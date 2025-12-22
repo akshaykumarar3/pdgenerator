@@ -155,10 +155,13 @@ def get_template_sql():
         
     return os.path.join(SQL_FOLDER, all_files[0])
 
-def save_sql(patient_id: str, content: str):
+def save_sql(patient_id: str, content: str, output_folder: str = SQL_FOLDER):
     """Saves the final SQL."""
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder, exist_ok=True)
+        
     filename = f"{patient_id}_final.sql"
-    path = os.path.join(SQL_FOLDER, filename)
+    path = os.path.join(output_folder, filename)
     with open(path, 'w') as f:
         f.write(content)
     return path

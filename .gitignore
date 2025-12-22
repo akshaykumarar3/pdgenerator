@@ -10,3 +10,9 @@ venv/
 
 # MacOS
 .DS_Store
+
+# Generated Output
+generated_output/
+
+# Secrets
+core/*.json
