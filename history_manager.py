@@ -1,7 +1,14 @@
 import os
 from datetime import datetime
 
-LOG_FOLDER = "logs"
+from dotenv import load_dotenv
+
+# Load .env explicitly
+env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
+load_dotenv(env_path)
+
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
+LOG_FOLDER = os.path.join(OUTPUT_DIR, "logs")
 
 def get_history(patient_id: str) -> str:
     """
