@@ -9,12 +9,30 @@ import requests
 import datetime
 import core.patient_db as patient_db
 import purge_manager
+from dotenv import load_dotenv
+
+# Load Env (Explicitly to be safe, though ai_engine does it)
+env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
+load_dotenv(env_path)
+
+# OUTPUT CONFIGURATION
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
+SQL_DIR = os.path.join(OUTPUT_DIR, "sqls")
+PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
+REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
+
+# Validate/Create Directories
+for d in [OUTPUT_DIR, SQL_DIR, PERSONA_DIR, REPORTS_DIR]:
+    if not os.path.exists(d):
+        os.makedirs(d, exist_ok=True)
+        # print(f"📁 Verified Folder: {d}") # Noise reduction
 
 def main():
     print("\n🚀 Clinical Data Generator (v2.0) - Modular & Interactive")
-def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None):
+def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None) -> str:
     """
     Main orchestration logic for a single patient.
+    Returns the Generated Name (str) if successful, else None.
     """
     if excluded_names is None:
         excluded_names = []
@@ -88,7 +106,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         # Output SQL
         # Output SQL (Conditional)
         if generate_sql:
-            out_path = data_loader.save_sql(patient_id, result.updated_sql)
+            out_path = data_loader.save_sql(patient_id, result.updated_sql, output_folder=SQL_DIR)
             print(f"   ✅ SQL Saved: {os.path.basename(out_path)}")
         else:
             print(f"   🚫 SQL Generation Skipped (Mode: No-SQL)")
@@ -117,7 +135,10 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         image_count = 0
         
         # Prepare Images Folder
-        img_folder = os.path.abspath(f"documents/{patient_id}/images")
+        # Prepare Images Folder (Inside Patient's Report Folder)
+        patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+        img_folder = os.path.join(patient_report_folder, "images")
+        
         if not os.path.exists(img_folder):
             os.makedirs(img_folder, exist_ok=True)
             print(f"      📁 Created Image Folder: {img_folder}")
@@ -176,6 +197,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                 content=doc.content, 
                 patient_persona=result.patient_persona,
                 doc_metadata=doc,
+                base_output_folder=patient_report_folder, # Pass the specific folder
                 image_path=image_path
             )
             print(f"      - Created: {os.path.basename(pdf_path)}")
@@ -189,7 +211,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
             # Pass the generated_images map so Persona can reuse them
             # Updated to pass the OBJECT
-            persona_path = pdf_generator.create_persona_pdf(patient_id, p_full_name, result.patient_persona, result.documents, generated_images, mrn=current_mrn)
+            persona_path = pdf_generator.create_persona_pdf(patient_id, p_full_name, result.patient_persona, result.documents, generated_images, mrn=current_mrn, output_folder=PERSONA_DIR)
             print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
             
         # Summary PDF (Mock)
@@ -217,7 +239,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
            "timeline": [{"date": "2025-01-01", "title": "Clinical Encounter", "details": ["Patient presented for evaluation."]}]
         }
         
-        sum_path = pdf_generator.create_patient_summary_pdf(patient_id, summary_data)
+        sum_path = pdf_generator.create_patient_summary_pdf(patient_id, summary_data, output_folder=patient_report_folder)
         print(f"DEBUG: sum_path={sum_path}")
         if sum_path and os.path.exists(sum_path):
             print(f"   📊 Summary PDF Created: {os.path.basename(sum_path)}")
@@ -225,8 +247,12 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
              print(f"   ❌ Summary PDF FAILED TO CREATE at {sum_path}")
         # Processing complete
 
+        # Return the new name for caching
+        return p_full_name if 'p_full_name' in locals() else None
+
     except Exception as e:
         print(f"❌ Error during processing: {e}")
+        return None
 
 
 def check_patient_sync_status(patient_id: str) -> bool:
@@ -323,6 +349,10 @@ def main():
             all_ids = data_loader.get_all_patient_ids()
             print(f"   🔍 Found {len(all_ids)} potential patients in Excel.")
             
+            # OPTIMIZATION: Load names ONCE before loop
+            current_names = patient_db.get_all_patient_names()
+            print(f"   🧠 Loaded {len(current_names)} existing personas for uniqueness check.")
+            
             count = 0
             for p_id in all_ids:
                 # Smart Skip Logic
@@ -330,9 +360,15 @@ def main():
                     print(f"   ⏭️  Skipping {p_id} (Verified Complete)")
                 else:
                     print(f"\n▶️  Processing {p_id}...")
-                    # Fetch used names for this batch run
-                    current_names = patient_db.get_all_patient_names()
-                    process_patient_workflow(p_id, feedback="", excluded_names=current_names) 
+                    print(f"\n▶️  Processing {p_id}...")
+                    
+                    # Pass the IN-MEMORY list implies efficiency
+                    new_name = process_patient_workflow(p_id, feedback="", excluded_names=current_names) 
+                    
+                    # Optimize: Update local list immediately to avoid re-reading DB
+                    if new_name:
+                         current_names.append(new_name)
+                         
                     count += 1
             
             print(f"\n✅ Batch Complete. Processed {count} patients.")
@@ -343,12 +379,7 @@ def main():
             print("   Enter any specific instructions for the AI.")
             feedback = input("   Feedback [Press Enter to skip]: ").strip()
             
-            # Single Run -> Ask for Feedback
-        print("\n💡 Feedback Loop")
-        print("   Enter any specific instructions for the AI.")
-        feedback = input("   Feedback [Press Enter to skip]: ").strip()
-        
-        # Fetch current names for exclusion
+        # Fetch current names for exclusion (Single run can verify against DB fresh)
         current_names = patient_db.get_all_patient_names()
         process_patient_workflow(target_input, feedback, excluded_names=current_names)
 
