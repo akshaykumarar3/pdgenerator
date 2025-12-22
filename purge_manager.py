@@ -3,12 +3,20 @@ import shutil
 import glob
 import json
 import core.patient_db as patient_db
+from dotenv import load_dotenv
+
+# Load .env (from cred/ directory) - Explicit path since we are in module
+env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
+load_dotenv(env_path)
 
 # CONSTANTS
-DOCS_DIR = "documents"
-LOGS_DIR = "logs"
-SQLS_DIR = "sqls"
-PERSONAS_DIR = os.path.join(DOCS_DIR, "personas")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output") # Default
+
+# Derived Paths
+DOCS_DIR = os.path.join(OUTPUT_DIR, "patient-reports") # Reports here
+LOGS_DIR = "logs" # Keep logs separate or in output? Usually separate.
+SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
+PERSONAS_DIR = os.path.join(OUTPUT_DIR, "persona") # Singular 'persona' as per plan
 DB_PATH = patient_db.DB_PATH
 
 def confirm_action(message: str) -> bool:
@@ -36,6 +44,11 @@ def purge_all():
         shutil.rmtree(DOCS_DIR)
         os.makedirs(DOCS_DIR) # Recreate empty root
         print(f"      ✅ Deleted: {DOCS_DIR}/")
+
+    if os.path.exists(PERSONAS_DIR):
+        shutil.rmtree(PERSONAS_DIR)
+        os.makedirs(PERSONAS_DIR)
+        print(f"      ✅ Deleted: {PERSONAS_DIR}/")
 
     # 2. Logs
     if os.path.exists(LOGS_DIR):
