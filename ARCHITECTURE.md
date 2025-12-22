@@ -24,11 +24,12 @@ graph TD
         AI --> VertexImage["Google Vertex AI (Imagen 3)"]
     end
     
-    subgraph "Outputs"
-        Generator --> SQL["Final SQL Script (.sql)"]
-        PDF --> Docs["Clinical Documents (.pdf)"]
-        PDF --> Persona["Patient Persona (.pdf)"]
-        VertexImage --> Images["Medical Images (.png)"]
+    subgraph "Outputs (Configurable)"
+        Generator --> SQL["sqls/*_final.sql"]
+        PDF --> Docs["patient-reports/<ID>/*.pdf"]
+        PDF --> Persona["persona/*-persona.pdf"]
+        VertexImage --> Images["patient-reports/<ID>/images/*.png"]
+        History --> Logs["logs/*.txt"]
     end
 ```
 
@@ -40,6 +41,9 @@ This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to 
 *   **Persona Diversity Logic**:
     *   Before processing, fetches **All Existing Patient Names** from `core/patient_db.py`.
     *   Passes this list as an `exclusion_list` to the AI Engine to prevent duplicate characters (e.g., no two "Walter Whites").
+*   **Optimization**:
+    *   **Lazy Loading**: Loads patient DB once.
+    *   **In-Memory Caching**: Dynamically tracks generated names to prevent duplicates without re-reading files (O(1)).
 *   **Artifact Generation**:
     *   **SQL**: Conditionally writes `_final.sql`.
     *   **Images**: Calls `ai_engine.generate_clinical_image` for relevant document types.
@@ -59,6 +63,12 @@ Abstracts all LLM interactions. It uses a **Hybrid SDK Approach**:
 Converts structured data into professional clinical documents using `reportlab`.
 *   **Features**: HTML Sanitization, Dynamic Templates (Consult vs Lab), and Image Embedding.
 
+### D. Purge Manager (`purge_manager.py`)
+Handles data lifecycle and cleanup.
+*   **Configurable Targets**: Reads `OUTPUT_DIR` from `.env`.
+*   **Granular Cleaning**: Can purge just documents, just personas, or everything.
+*   **Safety**: Explicitly verifies paths before restrictive `rm -rf` operations.
+
 ## 4. Developer Guide: How to Make Changes
 
 ### How to Add a New Field (e.g., "Blood Type")
@@ -74,17 +84,19 @@ Converts structured data into professional clinical documents using `reportlab`.
 ```
 pdgenerator/
 ├── cred/                   # Credentials (Ignored by Git)
-│   ├── .env                # Environment Variables
+│   ├── .env                # Config: keys, OUTPUT_DIR
 │   └── gcp_auth_key.json   # Service Account Key
 ├── core/                   # Static assets & DB Logic
 │   ├── patients_db.json    # Central Patient Registry
-│   ├── patient_db.py       # DB Access/Helper functions
 │   └── seed_template.sql   # Base SQL
-├── documents/              # Output Artifacts (per patient)
-│   └── 237/
-│       ├── images/         # Generated PNGs
-│       ├── *.pdf           # Generated Clinical PDFs
-│       └── *_final.sql     # Final SQL script
+├── generated_output/       # (Default) Dynamic Output Dir
+│   ├── persona/            # Generated Personas (.pdf)
+│   ├── sqls/               # Generated SQLs (.sql)
+│   ├── logs/               # Interaction Logs (.txt)
+│   └── patient-reports/    # Clinical Artifacts
+│       └── 237/
+│           ├── images/
+│           └── *.pdf
 ├── ai_engine.py            # AI Logic & Pydantic Framework
 ├── generator.py            # Main Loop & Orchestrator
 ├── pdf_generator.py        # ReportLab Rendering Logic

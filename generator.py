@@ -27,8 +27,6 @@ for d in [OUTPUT_DIR, SQL_DIR, PERSONA_DIR, REPORTS_DIR]:
         os.makedirs(d, exist_ok=True)
         # print(f"📁 Verified Folder: {d}") # Noise reduction
 
-def main():
-    print("\n🚀 Clinical Data Generator (v2.0) - Modular & Interactive")
 def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None) -> str:
     """
     Main orchestration logic for a single patient.
@@ -315,6 +313,11 @@ def check_patient_sync_status(patient_id: str) -> bool:
 def main():
     print("\n🚀 Clinical Data Generator (v2.0) - Modular & Interactive")
     
+    # Pre-flight Check
+    if not ai_engine.check_connection():
+        print("\n❌ Critical: AI Connection Failed. Please check your credentials/internet.")
+        return
+
     while True:
         # 1. INPUT: ID or '*'
         print("\n" + "="*50)

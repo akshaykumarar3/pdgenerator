@@ -8,6 +8,11 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 
+def _ensure_folder(path: str):
+    """Helper: Ensures directory exists."""
+    if not os.path.exists(path):
+        os.makedirs(path, exist_ok=True)
+
 def format_clinical_text(text: str) -> str:
     """
     Converts raw AI text (Markdown-style) into ReportLab-friendly XML.
@@ -42,8 +47,7 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     """
     # Use the passed folder directly - assuming it is the FULL path to the patient's report folder
     patient_folder = base_output_folder
-    if not os.path.exists(patient_folder):
-        os.makedirs(patient_folder, exist_ok=True)
+    _ensure_folder(patient_folder)
         
     if doc_type.startswith("DOC-"):
         filename = f"{doc_type}.pdf" if not doc_type.endswith(".pdf") else doc_type
@@ -188,8 +192,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     else:
         output_dir = f"documents/{patient_id}" # Fallback
         
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir, exist_ok=True)
+    _ensure_folder(output_dir)
 
     filename = f"Clinical_Summary_Patient_{patient_id}.pdf"
     file_path = os.path.join(output_dir, filename)
@@ -301,8 +304,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
     - **Clinical Assets**: Reports & Images.
     """
     persona_folder = output_folder
-    if not os.path.exists(persona_folder):
-        os.makedirs(persona_folder, exist_ok=True)
+    _ensure_folder(persona_folder)
 
     safe_name = patient_name.replace(" ", "_").replace("/", "-")
     filename = f"{patient_id}-{safe_name}-persona.pdf"

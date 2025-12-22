@@ -33,17 +33,18 @@ Once launched, you will see a prompt: `🎯 Enter Patient ID (or '*' for Batch, 
 | **`--documents`** | Purge only documents (keeps personas). | `--documents` |
 
 ### 3. Output Artifacts
-Results are saved in `documents/<ID>/`:
-*   `*_final.sql` (If requested): The SQL script to populate your database.
-*   `*.pdf`: Clinical documents (Consults, Labs, Notes).
-*   `images/*.png`: Generated medical images (MRI, X-Ray) embedded in reports.
-*   `*-persona.pdf`: A comprehensive Face Sheet & Bio for the patient.
+Results are saved in the **configured output directory** (Default: `generated_output/`):
+*   `persona/*.pdf`: Comprehensive Face Sheet & Bio for the patient.
+*   `sqls/*_final.sql`: The finalized SQL script.
+*   `patient-reports/<ID>/*.pdf`: Clinical documents (Consults, Labs, Notes).
+*   `patient-reports/<ID>/images/*.png`: Embeddable medical images.
+*   `logs/`: Execution logs.
 
 ---
 
 ## 🛠️ Installation & Setup
 
-### 1. Prerequisites
+### 1. Prerequisites-
 *   Python 3.10+
 *   Google Cloud Platform Project with **Vertex AI API** enabled.
 *   Service Account Key (JSON) with `Vertex AI User` role.
@@ -76,6 +77,9 @@ The system expects credentials in a `cred/` directory to keep them secure.
     GCP_LOCATION=us-central1
     # Points to the key in the SAME folder
     GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
+    
+    # Optional: Custom Output Path
+    OUTPUT_DIR=generated_output
     ```
 3.  **Service Account Key**: Place your JSON key at `cred/gcp_auth_key.json`.
 
@@ -91,6 +95,8 @@ The system expects credentials in a `cred/` directory to keep them secure.
 
 *   **Multi-Modal AI**: Uses **Gemini 2.5 Pro** (Reasoning/Text) and **Imagen 3** (Medical Imaging).
 *   **Interactive Workflow**: Continuous processing loop with admin purge commands.
+*   **Optimized Batch Processing**: In-memory caching for high-efficiency bulk generation (O(1) lookups).
+*   **Configurable Output**: Define completely custom output paths via `.env`.
 *   **Structured Data**: Outputs validated SQL adhering to a rigid FHIR-like schema.
 *   **Rich Clinical Narrative**: Generates comprehensive SOAP notes, Imaging Reports, and Discharge Summaries.
 *   **Persona Consistency**: Maintains identity across runs (e.g., "Walter White" for ID 210).
