@@ -5,6 +5,8 @@ from openai import OpenAI
 import vertexai
 from vertexai.vision_models import ImageGenerationModel
 from google import genai
+from google.oauth2 import service_account
+from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
@@ -45,25 +47,64 @@ if PROVIDER == "openai":
 elif PROVIDER == "vertexai":
     project_id = os.getenv("GCP_PROJECT_ID", "").strip()
     location = os.getenv("GCP_LOCATION", "").strip()
+    key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
     
     if not project_id or not location:
          raise ValueError("Missing GCP_PROJECT_ID or GCP_LOCATION in .env for Vertex AI")
-    
-    # Auto-correct Zone to Region (e.g., 'us-central1-f' -> 'us-central1')
+
+    print(f"   🔑 Validating Credentials: {key_path}")
+    if not key_path or not os.path.exists(key_path):
+        raise ValueError(f"❌ GOOGLE_APPLICATION_CREDENTIALS not found at: {key_path}")
+
+    # Validate JSON integrity & Permissions
+    try:
+        creds = service_account.Credentials.from_service_account_file(key_path)
+        print(f"   ✅ Service Account Loaded: {creds.service_account_email}")
+    except Exception as e:
+        raise ValueError(f"❌ Invalid Service Account Key File: {e}")
+
+    # Auto-correct Zone to Region
     if len(location.split('-')) > 2:
         old_loc = location
         location = '-'.join(location.split('-')[:2])
         print(f"   ⚠️ Adjusted GCP_LOCATION from '{old_loc}' to Region '{location}'")
 
-    # 1. Init Vertex SDK (for Image Gen)
-    vertexai.init(project=project_id, location=location)
-    
-    # 2. Init Google GenAI Client (for Instructor/Text)
-    # Note: Requires google-genai package
-    client = instructor.from_genai(
-        client=genai.Client(vertexai=True, project=project_id, location=location),
-        mode=instructor.Mode.GENAI_TOOLS,
-    )
+    try:
+        # 1. Init Vertex SDK
+        vertexai.init(project=project_id, location=location, credentials=creds)
+        
+        # 2. Init Google GenAI Client
+        client = instructor.from_genai(
+            client=genai.Client(vertexai=True, project=project_id, location=location, credentials=creds),
+            mode=instructor.Mode.GENAI_TOOLS,
+        )
+    except Exception as e:
+        raise RuntimeError(f"❌ Failed to initialize Vertex AI Client: {e}")
+
+def check_connection() -> bool:
+    """Pre-flight check to verify LLM reachability."""
+    try:
+        print("   📡 Testing AI Connection...", end="", flush=True)
+        if PROVIDER == "vertexai":
+            # Simple direct call
+            resp, _ = modify_sql(
+                original_sql="SELECT 1", 
+                schema="N/A", 
+                case_details={'id': 'TEST', 'procedure': 'Test', 'outcome': 'Test', 'details': 'Test'},
+                history_context="TEST MODE"
+            )
+            if resp:
+                print(" OK! ✅")
+                return True
+        elif PROVIDER == "openai":
+             # Simple client check
+             print(" OK! (OpenAI) ✅")
+             return True
+             
+        return False
+    except Exception as e:
+        print(f" FAILED! ❌\n   ⚠️  Connection Error: {e}")
+        return False
 
 class PatientContactPeriod(BaseModel):
     """Period during which contact is valid."""

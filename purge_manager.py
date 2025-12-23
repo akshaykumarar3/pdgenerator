@@ -14,7 +14,7 @@ OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output") # Default
 
 # Derived Paths
 DOCS_DIR = os.path.join(OUTPUT_DIR, "patient-reports") # Reports here
-LOGS_DIR = "logs" # Keep logs separate or in output? Usually separate.
+LOGS_DIR = os.path.join(OUTPUT_DIR, "logs") # Moved to output dir
 SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
 PERSONAS_DIR = os.path.join(OUTPUT_DIR, "persona") # Singular 'persona' as per plan
 DB_PATH = patient_db.DB_PATH

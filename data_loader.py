@@ -7,6 +7,26 @@ SQL_FOLDER = "sqls"
 SCHEMA_PATH = "core/mockdata_schema.sql"
 CORE_FOLDER = "core"
 
+def _get_patient_id_column(df: pd.DataFrame) -> str:
+    """Helper: Identifies the Patient ID column."""
+    if 'Patient ID' in df.columns:
+        return 'Patient ID'
+    
+    # Heuristic Search
+    for col in df.columns:
+        if 'Unnamed' in str(col):
+            first_val = df[col].dropna().iloc[0] if not df[col].dropna().empty else 0
+            if isinstance(first_val, (int, float)) and first_val > 100:
+                return col
+    return 'Patient ID' # Default fallback
+
+def _normalize_id(raw_val) -> str:
+    """Helper: Standardizes Patient ID format."""
+    try:
+        return str(int(float(raw_val)))
+    except:
+        return str(raw_val).strip()
+
 def get_db_schema():
     """Reads the schema file."""
     if os.path.exists(SCHEMA_PATH):
@@ -31,24 +51,14 @@ def load_patient_case(target_id: str):
             if 'Test Case #' not in df.columns:
                 continue
                 
-            # Find the ID column
-            id_col = 'Patient ID'
-            if id_col not in df.columns:
-                for col in df.columns:
-                    if 'Unnamed' in str(col):
-                        first_val = df[col].dropna().iloc[0] if not df[col].dropna().empty else 0
-                        if isinstance(first_val, (int, float)) and first_val > 100:
-                            id_col = col
-                            break
+            if 'Test Case #' not in df.columns:
+                continue
+                
+            id_col = _get_patient_id_column(df)
             
             # Iterate
             for _, row in df.iterrows():
-                # Parse ID
-                raw_id = row.get(id_col, '')
-                try:
-                    p_id = str(int(float(raw_id)))
-                except:
-                    p_id = str(raw_id).strip()
+                p_id = _normalize_id(row.get(id_col, ''))
                 
                 if p_id == target_id:
                     # Found Match
@@ -81,23 +91,16 @@ def get_all_patient_ids() -> list:
             if 'Test Case #' not in df.columns:
                 continue
                 
-            # Find the ID column (Logic mirrored from load_patient_case)
-            id_col = 'Patient ID'
-            if id_col not in df.columns:
-                for col in df.columns:
-                    if 'Unnamed' in str(col):
-                        first_val = df[col].dropna().iloc[0] if not df[col].dropna().empty else 0
-                        if isinstance(first_val, (int, float)) and first_val > 100:
-                            id_col = col
-                            break
+            if 'Test Case #' not in df.columns:
+                continue
+                
+            id_col = _get_patient_id_column(df)
             
             for _, row in df.iterrows():
-                raw_id = row.get(id_col, '')
-                try:
-                    p_id = str(int(float(raw_id)))
-                    found_ids.add(p_id)
-                except:
-                    pass
+                # Check for valid ID
+                p_id = _normalize_id(row.get(id_col, ''))
+                if p_id and p_id != '':
+                     found_ids.add(p_id)
                     
         return sorted(list(found_ids))
     except Exception as e:

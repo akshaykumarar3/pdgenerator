@@ -1,1 +1,120 @@
-{}
+{
+  "238": {
+    "first_name": "Hermione",
+    "last_name": "Granger",
+    "gender": "female",
+    "dob": "1979-09-19",
+    "address": "12 Grimmauld Place, London, UK",
+    "telecom": "555-238-0707",
+    "race": "Caucasian",
+    "height": "5 ft 5 in",
+    "weight": "130 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Molly Weasley",
+      "telecom": "555-238-1234",
+      "address": "The Burrow, Ottery St Catchpole, Devon, UK",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Minerva McGonagall, MD",
+      "managingOrganization": "Hogwarts Medical Clinic"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "Wizard Healthcare",
+      "plan_name": "Gold Wizard Plan",
+      "plan_type": "PPO",
+      "group_id": "GRP-99999",
+      "group_name": "Ministry of Magic",
+      "member_id": "MBR-000238",
+      "policy_number": "POL-19790319",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "SUB-238",
+        "subscriber_name": "Hermione Granger",
+        "subscriber_relationship": "self",
+        "subscriber_dob": "1979-09-19",
+        "subscriber_address": "12 Grimmauld Place, London, UK"
+      }
+    },
+    "bio_narrative": "Hermione Granger, a widely respected innovator in magical law, has dedicated much of her career to advocating for the rights of magical creatures while also maintaining a robust professional presence in the Wizarding World. Born in 1979, Hermione excelled academically, ultimately achieving notable accolades at Hogwarts School of Witchcraft and Wizardry before pursuing a career in magical law and various roles within the Ministry of Magic.\\n\\nDespite her illustrious career, Hermione has faced personal challenges, including episodes of severe stress related to the demands of political and legal reform work, leading to bruxism, or teeth grinding, which exacerbated her developing jaw pain. This physical stress, compounded by the pivotal societal role she plays, has contributed to structural issues within the maxillary bone.\\n\\nSocially, Hermione maintains close ties with friends and her extended family, often finding solace and support in familial gatherings at her childhood home, The Burrow. Her hobbies include reading extensively on magical history and innovation, as well as participating in debates on issues challenging the Wizarding World.\\n\\nMedically, Hermione has stayed active, prioritizing both her physical and magical wellness, ensuring regular check-ups and treating conditions with a holistic approach. Known for her tenacity and problem-solving, she has set her sights on overcoming current health obstacles through dedicated self-care and professional guidance, remaining vigilant in her pursuit of optimal health despite the constraints of her public responsibilities."
+  },
+  "239": {
+    "first_name": "Aragorn",
+    "last_name": "Son of Arathorn",
+    "gender": "male",
+    "dob": "1982-03-01",
+    "address": "445 Kings Road, Rivendell",
+    "telecom": "555-023-9239",
+    "race": "Dun\u00e9dain",
+    "height": "6 ft 6 in",
+    "weight": "210 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "Common Tongue",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Gandalf the Grey",
+      "telecom": "555-321-4321",
+      "address": "123 Middle Earth Steet, The Shire",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2023-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Elrond Halfelven",
+      "managingOrganization": "Rivendell Healing House"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "Middle-earth Mutual Health",
+      "plan_name": "Gold Fellowship",
+      "plan_type": "PPO",
+      "group_id": "GRP-123456",
+      "group_name": "Defenders of Middle-Earth",
+      "member_id": "MBR-239456789",
+      "policy_number": "POL-2025-023942",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "SUB-0239",
+        "subscriber_name": "Aragorn Son of Arathorn",
+        "subscriber_relationship": "self",
+        "subscriber_dob": "1982-03-01",
+        "subscriber_address": "445 Kings Road, Rivendell"
+      }
+    },
+    "bio_narrative": "Aragorn Son of Arathorn, a renowned leader within Middle-earth, hails from the ancient lineage of the Dun\u00e9dain, known for their resilience and longevity. As a ranger and eventual King of Gondor, Aragorn\u2019s upbringing combined rigorous training with nomadic travels across varied landscapes, contributing to his robust physical condition and acute survival instincts.\n\nThroughout his life, Aragorn has engaged in numerous responsibilities, including protecting lesser-known realms and orchestrating peace across disparate factions. These roles often introduce high stress levels that Aragorn manages through deeply ingrained discipline and the occasional respite in rural Elven territories where he finds solace among allies.\n\nMedically, Aragorn is in superb health, primarily due to an active lifestyle and access to the woodland remedies of Lothlorien. However, his constant high-alert state has introduced nocturnal bruxism, manifesting in jaw discomfort due to persistent teeth grinding during sleep.\n\nSocially, Aragorn is characterized by a deep sense of duty balanced by an innate humility. His connections with figures like Gandalf and Elrond provide essential support networks. He adeptly navigates complex social dynamics required of him by his leadership, always balancing personal and community welfare. Aragorn\u2019s eating habits lean towards simple, nutritious fare consistent with his ranger training, focusing on sustenance over extravagance.\n\nIn the realm of family, Aragorn descends from a legacy of monarchs with noteworthy health, further solidified by alliances such as his eventual union with Arwen Undomiel, intertwining Elven and human heritage."
+  }
+}
