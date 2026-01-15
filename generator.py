@@ -9,6 +9,7 @@ import requests
 import datetime
 import core.patient_db as patient_db
 import purge_manager
+from doc_validator import validate_structure
 from dotenv import load_dotenv
 
 # Load Env (Explicitly to be safe, though ai_engine does it)
@@ -111,6 +112,25 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         
         # GENERATE PDFs (Dynamic + Unique)
         print(f"   📄 Generating {len(result.documents)} Document(s)...")
+
+        # === DOCUMENT COMPLIANCE ANALYSIS ===
+        print(f"   🔍 Analyzing Document Compliance ({len(result.documents)} docs)...")
+        all_valid = True
+        for doc in result.documents:
+            is_valid = validate_structure(doc.content)
+            if not is_valid:
+                print(f"      ⚠️ Document '{doc.doc_id}' is NOT AI-Friendly (Validation Failed).")
+                all_valid = False
+            else:
+                #print(f"      ✅ Document '{doc.doc_id}' is Compliant.")
+                pass
+        
+        if not all_valid:
+            print("   ⚠️ WARNING: Some documents violate strict schema rules. Review logs.")
+            # Optional: Logic to Auto-Retry could go here
+        else:
+            print("   ✅ All documents are AI-Friendly & Schema Compliant.")
+
         seen_titles = {}
         # 6. Save/Update Patient DB
         # Structured Persona Object is now available

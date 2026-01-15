@@ -184,9 +184,9 @@
     "address": "361 Kaplan Drive, Seattle, WA",
     "telecom": "555-210-0210",
     "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "143 lbs",
-    "maritalStatus": "Married",
+    "height": "5 ft 7 in",
+    "weight": "145 lbs",
+    "maritalStatus": "Widowed",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -195,14 +195,14 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "spouse",
+      "relationship": "Spouse",
       "name": "Derek Shepherd",
-      "telecom": "555-210-0420",
+      "telecom": "555-210-0211",
       "address": "361 Kaplan Drive, Seattle, WA",
       "gender": "male",
-      "organization": "N/A",
-      "period_start": "2010-06-01",
-      "period_end": "ongoing"
+      "organization": "Family",
+      "period_start": "2005-02-27",
+      "period_end": "2015-04-23"
     },
     "provider": {
       "generalPractitioner": "Dr. Miranda Bailey, MD",
@@ -214,26 +214,26 @@
     },
     "payer": {
       "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Platinum Advantage Plan",
+      "payer_name": "Aetna",
+      "plan_name": "Gold PPO",
       "plan_type": "PPO",
-      "group_id": "GRP-001920",
-      "group_name": "Grey Sloan Memorial Staff",
-      "member_id": "MBR-2102025",
-      "policy_number": "POL-2025-011234",
-      "effective_date": "2025-01-01",
+      "group_id": "GS78910",
+      "group_name": "Grey Sloan Memorial Hospital Employee Plan",
+      "member_id": "AETNA-MEMBER-8887766",
+      "policy_number": "POL-987654321",
+      "effective_date": "2018-07-01",
       "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
+      "copay_amount": "$40",
+      "deductible_amount": "$1500",
       "subscriber": {
-        "subscriber_id": "SUB-2100",
+        "subscriber_id": "AETNA-MEMBER-8887766",
         "subscriber_name": "Meredith Grey",
-        "subscriber_relationship": "self",
+        "subscriber_relationship": "Self",
         "subscriber_dob": "1983-09-03",
         "subscriber_address": "361 Kaplan Drive, Seattle, WA"
       }
     },
-    "bio_narrative": "Meredith Grey, born on September 3, 1983, is a well-accomplished surgeon at Grey Sloan Memorial Hospital. Admired for her resilience and expertise, Meredith juggles a demanding professional life with personal commitments. Married to Derek Shepherd, a renowned neurosurgeon, they have two children and enjoy a supportive family dynamic. Her lifestyle emphasizes balance; managing occupational stress through yoga and allocating time for her family. Meredith's clinical journey in recent months has involved addressing recurrent dizziness episodes. Despite her medical acumen, these episodes have urged her closer to her physician, balancing professional knowledge with personal health challenges.\n\nHer medical background is marked with controlled essential hypertension, tension headaches, and episodic vertigo. Meredith's personality is woven with compassion, determination, and a complex interplay of professional dedication and familial affection. Her immersion within the medical community provides her with insights and resources, which she readily extends to her family and friends, cementing her role not just as a physician, but a mentor within both personal and professional spheres. Meredith believes in proactive health management, consistent with her approach to her patients."
+    "bio_narrative": "Meredith Grey is a highly accomplished 40-year-old female, a renowned general surgeon, and the Chief of General Surgery at Grey Sloan Memorial Hospital. Her life is a constant balancing act between a demanding, high-stakes career and being a single mother. She is known for her resilience, intelligence, and deep-seated compassion, though she often presents with a stoic and pragmatic demeanor shaped by a challenging personal and professional life. \n\nCLINICAL HISTORY: The patient presents with a recent onset of intermittent, atypical chest pain over the last three months. The pain is described as a dull, non-exertional ache. This symptom is particularly concerning to her due to her stressful occupation and a family history of cardiac disease. Her primary care physician, Dr. Bailey, initiated a workup, including a referral to cardiology. The consulting cardiologist, Dr. Yang, noted the atypical nature of the symptoms but recommended a Myocardial Perfusion Imaging (SPECT) scan to definitively rule out an ischemic cause, given the patient's risk profile (hypertension, family history). Notably, preliminary diagnostic steps such as an ECG or a formal stress test were not performed prior to the advanced imaging request. Her chronic conditions include well-managed essential hypertension and recently noted dyslipidemia. She is diligent with her medication regimen. The current prior authorization request is for the SPECT scan intended to investigate these unresolved chest pain symptoms."
   },
   "211": {
     "first_name": "Daenerys",

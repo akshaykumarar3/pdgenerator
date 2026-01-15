@@ -19,8 +19,22 @@ load_dotenv("cred/.env")
 
 # PROVIDER CONFIG
 PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
+TEST_MODE = os.getenv("TEST_MODE", "false").lower() == "true"
+
 ALLOWED_PROVIDERS = ["vertexai", "openai"]
-MODEL_NAME = "gemini-2.5-pro" # Updated to Flash/Pro for speed/reasoning
+
+# Model Configuration (Prod vs Test)
+MODEL_MAP = {
+    "vertexai": {"prod": "gemini-2.5-pro", "test": "gemini-2.5-flash"},
+    "openai":   {"prod": "gpt-4o",         "test": "gpt-4o-mini"}
+}
+
+# Select Model
+mode_key = "test" if TEST_MODE else "prod"
+MODEL_NAME = MODEL_MAP.get(PROVIDER, {}).get(mode_key, "gemini-2.5-pro")
+
+if TEST_MODE:
+    print(f"   ⚡ TEST MODE ACTIVE: Using lightweight model ({MODEL_NAME}) & Minimal Data.")
 
 # Diversity Settings
 CHARACTER_UNIVERSES = [
@@ -58,7 +72,10 @@ elif PROVIDER == "vertexai":
 
     # Validate JSON integrity & Permissions
     try:
-        creds = service_account.Credentials.from_service_account_file(key_path)
+        creds = service_account.Credentials.from_service_account_file(
+            key_path, 
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
         print(f"   ✅ Service Account Loaded: {creds.service_account_email}")
     except Exception as e:
         raise ValueError(f"❌ Invalid Service Account Key File: {e}")
@@ -84,18 +101,16 @@ elif PROVIDER == "vertexai":
 def check_connection() -> bool:
     """Pre-flight check to verify LLM reachability."""
     try:
-        print("   📡 Testing AI Connection...", end="", flush=True)
+        print(f"   📡 Testing AI Connection... (Model: {MODEL_NAME})", end="", flush=True)
         if PROVIDER == "vertexai":
-            # Simple direct call
-            resp, _ = modify_sql(
-                original_sql="SELECT 1", 
-                schema="N/A", 
-                case_details={'id': 'TEST', 'procedure': 'Test', 'outcome': 'Test', 'details': 'Test'},
-                history_context="TEST MODE"
-            )
+            # Direct SDK call to avoid Instructor retries on Auth fail
+            from vertexai.generative_models import GenerativeModel
+            model = GenerativeModel(MODEL_NAME)
+            resp = model.generate_content("Hello")
             if resp:
                 print(" OK! ✅")
                 return True
+
         elif PROVIDER == "openai":
              # Simple client check
              print(" OK! (OpenAI) ✅")
@@ -198,22 +213,72 @@ class PatientPersona(BaseModel):
     # Narrative
     bio_narrative: str = Field(..., description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
 
-class GeneratedDocument(BaseModel):
-    doc_id: str = Field(..., description="The EXACT 'id' used in the SQL insert for this document (e.g. 'DOC-1234').")
-    title_hint: str = Field(..., description="A short, descriptive title (e.g., 'Cardiology_Consult'). NO spaces, use underscores.")
-    service_date: str = Field(..., description="Date the service was performed (YYYY-MM-DD). logic: MUST be in the PAST relative to the Procedure Date.")
-    facility_name: str = Field(..., description="Name of the facility where this specific service occurred (e.g., 'Stark Medical Center', 'Downtown Lab Corp').")
-    provider_name: str = Field(..., description="Name of the clinician or technician who performed/authorized this report.")
-    accession_number: str = Field(..., description="Realistic identifier for the report (e.g., 'ACC-2025-88942').")
-    content: str = Field(..., description="The FULL, VERBATIM content. MUST be EXTREMELY DETAILED (approx 800-1000 words). Mimic a real clinical record. For Consults: Include CC, HPI (3+ paragraphs), ROS, PMH, PSH, Meds, Allergies, Vitals, PE, Labs, Assessment, Plan. For Imaging: Technique, Findings (w/ measurements), Impression. NO SUMMARIES.")
+from doc_validator import format_clinical_document
 
-class ModifiedSQL(BaseModel):
+class StructuredClinicalDoc(BaseModel):
+    """
+    Layer 1: Raw Structured Content (AI Generation).
+    The AI fills these fields. Python Helper formats them.
+    """
+    doc_id: str = Field(..., description="ID matching the SQL insert (e.g. 'DOC-101').")
+    doc_type: str = Field(..., description="Type: 'CONSULT', 'IMAGING', 'LAB', 'DISCHARGE', 'ER_VISIT'.")
+    title: str = Field(..., description="Descriptive title e.g. 'Cardiology_Consult'.")
+    service_date: str = Field(..., description="YYYY-MM-DD")
+    facility: str = Field(..., description="Facility Name")
+    provider: str = Field(..., description="Provider Name")
+    
+    # Clinical Sections (Optional - AI fills relevant ones)
+    chief_complaint: Optional[str] = None
+    hpi: Optional[str] = None
+    past_medical_history: Optional[List[str]] = None
+    medications: Optional[List[str]] = None
+    allergies: Optional[List[str]] = None
+    social_history: Optional[str] = None
+    family_history: Optional[str] = None
+    review_of_systems: Optional[str] = None
+    vitals: Optional[List[str]] = None
+    physical_exam: Optional[str] = None
+    labs: Optional[List[str]] = None
+    imaging: Optional[str] = None
+    assessment: Optional[str] = None
+    plan: Optional[str] = None
+    
+    # Imaging Specific
+    exam_type: Optional[str] = None
+    indication: Optional[str] = None
+    technique: Optional[str] = None
+    findings: Optional[str] = None
+    impression: Optional[str] = None
+    
+    # Narratives
+    narrative: Optional[str] = None # For anything else
+
+class GeneratedDocument(BaseModel):
+    """
+    Final Output Object (Layer 3).
+    Contains the raw content string formatted by Python.
+    """
+    doc_id: str
+    content: str
+
+
+class ModifiedSQLRaw(BaseModel):
+    """Internal model for AI generation (Structured Data)."""
     updated_sql: str = Field(..., description="The fully rewritten, valid SQL code.")
     changes_summary: str = Field(..., description="A short bulleted list of the changes made to the SQL.")
-    documents: List[GeneratedDocument] = Field(..., description="A list of ALL text documents corresponding to the document_reference_fhir entries.")
+    structured_documents: List[StructuredClinicalDoc] = Field(..., description="List of structured clinical documents.")
     patient_persona: PatientPersona = Field(..., description="The detailed, structured patient identity.")
 
-def modify_sql(original_sql: str, schema: str, case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None) -> ModifiedSQL:
+class ModifiedSQL(BaseModel):
+    """Public model for consumption (Formatted Text)."""
+    updated_sql: str
+    changes_summary: str
+    documents: List[GeneratedDocument]
+    patient_persona: PatientPersona
+
+
+def modify_sql(original_sql: str, schema: str, case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None) -> 'FinalResult':
+
     """
     Calls OpenAI to modify the SQL based on the case + feedback + history.
     Values referencing 'existing_persona' are STRICT constraints.
@@ -458,6 +523,9 @@ F. **NAMING CONVENTION (HOLLYWOOD/SITCOM)**:
         print(f"   ⚠️ AI Generation Failed: {e}")
         # Return dummy to prevent crash if possible, or re-raise
         raise e
+
+
+
 
 def generate_clinical_image(context: str, image_type: str, output_path: str = None) -> str:
     """
