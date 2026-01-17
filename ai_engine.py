@@ -29,6 +29,9 @@ MODEL_MAP = {
     "openai":   {"prod": "gpt-4o",         "test": "gpt-4o-mini"}
 }
 
+# ... (lines 28-30 skipped/implied by patch location, actuall I need to do this carefully)
+
+
 # Select Model
 mode_key = "test" if TEST_MODE else "prod"
 MODEL_NAME = MODEL_MAP.get(PROVIDER, {}).get(mode_key, "gemini-2.5-pro")
@@ -88,13 +91,22 @@ elif PROVIDER == "vertexai":
 
     try:
         # 1. Init Vertex SDK
-        vertexai.init(project=project_id, location=location, credentials=creds)
-        
-        # 2. Init Google GenAI Client
-        client = instructor.from_genai(
-            client=genai.Client(vertexai=True, project=project_id, location=location, credentials=creds),
-            mode=instructor.Mode.GENAI_TOOLS,
+        # Force REST transport to avoid gRPC deadlocks on macOS
+        vertexai.init(
+            project=project_id, 
+            location=location, 
+            credentials=creds,
+            api_transport="rest"
         )
+        
+        # 2. Init Instructor with Vertex AI Model
+        # Using the specific model instance prevents client/version conflicts
+        model = vertexai.generative_models.GenerativeModel(MODEL_NAME)
+        client = instructor.from_vertexai(
+            client=model,
+            mode=instructor.Mode.VERTEXAI_TOOLS,
+        )
+
     except Exception as e:
         raise RuntimeError(f"❌ Failed to initialize Vertex AI Client: {e}")
 
@@ -421,12 +433,14 @@ def modify_sql(original_sql: str, schema: str, case_details: dict, user_feedback
 
     # Use create_with_completion to get usage stats
     try:
+        # Convert system prompt to user prompt for Vertex AI compatibility
+        system_role = "user" if PROVIDER == "vertexai" else "system"
+
         # Standardize arguments
         kwargs = {
             "response_model": ModifiedSQL,
             "messages": [
-                {"role": "system", "content": """
-You are **Clinical SQL Generator for Lucenz**, a senior healthcare data architect and FHIR-SQL expert.
+                {"role": system_role, "content": """You are an expert healthcare data architect and FHIR-SQL expert.
 Your task: transform one-line clinical use cases into realistic, schema-validated SQL datasets for prior authorization workflows.
 
 === Core Rules ===
@@ -465,8 +479,8 @@ Your task: transform one-line clinical use cases into realistic, schema-validate
 
 === CRITICAL PROJECT CONSTRAINTS (MUST FOLLOW) ===
 A. **Data Density**: You MUST include entries for ALL tables.
-   - Medications: Minimum 7 distinct entries.
-   - Observations: Minimum 7 distinct entries.
+   - Medications: Minimum 3 distinct entries.
+   - Observations: Minimum 3 distinct entries.
 B. **Clinical Status**:
    - Target Procedure ({case_details['procedure']}) Status: 'requested'.
    - Historical Procedures Status: 'completed'.
@@ -487,14 +501,73 @@ F. **NAMING CONVENTION (HOLLYWOOD/SITCOM)**:
             ]
         }
         
-        # Add model parameter
-        if PROVIDER == "openai":
-            kwargs["model"] = "gpt-4o"
-        elif PROVIDER == "vertexai":
-            # Using Gemini 2.5 Pro as requested
-            kwargs["model"] = "gemini-2.5-pro"
+        if PROVIDER == "vertexai":
+             print(f"   [DEBUG] Calling Vertex AI Direct (Bypassing Instructor) - Model: {MODEL_NAME}")
+             print("   [DEBUG] Sending request...")
+             
+             try:
+                 # Flatten messages for simple prompt (or use chat)
+                 # Vertex chat needs history... let's just use the final user prompt + system context
+                 # Note: client is Instructor, client.client is GenerativeModel
+                 model_instance = client.client 
+                 
+                 from vertexai.generative_models import GenerationConfig
+                 
+                 # Prepare Prompt
+                 msgs = kwargs['messages']
+                 # msgs is a list of dicts: [{'role':..., 'content':...}, ...]
+                 full_prompt = f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
+                 
+                 resp = model_instance.generate_content(
+                    full_prompt,
+                    generation_config=GenerationConfig(
+                        response_mime_type="application/json",
+                        # response_schema=ModifiedSQL.model_json_schema() # Causing hangs
+                    )
+                 )
+                 
+                 print("   [DEBUG] Request complete.")
+                 print(f"   [DEBUG] Raw Response Length: {len(resp.text)}")
+                 
+                 # Handle potential List response (e.g. [Object]) vs Object
+                 import json
+                 try:
+                     raw_text = resp.text.strip()
+                     # Basic cleanup if md block
+                     if raw_text.startswith("```json"):
+                         raw_text = raw_text[7:]
+                     if raw_text.endswith("```"):
+                         raw_text = raw_text[:-3]
+                     
+                     data = json.loads(raw_text)
+                     if isinstance(data, list) and len(data) > 0:
+                         print("   ⚠️  AI returned a LIST. extracted first item.")
+                         data = data[0]
+                     
+                     response_obj = ModifiedSQL.model_validate(data)
+                 except Exception as e:
+                     print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
+                     response_obj = ModifiedSQL.model_validate_json(resp.text)
+                 
+                 # Fake clean usage for now or extract
+                 usage_stats = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+                 if resp.usage_metadata:
+                     usage_stats["prompt_tokens"] = resp.usage_metadata.prompt_token_count
+                     usage_stats["completion_tokens"] = resp.usage_metadata.candidates_token_count
+                     usage_stats["total_tokens"] = resp.usage_metadata.total_token_count
+                     
+                 return response_obj, usage_stats
+                 
+             except Exception as e:
+                 print(f"   ❌ Vertex Direct Call Failed: {e}")
+                 # Fallback or raise
+                 raise e
 
+        # ORIGINAL PATH FOR OPENAI
+        print(f"   [DEBUG] Calling AI Provider: {PROVIDER}, Model: {MODEL_NAME}")
+        print("   [DEBUG] Sending request...")
         completion_resp = client.chat.completions.create_with_completion(**kwargs)
+        print("   [DEBUG] Request complete.")
         
         # Handle Instructor Tuple Return (Response, Completion)
         response_obj = None
