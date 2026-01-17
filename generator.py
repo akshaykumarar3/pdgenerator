@@ -55,19 +55,64 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     persona_context_prompt = ""
     if existing_patient:
         print(f"      🔄 Found Existing Patient Record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
+
+    # Prepare Patient's Report Folder (needed for incremental logic)
+    patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+    if not os.path.exists(patient_report_folder):
+        os.makedirs(patient_report_folder, exist_ok=True)
+
+    # === INCREMENTAL GENERATION LOGIC ===
+    # Scan for existing documents to prevent duplicates and resume numbering
+    existing_filenames = []
+    max_seq = 0
     
+    if os.path.exists(patient_report_folder):
+        for f in os.listdir(patient_report_folder):
+            if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
+                existing_filenames.append(f)
+                # Parse sequence number: DOC-210-001-Title.pdf
+                try:
+                    parts = f.split("-")
+                    # DOC, PID, SEQ, Title...
+                    seq_num = int(parts[2])
+                    if seq_num > max_seq:
+                        max_seq = seq_num
+                except:
+                    pass
+    
+    doc_seq_counter = max_seq + 1
+    if max_seq > 0:
+        print(f"      📥 Existing Documents Found: {len(existing_filenames)} (Max Seq: {max_seq:03d})")
+        print(f"      ⏭️  Resuming generation at sequence #{doc_seq_counter:03d} (Smart Append Mode)")
+
+    # 4. Generate Clinical Data (AI)
     print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
-    
     try:
-        # Result is ClinicalDataPayload (no SQL)
-        result, usage = ai_engine.generate_clinical_data(
+        # Calls the unified AI Engine
+        # Returns tuple: (ClinicalDataPayload, usage_stats)
+        ai_response = ai_engine.generate_clinical_data(
             case_details=case_data, 
             user_feedback=feedback, 
-            history_context=history_txt, 
-            existing_persona=existing_patient, 
-            excluded_names=excluded_names
+            history_context=history_txt,
+            existing_persona=existing_patient,
+            excluded_names=excluded_names,
+            existing_filenames=existing_filenames # Pass existing docs context
         )
         
+        if not ai_response:
+            print("❌ AI Engine returned None.")
+            return None
+            
+        result, usage = ai_response
+
+    except Exception as e:
+        print(f"❌ Error using AI Engine: {e}")
+        return None
+
+    # 5. Process Results
+    if not result.documents:
+        print("   ✅ AI determined existing documents are sufficient. No new files generated.")
+    else:
         # SAVE HISTORY
         history_manager.append_history(patient_id, feedback, result.changes_summary)
         
@@ -107,7 +152,6 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             os.makedirs(img_folder, exist_ok=True)
             print(f"      📁 Created Image Folder: {img_folder}")
 
-        doc_seq_counter = 1
         for doc in result.documents:
             # Deduplication
             base_title = doc.title_hint
@@ -231,9 +275,6 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         # Return the new name for caching
         return p_full_name if 'p_full_name' in locals() else None
 
-    except Exception as e:
-        print(f"❌ Error during processing: {e}")
-        return None
 
 
 # OUTPUT CONFIGURATION

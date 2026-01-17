@@ -298,7 +298,7 @@ class ClinicalDataPayload(BaseModel):
     patient_persona: PatientPersona
 
 
-def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None) -> 'FinalResult':
+def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None, existing_filenames: List[str] = None) -> 'FinalResult':
 
     """
     Calls AI to generate clinical data (Persona + Documents) based on the case + feedback + history.
@@ -313,6 +313,25 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
         The user has provided specific instructions for this run. You MUST incorporate them while strictly adhering to the clinical outcome:
         > "{user_feedback}"
         """
+
+    # Existing Documents Logic (Smart Append)
+    existing_docs_instruction = ""
+    if existing_filenames and len(existing_filenames) > 0:
+        titles_str = ", ".join([f"'{f}'" for f in existing_filenames])
+        existing_docs_instruction = f"""
+        **EXISTING DOCUMENTS (INCREMENTAL MODE):**
+        The following documents ALREADY EXIST for this patient:
+        [{titles_str}]
+        
+        **CRITICAL INSTRUCTION:**
+        - Do NOT regenerate the exact same document types/titles if they are already sufficient.
+        - ONLY generate NEW documents if the clinical picture is incomplete (e.g., missing critical labs, imaging, or specialist consults).
+        - If the existing documents fully cover the {case_details['outcome']} scenario, return an EMPTY list for 'documents'.
+        - If generating new docs, ensure TITLES are unique and do not conflict with the list above.
+        """
+    else:
+        # Default behavior: Force generation if no docs exist
+        existing_docs_instruction = "4. **Data Density (MANDATORY)**:\n       - **Documents**: Minimum 5 distinct clinical documents (e.g., Consult, Lab_Report, Imaging_Report, Discharge_Summary, Specialist_Note)."
 
     # Identity Constraints
     if existing_persona:
@@ -373,8 +392,7 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
     3. **Clinical Status**:
        - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
        - All *historical* procedures must be implied as 'completed'.
-    4. **Data Density (MANDATORY)**:
-       - **Documents**: Minimum 5 distinct clinical documents (e.g., Consult, Lab_Report, Imaging_Report, Discharge_Summary, Specialist_Note).
+    {existing_docs_instruction}
     5. **Document Generation (CRITICAL Rules)**:
        - Generate `documents` list with rich content.
        - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
