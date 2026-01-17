@@ -4,13 +4,11 @@ import random # For persona diversity
 from openai import OpenAI
 import vertexai
 from vertexai.vision_models import ImageGenerationModel
-from google import genai
 from google.oauth2 import service_account
 from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
-from datetime import datetime
 import instructor
 import httpx # For disabling HTTP/2 to prevent hangs
 

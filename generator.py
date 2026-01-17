@@ -11,6 +11,7 @@ import core.patient_db as patient_db
 import purge_manager
 from doc_validator import validate_structure
 from dotenv import load_dotenv
+from scan_helper import scan_existing_documents
 
 # Load Env (Explicitly to be safe, though ai_engine does it)
 env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
@@ -63,45 +64,11 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
 
     # === INCREMENTAL GENERATION LOGIC ===
     # Scan for existing documents to prevent duplicates and resume numbering
-    existing_filenames = []
-    max_seq = 0
-    # Map Title -> {"seq": int, "filename": str}
-    # Help AI match titles for updates
-    existing_docs_map = {} 
-    
-    if os.path.exists(patient_report_folder):
-        for f in os.listdir(patient_report_folder):
-            if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
-                existing_filenames.append(f)
-                # Parse sequence number: DOC-210-001-Title.pdf
-                # We need to extract the title part for matching
-                try:
-                    # Remove extension
-                    name = os.path.splitext(f)[0]
-                    parts = name.split("-")
-                    # parts = ['DOC', 'PID', 'SEQ', 'Title', 'Part2'...]
-                    if len(parts) >= 4:
-                        seq_num = int(parts[2])
-                        # Title is everything after index 3 joined
-                        # But wait, original code was: final_filename_base = f"{doc_identifier}-{doc.title_hint}"
-                        # So title starts at parts[3].
-                        # Beware of title having dashes.
-                        # Reconstruct title from parts[3:]
-                        title_extracted = "-".join(parts[3:])
-                        # Remove -NAF suffix if present for matching
-                        if title_extracted.endswith("-NAF"):
-                            title_extracted = title_extracted[:-4]
-                            
-                        existing_docs_map[title_extracted] = {"seq": seq_num, "filename": f}
-                        
-                        if seq_num > max_seq:
-                            max_seq = seq_num
-                except:
-                    pass
+    max_seq, existing_docs_map = scan_existing_documents(patient_id, patient_report_folder)
     
     doc_seq_counter = max_seq + 1
     if max_seq > 0:
-        print(f"      📥 Existing Documents Found: {len(existing_filenames)} (Max Seq: {max_seq:03d})")
+        print(f"      📥 Existing Documents Found: {len(existing_docs_map)} (Max Seq: {max_seq:03d})")
         print(f"      ⏭️  Ready for Smart Update/Append")
 
     # 4. Generate Clinical Data (AI)
