@@ -65,28 +65,51 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     # Scan for existing documents to prevent duplicates and resume numbering
     existing_filenames = []
     max_seq = 0
+    # Map Title -> {"seq": int, "filename": str}
+    # Help AI match titles for updates
+    existing_docs_map = {} 
     
     if os.path.exists(patient_report_folder):
         for f in os.listdir(patient_report_folder):
             if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
                 existing_filenames.append(f)
                 # Parse sequence number: DOC-210-001-Title.pdf
+                # We need to extract the title part for matching
                 try:
-                    parts = f.split("-")
-                    # DOC, PID, SEQ, Title...
-                    seq_num = int(parts[2])
-                    if seq_num > max_seq:
-                        max_seq = seq_num
+                    # Remove extension
+                    name = os.path.splitext(f)[0]
+                    parts = name.split("-")
+                    # parts = ['DOC', 'PID', 'SEQ', 'Title', 'Part2'...]
+                    if len(parts) >= 4:
+                        seq_num = int(parts[2])
+                        # Title is everything after index 3 joined
+                        # But wait, original code was: final_filename_base = f"{doc_identifier}-{doc.title_hint}"
+                        # So title starts at parts[3].
+                        # Beware of title having dashes.
+                        # Reconstruct title from parts[3:]
+                        title_extracted = "-".join(parts[3:])
+                        # Remove -NAF suffix if present for matching
+                        if title_extracted.endswith("-NAF"):
+                            title_extracted = title_extracted[:-4]
+                            
+                        existing_docs_map[title_extracted] = {"seq": seq_num, "filename": f}
+                        
+                        if seq_num > max_seq:
+                            max_seq = seq_num
                 except:
                     pass
     
     doc_seq_counter = max_seq + 1
     if max_seq > 0:
         print(f"      📥 Existing Documents Found: {len(existing_filenames)} (Max Seq: {max_seq:03d})")
-        print(f"      ⏭️  Resuming generation at sequence #{doc_seq_counter:03d} (Smart Append Mode)")
+        print(f"      ⏭️  Ready for Smart Update/Append")
 
     # 4. Generate Clinical Data (AI)
     print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
+    
+    # Pass ONLY titles to AI to make it easier to match
+    existing_titles_list = list(existing_docs_map.keys())
+    
     try:
         # Calls the unified AI Engine
         # Returns tuple: (ClinicalDataPayload, usage_stats)
@@ -96,7 +119,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             history_context=history_txt,
             existing_persona=existing_patient,
             excluded_names=excluded_names,
-            existing_filenames=existing_filenames # Pass existing docs context
+            existing_filenames=existing_titles_list # Pass TITLES now, not full filenames, clearer for AI
         )
         
         if not ai_response:
@@ -126,18 +149,19 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         # 6. Save/Update Patient DB
         # Structured Persona Object is now available
         if result.patient_persona:
-            db_entry = result.patient_persona.model_dump()
-            # Flatten or keep nested? Keep nested as per user JSON requirement.
-            # We map Pydantic fields to the "p_" fields user requested roughly, or just store the clean object.
-            # actually user wants "p_telecom", etc. 
-            # Ideally we adapt it, but for now let's save the RAW structured data which has everything.
-            # Then the export logic (not this file) can transform it.
-            # Or we can just store the Pydantic dump which is very clean.
-            
-            patient_db.save_patient(patient_id, db_entry)
-            
-            p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
+            if existing_patient is None:
+                # First time generation - save to DB
+                db_entry = result.patient_persona.model_dump()
+                patient_db.save_patient(patient_id, db_entry)
+                p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
+                print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
+            else:
+                # We don't update demographics on re-runs to preserve identity, 
+                # unless we implement specific update logic. 
+                # For now, assume identity lock.
+                
+                p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
+                print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
 
         # 7. Generate Documents
         generated_images = {} # Map title -> file_path
@@ -153,8 +177,22 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             print(f"      📁 Created Image Folder: {img_folder}")
 
         for doc in result.documents:
-            # Deduplication
+            # Deduplication & Overwrite Logic
             base_title = doc.title_hint
+            
+            # Check if this title exists in our map
+            if base_title in existing_docs_map:
+                # OVERWRITE MODE
+                seq_num = existing_docs_map[base_title]["seq"]
+                # Reuse sequence
+                seq_str = f"{seq_num:03d}"
+                print(f"      🔄 UPDATING existing document: '{base_title}' (Seq #{seq_str})")
+            else:
+                # NEW FILE MODE
+                seq_str = f"{doc_seq_counter:03d}"
+                doc_seq_counter += 1
+                print(f"      ✨ CREATING new document: '{base_title}' (Seq #{seq_str})")
+            
             # Generate Image if needed
             image_path = None
             img_asset = pdf_generator.get_clinical_image(doc.title_hint) # Check static assets first
@@ -194,7 +232,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                         print(f"      ⚠️ Image Generation failed: {e}")
 
             # Construct Filename: DOC-{pid}-{seq}-{title}
-            seq_str = f"{doc_seq_counter:03d}"
+            # seq_str is already set logic above
             doc_identifier = f"DOC-{patient_id}-{seq_str}"
             final_filename_base = f"{doc_identifier}-{doc.title_hint}"
             

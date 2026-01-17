@@ -323,11 +323,10 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
         The following documents ALREADY EXIST for this patient:
         [{titles_str}]
         
-        **CRITICAL INSTRUCTION:**
-        - Do NOT regenerate the exact same document types/titles if they are already sufficient.
-        - ONLY generate NEW documents if the clinical picture is incomplete (e.g., missing critical labs, imaging, or specialist consults).
-        - If the existing documents fully cover the {case_details['outcome']} scenario, return an EMPTY list for 'documents'.
-        - If generating new docs, ensure TITLES are unique and do not conflict with the list above.
+        **CRITICAL INSTRUCTION (SMART UPDATE):**
+        - **TO KEEP**: If a document is valid/good, DO NOT include it in the output list.
+        - **TO UPDATE/FIX**: If an existing document is incomplete or needs changes, GENERATE it again using the **EXACT SAME TITLE_HINT** from the list above.
+        - **TO ADD**: If a new clinical document is needed, generate it with a **NEW UNIQUE TITLE**.
         """
     else:
         # Default behavior: Force generation if no docs exist
