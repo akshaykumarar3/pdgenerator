@@ -18,12 +18,11 @@ load_dotenv(env_path)
 
 # OUTPUT CONFIGURATION
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
-SQL_DIR = os.path.join(OUTPUT_DIR, "sqls")
 PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
 REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
 
 # Validate/Create Directories
-for d in [OUTPUT_DIR, SQL_DIR, PERSONA_DIR, REPORTS_DIR]:
+for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
     if not os.path.exists(d):
         os.makedirs(d, exist_ok=True)
         # print(f"📁 Verified Folder: {d}") # Noise reduction
@@ -35,101 +34,48 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     """
     if excluded_names is None:
         excluded_names = []
-    # --- CONDITIONAL SQL LOGIC ---
-    # Syntax: "237" -> No SQL, "237-sql" -> Generate SQL
-    generate_sql = False
-    input_patient_id = patient_id # Store original patient_id for checking suffix
-    if input_patient_id.endswith("-sql"):
-        generate_sql = True
-        patient_id = input_patient_id[:-4] # Remove "-sql"
-    else:
-        patient_id = input_patient_id
         
-    print(f"🚀 Starting Workflow for Patient ID: {patient_id} (SQL Generation: {generate_sql})")
-
+    print(f"🚀 Starting Workflow for Patient ID: {patient_id}")
     print(f"\n📂 Loading Case Data for ID: {patient_id}...")
     case_data = data_loader.load_patient_case(patient_id)
     
     if not case_data:
         print(f"❌ Error: Patient ID '{patient_id}' not found in Excel Plan.")
         return
-
+    
     print(f"   ✅ Case Found: {case_data['procedure']} -> {case_data['outcome']}")
-
-    source_sql_path = data_loader.find_sql_file(patient_id)
-    if not source_sql_path:
-        # Fallback: Use a template if specific file missing
-        source_sql_path = data_loader.get_template_sql()
-        if source_sql_path:
-             print(f"   ⚠️  Notice: Source SQL missing. Using template: {os.path.basename(source_sql_path)}")
-        else:
-             print(f"❌ Error: No SQL file found for Patient {patient_id} and no template available.")
-             return
     
-    with open(source_sql_path, 'r') as f:
-        original_sql = f.read()
-    
-    # LOAD HISTORY
+    # 2. LOAD HISTORY
     history_txt = history_manager.get_history(patient_id)
     if history_txt:
         print(f"   📜 History Found: Loaded past context.")
-
-    # 4. Check Persistent DB for Consistency
+    
+    # 3. Check Persistent DB for Consistency
     existing_patient = patient_db.load_patient(patient_id)
     persona_context_prompt = ""
     if existing_patient:
         print(f"      🔄 Found Existing Patient Record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
-        persona_context_prompt = f"""
-        **IMMUTABLE PATIENT IDENTITY (FROM DATABASE):**
-        - Name: {existing_patient.get('first_name')} {existing_patient.get('last_name')}
-        - Gender: {existing_patient.get('gender', 'Unknown')}
-        - DOB: {existing_patient.get('dob', 'Unknown')}
-        - Address: {existing_patient.get('address', 'Unknown')}
-        - CORE PERSONA: {existing_patient.get('bio_narrative', 'N/A')[:200]}...
-        - **DO NOT CHANGE THESE DETAILS.**
-        """
-
-    # ... process ...
+    
     print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
-    schema = data_loader.get_db_schema()
-
+    
     try:
-        # Pass existing history + persona context
-        full_history = history_txt + "\n" + persona_context_prompt
-        
-        result, usage = ai_engine.modify_sql(original_sql, schema, case_data, feedback, full_history, existing_persona=existing_patient, excluded_names=excluded_names)
+        # Result is ClinicalDataPayload (no SQL)
+        result, usage = ai_engine.generate_clinical_data(
+            case_details=case_data, 
+            user_feedback=feedback, 
+            history_context=history_txt, 
+            existing_persona=existing_patient, 
+            excluded_names=excluded_names
+        )
         
         # SAVE HISTORY
         history_manager.append_history(patient_id, feedback, result.changes_summary)
-        
-        # Output SQL
-        # Output SQL (Conditional)
-        if generate_sql:
-            out_path = data_loader.save_sql(patient_id, result.updated_sql, output_folder=SQL_DIR)
-            print(f"   ✅ SQL Saved: {os.path.basename(out_path)}")
-        else:
-            print(f"   🚫 SQL Generation Skipped (Mode: No-SQL)")
         
         # GENERATE PDFs (Dynamic + Unique)
         print(f"   📄 Generating {len(result.documents)} Document(s)...")
 
         # === DOCUMENT COMPLIANCE ANALYSIS ===
-        print(f"   🔍 Analyzing Document Compliance ({len(result.documents)} docs)...")
-        all_valid = True
-        for doc in result.documents:
-            is_valid = validate_structure(doc.content)
-            if not is_valid:
-                print(f"      ⚠️ Document '{doc.doc_id}' is NOT AI-Friendly (Validation Failed).")
-                all_valid = False
-            else:
-                #print(f"      ✅ Document '{doc.doc_id}' is Compliant.")
-                pass
-        
-        if not all_valid:
-            print("   ⚠️ WARNING: Some documents violate strict schema rules. Review logs.")
-            # Optional: Logic to Auto-Retry could go here
-        else:
-            print("   ✅ All documents are AI-Friendly & Schema Compliant.")
+        # (Performed per-document during generation now)
 
         seen_titles = {}
         # 6. Save/Update Patient DB
@@ -208,6 +154,23 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             doc_identifier = f"DOC-{patient_id}-{seq_str}"
             final_filename_base = f"{doc_identifier}-{doc.title_hint}"
             
+            # === COMPLIANCE & REPAIR ===
+            is_valid, errors = validate_structure(doc.content)
+            if not is_valid:
+                print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
+                # Retry 1
+                doc.content = ai_engine.fix_document_content(doc.content, errors)
+                is_valid, errors = validate_structure(doc.content)
+                
+                if not is_valid:
+                     print(f"      ❌ Fix Failed. Marking as NAF (Not AI Friendly).")
+                     final_filename_base += "-NAF"
+                else:
+                     print(f"      ✅ AI Fixed the document.")
+            else:
+                pass 
+                # print(f"      ✅ Valid.")
+            
             # Create PDF with Metadata
             pdf_path = pdf_generator.create_patient_pdf(
                 patient_id=patient_id, 
@@ -273,13 +236,27 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         return None
 
 
+# OUTPUT CONFIGURATION
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
+PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
+REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
+
+# Validate/Create Directories
+for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
+    if not os.path.exists(d):
+        os.makedirs(d, exist_ok=True)
+
+# ... (process_patient_workflow is between these, but we are editing top and bottom params. 
+# Better to do separate chunks. I will do top chunk first. 
+# Wait, I cannot do multi-chunk with simple replace unless I use multi_replace.
+# I will use multi_replace logic by just making 2 calls or use multi_replace tool.
+# I'll use simple replace for the function `check_patient_sync_status` first.
+
 def check_patient_sync_status(patient_id: str) -> bool:
     """
     Verification Logic:
-    1. SQL Mode: If _final.sql exists, PDF count must match SQL INSERTs.
-    2. No-SQL Mode: If _final.sql missing, at least one PDF must exist.
+    Checks if documents exist for the patient.
     """
-    sql_path = f"sqls/{patient_id}_final.sql"
     doc_folder = f"documents/{patient_id}"
 
     # Smart Migration: Rename old summary if needed
@@ -289,9 +266,8 @@ def check_patient_sync_status(patient_id: str) -> bool:
     if os.path.exists(old_summary) and not os.path.exists(new_summary):
         try:
             os.rename(old_summary, new_summary)
-            print(f"   ✨ Migrated Summary for {patient_id}")
-        except Exception as e:
-            print(f"   ⚠️ Failed to migrate summary for {patient_id}: {e}")
+        except Exception:
+            pass
 
     # Check for Documents
     if not os.path.exists(doc_folder):
@@ -301,33 +277,10 @@ def check_patient_sync_status(patient_id: str) -> bool:
     # Exclude summary from count
     actual_count = len([f for f in pdf_files if "clinical_summary" not in f.lower()])
 
-    if not os.path.exists(sql_path):
-        # No-SQL Mode: Valid if we have generated documents
-        if actual_count > 0:
-            return True
-        else:
-            print(f"   ⚠️  No SQL and No Documents found for {patient_id}")
-            return False
-        
-    try:
-        # SQL Mode: Count Expected Docs from SQL
-        with open(sql_path, 'r') as f:
-            sql_content = f.read()
-            
-            # Robust Heuristic: Count INSERT statements for documents
-            # Case insensitive count of "INSERT INTO mockdata.document_reference_fhir"
-            expected_count = sql_content.lower().count("insert into mockdata.document_reference_fhir")
-
-        if expected_count > 0:
-            is_valid = actual_count >= expected_count
-            if not is_valid:
-                 print(f"   ⚠️  Sync Mismatch: SQL expects {expected_count} documents, but found {actual_count}.")
-            return is_valid
-        else:
-            return True # SQL exists but no docs inserted?
-            
-    except Exception as e:
-        print(f"Error checking sync for {patient_id}: {e}")
+    if actual_count > 0:
+        return True
+    else:
+        print(f"   ⚠️  No Documents found for {patient_id}")
         return False
 
 def main():
