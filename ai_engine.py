@@ -231,7 +231,7 @@ class PatientPersona(BaseModel):
     payer: PayerDetails = Field(..., description="Insurance/Payer details - MUST populate ALL fields including subscriber")
     
     # Narrative
-    bio_narrative: str = Field(..., description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
+    bio_narrative: Optional[str] = Field(default="", description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
 
 from doc_validator import format_clinical_document
 
