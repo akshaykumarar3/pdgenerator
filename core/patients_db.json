@@ -1,899 +1,14 @@
 {
-  "238": {
-    "first_name": "Hermione",
-    "last_name": "Granger",
-    "gender": "female",
-    "dob": "1979-09-19",
-    "address": "12 Grimmauld Place, London, UK",
-    "telecom": "555-238-0707",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Ron Weasley",
-      "telecom": "555-238-0708",
-      "address": "12 Grimmauld Place, London, UK",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2004-07-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Minerva McGonagall, MD",
-      "managingOrganization": "Hogwarts Medical Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Wizard Gold Plan",
-      "plan_type": "PPO",
-      "group_id": "GRP-23845",
-      "group_name": "Ministry of Magic Employees",
-      "member_id": "MBR-20250456",
-      "policy_number": "POL-2025-34716",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-238769",
-        "subscriber_name": "Hermione Granger",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1979-09-19",
-        "subscriber_address": "12 Grimmauld Place, London, UK"
-      }
-    },
-    "bio_narrative": "Hermione Granger lives a balanced life as both a professional advocate for magical law and a devoted family person. She is married to Ron Weasley, with whom she shares her advocacy for magical rights and well-being. Residing at the historic Grimmauld Place, she tirelessly bridges the gap between magical legislation and grassroots activism.\n\nHer past medical history notably includes mild anemia, which she manages through dietary intake enhancements. Clinically, she presents with a unique case of bone density reduction, significantly impacting her maxillofacial region, necessitating surgical intervention for stability. Her proactive approach to health and thorough commitment to follow-up care make her an exemplary patient within the Hogwarts Medical Clinic framework.\n\nSocially, she balances her demanding career with household responsibilities and community involvement. Hermione abstains from alcohol and tobacco, preferring a diet rich in nutrients aiding her medical condition. Regular physical activity is integral to her routine, providing stress relief and supporting her vigorous lifestyle.\n\nFamily history reveals no significant genetic predispositions to chronic diseases, with parents and siblings maintaining a stable health profile. Her clinical focus remains staunch on optimizing current conditions and advocating for improvements in magical health policies.\n\nApart from her professional endeavors, Hermione enjoys reading, engaging discussions, and preserving magical heritage, aligning personal and professional interests harmoniously."
-  },
-  "239": {
-    "first_name": "Aragorn",
-    "last_name": "Son of Arathorn",
-    "gender": "male",
-    "dob": "1982-03-01",
-    "address": "445 Kings Road, Rivendell",
-    "telecom": "555-023-9239",
-    "race": "Caucasian",
-    "height": "6 ft 2 in",
-    "weight": "210 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Arwen Undomiel",
-      "telecom": "555-024-9374",
-      "address": "456 Elven Path, Rivendell",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2005-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Elrond Halfelven",
-      "managingOrganization": "Rivendell Healing House"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Middle-earth Mutual",
-      "plan_name": "King's Choice PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-107",
-      "group_name": "Gondor Royal Services",
-      "member_id": "MBR-3920",
-      "policy_number": "POL-239-2025",
-      "effective_date": "2020-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "SUB-239",
-        "subscriber_name": "Aragorn Son of Arathorn",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1982-03-01",
-        "subscriber_address": "445 Kings Road, Rivendell"
-      }
-    },
-    "bio_narrative": "Aragorn Son of Arathorn, esteemed leader of Middle-earth, embodies resilience and vigor. As a direct descendant of the Dun\u00e9dain, he holds a legendary status among his people. Though frequently engaged in quests that push the bounds of endurance, recent cardiac symptoms have arisen, demanding medical scrutiny. Renowned for his historical achievements, Aragorn balances a life filled with responsibility and adventurous pursuit. Residing in the tranquil Rivendell, he cherishes the serenity and support from allies such as Elrond and his beloved Arwen. Amidst the weight of leadership and legacy, his journey towards sustained health is integral for both his personal well-being and the kingdom's future. Aragorn now emphasizes health initiatives to counter cardiovascular risks enhanced by familial predispositions and past lifestyle choices. His narrative exemplifies the narrative of courage intertwined with vigilance."
-  },
   "222": {
-    "first_name": "Ethan",
-    "last_name": "Hunt",
-    "gender": "male",
-    "dob": "1964-03-18",
-    "address": "Mission Impossible HQ, Washington, DC",
-    "telecom": "555-762-5555",
-    "race": "Caucasian",
-    "height": "6 ft 0 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "wife",
-      "name": "Julia Meade",
-      "telecom": "555-987-6543",
-      "address": "Mission Impossible HQ, Washington, DC",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2015-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Kittridge",
-      "managingOrganization": "Impossible Mission Force Medical"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Healthcare Alliance Inc.",
-      "plan_name": "Elite PPO",
-      "plan_type": "PPO",
-      "group_id": "G-IMF2025",
-      "group_name": "Impossible Mission Force",
-      "member_id": "IMF-19640318",
-      "policy_number": "POL-IMF2025",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "E103",
-        "subscriber_name": "Ethan Hunt",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1964-03-18",
-        "subscriber_address": "Mission Impossible HQ, Washington, DC"
-      }
-    },
-    "bio_narrative": "Ethan Hunt is an extraordinary individual whose life is dedicated to high-stakes missions that protect global security. Despite the physically demanding nature of his work, Ethan has maintained an exemplary health profile, although recent medical assessments indicate a shift in his renal function attributed to his rigorous lifestyle.\n\nAn overview of Ethan's social history reveals a spouse who, although outside the missions, provides crucial emotional stability. His living arrangement alternates between field missions and a secured residence at the Mission Impossible HQ. Ethan practices disciplined fitness routines and maintains a specialized diet crafted for endurance, though his travels and missions impose an irregular meal schedule.\n\nEthan has no familial predispositions to chronic illnesses but currently faces challenges stemming from his work-driven hypertension. This has exacerbated his CKD, demanding a more managed healthcare approach. Ethan\u2019s treatment plan involves transitioning to regular nephrology care while preparing for dialysis, as evidenced by his need for vascular access placement. His mission-driven mindset ensures disciplined adherence to proposed treatments.\n\nFrom a clinical standpoint, Ethan is committed to engaging with medical protocols to mitigate the progression of his kidney disease. His resilience in handling mission stressors reflects his ability to confront health challenges head-on, cooperating with his medical team to ensure optimal activity level maintenance."
-  },
-  "210": {
-    "first_name": "Meredith",
-    "last_name": "Grey",
+    "first_name": "Bellatrix",
+    "last_name": "Lestrange",
     "gender": "female",
-    "dob": "1983-09-03",
-    "address": "361 Kaplan Drive, Seattle, WA",
-    "telecom": "555-210-0210",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "145 lbs",
-    "maritalStatus": "Widowed",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Derek Shepherd",
-      "telecom": "555-210-0211",
-      "address": "361 Kaplan Drive, Seattle, WA",
-      "gender": "male",
-      "organization": "Family",
-      "period_start": "2005-02-27",
-      "period_end": "2015-04-23"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Miranda Bailey, MD",
-      "managingOrganization": "Grey Sloan Memorial Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Aetna",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GS78910",
-      "group_name": "Grey Sloan Memorial Hospital Employee Plan",
-      "member_id": "AETNA-MEMBER-8887766",
-      "policy_number": "POL-987654321",
-      "effective_date": "2018-07-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$40",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "AETNA-MEMBER-8887766",
-        "subscriber_name": "Meredith Grey",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1983-09-03",
-        "subscriber_address": "361 Kaplan Drive, Seattle, WA"
-      }
-    },
-    "bio_narrative": "Meredith Grey is a highly accomplished 40-year-old female, a renowned general surgeon, and the Chief of General Surgery at Grey Sloan Memorial Hospital. Her life is a constant balancing act between a demanding, high-stakes career and being a single mother. She is known for her resilience, intelligence, and deep-seated compassion, though she often presents with a stoic and pragmatic demeanor shaped by a challenging personal and professional life. \n\nCLINICAL HISTORY: The patient presents with a recent onset of intermittent, atypical chest pain over the last three months. The pain is described as a dull, non-exertional ache. This symptom is particularly concerning to her due to her stressful occupation and a family history of cardiac disease. Her primary care physician, Dr. Bailey, initiated a workup, including a referral to cardiology. The consulting cardiologist, Dr. Yang, noted the atypical nature of the symptoms but recommended a Myocardial Perfusion Imaging (SPECT) scan to definitively rule out an ischemic cause, given the patient's risk profile (hypertension, family history). Notably, preliminary diagnostic steps such as an ECG or a formal stress test were not performed prior to the advanced imaging request. Her chronic conditions include well-managed essential hypertension and recently noted dyslipidemia. She is diligent with her medication regimen. The current prior authorization request is for the SPECT scan intended to investigate these unresolved chest pain symptoms."
-  },
-  "211": {
-    "first_name": "Daenerys",
-    "last_name": "Targaryen",
-    "gender": "female",
-    "dob": "1989-12-12",
-    "address": "456 Dragonstone Plaza",
-    "telecom": "555-111-0199",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "friend",
-      "name": "Missandei",
-      "telecom": "555-222-3344",
-      "address": "891 Maester Ave",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2025-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Maester Mormont",
-      "managingOrganization": "Dragonstone Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Unicorn Health Plan",
-      "plan_name": "Platinum Elite",
-      "plan_type": "PPO",
-      "group_id": "GRP15029",
-      "group_name": "House Targaryen",
-      "member_id": "MBR569874123",
-      "policy_number": "POL578945632",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB123456789",
-        "subscriber_name": "Daenerys Targaryen",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1989-12-12",
-        "subscriber_address": "456 Dragonstone Plaza"
-      }
-    },
-    "bio_narrative": "Daenerys Targaryen, known as the Dragon Queen, resides in the illustrious Dragonstone, a bastion of history and power. As the legitimate ruler of her realm, she navigates the complexities of leadership with a keen intellect, fueled by a vision for prosperity and peace. Despite a lineage shadowed by cardiac maladies, her personal commitment to health and wellness shines through mindful practices.\n\nClinically, Daenerys has been gripped by episodic chest pain over recent weeks, juxtaposed against the backcloth of her demanding role. These episodes, mild yet disconcerting, necessitated a thorough cardiac review owing to family history. Fortunately, her evaluations, including a baseline ECG and follow-up stress echocardiogram, reveal reassuring heart health, casting alleviating light upon her concerns.\n\nSocially, Daenerys thrives amidst her council, advocating reforms and upholding justice. Her household reflects an admirable blend of tradition and modernity, fostering loyalty and respect among allies.\n\nShe embarks on a regimen of cardiovascular health, encapsulated by routine fitness and pharmacological support, involving Amlodipine and Metformin for allied conditions. Her diet remains a watchful orchestration of balanced nutrition, mindful of her family history and current clinical assessments.\n\nHer support system, symbolized by close alliances with confidantes like Missandei, aids in the diffusion of leadership-induced stress, nurturing her mental and emotional resilience. The Dragon Queen's health trajectory embodies a holistic paradigm, balancing regal duties with nurturing self-care, ensuring a bright and continued reign."
-  },
-  "212": {
-    "first_name": "Ross",
-    "last_name": "Geller",
-    "gender": "male",
-    "dob": "1967-10-18",
-    "address": "495 Grove St. Apt. 19, New York, NY",
-    "telecom": "555-212-6789",
-    "race": "Caucasian",
-    "height": "6 ft 1 in",
-    "weight": "192 lbs",
-    "maritalStatus": "Divorced",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "sibling",
-      "name": "Monica Geller",
-      "telecom": "555-212-6790",
-      "address": "495 Grove St. Apt. 20, New York, NY",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1998-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. David Becker, MD",
-      "managingOrganization": "General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-123456",
-      "group_name": "City of New York",
-      "member_id": "MBR-6789012345",
-      "policy_number": "POL-2025-ABC123",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-210987",
-        "subscriber_name": "Ross Geller",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1967-10-18",
-        "subscriber_address": "495 Grove St. Apt. 19, New York, NY"
-      }
-    },
-    "bio_narrative": "Ross Geller is a 57-year-old paleontologist residing in New York City, known for his scholarly work in academia and his passion for paleontology. Leading a busy academic life, Ross balances his professional responsibilities with his familial ties, particularly with his sister Monica, who lives in the same residential building. Despite his demanding career, Ross is dedicated to maintaining close family connections, often gathering with friends and family in the city.\n\nRoss has been experiencing increasing episodes of fatigue and mild chest discomfort over the past month, which culminated in a decision to seek medical evaluation after persistent symptoms, especially under physical exertion. As a single man, he emphasizes the importance of staying fit and engaged in active routines; however, recent health challenges have caused him to slow down his pace.\n\nDespite a history of being relatively healthy, Ross has occasional stress-related health issues driven by his hectic lifestyle and significant academic responsibilities. He maintains a regular exercise routine to manage stress and sustain his overall wellness. However, these recent cardiovascular symptoms hint at underlying conditions potentially related to his family history, including his father\u2019s early cardiac events. \n\nClinically, Ross's condition denotes a moderate risk factor profile for coronary artery disease, primarily due to elevated cholesterol levels and the suspicion of a coronary anomaly identified in recent imaging. A structured plan emphasizing pharmacologic management\u2014such as statins\u2014and lifestyle modifications, including dietary changes and regulated physical activity, form the critical components of his treatment strategy. Additionally, a comprehensive follow-up with advanced imaging modalities has been proposed, aiming to delineate his cardiac anatomy and inform appropriate management approaches.\n\nRoss continues to take an active role in his health, prioritizing regular check-ups and adhering closely to medical advice, reflecting his commitment to maintaining peak wellness amidst the challenges posed by his personal and professional life."
-  },
-  "213": {
-    "first_name": "Gustavo",
-    "last_name": "Fring",
-    "gender": "male",
-    "dob": "1960-07-07",
-    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "telecom": "505-555-6948",
-    "race": "Hispanic",
-    "height": "5 ft 11 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Widowed",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "friend",
-      "name": "Lydia Rodarte-Quayle",
-      "telecom": "505-555-3322",
-      "address": "505 Park Avenue, Albuquerque, NM",
-      "gender": "female",
-      "organization": "Madrigal Electromotive",
-      "period_start": "2010-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jerome Adams, MD",
-      "managingOrganization": "Albuquerque Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-28750",
-      "group_name": "Los Pollos Hermanos Inc.",
-      "member_id": "MBR-65198742",
-      "policy_number": "POL-2025-332198",
-      "effective_date": "2020-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-65198742",
-        "subscriber_name": "Gustavo Fring",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1960-07-07",
-        "subscriber_address": "308 Negra Arroyo Lane, Albuquerque, NM"
-      }
-    },
-    "bio_narrative": "Gustavo Fring is a 64-year-old man hailing from the bustling city of Albuquerque, NM. As a prominent businessman, he heads a successful chain of eateries and is well-regarded in his community both for his entrepreneurial skills and his philanthropic ventures. Despite the demands of his professional life, Gustavo maintains a disciplined approach to his personal health. He is diligent about regular health check-ups and adheres to a healthy diet, supplemented by moderate exercise. His lifestyle is largely stress-induced owing to business, yet he strives to manage it with relaxation techniques and periodic vacations.\\n\\nGustavo's medical history includes well-controlled hypertension managed by daily medication. He has remained free from any major illnesses, including cardiac diseases which are prevalent in his family history. Despite this, recent months have seen occurrences of chest pain during strenuous physical activity\u2014an unsettling symptom given his father's and mother's early myocardial infarctions. This warranted a thorough cardiological evaluation.\\n\\nSocially, Gustavo is widowed and cherishes memories of his late wife. He enjoys a close-knit circle of friends but prefers a quiet personal life. His primary leisure pursuits include reading, classical music, and culinary explorations. His professional ties blend closely with his social interests, aligning philanthropic endeavours with community betterment initiatives.\\n\\nHe is advised to keep up regular consultations with his healthcare provider to monitor his heart health proactively. His general optimism and proactive measures contribute greatly to his continued well-being."
-  },
-  "214": {
-    "first_name": "Leslie",
-    "last_name": "Knope",
-    "gender": "female",
-    "dob": "1985-11-17",
-    "address": "123 Main Street, Pawnee, IN",
-    "telecom": "555-123-4567",
-    "race": "Caucasian",
-    "height": "5 ft 4 in",
-    "weight": "160 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "spouse",
-      "name": "Ben Wyatt",
-      "telecom": "555-890-1234",
-      "address": "123 Main Street, Pawnee, IN",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2022-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Alicia Jones, MD",
-      "managingOrganization": "Pawnee General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "City of Pawnee",
-      "member_id": "MBR-987654321",
-      "policy_number": "POL-2025-000214",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-214",
-        "subscriber_name": "Leslie Knope",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1985-11-17",
-        "subscriber_address": "123 Main Street, Pawnee, IN"
-      }
-    },
-    "bio_narrative": "Leslie Knope, a 39-year-old devoted public servant, resides in the heart of Pawnee, Indiana, with her husband, Ben Wyatt. Known for her diligence and optimism, Leslie has made significant contributions to her community, often juggling her role as a civil servant with her health challenges. Recently, she has been dealing with progressive heart failure due to dilated cardiomyopathy, diagnosed several months ago.\n\nLeslie's health journey began with sporadic episodes of fatigue and shortness of breath, initially dismissed in light of her hectic lifestyle and dedication to public duties. However, as these episodes grew increasingly frequent and bothersome, characterized by breathlessness and persistent coughs disrupting her sleep, Leslie consulted her primary care physician, Dr. Alicia Jones, at Pawnee General Hospital.\n\nDr. Jones's examination revealed signs of heart failure, and subsequent diagnostic tests confirmed dilated cardiomyopathy with a reduced ejection fraction, necessitating a tailored cardiology treatment approach. Despite these challenges, Leslie remains committed to her work, albeit with more conscious health management and regular medical follow-ups.\n\nLeslie's support network includes her husband, Ben, who plays a key role in her healthcare journey. The couple frequently discusses health decisions together, underscoring teamwork both personally and professionally. Leslie actively engages in her treatment plan, taking prescribed medications Valsartan, Metoprolol, and Spironolactone, aimed at managing her cardiac function and mitigating heart failure symptoms.\n\nSocially, Leslie maintains a vibrant engagement with her community activities, often balancing her healthcare responsibilities with public duties and advocacy. Her resilient spirit and proactive attitude continue to empower her management of heart health, fostering an encouraging outlook for living a full and impactful life despite the underlying cardiac condition."
-  },
-  "215": {
-    "first_name": "Sheldon",
-    "last_name": "Cooper",
-    "gender": "male",
-    "dob": "1980-03-24",
-    "address": "2311 North Los Robles Avenue, Pasadena, CA",
-    "telecom": "626-555-7870",
-    "race": "Caucasian",
-    "height": "6 ft 2 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Leonard Hofstadter",
-      "telecom": "626-555-9724",
-      "address": "2311 North Los Robles Avenue, Pasadena, CA",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2007-09-24",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Beverly Hofstadter, PhD",
-      "managingOrganization": "California Institute of Technology"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Premium Gold Plan",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Physics League of America",
-      "member_id": "MBR-215456789",
-      "policy_number": "POL-2025-215000",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-215123456",
-        "subscriber_name": "Sheldon Cooper",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1980-03-24",
-        "subscriber_address": "2311 North Los Robles Avenue, Pasadena, CA"
-      }
-    },
-    "bio_narrative": "Sheldon Cooper, a theoretical physicist with a sharp intellect, hails from a fictional realm where his daily life is intertwined with the nuances of scientific exploration and quirky social encounters. Despite a keen awareness of theoretical hypotheses, he finds himself confronting the realities of health challenges including dilated cardiomyopathy.\\n\\nFrom childhood, Sheldon displayed an unparalleled aptitude for learning, often outpacing his peers with insightful logic. Throughout his academic pursuit, he became engrossed in quantum mechanics, a fascination that transcended into his professional career at the prestigious California Institute of Technology. In addition to his academic achievements, he is known for his fastidious adherence to routine, valuing structure in both his personal and professional life.\\n\\nLiving alone in Pasadena, California, Sheldon leads a relatively sedentary lifestyle apart from regular debates with his close circle of friends. His social world comprises intellectual discussions and activities slated around astrophysics and his token to personal reflection \u2013 comic book collections. Non-alcoholic and averse to smoking, his indulgences are often food-based, enjoying take-out meals or homemade dishes that reflect his Southern roots.\\n\\nUnfortunately, his clinical journey presents a contrasting storyline. His struggle with cardiomyopathy jeopardizes his rigid lifestyle, leading to adjustments in his routine aimed at integrating therapeutic practices to manage symptoms. Recently, episodes of breathlessness compelled Sheldon to seek intervention. Socially awkward in most clinical settings, he approaches his health logically, remaining committed to treatment protocols.\\n\\nAmidst these challenges, Sheldon navigates his multifaceted identity with intellectual might and resilience, manifesting a digital persona that mirrors the compassion and care infused by his support network. His eccentric yet endearing nature reflects not only in his academic brilliance but also in his determined approach to maintain equilibrium in health and life."
-  },
-  "216": {
-    "first_name": "Caroline",
-    "last_name": "Channing",
-    "gender": "female",
-    "dob": "1985-03-20",
-    "address": "Brooklyn, NY",
-    "telecom": "718-555-0176",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "140 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "en-US",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "next of kin",
-      "name": "Max Black",
-      "telecom": "718-555-0175",
-      "address": "Brooklyn, NY",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Green",
-      "managingOrganization": "Williamsburg Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Aetna",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-23456",
-      "group_name": "Williamsburg LCC",
-      "member_id": "MBR-987654321",
-      "policy_number": "POL-2025-002345",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-2025-001",
-        "subscriber_name": "Caroline Channing",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1985-03-20",
-        "subscriber_address": "Brooklyn, NY"
-      }
-    },
-    "bio_narrative": "Caroline Channing is a vibrant and exuberantly independent woman residing in Brooklyn, New York. Born on March 20, 1985, she grew up with a strong sense of creativity and entrepreneurship, fostering a dream of making a mark with her flavorful cupcake business. Despite a rigorous work schedule, Caroline remains dedicated to maintaining her health, which has become a notable priority following her diagnosis of hypertension nearly two years ago. \n\nHealthwise, Caroline\u2019s journey began when recurrent headaches led to a primary care visit that identified high blood pressure readings. Her physician, Dr. Green, advised comprehensive lifestyle changes alongside pharmacological interventions, including Lisinopril and, initially, Atenolol, which was later phased out due to controlled blood pressure and minor side effects. Caroline\u2019s journey with Metformin continues as a preventive approach towards maintaining glucose levels within a healthy range, alongside her balanced diet.\n\nCaroline\u2019s commitment to a heart-healthy lifestyle is evident as she participates in community yoga sessions, often taking early morning walks through Prospect Park. Her single status has afforded her the independence to choose an active lifestyle and engage in various social circles; yet, she often finds solace in the creative aspects of her work, drawing patterns of cake designs or attending culinary workshops. She shares her living space with her closest friend, Max Black, who is often her confidante and supportive ally in life\u2019s ventures.\n\nFamily history shows a lineage marked by hypertension and cardiovascular challenges on her paternal side; this concern propels Caroline to proactively manage her condition, adhering strictly to doctor\u2019s advice and consistent monitoring. Caroline recognizes the importance of regular health check-ups and openly communicates any discomfort she experiences. Recently, she has been specifically focused on reducing work-induced stress, understanding its impact on her hypertensive status, while using meditation and creative outlets as stress-relief mechanisms. \n\nCaroline\u2019s outlook on health and wellness is aspirational; she maintains a proactive role in her healthcare decisions, learning continuously from her medical consultations and adjusting her lifestyle accordingly. Her relationship with Dr. Green, underscored by mutual trust and aligned health objectives, fortifies her confidence in navigating the complexities of adult life with a standardized approach to wellbeing. Caroline remains steadfast in her mission to achieve a sustained state of health, setting an example, and inspiring those in her community, and beyond, to prioritize health through a mindful and balanced lifestyle."
-  },
-  "217": {
-    "first_name": "Carmela",
-    "last_name": "Soprano",
-    "gender": "female",
-    "dob": "1963-03-29",
-    "address": "742 Evergreen Terrace, Newark, NJ",
-    "telecom": "555-217-0000",
-    "race": "Caucasian",
-    "height": "5 ft 4 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Tony Soprano",
-      "telecom": "555-211-1111",
-      "address": "742 Evergreen Terrace, Newark, NJ",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "1980-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Melfi, MD",
-      "managingOrganization": "Newark Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Silver PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-21711",
-      "group_name": "Bada Bing, Corp",
-      "member_id": "MBR-2174321",
-      "policy_number": "POL-217-4321",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-217654",
-        "subscriber_name": "Carmela Soprano",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1963-03-29",
-        "subscriber_address": "742 Evergreen Terrace, Newark, NJ"
-      }
-    },
-    "bio_narrative": "Carmela Soprano is a 62-year-old woman with a rich personal and family history deeply rooted in Newark, New Jersey. As an influential matriarch known for her strong-willed character, she has managed significant personal stressors throughout her life without losing her composure. She balances her role as a homemaker with various voluntary activities and takes keen interest in her children's well-being and futures. Her marriage to Tony Soprano is notably complex, sprinkled with both affection and strife, which at times influences her psychological state.\n\nIn terms of her health, Carmela has been navigating chronic conditions, primarily focusing on hypertension diagnosed in 2018. Despite being relatively new to pharmacologic treatments, she adheres to her medications and continually engages in discussions with her healthcare provider, Dr. Melfi, regarding lifestyle modifications.\n\nSocially, Carmela is interwoven within her community through various charity events and local gatherings. She is often noted for her culinary expertise, especially her traditional Italian dishes. Despite her social engagements, she practices moderation in her alcohol consumption, treating special occasions with a toast of wine.\n\nHer recent health challenges have centered on cardiovascular health, culminating in an 80% stenosis finding, prompting an active re-evaluation of her therapeutic plan. Her medical journey continues under the vigilant guidance of Dr. Melfi, as they aim to improve her cardiovascular outcomes while maintaining her quality of life."
-  },
-  "218": {
-    "first_name": "Frodo",
-    "last_name": "Baggins",
-    "gender": "male",
-    "dob": "1987-03-25",
-    "address": "12 Bag End, Hobbiton, Shire",
-    "telecom": "555-102-0018",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Bilbo Baggins",
-      "telecom": "555-204-3210",
-      "address": "12 Bag End, Hobbiton, Shire",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2005-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Gandalf Grey, MD",
-      "managingOrganization": "Shire Health Network"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Middle Earth Insurance",
-      "plan_name": "Shire Health Plan",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Bag End Enterprises",
-      "member_id": "MBR-67584932",
-      "policy_number": "POL-987654321",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-001",
-        "subscriber_name": "Frodo Baggins",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1987-03-25",
-        "subscriber_address": "12 Bag End, Hobbiton, Shire"
-      }
-    },
-    "bio_narrative": "Frodo Baggins resides in the serene setting of the Shire, a place of peaceful meadows and friendly faces. As he lives in Hobbiton, Frodo leads a largely tranquil life focused on horticulture and the pleasures of good food and company. However, his health regime took a serious turn when he began experiencing recurring chest pain during physical exertions, such as walking uphill to visit friends or carrying gardening supplies in the fields adjacent to his home.\n\nMedically, Frodo is in a relatively good state for someone of his age, but these occasional episodes have prompted him to seek medical advice. Despite a family history of cardiovascular issues on his father's side, Frodo has never had hypertension or other related conditions diagnosed previously. His current lifestyle includes a high intake of vegetables as part of his diet, walks at mild paces around Hobbiton, and reading in leisure time.\n\nSocially, Frodo is profoundly rooted in his community, known for sharing stories. He maintains strong bonds with his uncle, Bilbo Baggins, who has been a guardian figure. While he relishes solitude, his open doors policy means friends and relatives drop by frequently. This sociable lifestyle provides Frodo with ample mental stimulation and emotional support to buffer the sporadic stressors of his health concerns.\n\nAs per his medical regimen, Frodo has commenced a course of Metoprolol for managing symptoms potentially related to angina, together with Amlodipine and a low-dose Aspirin for its preventative benefits. His medical consultation with Dr. Gandalf Grey was engaging, and he plans to adhere strictly to the prescribed plan, including an upcoming echocardiogram to explore the extent of his cardiovascular state more thoroughly. Fortunately, his health insurance under Middle Earth Insurance covers most of his care, allowing Frodo to focus on his well-being without excessive financial worry.\n\nThe Shire Health Network, where he receives care, is noted for its thoughtful approach to Hobbit health, with special attention given to balancing conventional medicine with the essence of holistic Hobbiton living. Dr. Gandalf Grey, trusted for his wisdom beyond standard medical knowledge, remains the anchor for Frodo's health journey, recommending subtle lifestyle adjustments tailored to fit seamlessly with the vibrant pulse of life in Hobbiton. Frodo's path forward involves reassessing physical exertions and ensuring that potential triggers for stress are meticulously minimized so his comfort in the Shire remains harmonious."
-  },
-  "219": {
-    "first_name": "Minerva",
-    "last_name": "McGonagall",
-    "gender": "female",
-    "dob": "1925-10-04",
-    "address": "Hogwarts Castle, 420 High St, Little Whinging, Surrey, UK",
-    "telecom": "555-591-1945",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Widowed",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Albus Dumbledore",
-      "telecom": "555-555-1234",
-      "address": "Hogwarts Castle, Headmaster Wing, Surrey, UK",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "1920-09-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Poppy Pomfrey",
-      "managingOrganization": "Hogwarts Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Wizarding Health Services",
-      "plan_name": "Elder Gold",
-      "plan_type": "PPO",
-      "group_id": "GRP-93765",
-      "group_name": "Ministry of Magic",
-      "member_id": "MBR-006543210",
-      "policy_number": "POL-2025-65342",
-      "effective_date": "2010-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$10",
-      "deductible_amount": "$100",
-      "subscriber": {
-        "subscriber_id": "SUB-219",
-        "subscriber_name": "Minerva McGonagall",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1925-10-04",
-        "subscriber_address": "Hogwarts Castle, 420 High St, Little Whinging, Surrey, UK"
-      }
-    },
-    "bio_narrative": "Minerva McGonagall is a well-respected witch and former headmistress of Hogwarts School of Witchcraft and Wizardry, currently retired but serves as an advisor. Her life has been profoundly intertwined with magical education and the defense of wizarding values, contributing to her notoriety both within and outside magical circles. \n\nMedically, Minerva has been managing hypertension and occasional atrial fibrillation effectively with medication. Her resilience is notable given her age, but recent symptoms aligned with advancing age include mild fatigue and breathlessness on exertion. The murmur heard during a routine exam warrants further investigation given her age and history of controlled cardiovascular conditions.\n\nSocially, Minerva continues to engage in scholarly activities and mentoring roles, though less frequent than before. Residing at Hogwarts, she remains a figurative cornerstone of the school, often sought after for guidance. Her lifestyle reflects a balance between mental engagement and relaxation, though recent health evaluations suggest minor dietary adjustments to bolster overall well-being.\n\nHer family history is consistent with concerns typical for advanced age, including cardiovascular changes and nutritional vigilance to maintain her independent and enriching lifestyle."
-  },
-  "220": {
-    "first_name": "Gregory",
-    "last_name": "House",
-    "gender": "male",
-    "dob": "1959-06-11",
-    "address": "101 Princeton-Plainsboro Rd, Plainsboro Township, NJ, 08536",
-    "telecom": "609-555-0199",
-    "race": "Caucasian",
-    "height": "6 ft 1 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "James Wilson",
-      "telecom": "609-555-0123",
-      "address": "101 Princeton-Plainsboro Road, Plainsboro, NJ 08536",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Lisa Cuddy, MD",
-      "managingOrganization": "Princeton-Plainsboro Teaching Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "Stark Industries",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-001234",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "SUB-2025-001",
-        "subscriber_name": "Gregory House",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1959-06-11",
-        "subscriber_address": "101 Princeton-Plainsboro Rd, Plainsboro Township, NJ, 08536"
-      }
-    },
-    "bio_narrative": "Gregory House is a renowned diagnostician known for his unconventional approaches and brilliant problem-solving skills. He lives and works in Plainsboro, New Jersey, where he leads a team at Princeton-Plainsboro Teaching Hospital. Despite being highly respected professionally, House leads a rather solitary personal life, largely due to his abrasive personality and coping mechanisms developed during years of chronic pain management.\n\nHouse has a complex medical history marked by chronic kidney issues arising from lupus nephritis. This underlying condition has slowly progressed to End Stage Renal Disease (ESRD). He follows a rigorous medication regimen to manage blood pressure and mitigate renal function decline. Despite his medical challenges, House has maintained a consistent work routine, valuing his cerebral pursuits above physical comfort.\n\nSocially, House is known to rely on a few close colleagues for interaction. Dr. James Wilson, an oncologist, is his closest friend, often serving as a nuanced voice of reason and support in House's life, both personally and professionally.\n\nHis dietary habits have been adjusted to accommodate his renal health, emphasizing low sodium intake. House is known to partake in minimal physical exercise due to leg pain but compensates with mental resilience and sharp wit that he employs both in diagnosis and in life.\n\nFamily history is significant for autoimmune disorders and cardiovascular diseases, necessitating regular consultations and updates to his care plans. House's lifestyle, marked by introspection and a peculiar sense of humor, complements his dedication to his medical practice, often innovating in intense clinical pathologies.\n\nDespite his personal and professional complexities, House is driven by an insatiable curiosity for medical mysteries, which sustains his notable legacy as one of the sharpest minds in medicine."
-  },
-  "221": {
-    "first_name": "April",
-    "last_name": "Ludgate",
-    "gender": "female",
-    "dob": "1990-03-31",
-    "address": "640 Main St, Pawnee, IN",
+    "dob": "1975-12-06",
+    "address": "12 Grimmauld Place, London, UK",
     "telecom": "555-987-6543",
     "race": "Caucasian",
-    "height": "5 ft 4 in",
+    "height": "5 ft 6 in",
     "weight": "130 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Andy Dwyer",
-      "telecom": "555-123-4567",
-      "address": "640 Main St, Pawnee, IN",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2012-04-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Leslie Knope",
-      "managingOrganization": "Pawnee Family Practice"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Anthem Blue Cross",
-      "plan_name": "Premier PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-PAWNEE-001",
-      "group_name": "City of Pawnee",
-      "member_id": "MBR-221-3214",
-      "policy_number": "POL-2025-04221",
-      "effective_date": "2020-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "SUB-221-3214",
-        "subscriber_name": "April Ludgate",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1990-03-31",
-        "subscriber_address": "640 Main St, Pawnee, IN"
-      }
-    },
-    "bio_narrative": "April Ludgate is a well-known character in the town of Pawnee, Indiana. She is admired for her quirky personality and dry sense of humor. As a key figure at the Pawnee Parks and Recreation Department, April embraces her role while balancing her personal life with her husband, Andy Dwyer. April has a deep connection with animals, reflected in her work and home life, where she cares for several pets.\n\nRecently, April began experiencing pain in her right knee, which has impacted her active lifestyle, including her participation in community Frisbee games and outdoor concerts. Known for her reluctance to show weakness, April initially ignored the pain until it began interfering with her daily activities. Her decision to seek medical attention showcases her pragmatic side, focused on regaining mobility and comfort.\n\nApril's medical history is relatively unremarkable apart from occasional allergy issues, for which she takes loratadine as needed. Her only significant surgery was an appendectomy in her twenties, from which she recovered without complications.\n\nSocially, April is very vocal about her disdain for superficial interactions yet remains fiercely loyal to her close friends. She has an unorthodox approach to life, emphasizing authenticity and straightforwardness. This has earned her respect and affection from those who appreciate her candidness.\n\nWith a family history of cardiovascular issues, including high cholesterol and hypertension, April is conscious of maintaining a balanced diet and staying physically active, though she enjoys indulging in Pawnee's famous waffles. Her current focus is on recovering from her knee procedure to return fully to her active routine."
-  },
-  "223": {
-    "first_name": "Ron",
-    "last_name": "Swanson",
-    "gender": "male",
-    "dob": "1960-05-06",
-    "address": "604 Pawnee Ln, Pawnee, IN",
-    "telecom": "555-223-1234",
-    "race": "Caucasian",
-    "height": "6 ft",
-    "weight": "225 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -903,254 +18,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
-      "name": "Leslie Knope",
-      "telecom": "555-987-6543",
-      "address": "750 E 9th Street, Pawnee, IN",
+      "relationship": "Emergency Contact",
+      "name": "Narcissa Black",
+      "telecom": "555-765-4321",
+      "address": "12 Grimmauld Place, London, UK",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2015-01-01",
+      "period_start": "2025-05-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. James Levine, MD",
-      "managingOrganization": "Pawnee General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Platinum Supplemental",
-      "plan_type": "PPO",
-      "group_id": "GRP-22345",
-      "group_name": "Pawnee Parks Department",
-      "member_id": "MBR-223567",
-      "policy_number": "POL-2025-02223",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-602236",
-        "subscriber_name": "Ron Swanson",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1960-05-06",
-        "subscriber_address": "604 Pawnee Ln, Pawnee, IN"
-      }
-    },
-    "bio_narrative": "Ron Swanson is a 65-year-old gentleman residing at 604 Pawnee Ln, Pawnee, IN. Known for his no-nonsense attitude and love for woodworking, Ron has been methodically dealing with his medical conditions just as he tackles a good piece of lumber. Presently, he's managing End Stage Renal Disease (ESRD) due to long-standing hypertension.\n\nHistorically, Ron has been averse to healthcare but his dedication to routine has ensured his compliance with tri-weekly hemodialysis sessions. His condition has demanded close management of dietary intake to sustain a stable biochemical milieu. Ron's solid approach to life reflects in his commitment to stay informed about his condition, despite a notorious disinterest in modern innovations like electronic health records.\n\nSocially, Ron resides alone, though he maintains a robust support network through his colleagues at the Parks and Recreation Department. His day-to-day regimen includes careful attention to not only his dietary plans provided by healthcare nutritionists but also maintaining his physical activity to the degree tolerated.\n\nClinically, Ron\u2019s primary challenge remains the balancing act of adhering to a restrictive diet whilst maintaining his energy levels. His modest enjoyment of foods typically not recommended for kidney patients is countered with regular consultation with nephrologists. His medical regimen includes Epoetin alfa and cinacalcet to manage anemia and secondary hyperparathyroidism-related to his ESRD, as well as access optimization planned through surgical interventions. The nephrology team remains vigilant in ensuring he receives timely interventions to maintain his current quality of life."
-  },
-  "224": {
-    "first_name": "Jesse",
-    "last_name": "Pinkman",
-    "gender": "male",
-    "dob": "1984-09-24",
-    "address": "9809 Margo Street, Albuquerque, NM 87109",
-    "telecom": "505-555-0199",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Mother",
-      "name": "Jane Margolis",
-      "telecom": "505-555-0198",
-      "address": "123 Margo Street, Albuquerque, NM 87109",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2010-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Hugo Archuleta, MD",
-      "managingOrganization": "Albuquerque General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "Stark Industries",
-      "member_id": "MBR-2241234",
-      "policy_number": "POL-2025-224",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-5678",
-        "subscriber_name": "Jane Margolis",
-        "subscriber_relationship": "Mother",
-        "subscriber_dob": "1960-05-15",
-        "subscriber_address": "123 Margo Street, Albuquerque, NM 87109"
-      }
-    },
-    "bio_narrative": "Jesse Pinkman is a 40-year-old male born and raised in Albuquerque, New Mexico. He has a history of substance use which he overcame with the help of rehabilitation. Now, Jesse is a resilient individual dedicated to maintaining his health despite significant medical challenges. Diagnosed with end-stage renal disease (ESRD) at 35 due to uncontrolled hypertension, he has been on hemodialysis ever since.\n\nJesse's life has been tumultuous, but he has managed to regain control through structured support and a strict routine. He lives alone but remains close to his mother, who provides a strong support network. Jesse's daily life revolves around his dialysis schedule and ongoing medical appointments. He is diligent with his health management, adheres to dietary restrictions, and actively participates in treatment planning.\n\nSocially, Jesse has distanced himself from former negative influences, focusing on sobriety and self-improvement. Therapy sessions and regular contact with patient support groups have been integral to his stability. This change in lifestyle has facilitated a clear mindset and strengthened resolve to pursue a kidney transplant.\n\nFamily history indicates some hereditary conditions including hypertension and diabetes prevalent among immediate relatives. Jesse is determined to break this cycle and improve his quality of life through the transplant process. His provider network, led by Dr. Hugo Archuleta at Albuquerque General Hospital, is comprehensive, reflecting his complex medical needs. Together, they aim to secure Jesse's future health and well-being, embarking on the path toward successful renal transplantation."
-  },
-  "225": {
-    "first_name": "Luke",
-    "last_name": "Skywalker",
-    "gender": "male",
-    "dob": "1977-05-25",
-    "address": "123 Tatooine Way",
-    "telecom": "555-1980",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "160 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Uncle",
-      "name": "Owen Lars",
-      "telecom": "555-000-1234",
-      "address": "123 Tatooine Way",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2022-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Leia Organa, MD",
-      "managingOrganization": "Rebel Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Rebel Health Insurance",
-      "plan_name": "Rebel PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-56789",
-      "group_name": "Rebel Alliance",
-      "member_id": "MBR-2258901",
-      "policy_number": "POL-2025-67890",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-225",
-        "subscriber_name": "Luke Skywalker",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1977-05-25",
-        "subscriber_address": "123 Tatooine Way"
-      }
-    },
-    "bio_narrative": "Luke Skywalker is a resilient individual known for his adventurous spirit. Having been raised on the remote planet of Tatooine, he grew up learning the intricacies of survival in harsh conditions. Despite such hardship, he embarked on a career as a pilot, which became both his passion and profession. He now lives a quieter life at 123 Tatooine Way.\n\nOver the recent years, Luke transitioned to dealing with chronic health issues, specifically battling end-stage renal disease (ESRD) caused by hypertensive nephrosclerosis. Despite this, his persistent nature has kept him actively pursuing activities that include engineering droid innovations and piloting simulations.\n\nSocially, Luke is well-connected within his community of former colleagues and maintains strong communication lines with his caretaker, Uncle Owen Lars.\n\nClinically, Luke's journey with ESRD has been rigorous. He follows a strict dialysis schedule, accompanied by a specialized diet plan to manage fluid and electrolyte balance. His nephrologist, Dr. Leia Organa, has been pivotal in his care plan, guiding him through multiple health challenges effectively.\n\nA determined figure, Luke now positions himself for a future transplant, with the Rebel Medical Center's comprehensive plan paving his path to recovery. This medical quest aligns with his personal drive to conquer the odds, reestablishing his health for the years to come."
-  },
-  "226": {
-    "first_name": "Anthony",
-    "last_name": "Soprano",
-    "gender": "male",
-    "dob": "1959-08-22",
-    "address": "23 Burns Ave, North Caldwell, NJ",
-    "telecom": "555-555-2266",
-    "race": "Caucasian",
-    "height": "5 ft 10 in",
-    "weight": "240 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "spouse",
-      "name": "Carmela Soprano",
-      "telecom": "555-555-1111",
-      "address": "23 Burns Ave, North Caldwell, NJ",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1992-06-10",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jennifer Melfi, MD",
-      "managingOrganization": "St. Mary's General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Platinum PPO",
-      "plan_type": "PPO",
-      "group_id": "SOP-01",
-      "group_name": "Soprano Associates",
-      "member_id": "MBR-226",
-      "policy_number": "POL-2025-226001",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-2260",
-        "subscriber_name": "Anthony Soprano",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1959-08-22",
-        "subscriber_address": "23 Burns Ave, North Caldwell, NJ"
-      }
-    },
-    "bio_narrative": "Anthony \"Tony\" Soprano, a renowned figure from North Caldwell, New Jersey, embodies the complex intertwining of personal and professional complexities. Born in the late 50s, Tony's life has been a tapestry of duty, loyalty, and the perpetual balancing act between power and vulnerability.\n\nFrom an early age, Tony displayed a sharp intellect that was frequently at odds with his curiosity and penchant for rules. Growing up in a family deeply entrenched in the traditions of its heritage, Tony was imbued with a sense of responsibility, keenly aware of the influence and expectations surrounding him.\n\nAs he matured, so too did his health challenges, the most significant being hypertension, a silent companion through his later years. This condition, aggravated by the stresses of leadership and the strains of managing family expectations, necessitated a disciplined regimen of medication and healthcare consultations. Under the meticulous care of practitioners at St. Mary's General Hospital, Tony's medical journey is characterized by regular check-ups, medication adherence, and lifestyle adjustments, which he embraces with varying degrees of enthusiasm.\n\nSocially, Tony is a complex figure\u2014equally feared and adored, misunderstood at times, yet never insignificant. His personal life, replete with the nuances of a long-standing marriage to Carmela Soprano, unfolds as a partnership embracing both tumult and triumph. Their household is marked by warmth, authenticity, and the constant presence of close family ties.\n\nDespite the layers of Tony's existence, his pursuit of relief from the rigors of his lifestyle finds an outlet in periodic retreats to therapy sessions. Here, he seeks refuge from the often overwhelming gravity of his circumstances, led by the thoughtful guidance of his confidante and therapist.\n\nTony's narrative, though fraught with challenges, underscores his resilience\u2014a continuous dance with fate, a quest for stability amidst the chaos, and a man ever on the cusp of understanding and managing the world within and around him."
-  },
-  "227": {
-    "first_name": "Michael",
-    "last_name": "Scott",
-    "gender": "male",
-    "dob": "1964-03-15",
-    "address": "1725 Slough Avenue, Scranton, PA",
-    "telecom": "570-555-0141",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Partner",
-      "name": "Jan Levinson",
-      "telecom": "570-555-0128",
-      "address": "1725 Slough Avenue, Scranton, PA",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Hazel Chen, MD",
-      "managingOrganization": "Mercy General Hospital"
+      "generalPractitioner": "Dr. Arthur Weasley, MD",
+      "managingOrganization": "St. Mungo's Hospital for Magical Maladies and Injuries"
     },
     "link": {
       "other_patient": "N/A",
@@ -1161,92 +40,33 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Gold PPO",
       "plan_type": "PPO",
-      "group_id": "GRP-20367",
-      "group_name": "Dunder Mifflin Paper Company",
-      "member_id": "MBR-670515",
-      "policy_number": "POL-2025-00567",
+      "group_id": "GRP-99999",
+      "group_name": "Employer Group",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-99999",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500",
       "subscriber": {
-        "subscriber_id": "SUB-227",
-        "subscriber_name": "Michael Scott",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1964-03-15",
-        "subscriber_address": "1725 Slough Avenue, Scranton, PA"
-      }
-    },
-    "bio_narrative": "Michael Scott is a 61-year-old male, well-known as the eccentric yet beloved Regional Manager of Dunder Mifflin Paper Company\u2019s Scranton branch. Despite his reputation for humor and at times, questionable management techniques, he maintains a deep love for his employees, considering them his family. Michael lives alone in the suburbs of Scranton, PA, and has a very active social life, often planning office events and engaging in community theater.\n\nHistory of present illness (HPI) reveals that over the past several weeks, Michael has been experiencing sporadic chest tightness and palpitations. These episodes generally occur during high stress periods, particularly when challenging issues arise at work. There is a relevant family history of cardiovascular disease, his father having passed away from a myocardial infarction at 68. Consequently, these symptoms have raised concerns for him, as he approaches the age when his father first exhibited similar symptoms.\n\nSocially, Michael refrains from smoking and consumes alcohol in moderation, strictly during social gatherings. His diet is often irregular, influenced by late-office hours and meetings, leading him to opt for convenient but occasionally unhealthy meals. Exercise is primarily incidental, comprising of short walks in the office and playing basketball occasionally with co-workers.\n\nFamily history is significant for heart disease, primarily on the paternal side. His mother currently manages hypertension effectively with medication.\n\nCurrently, Michael is maintained on a medication regimen that includes low-dose aspirin for potential prevention, along with lisinopril to manage his mild hypertension. Treatment focuses on symptom control and risk factor modification.\n\nIn terms of lifestyle, Michael is advised to incorporate stress reduction techniques such as meditation and to engage more consistently in aerobic exercise to improve cardiovascular health. There also lies an encouragement to diversify his diet, reducing processed foods and integrating more nutrient-dense options into his meals. Follow-up appointments focus on lifestyle coaching and further diagnostic assessment if necessary."
-  },
-  "228": {
-    "first_name": "Legolas",
-    "last_name": "Greenleaf",
-    "gender": "male",
-    "dob": "2931-01-01",
-    "address": "Rivendell, Middle Earth",
-    "telecom": "555-555-5555",
-    "race": "Elven",
-    "height": "6 ft 1 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "Sindarin",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Thranduil",
-      "telecom": "555-555-0101",
-      "address": "Mirkwood, Middle Earth",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2023-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Galadriel",
-      "managingOrganization": "Lothl\u00f3rien Health System"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Lothl\u00f3rien Health Plan",
-      "plan_name": "Elven Comprehensive",
-      "plan_type": "PPO",
-      "group_id": "GRP-228-LTR",
-      "group_name": "Elven Leaders of Middle Earth",
-      "member_id": "MBR-228-LEG",
-      "policy_number": "POL-228-LEG-001",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$150",
-      "subscriber": {
-        "subscriber_id": "SUB-228-LEG",
-        "subscriber_name": "Legolas Greenleaf",
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
         "subscriber_relationship": "Self",
-        "subscriber_dob": "2931-01-01",
-        "subscriber_address": "Rivendell, Middle Earth"
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Legolas, the Elven prince from Mirkwood, resides in Rivendell temporarily. Known for his keen perception and dexterity, he is an integral part of the community. As a seasoned warrior and son of King Thranduil, Legolas has extensive experience in battle and diplomacy. Throughout his life in Middle Earth, he has maintained an ideal physique and sound health, with lifestyle practices that include a strict diet of home-grown, organic foods and a consistent physical training routine vital for his duties.\n\nRecently, Legolas has experienced spells of fatigue, occasional dizziness, and observed pallor, unfamiliar to someone with his vigor. Disturbed by these symptoms, he sought medical guidance\u2014leading to a hematology consultation. Tests revealed lower than usual blood levels, prompting the beginning of supplements to address deficiencies. Legolas's medical team, led by Dr. Galadriel from the Lothl\u00f3rien Health System, initially planned imaging studies, discovering slight lymph node changes needing further evaluation. This plan harmonizes with his duties as a ranger, where health optimization is imperative.\n\nSocially, Legolas remains engaged with other elves, participating in cultural events and ranger missions. His upbringing in a noble lineage imbues a sense of responsibility, emphasizing balance with nature and societal contributions. Nevertheless, his recent health concerns necessitate a cautious evaluation, balancing duties as a protector of Middle Earth with his well-being. Legolas is optimistic about his recovery and is committed to meticulously following his health regimen, including planned follow-ups and medical imaging to rule out any serious underlying problems."
+    "bio_narrative": "Bellatrix Lestrange presents as a determined individual with a profound sense of loyalty to her family. Recently diagnosed with chronic kidney disease, she exhibits a notable history of medical negligence. Previous admissions have highlighted renal deterioration prompting nephrology referrals. Socially, Bellatrix has limited support due to estrangement from extended family, contributing to stress related to her health management. She embodies a unique resilience, determined to manage her complex care, including upcoming dialysis needs and catheter placement."
   },
-  "229": {
-    "first_name": "Han",
-    "last_name": "Solo",
+  "210": {
+    "first_name": "Kendall",
+    "last_name": "Roy",
     "gender": "male",
-    "dob": "1950-05-29",
-    "address": "Bespin Cloud City, Sector 11",
-    "telecom": "555-023-8477",
+    "dob": "1988-11-27",
+    "address": "10 Park Ave, New York, NY, 10016",
+    "telecom": "555-012-3456",
     "race": "Caucasian",
-    "height": "5 ft 11 in",
+    "height": "6 ft 1 in",
     "weight": "180 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
@@ -1257,77 +77,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "friend",
-      "name": "Chewbacca",
-      "telecom": "555-712-3490",
-      "address": "Kashyyyk, Sector 7",
+      "relationship": "Emergency Contact",
+      "name": "Stewy Grimson",
+      "telecom": "555-987-6543",
+      "address": "50 Sunset Blvd, New York, NY, 10016",
       "gender": "male",
-      "organization": "Rebel Alliance",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Leia Organa, MD",
-      "managingOrganization": "New Alderaan General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Galactic Insurance",
-      "plan_name": "Alderaan Shield PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-74298",
-      "group_name": "Rebellion Cohort",
-      "member_id": "MBR-2985674",
-      "policy_number": "POL-2024-011234",
-      "effective_date": "2022-03-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-405926",
-        "subscriber_name": "Han Solo",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1950-05-29",
-        "subscriber_address": "Bespin Cloud City, Sector 11"
-      }
-    },
-    "bio_narrative": "Han Solo, known to many as a legendary pilot and smuggler, now resides comfortably in Bespin Cloud City, where he has settled into a quieter life. As a consultant with the Rebel Alliance, Han has transitioned his skills from high-speed chases to strategic advisory roles. Despite stepping back from the front lines, he maintains a deep connection with his past and remains committed to safeguarding freedom in the galaxy.\n\nBorn in the rough and tumble Corellia, Han's life has always been marked by adventure and an indomitable spirit. Over the years, he has adapted to diverse environments, learning the art of survival and negotiation, often balancing on the edge of law and morality. His medical history is unremarkable save for an old blaster wound from a conflict long resolved and a history of hypertension managed through medications.\n\nHan's family history is rather solitary; he considers his closest companion Chewbacca as more than just a friend, sharing a bond deeper than most blood ties. Han's lifestyle reflects an active commitment to his duties in the galaxy while maintaining his health. His diet is pragmatic, often consisting of simple, wholesome meals to keep his energy up during long strategic meetings and air travels.\n\nIn his social interactions, Han is known for his quick wit and readiness to defuse tense situations with humor and audacity. His reputation amongst peers is one of resourcefulness and loyalty, shadowed only by his reticence to accept full medical intervention when facing newfound knee pain\u2014a reminder of his more adventurous days.\n\nPresently, Han is adjusting to the physical limitations imposed by his condition while continuing to provide tactical insights to the galactic council. His approach to life remains largely unchanged\u2014one of resilience and adaptability, proving time and again that old rebels never fade, they simply find new arenas to conquer."
-  },
-  "230": {
-    "first_name": "Ben",
-    "last_name": "Wyatt",
-    "gender": "male",
-    "dob": "1974-11-15",
-    "address": "123 Main St, Pawnee, IN",
-    "telecom": "555-230-2300",
-    "race": "Caucasian",
-    "height": "5 ft 10 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "en",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Leslie Knope",
-      "telecom": "555-230-1234",
-      "address": "123 Main St, Pawnee, IN",
-      "gender": "female",
       "organization": "N/A",
       "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Harris, MD",
-      "managingOrganization": "Pawnee General Hospital"
+      "generalPractitioner": "Dr. Logan Huntzberger, MD",
+      "managingOrganization": "Royal Cardiovascular Clinic"
     },
     "link": {
       "other_patient": "N/A",
@@ -1338,267 +99,31 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Choice Plus",
       "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "City of Pawnee",
-      "member_id": "MBR-230987654",
-      "policy_number": "POL-2025-000123",
+      "group_id": "GRP-99999",
+      "group_name": "Employer Group",
+      "member_id": "MBR-987654321",
+      "policy_number": "POL-2025-001234",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500",
       "subscriber": {
-        "subscriber_id": "SUB-2323",
-        "subscriber_name": "Ben Wyatt",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1974-11-15",
-        "subscriber_address": "123 Main St, Pawnee, IN"
-      }
-    },
-    "bio_narrative": "Ben Wyatt is a 50-year-old male originally from Pawnee, Indiana, known for his meticulous and determined personality. As a former state auditor and current City Manager, he leads an active professional life, balancing responsibilities adeptly.\n\nBen's medical history reveals a long-standing dental condition, specifically malocclusion. His initial consultations date back several years when minor misalignments started affecting dietary habits and oral comfort. Despite non-surgical interventions, his condition has escalated to necessitate surgical correction to prevent further functional impairment.\n\nSocially, Ben is well-integrated in his community and has a robust support network, including his wife, Leslie, who is equally dedicated to public service. Their shared commitment to their careers frequently involves community engagements across Pawnee.\n\nBen occasionally consumes alcohol, typically during social events, and maintains a diet oriented towards maintaining his activity level. Physical exercise, though infrequent due to a bustling work-life schedule, comprises minimal fitness routines primarily on weekends.\n\nFamily history provides no significant genetic predispositions towards dental anomalies or significant systemic conditions, with his parents and siblings maintaining normal dental health.\n\nIn the past year, Ben's dental challenges have intensified, corroborated by progressive panoramic imaging studies. Maintaining his characteristic perseverance, he seeks comprehensive treatment, combining orthodontic strategies with impending surgical interventions designed to restore optimal dental functionality and enhance quality of life."
-  },
-  "231": {
-    "first_name": "Walter",
-    "last_name": "White",
-    "gender": "male",
-    "dob": "1959-09-07",
-    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "telecom": "505-555-0123",
-    "race": "Caucasian",
-    "height": "5 ft 11 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Skyler White",
-      "telecom": "505-555-7890",
-      "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2023-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jesse Pinkman, MD",
-      "managingOrganization": "Albuquerque General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Healthcare Partners Plan",
-      "plan_name": "Silver HMO",
-      "plan_type": "HMO",
-      "group_id": "GRP-WhiteFamily",
-      "group_name": "White Household",
-      "member_id": "MBR-231-902",
-      "policy_number": "POL-231-WHITE",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-231-902",
-        "subscriber_name": "Walter White",
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
         "subscriber_relationship": "Self",
-        "subscriber_dob": "1959-09-07",
-        "subscriber_address": "308 Negra Arroyo Lane, Albuquerque, NM"
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Walter White, a 65-year-old retired chemistry teacher from Albuquerque, New Mexico, presents with progressive concerns over maxillary hypoplasia affecting his dental alignment and masticatory function. Once a renowned high school educator, Walter now concerns himself with personal health management and family dynamics. Living with his wife, Skyler, Walter channels his disciplined persona into managing his health, writing memoirs, and engaging in local community science events. His background in chemistry frequently informs his understanding of medical advice, allowing him to converse adeptly with healthcare professionals.\n\nWalter's hypertensive condition is well-managed with Lisinopril, and he takes Omeprazole for GERD. His medical history reflects a regimented approach to healthcare, consistent with his analytical background. His lifestyle has adapted to a regimen that limits stress and focuses on regular walking exercises in his neighborhood, though he sometimes recounts challenging long walks with Skyler. Household dietary habits pivot around southwestern cuisine, modified for low sodium content, emphasizing Skyler's meticulous approach to meal preparation.\n\nSocially, Walter values his secluded environment but remains socially active through sporadic reunions with former colleagues and family visits from his children, who he sees as his legacy. His history shows the impactful role of his family\u2019s medical conditions, particularly hypertension, guiding his cautious approach to health. He maintains meticulous records of his medications, appointments, and a detailed schedule for proposed surgical interventions for his orthodontic issues. Walter's foresight and scientific background provide a unique perspective on his treatment, driving collaborative dialogue with his healthcare team as they navigate his surgical plan."
+    "bio_narrative": "Mr. Kendall Roy is a 36-year-old male living in New York City. He works in the media industry and has a busy lifestyle. Although he does not have significant past medical history, he is concerned about his cardiovascular health due to a strong family history of heart disease. He maintains a healthy diet and exercises regularly, but remains anxious about developing cardiac conditions prevalent in his family. He is motivated to engage in preventive health measures including regular check-ups and lifestyle management."
   },
   "232": {
-    "first_name": "Arwen",
-    "last_name": "Und\u00f3miel",
+    "first_name": "Leslie",
+    "last_name": "Knope",
     "gender": "female",
-    "dob": "1990-03-15",
-    "address": "123 Rivendell Rd, Middle-earth",
-    "telecom": "555-123-4567",
-    "race": "Elven",
-    "height": "5 ft 10 in",
-    "weight": "132 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Elrond Half-elven",
-      "telecom": "555-765-4321",
-      "address": "123 Rivendell Rd, Middle-earth",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2005-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Galadriel, MD",
-      "managingOrganization": "Middle-earth Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Middle-earth Mutual",
-      "plan_name": "Gold Protective Plan",
-      "plan_type": "PPO",
-      "group_id": "GRP-LOTR-001",
-      "group_name": "Fellowship Health",
-      "member_id": "MBR-ELVEN-232",
-      "policy_number": "POL-232-LOTR",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-ELROND-001",
-        "subscriber_name": "Elrond Half-elven",
-        "subscriber_relationship": "Father",
-        "subscriber_dob": "3000-01-01",
-        "subscriber_address": "123 Rivendell Rd, Middle-earth"
-      }
-    },
-    "bio_narrative": "Arwen Und\u00f3miel, an elven princess renowned for her ethereal grace and wisdom, resides in Rivendell, a serene sanctuary of peace nestled within Middle-earth. She is celebrated for her deep connection to nature and her compassionate soul, often tending to the gardens and engaging in communal gatherings. Despite the tranquility of her surroundings, Arwen has faced the challenge of a protruding jaw, a trait that not only affects her lovely features but also causes practical everyday discomfort.\n\nOver the years, this has strained her during vocal engagements and during meals, prompting consultations with Middle-earth Medical specialists. Her lineage is steeped in history, with both her parents and ancestors displaying varied physical characteristics, some of which have resulted in unique challenges. Arwen's proactive nature propels her toward corrective measures to alleviate her OR-facial discomfort, opting for a well-considered surgical journey guided by her trusted practitioners.\n\nSocially, she remains engaged in elven festivals and cultural ceremonies, maintaining a substantial social network with elves across the lands. Arwen abstains from alcohol and endorses a mostly plant-based diet, keen on maintaining her vitality and elven longevity. Her commitment to personal well-being and fidelity to family legacies earn her high respect among her peers and ensure her story within Middle-earth continues with grace and strength."
-  },
-  "233": {
-    "first_name": "Remy",
-    "last_name": "Hadley",
-    "gender": "female",
-    "dob": "1986-10-12",
-    "address": "221B Baker Street, Princeton, NJ",
-    "telecom": "555-233-0000",
-    "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "James Wilson",
-      "telecom": "555-233-0001",
-      "address": "221B Baker Street, Princeton, NJ",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Lisa Cuddy, MD",
-      "managingOrganization": "Princeton-Plainsboro Teaching Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Gold PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "City of Princeton",
-      "member_id": "MBR-233456789",
-      "policy_number": "POL-2025-233456",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-233456",
-        "subscriber_name": "Remy Hadley",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1986-10-12",
-        "subscriber_address": "221B Baker Street, Princeton, NJ"
-      }
-    },
-    "bio_narrative": "Remy Hadley, best known as \"Thirteen\" within her professional sphere, is a brilliant yet private individual inspired by her need to navigate her own medical challenges. A Princeton-based specialist, Remy balances a demanding career with her health. Diagnosed with obstructive sleep apnea, she is acutely aware of nuances in sleep medicine.\n\nGrowing up as an only child, Remy faced familial health challenges early on. Her father's struggle with a slow-progressing Parkinson's kindled her interest in medicine. Her lifestyle choices such as regular pilates and careful dietary adjustments show dedication to maintaining her health despite a history of anxiety that she manages with both pharmacologic and therapeutic interventions, ensuring her career isn't compromised.\n\nIn her social life, she values meaningful interactions over superficial acquaintances and spends free time exploring the arts, rarely missing a modern exhibition at the local galleries.\n\nRemy's commitment to her patients often reflects her own experiences; she challenges norms, staying on top of medical advances and pioneering innovative approaches where conventional wisdom might falter. Though intensely private, her colleagues respect her complete engagement in patient advocacy and the mentor role she occasionally embraces for budding professionals in healthcare.\n\nIn her recent medical scenario, Remy has noticed a downturn in energy and clarity, which she attributes to untreated episodes of apnea. Her pulmonologist collaboration with professionals at Princeton-Plainsboro Teaching Hospital forms part of her proactive management, which includes polysomnography assessments, primary-to-secondary care interfacing, and careful monitoring along with behavioral adjustments guided by her understanding as both clinician and patient, anchoring her journey to well-being."
-  },
-  "234": {
-    "first_name": "Ned",
-    "last_name": "Stark",
-    "gender": "male",
-    "dob": "1960-02-08",
-    "address": "123 Winterfell Ave",
-    "telecom": "555-346-5656",
-    "race": "Caucasian",
-    "height": "6 ft 4 in",
-    "weight": "220 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "spouse",
-      "name": "Catelyn Stark",
-      "telecom": "555-346-1234",
-      "address": "123 Winterfell Ave",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2010-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jon Snow, MD",
-      "managingOrganization": "Winterfell Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "The North Healthcare",
-      "plan_name": "Northern Health Plan",
-      "plan_type": "PPO",
-      "group_id": "GRP-897654",
-      "group_name": "Winterfell House Employees",
-      "member_id": "MBR-567890",
-      "policy_number": "POL-678943",
-      "effective_date": "2010-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-67890",
-        "subscriber_name": "Ned Stark",
-        "subscriber_relationship": "self",
-        "subscriber_dob": "1960-02-08",
-        "subscriber_address": "123 Winterfell Ave"
-      }
-    },
-    "bio_narrative": "Ned Stark is a strong and stoic leader hailing from the North, renowned for his dedication to duty and family. Having spent much of his life as the Warden of the North, he now devotes his time to his household and health matters at Winterfell. Despite the burdens of leadership he once carried, Ned remains grounded in his values and maintains strong ties with his family and community. Living amidst the cold environment of Winterfell, he proudly oversees the legacy and wellbeing of House Stark.\n\nNed has managed his health conditions conscientiously, maintaining a balance between personal wisdom and seeking medical counsel when necessary. Regular check-ups and an established history with his healthcare providers allow him to stay ahead of potential health concerns. Recently, a dental issue has surfaced requiring further attention. As a man who prioritizes the health of his family, he appreciates the necessity of such procedures both for himself and as an example to his children.\n\nSocially, Ned enjoys the quiet life. His past decisions to abstain from alcohol and give up smoking decades ago promotes the wellbeing he currently enjoys. The minor discomfort in his maxillary region, although unexpected, is addressed with the same diligence with which Ned faces other challenges. He recognizes the need to ensure his health as much as his family's, given his role as a patriarch and guardian.\n\nMedical evaluations have shown Ned to be a generally healthy individual for his age, albeit with considerations for age-related changes. He approaches his regular consultations with the same stoic demeanor, placing trust in established practitioners like Dr. Jon Snow. Ned remains vigilant in his health management, knowing well the North's expectation of enduring ability and resilience."
-  },
-  "235": {
-    "first_name": "Elaine",
-    "last_name": "Benes",
-    "gender": "female",
-    "dob": "1970-01-01",
-    "address": "129 West 81st Street, New York, NY 10024",
-    "telecom": "555-123-4567",
+    "dob": "1982-01-01",
+    "address": "123 Pawnee Commons, Pawnee, IN 47998",
+    "telecom": "555-987-6543",
     "race": "Caucasian",
     "height": "5 ft 6 in",
     "weight": "135 lbs",
@@ -1611,174 +136,56 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
-      "name": "Jerry Seinfeld",
-      "telecom": "555-789-0123",
-      "address": "129 West 81st Street, New York, NY 10024",
-      "gender": "male",
+      "relationship": "Best Friend",
+      "name": "Ann Perkins",
+      "telecom": "555-123-4567",
+      "address": "456 Pawnee Lane, Pawnee, IN 47998",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "1990-01-01",
+      "period_start": "2010-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Howard Moore, MD",
-      "managingOrganization": "Lenox Hill Hospital"
+      "generalPractitioner": "Dr. Ben Wyatt, MD",
+      "managingOrganization": "Pawnee Health Center"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
+      "plan_name": "Choice Plus",
       "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "Pendant Publishing",
-      "member_id": "MBR-EB007",
-      "policy_number": "POL-UHC-EB1970",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$35",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "SUB-EB007",
-        "subscriber_name": "Elaine Benes",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1970-01-01",
-        "subscriber_address": "129 West 81st Street, New York, NY 10024"
-      }
-    },
-    "bio_narrative": "Elaine Benes, a vibrant and assertive woman in her mid-50s, is a managing editor at Pendant Publishing in New York City. Known for her strong opinions, quick wit, and sometimes impulsive nature, she maintains an active social life with her close-knit group of friends. Despite her generally robust constitution, Elaine has recently been navigating a diagnosis of atrial fibrillation. This condition has introduced a new layer of consideration into her otherwise dynamic routine, prompting a more focused approach to her cardiac health.\n\nHer medical history also includes well-managed essential hypertension and hyperlipidemia, both of which she actively addresses through medication adherence and a conscious effort towards a balanced diet. She experiences occasional mild gastroesophageal reflux, effectively controlled with medication, and has recently been addressing a vitamin D insufficiency with supplementation. Her exertional capacity has generally been good, though she has noted occasional brief episodes of lightheadedness or increased palpitations, particularly when stressed or during strenuous activity, which have prompted further cardiac evaluation.\n\nSocially, Elaine lives in an apartment in a bustling New York neighborhood. She enjoys dancing, attending cultural events, and engaging in lively discussions with her friends. She is single and maintains strong platonic relationships, particularly with Jerry Seinfeld, who is listed as her next of kin. She occasionally enjoys a glass of wine or two but is not a smoker. Elaine is highly independent and values staying informed about her health, actively participating in treatment decisions. Her motivation to maintain her health is driven by a desire to continue her active lifestyle and demanding career without interruption."
-  },
-  "236": {
-    "first_name": "Peter",
-    "last_name": "Parker",
-    "gender": "male",
-    "dob": "2001-08-10",
-    "address": "20 Ingram Street, Queens, NY, 11375",
-    "telecom": "212-555-2233",
-    "race": "Caucasian",
-    "height": "5 ft 10 in",
-    "weight": "160 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Uncle",
-      "name": "Ben Parker",
-      "telecom": "212-555-2244",
-      "address": "20 Ingram Street, Queens, NY, 11375",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2018-08-10",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Stephen Strange",
-      "managingOrganization": "New York City Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Platinium Plus",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Parker Industries",
-      "member_id": "MBR-236001",
-      "policy_number": "POL-2025-236001",
+      "group_id": "GRP-123456",
+      "group_name": "Parks Department",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-001234",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500",
       "subscriber": {
-        "subscriber_id": "236001",
-        "subscriber_name": "Peter Parker",
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
         "subscriber_relationship": "Self",
-        "subscriber_dob": "2001-08-10",
-        "subscriber_address": "20 Ingram Street, Queens, NY, 11375"
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Peter Parker is a bright and energetic young man with a strong dedication to his academic and extracurricular pursuits at his local high school. Residing in the tight-knit community of Queens, NY, at his Aunt May's home, Peter's life is balanced between the demands of his studies and an active social life filled with friends and school activities.\n\nPeter has no significant medical history, apart from the typical childhood illnesses and injuries incurred during his active lifestyle. Known for his sharp wit and inherent curiosity, Peter displays a remarkable resilience and determination that often sees him through challenges, both academic and personal. His personality is marked by a strong sense of responsibility, empathy for others, and an unwavering commitment to doing what is right, traits that are occasionally at odds with the daring escapades he finds himself drawn to outside the classroom.\n\nIn terms of lifestyle, Peter maintains a healthy regimen, participating in regular physical activities and maintaining a balanced diet, despite occasional indulgence in his Aunt May's famous pies. He abstains from smoking and limits his alcohol consumption, aligning with his focused and conscientious personality.\n\nPeter has a strong support system at home and in his extended family, with his Uncle Ben being a particularly influential figure in his life. Through the trials typical of teenage years\u2014including the recent dental issues requiring professional attention\u2014Peter demonstrates an admirable ability to navigate complexities with a level of maturity beyond his years. His community involvement, combined with a keen interest in innovation and technology, sets him on a promising path toward a future ripe with potential.\n"
+    "bio_narrative": "Leslie Knope is a dedicated public servant working in the Parks and Recreation Department of Pawnee, Indiana. Known for her optimism and resilience, she has embodied the spirit of community service and dedication throughout her life. \nLeslie was born on January 1, 1982, and has lived in Pawnee her entire life. She has pursued a career devoted to improving the community and consistently strives to uplift those around her. Leslie enjoys mentoring her team and has worked tirelessly to implement programs that benefit local parks and engage citizens. \nThough she has a healthy lifestyle, recent concerns about her jaw alignment and functionality have prompted her to seek solutions through the recommended bilateral sagittal split osteotomy. While she has expressed mild discomfort related to her jaw, she remains highly motivated and positive about the procedure's outcomes, highlighting her steadfast belief in proactive health measures. \nIn her personal life, Leslie has cultivated strong relationships with her friends, particularly with her best friend Ann Perkins. They share a deep bond, supporting each other through personal and professional challenges."
   },
-  "237": {
-    "first_name": "Skyler",
-    "last_name": "White",
+  "234": {
+    "first_name": "Max",
+    "last_name": "Black",
     "gender": "female",
-    "dob": "1970-08-11",
-    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "telecom": "505-555-0188",
+    "dob": "1990-02-28",
+    "address": "123 Main St, Brooklyn, NY 11201",
+    "telecom": "718-555-1234",
     "race": "Caucasian",
     "height": "5 ft 5 in",
-    "weight": "145 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "spouse",
-      "name": "Walter White",
-      "telecom": "505-555-0199",
-      "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "1993-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Marie Schrader, MD",
-      "managingOrganization": "Albuquerque General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "Blue Cross Blue Shield",
-      "plan_name": "Silver PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-ABC123",
-      "group_name": "White Residence Co.",
-      "member_id": "MBR-237987654",
-      "policy_number": "POL-2025-001237",
-      "effective_date": "2023-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "SUB-2025001237",
-        "subscriber_name": "Skyler White",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1970-08-11",
-        "subscriber_address": "308 Negra Arroyo Lane, Albuquerque, NM"
-      }
-    },
-    "bio_narrative": "Skyler White is a 54-year-old woman residing in Albuquerque, New Mexico. Living in the picturesque suburban locale of 308 Negra Arroyo Lane, she leads a life steeped in community involvement, now seeing herself transition from a bookkeeper to a more home-centric role given recent health concerns. Her proximity to family is integral, with her husband, Walter White, known for his teaching career, providing mutual support in their journey through life's complexities.\n\nThroughout her life, Skyler has maintained a healthy lifestyle, seldom indulging in alcohol and abstaining from smoking. This dedication is paired with her routine nature walks around the Albuquerque landscape, best enjoyed while contemplating the serene Sandia Mountains.\n\nSkyler's medical interactions are not frequent but have been punctuated by her recent encounters with seasonal allergies. Her involvement in charitable events often places her in settings fraught with outdoor irritants, appointing the discovery of these allergies to an unexpected, albeit manageable, turn of events.\n\nHeritage in her family line reveals hints of seasonal allergens and hypertension, with her father being a notable figure in Skyler's emphasis on proactive health measures. The family history is free from malignancy but marked by cardiovascular vigilance, encouraging Skyler towards regular medical check-ups.\n\nSkyler is a mother with a keen eye for detail, whether managing her household or volunteering at community events. She employs this precision in her approach to health, closely monitoring her condition and preventing the escalation of any symptoms through timely consultations with her primary care team led by Dr. Marie Schrader. As Skyler navigates these medical nuances, she remains an embodiment of composure and resilience, inspiring those around her to value health, perspective, and familial ties."
-  },
-  "nan": {
-    "first_name": "Sansa",
-    "last_name": "Stark",
-    "gender": "female",
-    "dob": "1990-05-14",
-    "address": "Winterfell, The North",
-    "telecom": "555-021-1789",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "140 lbs",
+    "weight": "130 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -1788,18 +195,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "brother",
-      "name": "Jon Snow",
-      "telecom": "555-021-0000",
-      "address": "The Wall, The North",
-      "gender": "male",
+      "relationship": "Best Friend",
+      "name": "Caroline Channing",
+      "telecom": "718-555-5678",
+      "address": "456 Elm St, Brooklyn, NY 11201",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2015-04-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Maester Luwin",
-      "managingOrganization": "Winterfell Medical Center"
+      "generalPractitioner": "Dr. Josephine King, DMD",
+      "managingOrganization": "Brooklyn Medical Center"
     },
     "link": {
       "other_patient": "N/A",
@@ -1808,24 +215,24 @@
     "payer": {
       "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Gold PPO",
+      "plan_name": "Choice Plus",
       "plan_type": "PPO",
-      "group_id": "GRP-98765",
-      "group_name": "House Stark",
-      "member_id": "MBR-213456789",
+      "group_id": "GRP-99999",
+      "group_name": "Brooklyn Group",
+      "member_id": "MBR-987654321",
       "policy_number": "POL-2025-001234",
-      "effective_date": "2020-01-01",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
-      "deductible_amount": "$1500",
+      "deductible_amount": "$500",
       "subscriber": {
-        "subscriber_id": "SUB-0021",
-        "subscriber_name": "Sansa Stark",
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
         "subscriber_relationship": "Self",
-        "subscriber_dob": "1990-05-14",
-        "subscriber_address": "Winterfell, The North"
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Sansa Stark, originally from the noble House Stark, has experienced tremendous adversity despite her relatively young age. Raised in the formidable Winterfell, Sansa embodies a combination of strength and dignity characteristic of her upbringing in the harsh but resilient North. She is known for her poise and dedication to family values, continually striving to improve her personal and social circumstances.\n\nMedically, Sansa has maintained generally good health although she deals with seasonal allergies which she manages effectively through medication. A significant concern has been ongoing knee pain due to a suspected meniscal complication, impacting her active participation in various familial and communal activities.\n\nSocially, Sansa enjoys a close relationship with her siblings, particularly her brother Jon, who provides unwavering support. Her role often involves coordinating efforts within the community, requiring substantial mobility and interaction with others, which has been slightly impaired by her knee condition.\n\nSansa's commitment to physical activity is pivotal, as she yearns to maintain a regimen that accommodates her leadership roles and personal wellness pursuits. Her systematic approach to challenges reflects her strategic mindset developed over years of managing complex personal dynamics and external pressures.\n\nFurther exploring treatment options for her knee is vital, aligning with her proactive stance towards comprehensive health and wellness, ultimately aiming to restore full functional capacity and enhance her quality of life."
+    "bio_narrative": "Max Black is a 35-year-old female who has struggled with dental issues since childhood, stemming from a family history of poor dental health. After years of various dental treatments and procedures, she is now at a stage where significant intervention is required. Max has always been optimistic about her health despite these challenges and remains proactive in seeking treatment options. Living in Brooklyn, she works as a waitress, which adds to her desire to improve her smile, as it impacts her self-confidence and social interactions. She enjoys her job but often faces stress related to her appearance. Despite her dental struggles, she has a solid support system, particularly her best friend Caroline, who has been by her side since they met. Caroline has encouraged Max to take this step towards corrective surgery, providing emotional support and practical help during appointments. Max is determined to undergo the grafting procedure, with the hope of enhancing both her aesthetic appearance and overall oral function, looking forward to returning to her active lifestyle post-surgery."
   }
 }

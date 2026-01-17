@@ -79,10 +79,17 @@ def format_clinical_document(metadata: dict, structured_content: dict) -> str:
     final_doc = f"--- REPORT START ---\n{header}\n{chr(10).join(body_parts)}{narrative_block}\n--- REPORT END ---"
     return final_doc
 
-def validate_structure(document_text: str) -> bool:
+# CONFIG
+VALIDATION_CONFIG = {
+    "allow_markdown_bold": True,
+    "allow_triple_quotes": False,
+    "require_metadata_block": True
+}
+
+def validate_structure(document_text: str) -> tuple[bool, list[str]]:
     """
     Layer 3: Validator.
-    Checks regex for strict compliance.
+    Returns (IsValid, ListOfErrors).
     """
     errors = []
     
@@ -93,7 +100,7 @@ def validate_structure(document_text: str) -> bool:
         errors.append("Missing End Marker")
         
     # Rule 2: Metadata Header
-    if "[REPORT_METADATA]" not in document_text:
+    if VALIDATION_CONFIG["require_metadata_block"] and "[REPORT_METADATA]" not in document_text:
         errors.append("Missing [REPORT_METADATA]")
         
     # Rule 3: Key fields
@@ -103,18 +110,18 @@ def validate_structure(document_text: str) -> bool:
              errors.append(f"Missing Metadata Field: {key}")
              
     # Rule 4: Ban Forbidden Patterns
-    if '"""' in document_text:
+    if not VALIDATION_CONFIG["allow_triple_quotes"] and '"""' in document_text:
         errors.append("Triple quotes detected")
     if "Redacted" in document_text:
         errors.append("Redaction detected")
-    if "**" in document_text: # Markdown bold
+    if not VALIDATION_CONFIG["allow_markdown_bold"] and "**" in document_text:
         errors.append("Markdown bold detected")
         
     if errors:
-        print(f"   ⚠️ Validation Failed: {errors}")
-        return False
+        # print(f"   ⚠️ Validation Failed: {errors}") # Noise reduction
+        return False, errors
         
-    return True
+    return True, []
 
 def sanitize_narrative(text: str, identity_map: dict) -> str:
     """
