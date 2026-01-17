@@ -1,3 +1,5 @@
+import os
+
 def scan_existing_documents(patient_id: str, report_folder: str) -> tuple[int, dict]:
     """
     Scans the patient's report folder for existing PDF documents.

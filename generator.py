@@ -143,95 +143,9 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             os.makedirs(img_folder, exist_ok=True)
             print(f"      📁 Created Image Folder: {img_folder}")
 
-        for doc in result.documents:
-            # Deduplication & Overwrite Logic
-            base_title = doc.title_hint
-            
-            # Check if this title exists in our map
-            if base_title in existing_docs_map:
-                # OVERWRITE MODE
-                seq_num = existing_docs_map[base_title]["seq"]
-                # Reuse sequence
-                seq_str = f"{seq_num:03d}"
-                print(f"      🔄 UPDATING existing document: '{base_title}' (Seq #{seq_str})")
-            else:
-                # NEW FILE MODE
-                seq_str = f"{doc_seq_counter:03d}"
-                doc_seq_counter += 1
-                print(f"      ✨ CREATING new document: '{base_title}' (Seq #{seq_str})")
-            
-            # Generate Image if needed
-            image_path = None
-            img_asset = pdf_generator.get_clinical_image(doc.title_hint) # Check static assets first
-            
-            if img_asset:
-                 # Use static asset
-                 pass # We could copy it? For now, simplistic
-            else:
-                # Dynamic generation
-                # We only generate for Imaging type reports to save cost/time
-                if any(x in doc.title_hint.lower() for x in ['mri', 'ct', 'xray', 'scan', 'image']):
-                    print(f"      🎨 Generating MRI/CT Scan for {doc.title_hint}...")
-                    try:
-                        # Prepare Path (Folder already ensured above)
-                        image_filename = f"{doc.title_hint}_{int(datetime.datetime.now().timestamp())}.png"
-                        image_path = os.path.join(img_folder, image_filename)
-
-                        # Generate (Centralized Logic)
-                        img_context = f"Medical imaging scan, {doc.title_hint}, distinct features: {doc.content[:100]}..."
-                        img_result = ai_engine.generate_clinical_image(img_context, doc.title_hint, output_path=image_path)
-                        
-                        if img_result:
-                            # If result is URL (OpenAI), download it
-                            if img_result.startswith("http"):
-                                import requests
-                                img_data = requests.get(img_result).content
-                                with open(image_path, 'wb') as f:
-                                    f.write(img_data)
-                            
-                            # Success Tracking
-                            generated_images[doc.title_hint] = image_path 
-                            image_count += 1
-                        else:
-                            print(f"      ⚠️ Image Gen Skipped (None returned)")
-                        
-                    except Exception as e:
-                        print(f"      ⚠️ Image Generation failed: {e}")
-
-            # Construct Filename: DOC-{pid}-{seq}-{title}
-            # seq_str is already set logic above
-            doc_identifier = f"DOC-{patient_id}-{seq_str}"
-            final_filename_base = f"{doc_identifier}-{doc.title_hint}"
-            
-            # === COMPLIANCE & REPAIR ===
-            is_valid, errors = validate_structure(doc.content)
-            if not is_valid:
-                print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
-                # Retry 1
-                doc.content = ai_engine.fix_document_content(doc.content, errors)
-                is_valid, errors = validate_structure(doc.content)
-                
-                if not is_valid:
-                     print(f"      ❌ Fix Failed. Marking as NAF (Not AI Friendly).")
-                     final_filename_base += "-NAF"
-                else:
-                     print(f"      ✅ AI Fixed the document.")
-            else:
-                pass 
-                # print(f"      ✅ Valid.")
-            
-            # Create PDF with Metadata
-            pdf_path = pdf_generator.create_patient_pdf(
-                patient_id=patient_id, 
-                doc_type=final_filename_base, 
-                content=doc.content, 
-                patient_persona=result.patient_persona,
-                doc_metadata=doc,
-                base_output_folder=patient_report_folder, # Pass the specific folder
-                image_path=image_path
-            )
-            print(f"      - Created: {os.path.basename(pdf_path)}")
-            doc_seq_counter += 1
+        generated_images = _generate_and_save_documents(
+            result, patient_id, existing_docs_map, doc_seq_counter, patient_report_folder, img_folder
+        )
             
         # GENERATE PERSONA (New Requirement)
         current_year = datetime.datetime.now().year
@@ -413,5 +327,108 @@ def main():
                  # It might print the mismatch warning internally, but we state it here too
                  pass 
                  
+def _generate_and_save_documents(result, patient_id, existing_docs_map, doc_seq_counter, patient_report_folder, img_folder):
+    """
+    Helper to process document generation loop.
+    """
+    generated_images = {}
+    image_count = 0
+    
+    for doc in result.documents:
+        # Deduplication & Overwrite Logic
+        base_title = doc.title_hint
+        
+        # Check if this title exists in our map
+        if base_title in existing_docs_map:
+            # OVERWRITE MODE
+            seq_num = existing_docs_map[base_title]["seq"]
+            # Reuse sequence
+            seq_str = f"{seq_num:03d}"
+            print(f"      🔄 UPDATING existing document: '{base_title}' (Seq #{seq_str})")
+        else:
+            # NEW FILE MODE
+            seq_str = f"{doc_seq_counter:03d}"
+            doc_seq_counter += 1
+            print(f"      ✨ CREATING new document: '{base_title}' (Seq #{seq_str})")
+        
+        # Generate Image if needed
+        image_path = None
+        img_asset = pdf_generator.get_clinical_image(doc.title_hint) # Check static assets first
+        
+        if img_asset:
+             # Use static asset
+             pass # We could copy it? For now, simplistic
+        else:
+            # Dynamic generation
+            # We only generate for Imaging type reports to save cost/time
+            if any(x in doc.title_hint.lower() for x in ['mri', 'ct', 'xray', 'scan', 'image']):
+                print(f"      🎨 Generating MRI/CT Scan for {doc.title_hint}...")
+                try:
+                    # Prepare Path (Folder already ensured above)
+                    image_filename = f"{doc.title_hint}_{int(datetime.datetime.now().timestamp())}.png"
+                    image_path = os.path.join(img_folder, image_filename)
+
+                    # Generate (Centralized Logic)
+                    img_context = f"Medical imaging scan, {doc.title_hint}, distinct features: {doc.content[:100]}..."
+                    img_result = ai_engine.generate_clinical_image(img_context, doc.title_hint, output_path=image_path)
+                    
+                    if img_result:
+                        # If result is URL (OpenAI), download it
+                        if img_result.startswith("http"):
+                            import requests
+                            img_data = requests.get(img_result).content
+                            with open(image_path, 'wb') as f:
+                                f.write(img_data)
+                        
+                        # Success Tracking
+                        generated_images[doc.title_hint] = image_path 
+                        image_count += 1
+                    else:
+                        print(f"      ⚠️ Image Gen Skipped (None returned)")
+                    
+                except Exception as e:
+                    print(f"      ⚠️ Image Generation failed: {e}")
+
+        # Construct Filename: DOC-{pid}-{seq}-{title}
+        # seq_str is already set logic above
+        doc_identifier = f"DOC-{patient_id}-{seq_str}"
+        final_filename_base = f"{doc_identifier}-{doc.title_hint}"
+        
+        # === COMPLIANCE & REPAIR ===
+        is_valid, errors = validate_structure(doc.content)
+        if not is_valid:
+            print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
+            # Retry 1
+            doc.content = ai_engine.fix_document_content(doc.content, errors)
+            is_valid, errors = validate_structure(doc.content)
+            
+            if not is_valid:
+                 print(f"      ❌ Fix Failed. Marking as NAF (Not AI Friendly).")
+                 final_filename_base += "-NAF"
+            else:
+                 print(f"      ✅ AI Fixed the document.")
+        else:
+            pass 
+        
+        # Create PDF with Metadata
+        pdf_path = pdf_generator.create_patient_pdf(
+            patient_id=patient_id, 
+            doc_type=final_filename_base, 
+            content=doc.content, 
+            patient_persona=result.patient_persona,
+            doc_metadata=doc,
+            base_output_folder=patient_report_folder, # Pass the specific folder
+            image_path=image_path
+        )
+        print(f"      - Created: {os.path.basename(pdf_path)}")
+        # Note: doc_seq_counter increment happened in the NEW FILE MODE block
+        # But wait, local doc_seq_counter var in helper is not affecting caller?
+        # Caller passed existing counter.
+        # This function returns generated_images.
+        # It should probably return the updated doc_seq_counter if main loop continued, 
+        # but here the loop finishes.
+        
+    return generated_images
+
 if __name__ == "__main__":
     main()
