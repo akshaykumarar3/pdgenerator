@@ -12,6 +12,8 @@ from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 from datetime import datetime
 import instructor
+import httpx # For disabling HTTP/2 to prevent hangs
+
 
 # Load .env
 # Load .env (from cred/ directory)
@@ -59,7 +61,13 @@ client = None
 if PROVIDER == "openai":
     if "OPENAI_API_KEY" not in os.environ:
          raise ValueError("Missing OPENAI_API_KEY in .env")
-    client = instructor.from_openai(OpenAI())
+    client = instructor.from_openai(
+        OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+            http_client=httpx.Client(http2=False) # Fix for hangs
+        )
+    )
+
 
 elif PROVIDER == "vertexai":
     project_id = os.getenv("GCP_PROJECT_ID", "").strip()
@@ -438,6 +446,7 @@ def modify_sql(original_sql: str, schema: str, case_details: dict, user_feedback
 
         # Standardize arguments
         kwargs = {
+            "model": MODEL_NAME,
             "response_model": ModifiedSQL,
             "messages": [
                 {"role": system_role, "content": """You are an expert healthcare data architect and FHIR-SQL expert.
