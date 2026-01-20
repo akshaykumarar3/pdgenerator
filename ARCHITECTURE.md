@@ -41,9 +41,11 @@ graph TD
 This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to process user commands.
 
 * **Initialization**: Loads configuration (`cred/.env`) and database schema.
+* **Document Selection**: After Patient ID input, presents menu for Summary/Reports/Persona/All.
+* **Smart Duplicate Prevention**: Scans existing documents and passes titles to AI.
 * **Persona Diversity Logic**:
   * Before processing, fetches **All Existing Patient Names** from `core/patient_db.py`.
-  * Passes this list as an `exclusion_list` to the AI Engine to prevent duplicate characters (e.g., no two "Walter Whites").
+  * Passes this list as an `exclusion_list` to the AI Engine to prevent duplicate characters.
 * **Artifact Generation**:
   * **Images**: Calls `ai_engine.generate_clinical_image` for relevant document types.
   * **PDFs**: Calls `pdf_generator` to render physical files.
@@ -108,5 +110,9 @@ pdgenerator/
 ├── ai_engine.py            # AI Logic & Pydantic Framework
 ├── generator.py            # Main Loop & Orchestrator
 ├── pdf_generator.py        # ReportLab Rendering Logic
+├── doc_validator.py        # Document Structure Validator
+├── AI_CONTEXT.md           # AI Reference Documentation
+├── templates/              # Configuration Templates
+│   └── summary_template.json
 └── run.sh                  # Execution Wrapper
 ```

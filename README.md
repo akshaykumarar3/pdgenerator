@@ -32,7 +32,22 @@ Once launched, you will see a prompt: `🎯 Enter Patient ID (or '*' for Batch, 
 | **`q`** or **`exit`** | Quits the application. | `q` |
 | **`--`** | **PURGE ALL**. Deletes logs and documents. | `--` |
 
-### 3. Output Artifacts
+### 3. Document Selection (NEW)
+
+After entering a Patient ID, you'll be prompted to select what to generate:
+
+```
+📋 What to generate?
+   [1] Summary + Reports (default)
+   [2] Summary only
+   [3] Reports only
+   [4] Persona only
+   [5] All (Summary + Reports + Persona)
+```
+
+The system also automatically detects existing documents and skips duplicates.
+
+### 4. Output Artifacts
 
 Results are saved in the **configured output directory** (Default: `generated_output/`):
 
