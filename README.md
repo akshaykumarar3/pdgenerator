@@ -15,6 +15,14 @@ The tool now runs as an **Interactive REPL (Read-Eval-Print Loop)**, allowing yo
 
 ### 1. Launch the Generator
 
+**Windows:**
+```cmd
+run.bat
+:: OR
+python generator.py
+```
+
+**Mac / Linux:**
 ```bash
 ./run.sh
 # OR
@@ -72,12 +80,19 @@ Results are saved in the **configured output directory** (Default: `generated_ou
 # Clone repository
 git clone <repo-url>
 cd pdgenerator
+```
 
-# Create Virtual Environment
+**Windows (PowerShell or CMD):**
+```cmd
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+**Mac / Linux:**
+```bash
 python3 -m venv venv
 source venv/bin/activate
-
-# Install Dependencies
 pip install -r requirements.txt
 ```
 
