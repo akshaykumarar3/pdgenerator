@@ -27,13 +27,17 @@ for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
         os.makedirs(d, exist_ok=True)
         # print(f"📁 Verified Folder: {d}") # Noise reduction
 
-def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None) -> str:
+def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None, generation_mode: dict = None) -> str:
     """
     Main orchestration logic for a single patient.
     Returns the Generated Name (str) if successful, else None.
+    
+    generation_mode: dict with keys 'summary', 'reports', 'persona' (bool values)
     """
     if excluded_names is None:
         excluded_names = []
+    if generation_mode is None:
+        generation_mode = {"summary": True, "reports": True, "persona": False}
         
     print(f"🚀 Starting Workflow for Patient ID: {patient_id}")
     print(f"\n📂 Loading Case Data for ID: {patient_id}...")
@@ -55,6 +59,23 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     persona_context_prompt = ""
     if existing_patient:
         print(f"      🔄 Found Existing Patient Record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
+    # Scan for existing documents (Smart Duplicate Prevention)
+    patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+    existing_titles = []
+    if os.path.exists(patient_report_folder):
+        for f in os.listdir(patient_report_folder):
+            if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
+                # Extract title: DOC-210-001-Title.pdf -> Title
+                parts = os.path.splitext(f)[0].split("-")
+                if len(parts) >= 4:
+                    title = "-".join(parts[3:])
+                    if title.endswith("-NAF"):
+                        title = title[:-4]
+                    existing_titles.append(title)
+    
+    if existing_titles:
+        print(f"      📥 Existing Documents Found: {len(existing_titles)}")
+        print(f"         Skipping duplicates: {', '.join(existing_titles[:5])}{'...' if len(existing_titles) > 5 else ''}")
     
     print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
     
@@ -65,7 +86,8 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             user_feedback=feedback, 
             history_context=history_txt, 
             existing_persona=existing_patient, 
-            excluded_names=excluded_names
+            excluded_names=excluded_names,
+            existing_filenames=existing_titles  # Pass existing titles for duplicate prevention
         )
         
         # SAVE HISTORY
@@ -94,104 +116,89 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
             print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
 
-        # 7. Generate Documents
+        # 7. Generate Documents (Reports - conditional)
         generated_images = {} # Map title -> file_path
         image_count = 0
         
-        # Prepare Images Folder
         # Prepare Images Folder (Inside Patient's Report Folder)
         patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
         img_folder = os.path.join(patient_report_folder, "images")
         
         if not os.path.exists(img_folder):
             os.makedirs(img_folder, exist_ok=True)
-            print(f"      📁 Created Image Folder: {img_folder}")
 
-        doc_seq_counter = 1
-        for doc in result.documents:
-            # Deduplication
-            base_title = doc.title_hint
-            # Generate Image if needed
-            image_path = None
-            img_asset = pdf_generator.get_clinical_image(doc.title_hint) # Check static assets first
-            
-            if img_asset:
-                 # Use static asset
-                 pass # We could copy it? For now, simplistic
-            else:
-                # Dynamic generation
-                # We only generate for Imaging type reports to save cost/time
-                if any(x in doc.title_hint.lower() for x in ['mri', 'ct', 'xray', 'scan', 'image']):
-                    print(f"      🎨 Generating MRI/CT Scan for {doc.title_hint}...")
-                    try:
-                        # Prepare Path (Folder already ensured above)
-                        image_filename = f"{doc.title_hint}_{int(datetime.datetime.now().timestamp())}.png"
-                        image_path = os.path.join(img_folder, image_filename)
-
-                        # Generate (Centralized Logic)
-                        img_context = f"Medical imaging scan, {doc.title_hint}, distinct features: {doc.content[:100]}..."
-                        img_result = ai_engine.generate_clinical_image(img_context, doc.title_hint, output_path=image_path)
-                        
-                        if img_result:
-                            # If result is URL (OpenAI), download it
-                            if img_result.startswith("http"):
-                                import requests
-                                img_data = requests.get(img_result).content
-                                with open(image_path, 'wb') as f:
-                                    f.write(img_data)
-                            
-                            # Success Tracking
-                            generated_images[doc.title_hint] = image_path 
-                            image_count += 1
-                        else:
-                            print(f"      ⚠️ Image Gen Skipped (None returned)")
-                        
-                    except Exception as e:
-                        print(f"      ⚠️ Image Generation failed: {e}")
-
-            # Construct Filename: DOC-{pid}-{seq}-{title}
-            seq_str = f"{doc_seq_counter:03d}"
-            doc_identifier = f"DOC-{patient_id}-{seq_str}"
-            final_filename_base = f"{doc_identifier}-{doc.title_hint}"
-            
-            # === COMPLIANCE & REPAIR ===
-            is_valid, errors = validate_structure(doc.content)
-            if not is_valid:
-                print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
-                # Retry 1
-                doc.content = ai_engine.fix_document_content(doc.content, errors)
-                is_valid, errors = validate_structure(doc.content)
+        # REPORTS GENERATION (conditional)
+        if generation_mode.get("reports", True) and result.documents:
+            print(f"   📄 Generating {len(result.documents)} Report(s)...")
+            doc_seq_counter = 1
+            for doc in result.documents:
+                # Deduplication
+                base_title = doc.title_hint
+                # Generate Image if needed
+                image_path = None
+                img_asset = pdf_generator.get_clinical_image(doc.title_hint)
                 
-                if not is_valid:
-                     print(f"      ❌ Fix Failed. Marking as NAF (Not AI Friendly).")
-                     final_filename_base += "-NAF"
+                if img_asset:
+                    pass
                 else:
-                     print(f"      ✅ AI Fixed the document.")
-            else:
-                pass 
-                # print(f"      ✅ Valid.")
-            
-            # Create PDF with Metadata
-            pdf_path = pdf_generator.create_patient_pdf(
-                patient_id=patient_id, 
-                doc_type=final_filename_base, 
-                content=doc.content, 
-                patient_persona=result.patient_persona,
-                doc_metadata=doc,
-                base_output_folder=patient_report_folder, # Pass the specific folder
-                image_path=image_path
-            )
-            print(f"      - Created: {os.path.basename(pdf_path)}")
-            doc_seq_counter += 1
+                    if any(x in doc.title_hint.lower() for x in ['mri', 'ct', 'xray', 'scan', 'image']):
+                        print(f"      🎨 Generating MRI/CT Scan for {doc.title_hint}...")
+                        try:
+                            image_filename = f"{doc.title_hint}_{int(datetime.datetime.now().timestamp())}.png"
+                            image_path = os.path.join(img_folder, image_filename)
+                            img_context = f"Medical imaging scan, {doc.title_hint}, distinct features: {doc.content[:100]}..."
+                            img_result = ai_engine.generate_clinical_image(img_context, doc.title_hint, output_path=image_path)
+                            
+                            if img_result:
+                                if img_result.startswith("http"):
+                                    import requests
+                                    img_data = requests.get(img_result).content
+                                    with open(image_path, 'wb') as f:
+                                        f.write(img_data)
+                                generated_images[doc.title_hint] = image_path 
+                                image_count += 1
+                            else:
+                                print(f"      ⚠️ Image Gen Skipped (None returned)")
+                        except Exception as e:
+                            print(f"      ⚠️ Image Generation failed: {e}")
+
+                # Construct Filename
+                seq_str = f"{doc_seq_counter:03d}"
+                doc_identifier = f"DOC-{patient_id}-{seq_str}"
+                final_filename_base = f"{doc_identifier}-{doc.title_hint}"
+                
+                # Validation & Repair
+                is_valid, errors = validate_structure(doc.content)
+                if not is_valid:
+                    print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
+                    doc.content = ai_engine.fix_document_content(doc.content, errors)
+                    is_valid, errors = validate_structure(doc.content)
+                    if not is_valid:
+                        print(f"      ❌ Fix Failed. Marking as NAF.")
+                        final_filename_base += "-NAF"
+                    else:
+                        print(f"      ✅ AI Fixed the document.")
+                
+                # Create PDF
+                pdf_path = pdf_generator.create_patient_pdf(
+                    patient_id=patient_id, 
+                    doc_type=final_filename_base, 
+                    content=doc.content, 
+                    patient_persona=result.patient_persona,
+                    doc_metadata=doc,
+                    base_output_folder=patient_report_folder,
+                    image_path=image_path
+                )
+                print(f"      - Created: {os.path.basename(pdf_path)}")
+                doc_seq_counter += 1
             
         # GENERATE PERSONA (New Requirement)
         current_year = datetime.datetime.now().year
         current_mrn = f"MRN-{patient_id}-{current_year}" # Centralized MRN
 
-        if result.patient_persona:
+        # PERSONA GENERATION (conditional)
+        if generation_mode.get("persona", False) and result.patient_persona:
             p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            # Pass the generated_images map so Persona can reuse them
-            # Updated to pass the OBJECT
             persona_path = pdf_generator.create_persona_pdf(patient_id, p_full_name, result.patient_persona, result.documents, generated_images, mrn=current_mrn, output_folder=PERSONA_DIR)
             print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
             
@@ -220,12 +227,13 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
            "timeline": [{"date": "2025-01-01", "title": "Clinical Encounter", "details": ["Patient presented for evaluation."]}]
         }
         
-        sum_path = pdf_generator.create_patient_summary_pdf(patient_id, summary_data, output_folder=patient_report_folder)
-        print(f"DEBUG: sum_path={sum_path}")
-        if sum_path and os.path.exists(sum_path):
-            print(f"   📊 Summary PDF Created: {os.path.basename(sum_path)}")
-        else:
-             print(f"   ❌ Summary PDF FAILED TO CREATE at {sum_path}")
+        # SUMMARY GENERATION (conditional)
+        if generation_mode.get("summary", True):
+            sum_path = pdf_generator.create_patient_summary_pdf(patient_id, summary_data, output_folder=patient_report_folder)
+            if sum_path and os.path.exists(sum_path):
+                print(f"   📊 Summary PDF Created: {os.path.basename(sum_path)}")
+            else:
+                print(f"   ⚠️ Summary PDF creation skipped or failed.")
         # Processing complete
 
         # Return the new name for caching
@@ -350,14 +358,34 @@ def main():
             print(f"\n✅ Batch Complete. Processed {count} patients.")
 
         else:
-            # Single Run -> Ask for Feedback
+            # Single Run -> Ask for Generation Mode
+            print("\n📋 What to generate?")
+            print("   [1] Summary + Reports (default)")
+            print("   [2] Summary only")
+            print("   [3] Reports only")
+            print("   [4] Persona only")
+            print("   [5] All (Summary + Reports + Persona)")
+            mode_input = input("   Choice [1]: ").strip()
+            
+            # Parse mode
+            mode_map = {
+                "1": {"summary": True, "reports": True, "persona": False},
+                "2": {"summary": True, "reports": False, "persona": False},
+                "3": {"summary": False, "reports": True, "persona": False},
+                "4": {"summary": False, "reports": False, "persona": True},
+                "5": {"summary": True, "reports": True, "persona": True},
+                "": {"summary": True, "reports": True, "persona": False},  # Default
+            }
+            generation_mode = mode_map.get(mode_input, mode_map["1"])
+            
+            # Ask for Feedback
             print("\n💡 Feedback Loop")
             print("   Enter any specific instructions for the AI.")
             feedback = input("   Feedback [Press Enter to skip]: ").strip()
             
         # Fetch current names for exclusion (Single run can verify against DB fresh)
         current_names = patient_db.get_all_patient_names()
-        process_patient_workflow(target_input, feedback, excluded_names=current_names)
+        process_patient_workflow(target_input, feedback, excluded_names=current_names, generation_mode=generation_mode)
 
         # Final Verification (if single run)
         if target_input != '*':

@@ -1,0 +1,30 @@
+{
+  "title": "Patient Clinical Summary",
+  "sections": ["demographics", "diagnoses", "timeline", "treatment_plan"],
+  "demographics_fields": {
+    "name": "Patient Name",
+    "dob": "Date of Birth",
+    "gender": "Gender",
+    "mrn": "Medical Record Number",
+    "address": "Address",
+    "phone": "Phone",
+    "provider": "Primary Provider",
+    "facility": "Healthcare Facility"
+  },
+  "diagnoses_columns": ["code", "condition", "status", "date"],
+  "timeline_structure": {
+    "date": "YYYY-MM-DD",
+    "title": "Event Title",
+    "details": []
+  },
+  "treatment_fields": {
+    "procedure": "Procedure Name",
+    "outcome": "Expected Outcome",
+    "rationale": "Clinical Rationale"
+  },
+  "styling": {
+    "primary_color": "#27ae60",
+    "secondary_color": "#2980b9",
+    "accent_color": "#34495e"
+  }
+}
