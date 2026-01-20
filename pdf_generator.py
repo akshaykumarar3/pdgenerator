@@ -170,16 +170,9 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
 
 def get_clinical_image(doc_title: str):
     """
-    Returns the path to a matching clinical asset image based on title keywords.
+    Returns None - all clinical images are now AI-generated.
+    Static fallback images have been removed to ensure high-quality AI generation.
     """
-    title_lower = doc_title.lower()
-    
-    if any(k in title_lower for k in ['ecg', 'ekg', 'rhythm', 'cardio']):
-        return "assets/ecg.png"
-    if any(k in title_lower for k in ['x-ray', 'xray', 'radiograph', 'chest']):
-        return "assets/xray.png"
-    if any(k in title_lower for k in ['mri', 'ct', 'scan', 'imaging', 'resonance']):
-        return "assets/mri.png"
     return None
 
 def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = None):

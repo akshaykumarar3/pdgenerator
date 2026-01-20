@@ -14,6 +14,9 @@ from datetime import datetime
 import instructor
 import httpx # For disabling HTTP/2 to prevent hangs
 
+# Import centralized prompts
+import prompts
+
 
 # Load .env
 # Load .env (from cred/ directory)
@@ -41,14 +44,8 @@ MODEL_NAME = MODEL_MAP.get(PROVIDER, {}).get(mode_key, "gemini-2.5-pro")
 if TEST_MODE:
     print(f"   ⚡ TEST MODE ACTIVE: Using lightweight model ({MODEL_NAME}) & Minimal Data.")
 
-# Diversity Settings
-CHARACTER_UNIVERSES = [
-    "Seinfeld", "The Office", "Parks and Rec", "Star Wars", "Marvel", 
-    "Harry Potter", "Friends", "Lord of the Rings", "Breaking Bad", 
-    "Game of Thrones", "Succession", "The Sopranos", "Grey's Anatomy", 
-    "House MD", "Scrubs", "2 Broke Girls", "The Big Bang Theory", 
-    "Brooklyn 99", "Superstore"
-]
+# Diversity Settings (now imported from prompts.py)
+CHARACTER_UNIVERSES = prompts.CHARACTER_UNIVERSES
 
 if PROVIDER not in ALLOWED_PROVIDERS:
     raise ValueError(f"❌ Invalid LLM_PROVIDER in .env: '{PROVIDER}'. Must be one of {ALLOWED_PROVIDERS}")
@@ -306,115 +303,28 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
     """
     
     # Construct User Feedback Block
-    feedback_instruction = ""
-    if user_feedback:
-        feedback_instruction = f"""
-        **USER FEEDBACK / QA CORRECTIONS:**
-        The user has provided specific instructions for this run. You MUST incorporate them while strictly adhering to the clinical outcome:
-        > "{user_feedback}"
-        """
+    feedback_instruction = prompts.get_feedback_instruction(user_feedback)
 
     # Identity Constraints
     if existing_persona:
-        identity_constraint = f"""
-        **STRICT IDENTITY LOCK (EXISTING PATIENT):**
-        You MUST use the following demographics. DO NOT CHANGE THEM.
-        - Name: {existing_persona.get('first_name')} {existing_persona.get('last_name')}
-        - DOB: {existing_persona.get('dob')}
-        - Gender: {existing_persona.get('gender')}
-        - Address: {existing_persona.get('address')}
-        - Telecom: {existing_persona.get('telecom')}
-        - Provider: {(existing_persona.get('provider') or {}).get('generalPractitioner')} ({(existing_persona.get('provider') or {}).get('managingOrganization')})
-        - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}).
-        """
+        identity_constraint = prompts.get_existing_patient_constraint(existing_persona, case_details)
 
     else:
         # DYNAMIC DIVERSITY LOGIC
         # 1. Select Random Universe
         selected_universe = random.choice(CHARACTER_UNIVERSES)
         
-        # 2. Build Exclusion String
-        exclusion_instruction = ""
-        if excluded_names:
-            used_list = ", ".join(excluded_names[:50]) # Limit to 50 to avoid token bloat
-            exclusion_instruction = f"**USED NAMES (AVOID THESE):** {used_list}."
+        # 2. Generate identity constraint from prompts module
+        identity_constraint = prompts.get_new_patient_constraint(selected_universe, excluded_names)
 
-        identity_constraint = f"""
-        **IDENTITY GENERATION (STRICT DIVERSITY RULES):**
-        - **Character Source**: Select a UNIQUE fictional character from the universe of **{selected_universe}** (TV/Movie/Book).
-        - **VARIETY MANDATE**: {exclusion_instruction} Select a character NOT in the used list.
-        - **Gender Balance**: You MUST randomize gender (Aim for 50% Male / 50% Female across runs).
-        - **Demographics**: Generate accurate DOB, Address (matching the show's location), and Telecom.
-        - **Provider**: REQUIRED. Generate a GP and Managing Org appropriate for the location.
-        - **Bio Narrative**: Create a rich, multi-paragraph medical and social history consistent with the character's background but adapted to the patient scenario.
-        
-        **FEEDBACK OVERRIDE RULE:**
-        IF the User Feedback (below) explicitly specifies a character name (e.g. "Use Spider-Man"), you MUST IGNORE the 'Universe' and 'Used Names' constraints and use the requested character.
-        """
-
-    prompt = f"""
-    **CLINICAL SCENARIO Requirements (IMMUTABLE Source of Truth):**
-    - Procedure: {case_details['procedure']}
-    - Target Outcome: {case_details['outcome']}
-    - Clinical Context: {case_details['details']}
-    
-    **PAST HISTORY (CONTEXT):**
-    {history_context if history_context else "No prior history available."}
-
-    {feedback_instruction}
-
-    **INSTRUCTIONS:**
-    1. **Identity & Consistency**:
-       - Maintain strict patient identity if provided.
-       - Ensure all documents match the patient demographics.
-    2. **Clinical Logic Application**:
-       - If Target is Denial/Low Probability -> REMOVE supporting evidence or make findings ambiguous/normal.
-       - If Target is Approval -> ENSURE strong supporting evidence exists.
-    3. **Clinical Status**:
-       - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
-       - All *historical* procedures must be implied as 'completed'.
-    4. **Data Density (MANDATORY)**:
-       - **Documents**: Minimum 5 distinct clinical documents (e.g., Consult, Lab_Report, Imaging_Report, Discharge_Summary, Specialist_Note).
-    5. **Document Generation (CRITICAL Rules)**:
-       - Generate `documents` list with rich content.
-       - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
-       - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
-       - **STRICT FORMATTING (VALIDATOR COMPLIANCE)**:
-         - **MUST START WITH**: `--- REPORT START ---`
-         - **MUST END WITH**: `--- REPORT END ---`
-         - **MUST HAVE METADATA BLOCK**:
-           ```text
-           [REPORT_METADATA]
-           PATIENT_ID: (Use Case ID)
-           MRN: (Current MRN)
-           PATIENT_NAME: (Full Name)
-           DOB: (YYYY-MM-DD)
-           REPORT_DATE: (YYYY-MM-DD from Timeline)
-           ...
-           ```
-         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
-         - **NO TRIPLE QUOTES**: Do not use `'''`.
-       - **METADATA**:
-          - `service_date`: Must be logically consistent (Historical dates for evidence, recent for request).
-          - `facility_name` & `provider_name`: Realistic and consistent.
-    6. **TIMELINE LOGIC (CRITICAL)**:
-       - **Target Procedure Date**: Future (e.g. 2-3 weeks from now).
-       - **Historical Context**: All Consults, Labs, Imaging must be PAST dated.
-       - Example: "Today is 2025-05-01. Requesting procedure for 2025-05-20. Evidence generated from 2025-04-15."
-    7. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
-       - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
-       {identity_constraint}
-       - **Required Fields (ALL MUST BE FILLED)**:
-         - `first_name`, `last_name`, `gender`, `dob`, `address`, `telecom`
-         - **Biometrics**: `race`, `height`, `weight`
-         - `maritalStatus`, `photo` (default placeholder)
-         - `communication`, `contact` (Emergency)
-         - `provider` (GP), `link` (N/A)
-         - `payer` (MANDATORY): Full Insurance details.
-       - **Bio Narrative (PLAIN TEXT)**:
-         - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
-    8. **Output**: Return the `ClinicalDataPayload` JSON.
-    """
+    # Generate main prompt from centralized prompts module
+    prompt = prompts.get_clinical_data_prompt(
+        case_details=case_details,
+        user_feedback=user_feedback,
+        history_context=history_context,
+        identity_constraint=identity_constraint,
+        feedback_instruction=feedback_instruction
+    )
 
     # Use create_with_completion to get usage stats
     try:
@@ -427,28 +337,7 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
             "model": MODEL_NAME,
             "response_model": ClinicalDataPayload,
             "messages": [
-                {"role": system_role, "content": """You are an expert healthcare data generator.
-Your task: generate realistic, diverse clinical personas and medical documents based on clinical use cases.
-
-=== Core Rules ===
-1. Generate data that is FHIR-compliant and visually realistic.
-2. **Inference**: If CPT/procedure is not provided, infer the most clinically appropriate code.
-3. Suggest CPTs intelligently.
-4. Output valid, JSON-structured data.
-5. **No SQL**: Do not generate SQL. Focus on the Object Model.
-
-=== CRITICAL PROJECT CONSTRAINTS ===
-A. **Data Density**:
-   - Documents: Minimum 5 distinct clinical documents.
-B. **Clinical Status**:
-   - Target Procedure must be 'requested'.
-   - Historical Procedures 'completed'.
-C. **NO AI RESIDUE**:
-   - No "[Redacted]" or "Jane Doe". Use realistic names from Pop Culture Universes (e.g. Characters).
-   - Authenticity: 100%.
-D. **NAMING CONVENTION**:
-   - Use names from: Friends, Marvel, Star Wars, etc. (as per constraints).
-"""},
+                {"role": system_role, "content": prompts.SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
             ]
         }
@@ -553,9 +442,9 @@ D. **NAMING CONVENTION**:
 
 
 def generate_clinical_image(context: str, image_type: str, output_path: str = None) -> str:
-    # Generates a synthetic medical image based on the clinical context.
-    # Construct a safe, clinical prompt
-    prompt = f"A direct, close-up medical {image_type} scan result. Clinical Context: {context}. Style: AUTHENTIC DICOM/RADIOGRAPH. Black and white ONLY. High contrast. CRITICAL RESTRICTIONS: NO HUMANS, NO FACES, NO BODY PARTS visible (except internal anatomy). NO DOCTORS, NO MEDICAL DEVICES/MACHINES surrounding it. NO TEXT, NO LABELS, NO WATERMARKS. Just the raw scan image on a black background."
+    """Generates a synthetic medical image based on clinical context using AI."""
+    # Get prompt from centralized prompts module
+    prompt = prompts.get_image_generation_prompt(context, image_type)
     
     try:
         if PROVIDER == "vertexai":
@@ -602,8 +491,8 @@ def fix_document_content(content: str, errors: List[str]) -> str:
     try:
         system_role = "user" if PROVIDER == "vertexai" else "system"
         
-        # Use single quotes for inner f-string keys to avoid conflict
-        prompt = f"Fix the following Clinical Document content to resolve these specific validation errors:\\nERRORS: {errors}\\n\\nCONTENT:\\n{content}\\n\\nRETURN ONLY THE FIXED CONTENT string. No markdown code blocks."
+        # Get repair prompt from centralized prompts module
+        prompt = prompts.get_document_repair_prompt(content, errors)
         
         # Use lightweight model for fixes if possible, or just same model
         # For now reusing the main configured client

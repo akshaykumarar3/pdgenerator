@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-The Clinical Data Generator is a modular, AI-driven pipeline designed to synthesize high-fidelity synthetic healthcare datasets. It transforms minimal inputs (e.g., "Patient with Knee Pain") into comprehensive Electronic Health Record (EHR) artifacts, including clinical PDF documents and medical imaging.
+The Clinical Data Generator is a modular, AI-driven pipeline designed to synthesize high-fidelity synthetic healthcare datasets. It transforms minimal inputs (e.g., "Patient with Knee Pain") into comprehensive Electronic Health Record (EHR) artifacts, including clinical PDF documents and AI-generated medical imaging.
 
 The system utilizes **Generative AI (LLMs)** to ensure clinical logic, data density, and narrative consistency, employing **OpenAI or Google Cloud Vertex AI** for reasoning and **DALL-E 3 / Imagen 3** for medical image synthesis.
 
@@ -13,6 +13,7 @@ graph TD
     UserInput["User Input (Interactive Loop)"] --> Generator["Workflow Orchestrator (generator.py)"]
     
     subgraph "Core Modules"
+        Generator --> Prompts["Prompts Config (prompts.py)"]
         Generator --> Loader["Data Loader (data_loader.py)"]
         Generator --> AI["AI Engine (ai_engine.py)"]
         Generator --> PDF["PDF Factory (pdf_generator.py)"]
@@ -51,44 +52,75 @@ This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to 
   * **PDFs**: Calls `pdf_generator` to render physical files.
   * **Retry Logic**: If a document fails `doc_validator` checks, it calls `ai_engine` to fix it.
 
-### B. AI Engine (`ai_engine.py`)
+### B. Prompts Configuration (`prompts.py`) ⚡ NEW
+
+Centralized repository for all AI instructions and prompts.
+
+* **Purpose**: Separate AI behavior from code logic for easy customization
+* **Key Components**:
+  * `SYSTEM_PROMPT` - Core AI role and rules
+  * `get_clinical_data_prompt()` - Main document generation instructions
+  * `get_image_generation_prompt()` - Medical image synthesis specifications
+  * `get_document_repair_prompt()` - Validation fix instructions
+  * Helper functions for identity constraints
+* **User-Friendly**: Extensive comments and editing guidelines
+* **Benefits**: Non-developers can safely customize AI behavior
+
+### C. AI Engine (`ai_engine.py`)
 
 Abstracts all LLM interactions. It uses a **Hybrid SDK Approach**:
 
 * **Configuration**: Loads secrets from `cred/.env`.
+* **Prompt Integration**: Imports all prompts from `prompts.py`
 * **Persona Logic**:
-  * **Universe Selection**: Randomly picks a fictional universe (e.g., *Brooklyn 99*, *Seinfeld*, *Marvel*) to seed the persona.
-  * **Uniqueness Constraint**: Strictly instructed to avoid names in the provided `exclusion_list`.
-  * **Feedback Override**: If user explicitly requests a name (e.g., "Use Tony Stark"), it overrides all integrity checks.
+  * **Universe Selection**: Randomly picks a fictional universe (from `prompts.CHARACTER_UNIVERSES`)
+  * **Uniqueness Constraint**: Avoids names in the provided `exclusion_list`.
+  * **Feedback Override**: User-requested names override all integrity checks.
 * **Logic/Text**: Uses `instructor` wrapped clients for Pydantic-structured outputs.
-* **Vision**: Uses DALL-E 3 or Imagen 3 for medical image synthesis.
+* **Vision**: Uses DALL-E 3 or Imagen 3 for AI-generated medical images.
 
-### C. PDF Factory (`pdf_generator.py`)
+### D. PDF Factory (`pdf_generator.py`)
 
 Converts structured data into professional clinical documents using `reportlab`.
 
-* **Features**: HTML Sanitization, Dynamic Templates (Consult vs Lab), and Image Embedding.
+* **Features**: HTML Sanitization, Dynamic Templates (Consult vs Lab), AI-generated image embedding
+* **Image Strategy**: 100% AI-generated images (no static fallbacks)
 
-### D. Purge Manager (`purge_manager.py`)
+### E. Purge Manager (`purge_manager.py`)
 
 Handles data lifecycle and cleanup.
 
 * **Configurable Targets**: Reads `OUTPUT_DIR` from `.env`.
 * **Granular Cleaning**: Can purge just documents, just personas, or everything.
-* **Safety**: Explicitly verifies paths before restrictive `rm -rf` operations.
+* **Safety**: Explicitly verifies paths before destructive operations.
 
 ## 4. Developer Guide: How to Make Changes
 
+### How to Customize AI Prompts (Most Common)
+
+1. **Open `prompts.py`** (centralized location for all AI instructions)
+2. **Find the relevant function/constant** (e.g., `get_clinical_data_prompt()`)
+3. **Read the comments** for guidance on what's safe to change
+4. **Make your edits** following the guidelines
+5. **Test with TEST_MODE**: Set `TEST_MODE=true` in `.env` for cheaper testing
+
 ### How to Add a New Field (e.g., "Blood Type")
 
-1. **Update Data Model**: Open `ai_engine.py` -> `PatientPersona`, add `blood_type: str`.
-2. **Update Prompt**: In `ai_engine.py`, add specific instruction to `CORE_PROMPT`.
-3. **Update PDF**: Open `pdf_generator.py` -> `create_persona_pdf` to render the new field.
+1. **Update Data Model**: Open `ai_engine.py` → `PatientPersona`, add `blood_type: str`.
+2. **Update Prompt**: Open `prompts.py` → add specific instruction to persona requirements.
+3. **Update PDF**: Open `pdf_generator.py` → `create_persona_pdf` to render the new field.
 
 ### How to Change the AI Model
 
 1. Open `cred/.env` (provider config).
 2. Open `ai_engine.py` and modify `MODEL_NAME`.
+
+### How to Improve Image Quality
+
+1. Open `prompts.py`
+2. Find `get_image_generation_prompt()`
+3. Read comments for customization tips
+4. Add specific requirements (resolution, anatomical details, etc.)
 
 ## 5. Directory Structure
 
@@ -96,23 +128,57 @@ Handles data lifecycle and cleanup.
 pdgenerator/
 ├── cred/                   # Credentials (Ignored by Git)
 │   ├── .env                # Config: keys, OUTPUT_DIR
-│   └── gcp_auth_key.json   # Service Account Key
-├── core/                   # Static assets & DB Logic
-│   ├── patients_db.json    # Central Patient Registry
-│   └── seed_template.sql   # (Legacy/Reference)
+│   ├── gcp_auth_key.json   # Service Account Key
+│   └── examples/           # Example configurations (tracked by git)
+│       └── .env.example    # Template for setup
+├── core/                   # Static reference data & DB Logic
+│   ├── UAT Plan.xlsx       # Patient test cases
+│   ├── mockdata_schema.sql # Database schema
+│   ├── seed_template.sql   # SQL template (legacy/reference)
+│   ├── Sample persona.pdf  # Example output
+│   ├── patient_db.py       # Patient database module
+│   └── patients_db.json    # Central Patient Registry
+├── templates/              # Configuration Templates
+│   └── summary_template.json
 ├── generated_output/       # (Default) Dynamic Output Dir
 │   ├── persona/            # Generated Personas (.pdf)
 │   ├── logs/               # Interaction Logs (.txt)
 │   └── patient-reports/    # Clinical Artifacts
 │       └── 237/
-│           ├── images/
+│           ├── images/     # AI-generated medical images
 │           └── *.pdf
+├── prompts.py              # ⚡ Centralized AI Prompts & Instructions
 ├── ai_engine.py            # AI Logic & Pydantic Framework
 ├── generator.py            # Main Loop & Orchestrator
 ├── pdf_generator.py        # ReportLab Rendering Logic
 ├── doc_validator.py        # Document Structure Validator
+├── data_loader.py          # Excel case loader
+├── history_manager.py      # Conversation tracking
+├── purge_manager.py        # Data cleanup utilities
 ├── AI_CONTEXT.md           # AI Reference Documentation
-├── templates/              # Configuration Templates
-│   └── summary_template.json
-└── run.sh                  # Execution Wrapper
+├── ARCHITECTURE.md         # This file
+├── run.bat                 # Windows execution wrapper
+└── run.sh                  # Mac/Linux execution wrapper
 ```
+
+## 6. Recent Architectural Changes
+
+### Centralized Prompts (v2.0)
+
+- Created `prompts.py` to separate AI logic from code
+- All prompt strings moved out of `ai_engine.py`
+- User-friendly comments and editing guidelines
+- Easier maintenance and customization
+
+### AI-Only Image Generation
+
+- Removed `assets/` folder (static fallback images)
+- All images now AI-generated via DALL-E 3 / Imagen 3
+- Enhanced image prompts for medical-grade quality
+- `get_clinical_image()` in `pdf_generator.py` now returns `None`
+
+### Cross-Platform Support
+
+- Added Windows batch script (`run.bat`)
+- Platform-specific documentation
+- Example configuration files for easy onboarding

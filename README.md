@@ -9,11 +9,11 @@
 
 ---
 
-## 🏃 Usage (Interactive Mode)
+## 🚀 Quick Start
 
-The tool now runs as an **Interactive REPL (Read-Eval-Print Loop)**, allowing you to process multiple patients without restarting.
+Already set up? Start generating immediately:
 
-### 1. Launch the Generator
+### Launch the Generator
 
 **Windows:**
 ```cmd
@@ -29,20 +29,20 @@ python generator.py
 python3 generator.py
 ```
 
-### 2. Interactive Commands
+### Interactive Commands
 
-Once launched, you will see a prompt: `🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit):`
+Once launched, you'll see: `🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit):`
 
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | **`[Patient ID]`** | Generates data for a single patient. | `210` or `237` |
-| **`*`** | Runs **Batch Mode** for all missing patients in the Excel tracker. | `*` |
+| **`*`** | Runs **Batch Mode** for all missing patients. | `*` |
 | **`q`** or **`exit`** | Quits the application. | `q` |
 | **`--`** | **PURGE ALL**. Deletes logs and documents. | `--` |
 
-### 3. Document Selection (NEW)
+### Document Selection
 
-After entering a Patient ID, you'll be prompted to select what to generate:
+After entering a Patient ID:
 
 ```
 📋 What to generate?
@@ -53,26 +53,24 @@ After entering a Patient ID, you'll be prompted to select what to generate:
    [5] All (Summary + Reports + Persona)
 ```
 
-The system also automatically detects existing documents and skips duplicates.
+### Output
 
-### 4. Output Artifacts
+Results are saved in `generated_output/` (configurable):
 
-Results are saved in the **configured output directory** (Default: `generated_output/`):
-
-* `persona/*.pdf`: Comprehensive Face Sheet & Bio for the patient.
-* `patient-reports/<ID>/*.pdf`: Clinical documents (Consults, Labs, Notes).
-* `patient-reports/<ID>/images/*.png`: Embeddable medical images.
-* `logs/`: Execution logs.
+* `persona/*.pdf`: Patient Face Sheet & Bio
+* `patient-reports/<ID>/*.pdf`: Clinical documents
+* `patient-reports/<ID>/images/*.png`: AI-generated medical images
+* `logs/`: Execution logs
 
 ---
 
 ## 🛠️ Installation & Setup
 
-### 1. Prerequisites-
+### 1. Prerequisites
 
 * Python 3.10+
-* Google Cloud Platform Project with **Vertex AI API** enabled (if using Vertex).
-* OpenAI API Key (if using OpenAI).
+* Google Cloud Platform Project with **Vertex AI API** enabled (if using Vertex AI)
+* OpenAI API Key (if using OpenAI)
 
 ### 2. Environment Setup
 
@@ -98,48 +96,118 @@ pip install -r requirements.txt
 
 ### 3. Configuration (`cred/`)
 
-The system expects credentials in a `cred/` directory to keep them secure.
+The system expects credentials in a `cred/` directory.
 
 1. **Create Directory**: `mkdir cred`
-2. **Environment File**: Create `cred/.env` with the following template:
+2. **Create Environment File**: Copy the example and customize:
 
+    **Windows:**
+    ```cmd
+    copy cred\examples\.env.example cred\.env
+    notepad cred\.env
+    ```
+
+    **Mac / Linux:**
     ```bash
-    # cred/.env
-    LLM_PROVIDER=openai # or vertexai
-    OPENAI_API_KEY=sk-...
+    cp cred/examples/.env.example cred/.env
+    nano cred/.env
+    ```
+
+3. **Fill in your credentials:**
+    ```bash
+    # Choose provider
+    LLM_PROVIDER=openai  # or vertexai
     
-    # If using Vertex AI:
+    # OpenAI
+    OPENAI_API_KEY=sk-your-key-here
+    
+    # OR Vertex AI
     GCP_PROJECT_ID=your-project-id
     GCP_LOCATION=us-central1
     GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
     
-    # Optional: Custom Output Path
+    # Optional
     OUTPUT_DIR=generated_output
+    TEST_MODE=false
     ```
 
-3. **Service Account Key** (Vertex Only): Place your JSON key at `cred/gcp_auth_key.json`.
+4. **Service Account Key** (Vertex AI only): Place your JSON key at `cred/gcp_auth_key.json`.
 
 ---
 
-## 🔐 Credentials Management
+## 📁 Project Structure
 
-* **`.gitignore`**: The `cred/` folder is ignored by default.
-* **Templates**: Use the snippet above to reconstruct your environment on a new machine.
+```
+pdgenerator/
+├── cred/                       # Credentials (gitignored, create manually)
+│   ├── .env                    # Your configuration (copy from examples)
+│   ├── gcp_auth_key.json       # GCP service account (if using Vertex AI)
+│   └── examples/               # Example configuration files
+│       └── .env.example        # Template for .env
+│
+├── core/                       # Reference data & patient database
+│   ├── UAT Plan.xlsx           # Patient test cases & scenarios
+│   ├── mockdata_schema.sql     # Database schema reference
+│   ├── seed_template.sql       # SQL template for patient records
+│   ├── Sample persona.pdf      # Example output
+│   ├── patient_db.py           # Patient database module
+│   └── patients_db.json        # Patient records (auto-generated)
+│
+├── templates/                  # PDF layout templates
+│   └── summary_template.json   # Clinical summary structure
+│
+├── generated_output/           # Generated files (gitignored)
+│   ├── persona/                # Patient persona PDFs
+│   ├── patient-reports/        # Clinical documents & images
+│   └── logs/                   # Execution logs
+│
+├── prompts.py                  # ⚡ AI prompts configuration
+├── ai_engine.py                # LLM interaction (OpenAI/Vertex AI)
+├── generator.py                # Main orchestrator & REPL loop
+├── pdf_generator.py            # PDF rendering (ReportLab)
+├── doc_validator.py            # Document validation
+├── data_loader.py              # Excel case data loading
+├── history_manager.py          # Conversation history
+├── purge_manager.py            # Data cleanup utilities
+│
+├── run.bat                     # Windows launcher
+├── run.sh                      # Mac/Linux launcher
+├── requirements.txt            # Python dependencies
+├── README.md                   # This file
+├── AI_CONTEXT.md               # AI assistant reference
+└── ARCHITECTURE.md             # System architecture docs
+```
+
+### Key Files to Customize
+
+* **`prompts.py`** - Edit AI behavior and instructions
+* **`cred/.env`** - Configure API keys and settings
+* **`core/UAT Plan.xlsx`** - Add patient test cases
+* **`templates/summary_template.json`** - Modify PDF layouts
 
 ---
 
 ## 🚀 Key Features
 
-* **Multi-Modal AI**: Uses **GPT-4o / Gemini 2.5** (Reasoning/Text) and **DALL-E 3 / Imagen 3** (Medical Imaging).
-* **Interactive Workflow**: Continuous processing loop with admin purge commands.
+* **Multi-Modal AI**: Uses **GPT-4o / Gemini 2.5** (Text) and **DALL-E 3 / Imagen 3** (Medical Imaging)
+* **Interactive Workflow**: Continuous processing loop with admin purge commands
 * **AI-Friendly Validation**:
-  * **Auto-Repair**: If generated documents fail strict validation (e.g. missing metadata), the system automatically asks AI to fix them.
-  * **Fail-Safe**: Even if repair fails, documents are saved with `-NAF` suffix (Not AI Friendly) to prevent data loss.
-* **Configurable Output**: Define completely custom output paths via `.env`.
-* **Structured Data**: Outputs validated FHIR-compliant JSON objects.
-* **Rich Clinical Narrative**: Generates comprehensive SOAP notes, Imaging Reports, and Discharge Summaries.
-* **Persona Consistency**: Maintains identity across runs (e.g., "Walter White" for ID 210).
-* **Advanced PDFs**: Embedded images, barcode headers, and realistic formatting.
+  * **Auto-Repair**: Invalid documents are automatically fixed by AI
+  * **Fail-Safe**: Failed repairs saved with `-NAF` suffix (Not AI Friendly)
+* **Centralized Prompts**: All AI instructions in `prompts.py` for easy editing
+* **Configurable Output**: Custom output paths via `.env`
+* **Structured Data**: FHIR-compliant JSON objects
+* **Rich Clinical Narrative**: Comprehensive SOAP notes, Imaging Reports, Discharge Summaries
+* **Persona Consistency**: Maintains character identity across runs
+* **Advanced PDFs**: Embedded AI-generated images, barcode headers, realistic formatting
+
+---
+
+## 🔐 Credentials Management
+
+* **`.gitignore`**: The `cred/` folder is ignored by default (except `cred/examples/`)
+* **Templates**: Use `cred/examples/.env.example` to reconstruct your environment
+* **Security**: Never commit API keys or service account files
 
 ---
 
