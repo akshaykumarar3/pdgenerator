@@ -1,5 +1,6 @@
 # Credentials
 cred/
+!cred/examples/
 
 # Python
 __pycache__/

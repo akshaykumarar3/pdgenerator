@@ -7,7 +7,7 @@
 The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic healthcare data for testing Prior Authorization (PA) workflows. It generates:
 
 - **Clinical PDFs**: Lab reports, consult notes, imaging reports
-- **Medical Images**: AI-generated MRI/CT scans
+- **Medical Images**: AI-generated MRI/CT scans (DALL-E 3 / Imagen 3)
 - **Patient Personas**: FHIR-compliant patient records
 - **Clinical Summaries**: Aggregate patient overviews
 
@@ -16,6 +16,7 @@ The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic
 ```
 generator.py          → Main orchestrator, REPL loop
 ai_engine.py          → LLM interaction (OpenAI/Vertex AI)
+prompts.py            → Centralized AI prompts & instructions
 pdf_generator.py      → PDF rendering (ReportLab)
 doc_validator.py      → Document structure validation
 data_loader.py        → Excel case data loading
@@ -54,6 +55,24 @@ purge_manager.py      → Data cleanup utilities
 
 ## Recent Changes (Jan 2026)
 
+### Centralized Prompts (NEW)
+
+- **`prompts.py`**: All AI instructions now in one file with user-friendly comments
+- Helper functions: `get_clinical_data_prompt()`, `get_image_generation_prompt()`, etc.
+- Easy customization without touching core logic
+
+### AI-Generated Images  Only (NEW)
+
+- Removed static asset images (`assets/` folder deleted)
+- All medical images now generated via DALL-E 3 or Imagen 3
+- Enhanced image prompts for higher quality, medical-grade outputs
+
+### Windows Compatibility (NEW)
+
+- Added `run.bat` for Windows users
+- Cross-platform documentation in README
+- Example configuration files in `cred/examples/`
+
 ### Document Generation Enhancements
 
 - **Interactive Mode Selection**: Menu for Summary/Reports/Persona/All
@@ -74,22 +93,35 @@ purge_manager.py      → Data cleanup utilities
 
 ## Common Modification Patterns
 
+### Customize AI Prompts
+
+1. Open `prompts.py` (all prompts centralized here)
+2. Edit relevant function or constant
+3. Read comments for guidelines
+4. Test changes with `TEST_MODE=true`
+
 ### Add New Document Type
 
 1. Update `GeneratedDocument` in `ai_engine.py`
 2. Add rendering logic in `pdf_generator.py`
-3. Update AI prompt to include new type
+3. Update AI prompt in `prompts.py`
 
 ### Add New Patient Field
 
 1. Update `PatientPersona` model in `ai_engine.py`
-2. Update prompt instructions
+2. Update prompt instructions in `prompts.py`
 3. Update PDF rendering in `create_persona_pdf()`
 
 ### Change AI Provider
 
 1. Update `LLM_PROVIDER` in `cred/.env`
 2. Verify `MODEL_NAME` mapping in `ai_engine.py`
+
+### Improve Image Quality
+
+1. Edit `get_image_generation_prompt()` in `prompts.py`
+2. Add specific requirements (resolution, style, anatomical details)
+3. Follow comments in prompts.py for guidance
 
 ## File Naming Conventions
 
@@ -106,11 +138,22 @@ purge_manager.py      → Data cleanup utilities
 
 ## Testing
 
+**Windows:**
+```cmd
+:: Syntax check
+python -m py_compile generator.py ai_engine.py prompts.py
+
+:: Run with test mode (cheaper/faster)
+set TEST_MODE=true
+python generator.py
+```
+
+**Mac / Linux:**
 ```bash
 # Syntax check
-python3 -m py_compile generator.py ai_engine.py
+python3 -m py_compile generator.py ai_engine.py prompts.py
 
-# Run with test mode (cheaper/faster)
+# Run with test mode
 TEST_MODE=true python3 generator.py
 ```
 
@@ -121,3 +164,5 @@ TEST_MODE=true python3 generator.py
 3. Document titles should use underscores, not spaces
 4. Existing documents inform AI to avoid duplicates
 5. The `generation_mode` dict controls what gets generated
+6. **Prompts are in `prompts.py`** - edit there, not in ai_engine.py
+7. Images are 100% AI-generated - no static fallbacks

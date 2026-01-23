@@ -15,8 +15,15 @@ def load_patient(patient_id: str) -> Optional[Dict]:
     Returns None if not found.
     """
     _init_db()
-    with open(DB_PATH, 'r') as f:
-        data = json.load(f)
+    try:
+        with open(DB_PATH, 'r') as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        # Handle corrupted or empty JSON file
+        print(f"   ⚠️  Warning: patients_db.json was corrupted. Reinitializing...")
+        with open(DB_PATH, 'w') as f:
+            json.dump({}, f)
+        data = {}
     
     # Handle both string/int keys
     key = str(patient_id)
@@ -30,8 +37,12 @@ def save_patient(patient_id: str, patient_data: Dict):
     _init_db()
     
     # Read strict
-    with open(DB_PATH, 'r') as f:
-        current_db = json.load(f)
+    try:
+        with open(DB_PATH, 'r') as f:
+            current_db = json.load(f)
+    except (json.JSONDecodeError, ValueError):
+        # Handle corrupted or empty JSON file
+        current_db = {}
     
     # Update
     key = str(patient_id)
