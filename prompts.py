@@ -28,6 +28,7 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 4. Output valid, JSON-structured data.
 5. **No SQL**: Do not generate SQL. Focus on the Object Model.
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
+7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
 
 === CRITICAL PROJECT CONSTRAINTS ===
 A. **Data Density**:
@@ -40,6 +41,10 @@ C. **NO AI RESIDUE**:
    - Authenticity: 100%.
 D. **NAMING CONVENTION**:
    - Use names from: Friends, Marvel, Star Wars, etc. (as per constraints).
+E. **INSURANCE REQUIREMENT**:
+   - Payer: ALWAYS "UnitedHealthcare" (UHC).
+   - Plan Types: Choice Plus PPO, Options PPO, Navigate HMO, or Compass HMO.
+   - Include realistic member IDs, group IDs, policy numbers.
 """
 
 # ============================================================================
@@ -144,7 +149,14 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
-         - `payer` (MANDATORY): Full Insurance details.
+         - **payer (MANDATORY - UnitedHealthcare ONLY)**:
+           - `payer_name`: "UnitedHealthcare"
+           - `plan_name`: One of "Choice Plus PPO", "Options PPO", "Navigate HMO", "Compass HMO"
+           - `plan_type`: "PPO" or "HMO" (must match plan_name)
+           - `member_id`: Format "MBR-XXXXXXXXX" (9 digits)
+           - `group_id`: Format "GRP-XXXXX" (5 digits)
+           - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
+           - All other payer fields (deductible, copay, effective_date, subscriber details)
        - **Bio Narrative (PLAIN TEXT)**:
          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
     9. **Output**: Return the `ClinicalDataPayload` JSON.

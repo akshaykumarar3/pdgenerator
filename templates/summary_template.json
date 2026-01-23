@@ -12,7 +12,9 @@
     "name": "Gregory House",
     "dob": "1959-05-15",
     "gender": "Male",
-    "mrn": "MRN-211-2026"
+    "mrn": "MRN-211-2026",
+    "insurance_payer": "UnitedHealthcare",
+    "insurance_plan": "Choice Plus PPO"
   },
   "diagnoses": {
     "columns": [
@@ -23,20 +25,20 @@
     ],
     "data": [
       {
-        "code": "R07.9",
-        "condition": "Chest pain, unspecified",
+        "code": "I25.10",
+        "condition": "Atherosclerotic heart disease of native coronary artery without angina pectoris",
         "status": "Active",
         "date_recorded": "2025-04-15"
       },
       {
-        "code": "151.7",
-        "condition": "Cardiomegaly (Left Ventricular Hypertrophy)",
+        "code": "R07.9",
+        "condition": "Chest pain, unspecified",
         "status": "Active",
         "date_recorded": "2025-05-05"
       },
       {
-        "code": "R53.83",
-        "condition": "Other fatigue",
+        "code": "I51.7",
+        "condition": "Cardiomegaly",
         "status": "Active",
         "date_recorded": "2025-04-15"
       }
@@ -64,15 +66,16 @@
     "phone": "555-123-4567"
   },
   "treatment_plan": {
-    "procedure": "CPT 78452 (Myocardial perfusion imaging, tomographic (SPECT); multiple studies, at rest and/or stress)",
+    "procedure": "CPT 78452 - Myocardial perfusion imaging, tomographic (SPECT); multiple studies, at rest and/or stress",
     "outcome": "Pending Authorization"
   },
   "clinical_rationale": {
     "justification_text": "CPT code 78452 is medically necessary for this patient to accurately assess for inducible myocardial ischemia. Although the exercise stress test did not show overt arrhythmias, the patient's baseline LVH significantly limits the diagnostic sensitivity of a non-imaging stress test.",
     "clinical_necessity_points": [
-      "Persistent chest pain (6/10) and shortness of breath in a 65-year-old male.",
-      "Necessity to rule out underlying coronary artery disease not apparent on standard treadmill testing.",
-      "78452 protocol (Rest/Stress) provides necessary comparative data for myocardial viability."
+      "ICD-10 I25.10: Atherosclerotic heart disease supports need for advanced cardiac imaging",
+      "ICD-10 R07.9: Persistent chest pain requires definitive diagnostic evaluation",
+      "ICD-10 I51.7: Cardiomegaly necessitates assessment of myocardial viability",
+      "Standard stress testing limited by baseline EKG abnormalities"
     ]
   },
   "styling": {

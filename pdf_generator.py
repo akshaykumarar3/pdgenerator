@@ -271,17 +271,25 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
             # Get data from summary_data or template
             diagnoses = summary_data.get('diagnoses', diag_template.get('data', []))
             for diag in diagnoses:
-                row = [diag.get(col, 'N/A') for col in columns]
+                row = []
+                for col in columns:
+                    cell_text = str(diag.get(col, 'N/A'))
+                    # Wrap in Paragraph for text wrapping
+                    row.append(Paragraph(cell_text, style_normal))
                 table_data.append(row)
             
             if len(table_data) > 1:
-                t_diag = Table(table_data, colWidths=[1*inch, 3*inch, 1.5*inch, 1.5*inch])
+                t_diag = Table(table_data, colWidths=[0.8*inch, 3.5*inch, 1*inch, 1.2*inch])
                 t_diag.setStyle(TableStyle([
                     ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f2f2f2")),
                     ('TEXTCOLOR', (0,0), (-1,0), colors.black),
                     ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
                     ('BOTTOMPADDING', (0,0), (-1,0), 8),
+                    ('TOPPADDING', (0,0), (-1,-1), 4),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 4),
                     ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                    ('WORDWRAP', (0,0), (-1,-1), True),
                 ]))
                 Story.append(t_diag)
                 Story.append(Spacer(1, 10))
@@ -305,18 +313,22 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
                 
                 findings_data = [['Test', 'Date', 'Result']]
                 for finding in key_findings:
-                    findings_data.append([
-                        finding.get('test', 'N/A'),
-                        finding.get('date', 'N/A'),
-                        finding.get('result', 'N/A')
-                    ])
+                    row = [
+                        Paragraph(str(finding.get('test', 'N/A')), style_normal),
+                        Paragraph(str(finding.get('date', 'N/A')), style_normal),
+                        Paragraph(str(finding.get('result', 'N/A')), style_normal)
+                    ]
+                    findings_data.append(row)
                 
-                t_findings = Table(findings_data, colWidths=[1.5*inch, 1.5*inch, 4*inch])
+                t_findings = Table(findings_data, colWidths=[1.2*inch, 1*inch, 4.3*inch])
                 t_findings.setStyle(TableStyle([
                     ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f2f2f2")),
                     ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
                     ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
                     ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                    ('TOPPADDING', (0,0), (-1,-1), 4),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+                    ('WORDWRAP', (0,0), (-1,-1), True),
                 ]))
                 Story.append(t_findings)
                 Story.append(Spacer(1, 10))
