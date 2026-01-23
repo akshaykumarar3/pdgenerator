@@ -1,30 +1,85 @@
 {
   "title": "Patient Clinical Summary",
-  "sections": ["demographics", "diagnoses", "timeline", "treatment_plan"],
-  "demographics_fields": {
-    "name": "Patient Name",
-    "dob": "Date of Birth",
-    "gender": "Gender",
-    "mrn": "Medical Record Number",
-    "address": "Address",
-    "phone": "Phone",
-    "provider": "Primary Provider",
-    "facility": "Healthcare Facility"
+  "sections": [
+    "patient_details",
+    "diagnoses",
+    "encounters_documentation",
+    "contact_provider",
+    "treatment_plan",
+    "clinical_rationale"
+  ],
+  "patient_details": {
+    "name": "Gregory House",
+    "dob": "1959-05-15",
+    "gender": "Male",
+    "mrn": "MRN-211-2026"
   },
-  "diagnoses_columns": ["code", "condition", "status", "date"],
-  "timeline_structure": {
-    "date": "YYYY-MM-DD",
-    "title": "Event Title",
-    "details": []
+  "diagnoses": {
+    "columns": [
+      "code",
+      "condition",
+      "status",
+      "date_recorded"
+    ],
+    "data": [
+      {
+        "code": "R07.9",
+        "condition": "Chest pain, unspecified",
+        "status": "Active",
+        "date_recorded": "2025-04-15"
+      },
+      {
+        "code": "151.7",
+        "condition": "Cardiomegaly (Left Ventricular Hypertrophy)",
+        "status": "Active",
+        "date_recorded": "2025-05-05"
+      },
+      {
+        "code": "R53.83",
+        "condition": "Other fatigue",
+        "status": "Active",
+        "date_recorded": "2025-04-15"
+      }
+    ]
   },
-  "treatment_fields": {
-    "procedure": "Procedure Name",
-    "outcome": "Expected Outcome",
-    "rationale": "Clinical Rationale"
+  "encounters_documentation": {
+    "narrative_summary": "Patient presented to Dr. Lisa Cuddy at Princeton-Plainsboro Teaching Hospital with intermittent chest discomfort rated 6/10 and significant fatigue. Initial workup included a 12-lead ECG and a Standard Bruce Protocol Stress Test.",
+    "key_findings": [
+      {
+        "test": "ECG",
+        "date": "2025-05-05",
+        "result": "Demonstrated a Left Ventricular Hypertrophy (LVH) pattern."
+      },
+      {
+        "test": "Stress Test",
+        "date": "2025-05-10",
+        "result": "Patient achieved 85% of predicted maximal heart rate without acute ST changes; however, baseline LVH can mask ischemic changes."
+      }
+    ]
+  },
+  "contact_provider": {
+    "provider": "Dr. Lisa Cuddy, MD",
+    "facility": "Princeton-Plainsboro Teaching Hospital",
+    "address": "123 Hospital Road, Princeton, NJ, 08540",
+    "phone": "555-123-4567"
+  },
+  "treatment_plan": {
+    "procedure": "CPT 78452 (Myocardial perfusion imaging, tomographic (SPECT); multiple studies, at rest and/or stress)",
+    "outcome": "Pending Authorization"
+  },
+  "clinical_rationale": {
+    "justification_text": "CPT code 78452 is medically necessary for this patient to accurately assess for inducible myocardial ischemia. Although the exercise stress test did not show overt arrhythmias, the patient's baseline LVH significantly limits the diagnostic sensitivity of a non-imaging stress test.",
+    "clinical_necessity_points": [
+      "Persistent chest pain (6/10) and shortness of breath in a 65-year-old male.",
+      "Necessity to rule out underlying coronary artery disease not apparent on standard treadmill testing.",
+      "78452 protocol (Rest/Stress) provides necessary comparative data for myocardial viability."
+    ]
   },
   "styling": {
     "primary_color": "#27ae60",
     "secondary_color": "#2980b9",
-    "accent_color": "#34495e"
+    "accent_color": "#34495e",
+    "font_family": "Arial, sans-serif",
+    "layout": "medical_standard"
   }
 }

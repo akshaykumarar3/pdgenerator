@@ -295,7 +295,7 @@ class ClinicalDataPayload(BaseModel):
     patient_persona: PatientPersona
 
 
-def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None) -> 'FinalResult':
+def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None, existing_filenames: List[str] = None) -> 'FinalResult':
 
     """
     Calls AI to generate clinical data (Persona + Documents) based on the case + feedback + history.
@@ -323,7 +323,8 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
         user_feedback=user_feedback,
         history_context=history_context,
         identity_constraint=identity_constraint,
-        feedback_instruction=feedback_instruction
+        feedback_instruction=feedback_instruction,
+        existing_filenames=existing_filenames or []
     )
 
     # Use create_with_completion to get usage stats

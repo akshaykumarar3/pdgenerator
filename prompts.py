@@ -27,6 +27,7 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 3. Suggest CPTs intelligently.
 4. Output valid, JSON-structured data.
 5. **No SQL**: Do not generate SQL. Focus on the Object Model.
+6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
 
 === CRITICAL PROJECT CONSTRAINTS ===
 A. **Data Density**:
@@ -54,7 +55,7 @@ D. **NAMING CONVENTION**:
 
 def get_clinical_data_prompt(case_details: dict, user_feedback: str = "", 
                              history_context: str = "", identity_constraint: str = "",
-                             feedback_instruction: str = "") -> str:
+                             feedback_instruction: str = "", existing_filenames: list = None) -> str:
     """
     Generates the main prompt for clinical data generation.
     
@@ -64,10 +65,22 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
         history_context: Previous interaction history
         identity_constraint: Instructions for patient identity (new vs existing)
         feedback_instruction: Formatted feedback block
+        existing_filenames: List of existing document titles to avoid duplicates
     
     Returns:
         Complete prompt string
     """
+    
+    # Build duplicate prevention instruction
+    duplicate_prevention = ""
+    if existing_filenames:
+        duplicate_prevention = f"""
+    **DUPLICATE PREVENTION (CRITICAL)**:
+    - The following documents ALREADY EXIST for this patient: {', '.join(existing_filenames)}
+    - You MUST generate documents with DIFFERENT titles than these existing ones.
+    - Focus on new types of clinical evidence not yet documented.
+"""
+    
     return f"""
     **CLINICAL SCENARIO Requirements (IMMUTABLE Source of Truth):**
     - Procedure: {case_details['procedure']}
@@ -78,7 +91,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
     {history_context if history_context else "No prior history available."}
 
     {feedback_instruction}
-
+{duplicate_prevention}
     **INSTRUCTIONS:**
     1. **Identity & Consistency**:
        - Maintain strict patient identity if provided.
@@ -89,9 +102,14 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
     3. **Clinical Status**:
        - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
        - All *historical* procedures must be implied as 'completed'.
-    4. **Data Density (MANDATORY)**:
+    4. **Medical Coding Requirements (CRITICAL)**:
+       - **ICD-10 Codes**: Generate REAL ICD-10-CM diagnosis codes that clinically support the medical necessity of the requested procedure.
+       - **CPT Code**: The procedure MUST be specified with its CPT code (e.g., "CPT 78452 - Myocardial perfusion imaging").
+       - **Medical Necessity**: ICD-10 codes must be medically appropriate and commonly used to justify the CPT procedure.
+       - **Code Format**: ICD-10 codes should follow the format (e.g., "I25.10" for atherosclerotic heart disease, "R07.9" for chest pain).
+    5. **Data Density (MANDATORY)**:
        - **Documents**: Minimum 5 distinct clinical documents (e.g., Consult, Lab_Report, Imaging_Report, Discharge_Summary, Specialist_Note).
-    5. **Document Generation (CRITICAL Rules)**:
+    6. **Document Generation (CRITICAL Rules)**:
        - Generate `documents` list with rich content.
        - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
        - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
@@ -113,11 +131,11 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
        - **METADATA**:
           - `service_date`: Must be logically consistent (Historical dates for evidence, recent for request).
           - `facility_name` & `provider_name`: Realistic and consistent.
-    6. **TIMELINE LOGIC (CRITICAL)**:
+    7. **TIMELINE LOGIC (CRITICAL)**:
        - **Target Procedure Date**: Future (e.g. 2-3 weeks from now).
        - **Historical Context**: All Consults, Labs, Imaging must be PAST dated.
        - Example: "Today is 2025-05-01. Requesting procedure for 2025-05-20. Evidence generated from 2025-04-15."
-    7. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
+    8. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
        - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
        {identity_constraint}
        - **Required Fields (ALL MUST BE FILLED)**:
@@ -129,7 +147,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          - `payer` (MANDATORY): Full Insurance details.
        - **Bio Narrative (PLAIN TEXT)**:
          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
-    8. **Output**: Return the `ClinicalDataPayload` JSON.
+    9. **Output**: Return the `ClinicalDataPayload` JSON.
     """
 
 # ============================================================================

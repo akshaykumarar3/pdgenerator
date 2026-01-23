@@ -177,13 +177,24 @@ def get_clinical_image(doc_title: str):
 
 def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = None):
     """
-    Creates a highly styled Clinical Summary PDF.
+    Creates a highly styled Clinical Summary PDF using the template structure.
     """
+    import json
+    
+    # Load template
+    template_path = os.path.join(os.path.dirname(__file__), "templates", "summary_template.json")
+    try:
+        with open(template_path, 'r') as f:
+            template = json.load(f)
+    except Exception as e:
+        print(f"   ⚠️  Warning: Could not load summary template: {e}. Using defaults.")
+        template = {"sections": [], "styling": {}}
+    
     # 1. Folder Management
     if output_folder:
-        output_dir = output_folder # Explicit path
+        output_dir = output_folder
     else:
-        output_dir = f"documents/{patient_id}" # Fallback
+        output_dir = f"documents/{patient_id}"
         
     _ensure_folder(output_dir)
 
@@ -197,93 +208,168 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     # Styles
     styles = getSampleStyleSheet()
     
-    # Custom Colors
-    col_green = colors.HexColor("#27ae60")
-    col_blue = colors.HexColor("#2980b9")
+    # Get colors from template or use defaults
+    styling = template.get('styling', {})
+    col_primary = colors.HexColor(styling.get('primary_color', '#27ae60'))
+    col_secondary = colors.HexColor(styling.get('secondary_color', '#2980b9'))
+    col_accent = colors.HexColor(styling.get('accent_color', '#34495e'))
     col_light_blue = colors.HexColor("#f0f7fb")
-    col_dark_blue = colors.HexColor("#34495e")
     
     # Custom Styles
-    style_tit = ParagraphStyle('MainTitle', parent=styles['Heading1'], textColor=col_green, 
-                               borderPadding=10, borderWidth=0, borderBottomWidth=2, borderColor=colors.HexColor("#2ecc71"))
+    style_title = ParagraphStyle('MainTitle', parent=styles['Heading1'], textColor=col_primary, 
+                               borderPadding=10, borderWidth=0, borderBottomWidth=2, borderColor=col_primary)
     
-    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], textColor=col_blue, backColor=col_light_blue,
-                              borderPadding=8, borderWidth=0, borderLeftWidth=4, borderColor=colors.HexColor("#3498db"), spaceBefore=20)
+    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], textColor=col_secondary, backColor=col_light_blue,
+                              borderPadding=8, borderWidth=0, borderLeftWidth=4, borderColor=col_secondary, spaceBefore=20)
     
-    style_label = ParagraphStyle('Label', parent=styles['Normal'], fontName='Helvetica-Bold', textColor=colors.gray)
-    style_val = ParagraphStyle('Value', parent=styles['Normal'])
+    style_normal = ParagraphStyle('Normal', parent=styles['Normal'])
 
     Story = []
     
-    # --- TITLE ---
-    Story.append(Paragraph(f"Patient Clinical Summary (Approval Case)", style_tit))
+    # Title
+    title = template.get('title', 'Patient Clinical Summary')
+    Story.append(Paragraph(title, style_title))
     Story.append(Spacer(1, 20))
     
-    # --- DEMOGRAPHICS GRID (Using Table) ---
-    # Row 1: Headers
-    data_demo = [
-        [Paragraph("<b>Patient Details</b>", styles["Heading3"]), Paragraph("<b>Contact & Provider</b>", styles["Heading3"])],
-        [
-            Paragraph(f"<b>Name:</b> {summary_data.get('name', 'Unknown')}<br/>"
-                      f"<b>DOB:</b> {summary_data.get('dob', '1980-01-01')}<br/>"
-                      f"<b>Gender:</b> {summary_data.get('gender', 'Unknown')}<br/>"
-                      f"<b>MRN:</b> {summary_data.get('mrn', 'N/A')}", style_val),
+    # Process sections dynamically based on template
+    sections = template.get('sections', [])
+    
+    for section_name in sections:
+        if section_name == 'patient_details':
+            # Patient Details Section
+            patient_details = template.get('patient_details', {})
+            # Merge with actual data
+            name = summary_data.get('name', patient_details.get('name', 'Unknown'))
+            dob = summary_data.get('dob', patient_details.get('dob', 'N/A'))
+            gender = summary_data.get('gender', patient_details.get('gender', 'N/A'))
+            mrn = summary_data.get('mrn', patient_details.get('mrn', 'N/A'))
             
-            Paragraph(f"<b>Address:</b> {summary_data.get('address', 'Unknown')}<br/>"
-                      f"<b>Phone:</b> 555-0199<br/>"
-                      f"<b>Provider:</b> {summary_data.get('provider', 'Dr. Smith')}<br/>"
-                      f"<b>Facility:</b> {summary_data.get('facility', 'General Hospital')}", style_val)
-        ]
-    ]
-    
-    t_demo = Table(data_demo, colWidths=[3.5*inch, 3.5*inch])
-    t_demo.setStyle(TableStyle([
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('LEFTPADDING', (0,0), (-1,-1), 0),
-        ('RIGHTPADDING', (0,0), (-1,-1), 10),
-    ]))
-    Story.append(t_demo)
-    
-    # --- DIAGNOSIS ---
-    Story.append(Paragraph("Current Diagnoses", style_h2))
-    Story.append(Spacer(1, 10))
-    
-    diag_data = [['Code', 'Condition', 'Status', 'Date Recorded']]
-    # Add dummy data or passed data
-    for d in summary_data.get('diagnoses', []):
-        diag_data.append([d['code'], d['condition'], d['status'], d['date']])
+            Story.append(Paragraph("<b>Patient Details</b>", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            details_text = f"""
+            <b>Name:</b> {name}<br/>
+            <b>Date of Birth:</b> {dob}<br/>
+            <b>Gender:</b> {gender}<br/>
+            <b>MRN:</b> {mrn}
+            """
+            Story.append(Paragraph(details_text, style_normal))
+            Story.append(Spacer(1, 10))
+            
+        elif section_name == 'diagnoses':
+            # Diagnoses Table
+            Story.append(Paragraph("Current Diagnoses", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            diag_template = template.get('diagnoses', {})
+            columns = diag_template.get('columns', ['code', 'condition', 'status', 'date_recorded'])
+            
+            # Build table headers
+            headers = [col.replace('_', ' ').title() for col in columns]
+            table_data = [headers]
+            
+            # Get data from summary_data or template
+            diagnoses = summary_data.get('diagnoses', diag_template.get('data', []))
+            for diag in diagnoses:
+                row = [diag.get(col, 'N/A') for col in columns]
+                table_data.append(row)
+            
+            if len(table_data) > 1:
+                t_diag = Table(table_data, colWidths=[1*inch, 3*inch, 1.5*inch, 1.5*inch])
+                t_diag.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f2f2f2")),
+                    ('TEXTCOLOR', (0,0), (-1,0), colors.black),
+                    ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                    ('BOTTOMPADDING', (0,0), (-1,0), 8),
+                    ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+                ]))
+                Story.append(t_diag)
+                Story.append(Spacer(1, 10))
+            
+        elif section_name == 'encounters_documentation':
+            # Encounters & Documentation
+            Story.append(Paragraph("Clinical Encounters & Documentation", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            encounters = template.get('encounters_documentation', {})
+            narrative = encounters.get('narrative_summary', '')
+            if narrative:
+                Story.append(Paragraph(narrative, style_normal))
+                Story.append(Spacer(1, 10))
+            
+            # Key findings table
+            key_findings = encounters.get('key_findings', [])
+            if key_findings:
+                Story.append(Paragraph("<b>Key Findings:</b>", style_normal))
+                Story.append(Spacer(1, 5))
+                
+                findings_data = [['Test', 'Date', 'Result']]
+                for finding in key_findings:
+                    findings_data.append([
+                        finding.get('test', 'N/A'),
+                        finding.get('date', 'N/A'),
+                        finding.get('result', 'N/A')
+                    ])
+                
+                t_findings = Table(findings_data, colWidths=[1.5*inch, 1.5*inch, 4*inch])
+                t_findings.setStyle(TableStyle([
+                    ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f2f2f2")),
+                    ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                    ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+                    ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                ]))
+                Story.append(t_findings)
+                Story.append(Spacer(1, 10))
         
-    t_diag = Table(diag_data, colWidths=[1*inch, 3*inch, 1.5*inch, 1.5*inch])
-    t_diag.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f2f2f2")),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.black),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0,0), (-1,0), 8),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
-    ]))
-    Story.append(t_diag)
-    
-    # --- TIMELINE ---
-    Story.append(Paragraph("Clinical Encounters & Documentation", style_h2))
-    Story.append(Spacer(1, 10))
-    
-    for event in summary_data.get('timeline', []):
-        p_event = Paragraph(f"<font color='#34495e' backColor='#34495e'><b>&nbsp;{event['date']}&nbsp;</b></font>&nbsp; <b>{event['title']}</b>", styles["Normal"])
-        Story.append(p_event)
-        for detail in event['details']:
-             Story.append(Paragraph(detail, ParagraphStyle('d', leftIndent=20, parent=styles['Normal'])))
-        Story.append(Spacer(1, 10))
-
-    # --- PLAN ---
-    Story.append(Paragraph("Proposed Treatment Plan", style_h2))
-    Story.append(Spacer(1, 10))
-    
-    plan_text = f"""
-    <b>Procedure:</b> {summary_data.get('procedure', 'N/A')}<br/>
-    <b>Outcome:</b> {summary_data.get('outcome', 'N/A')}<br/>
-    <b>Clinical Rationale:</b> {summary_data.get('rationale', 'See LMN')}<br/>
-    """
-    Story.append(Paragraph(plan_text, styles["Normal"]))
+        elif section_name == 'contact_provider':
+            # Contact & Provider Information
+            Story.append(Paragraph("Contact & Provider Information", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            contact_info = template.get('contact_provider', {})
+            provider_text = f"""
+            <b>Provider:</b> {contact_info.get('provider', 'N/A')}<br/>
+            <b>Facility:</b> {contact_info.get('facility', 'N/A')}<br/>
+            <b>Address:</b> {contact_info.get('address', 'N/A')}<br/>
+            <b>Phone:</b> {contact_info.get('phone', 'N/A')}
+            """
+            Story.append(Paragraph(provider_text, style_normal))
+            Story.append(Spacer(1, 10))
+            
+        elif section_name == 'treatment_plan':
+            # Treatment Plan
+            Story.append(Paragraph("Proposed Treatment Plan", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            treatment = template.get('treatment_plan', {})
+            procedure = summary_data.get('procedure', treatment.get('procedure', 'N/A'))
+            outcome = summary_data.get('outcome', treatment.get('outcome', 'N/A'))
+            
+            plan_text = f"""
+            <b>Procedure:</b> {procedure}<br/>
+            <b>Outcome:</b> {outcome}
+            """
+            Story.append(Paragraph(plan_text, style_normal))
+            Story.append(Spacer(1, 10))
+            
+        elif section_name == 'clinical_rationale':
+            # Clinical Rationale (NEW SECTION)
+            Story.append(Paragraph("Clinical Rationale", style_h2))
+            Story.append(Spacer(1, 10))
+            
+            rationale = template.get('clinical_rationale', {})
+            justification = rationale.get('justification_text', '')
+            if justification:
+                Story.append(Paragraph(justification, style_normal))
+                Story.append(Spacer(1, 10))
+            
+            # Bullet points for clinical necessity
+            necessity_points = rationale.get('clinical_necessity_points', [])
+            if necessity_points:
+                Story.append(Paragraph("<b>Clinical Necessity:</b>", style_normal))
+                for point in necessity_points:
+                    Story.append(Paragraph(f"• {point}", ParagraphStyle('bullet', leftIndent=20, parent=style_normal)))
+                Story.append(Spacer(1, 10))
 
     doc.build(Story)
     return file_path

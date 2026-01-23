@@ -1,0 +1,297 @@
+{
+  "222": {
+    "first_name": "Creed",
+    "last_name": "Bratton",
+    "gender": "male",
+    "dob": "1943-02-08",
+    "address": "138 Main Street, Scranton, PA 18503",
+    "telecom": "570-555-0199",
+    "race": "Caucasian",
+    "height": "5 ft 10 in",
+    "weight": "180 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Michael Scott",
+      "telecom": "570-555-0143",
+      "address": "1725 Slough Avenue, Scranton, PA 18505",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. John Howard, MD",
+      "managingOrganization": "Scranton Medical Center"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Choice Plus",
+      "plan_type": "PPO",
+      "group_id": "GRP-99999",
+      "group_name": "Dunder Mifflin",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-99999",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Creed Bratton is a long-time resident of Scranton, Pennsylvania, known for his quirky personality and mysterious past. Allegedly born in 1943, Creed has a peculiar history of employment and often has vague stories about his life. He is currently single and lives a solitary life, enjoying various hobbies and interests that range from music to odd, sometimes humorous interests.\n\nMedically, Creed has been relatively healthy with no significant chronic conditions affecting his daily life until recently when he noticed some changes in his kidney function. He's relatively compliant with routine medical care but has a history of dismissing mild symptoms until necessary.\n\nSocially, Creed maintains a circle of unique friendships, with Michael Scott being his primary emergency contact and confidant. Michael is supportive, albeit sometimes bemused by Creed's antics. Creed's past employment has primarily been with Dunder Mifflin, where he stays active socially, participating in company events and maintaining his role with a charmingly aloof attitude.\n\nDespite his age, Creed remains active and prefers a life unburdened by unnecessary medical interventions. His current concern involves subtle kidney issues but without immediate or pressing surgical necessities according to recent medical evaluations."
+  },
+  "221": {
+    "first_name": "Pam",
+    "last_name": "Beesly",
+    "gender": "female",
+    "dob": "1980-03-25",
+    "address": "Scranton, PA 18503",
+    "telecom": "570-555-0147",
+    "race": "Caucasian",
+    "height": "5 ft 7 in",
+    "weight": "135 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Jim Halpert",
+      "telecom": "570-555-0198",
+      "address": "Scranton, PA 18503",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-06-10",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Sarah Adams, MD",
+      "managingOrganization": "Scranton Family Practice"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "Horizon Blue Cross Blue Shield",
+      "plan_name": "Preferred Plus",
+      "plan_type": "PPO",
+      "group_id": "GRP-00567",
+      "group_name": "Dunder Mifflin",
+      "member_id": "MBR-0001234",
+      "policy_number": "POL-234342",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$20",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": ""
+  },
+  "223": {
+    "first_name": "John",
+    "last_name": "Dorian",
+    "gender": "male",
+    "dob": "1975-04-20",
+    "address": "123 Scrubs Lane, San Diego, CA 92103",
+    "telecom": "619-555-0167",
+    "race": "Caucasian",
+    "height": "6 ft",
+    "weight": "185 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Christopher Turk",
+      "telecom": "619-555-0123",
+      "address": "456 Scrubs Lane, San Diego, CA 92103",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2025-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Elliot Reid",
+      "managingOrganization": "Sacred Heart Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-1234",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Gold PPO",
+      "plan_type": "PPO",
+      "group_id": "GRP-54321",
+      "group_name": "Sacred Heart Staff",
+      "member_id": "MBR-1234509876",
+      "policy_number": "POL-24032025",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$1000",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": ""
+  },
+  "215": {
+    "first_name": "Lisa",
+    "last_name": "Cuddy",
+    "gender": "female",
+    "dob": "1968-06-07",
+    "address": "123 Haverford Drive, Princeton, NJ 08540",
+    "telecom": "609-555-1234",
+    "race": "Caucasian",
+    "height": "5 ft 7 in",
+    "weight": "135 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "James Wilson",
+      "telecom": "609-555-6789",
+      "address": "456 East Main Street, Princeton, NJ 08540",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Gregory House, MD",
+      "managingOrganization": "Princeton-Plainsboro Teaching Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Comprehensive Care Plan",
+      "plan_type": "PPO",
+      "group_id": "GRP-12345",
+      "group_name": "Princeton University",
+      "member_id": "MBR-987654321",
+      "policy_number": "POL-456789",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$1000",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Lisa Cuddy has a long history of dedicated service as a hospital administrator, balancing her professional responsibilities with a deep commitment to patient care. Known for her resilience and strong leadership in demanding situations, she has faced personal health challenges in recent years, primarily centered around cardiac issues.\n\nHer current health journey began several years ago with the onset of symptoms consistent with heart failure, characterized by fatigue, shortness of breath, and arrhythmias. These symptoms have gradually worsened, and recent diagnostic tests have confirmed a substantial reduction in left ventricular ejection fraction, prompting consideration of further interventional measures.\n\nSocially, Lisa is active within her community, engaging in charity work and hospital administrative reforms. She maintains a healthy lifestyle, balancing work with regular light exercise, mindful eating, and stress management techniques. While single, she is supported by close colleagues and friends, particularly Dr. James Wilson, who is her designated emergency contact.\n\nFamily history is notable for cardiovascular disease, with a mother who suffered a myocardial infarction in her late 60s and a father with hypertension. Lisa is proactive in managing these risks through regular medical evaluations and adherence to prescribed medications."
+  },
+  "238": {
+    "first_name": "Dwight",
+    "last_name": "Schrute",
+    "gender": "male",
+    "dob": "1970-01-20",
+    "address": "Dunder Mifflin Employee Villas, Scranton, PA, 18503",
+    "telecom": "570-555-0133",
+    "race": "Caucasian",
+    "height": "6 ft 2 in",
+    "weight": "210 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Angela Martin",
+      "telecom": "570-555-0144",
+      "address": "Honesdale, PA, 18431",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2019-05-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. John Smith, MD",
+      "managingOrganization": "Scranton Community Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "BCBS-977",
+      "payer_name": "Blue Cross Blue Shield",
+      "plan_name": "Vision Package",
+      "plan_type": "PPO",
+      "group_id": "GRP-118762",
+      "group_name": "Dunder Mifflin Inc.",
+      "member_id": "MBR-874615",
+      "policy_number": "POL-564738",
+      "effective_date": "2023-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$1000",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Dwight Schrute is a Regional Manager at Dunder Mifflin in Scranton, Pennsylvania. Known for his eclectic personality and dedication to his work, Dwight has a passion for agriculture and runs a beet farm on the outskirts of Scranton. With a keen sense of workplace traditions and a sometimes outlandish adherence to office regulations, Dwight's concerns about his facial appearance arose following a prank gone wrong at the office.\n\nHis past is relatively uneventful medically, with no significant history of surgeries or prolonged ailments. However, the prank has left Dwight with a persistent concern about symmetry and facial structure, motivating his interest in facial reconstructive options. Socially, Dwight maintains a somewhat eccentric lifestyle but is genuinely committed to his immediate community, often participating in local events and fostering his relationships with colleagues.\n\nDwight is currently single, with no current joint health plans with a spouse. His emergency contact, Angela Martin, is both a close colleague and personal friend, reflecting the close-knit relationships maintained within the Dunder Mifflin team. Dwight's current consideration for a surgical procedure is primarily driven by personal aesthetic interest rather than medical necessity, noting a desire to enhance his personal confidence."
+  }
+}
