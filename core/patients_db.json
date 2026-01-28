@@ -66,8 +66,8 @@
     "address": "1 Livia St, North Caldwell, NJ 07006",
     "telecom": "555-123-4567",
     "race": "Caucasian",
-    "height": "5 ft 10 in",
-    "weight": "220 lbs",
+    "height": "5 ft 11 in",
+    "weight": "225 lbs",
     "maritalStatus": "Married",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -83,7 +83,7 @@
       "address": "1 Livia St, North Caldwell, NJ 07006",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "1995-04-01",
+      "period_start": "1999-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -95,18 +95,18 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Garden State Health",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-001234",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-08274",
+      "group_name": "Soprano Family Business",
+      "member_id": "MBR-739284560",
+      "policy_number": "POL-2025-000123",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$1500",
+      "copay_amount": "$20",
+      "deductible_amount": "$1000",
       "subscriber": {
         "subscriber_id": "Unknown",
         "subscriber_name": "Unknown",
@@ -115,7 +115,7 @@
         "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Tony Soprano is a 54-year-old male with a background in a high-stress environment. Recently diagnosed with End Stage Renal Disease, he presents with symptoms including increased fatigue and nocturia. His medical history includes a significant family history of hypertension and kidney disease, with lifestyle choices exacerbating his condition. He experiences substantial work-related stress and has been advised to make dietary modifications to improve his health outcomes. A follow-up plan for dialysis initiation is in place, reflecting the gravity of his condition."
+    "bio_narrative": ""
   },
   "221": {
     "first_name": "Bernadette",
@@ -126,7 +126,7 @@
     "telecom": "626-555-0123",
     "race": "Caucasian",
     "height": "5 ft 4 in",
-    "weight": "130 lbs",
+    "weight": "125 lbs",
     "maritalStatus": "Married",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -138,11 +138,11 @@
     "contact": {
       "relationship": "Spouse",
       "name": "Howard Wolowitz",
-      "telecom": "626-555-9876",
+      "telecom": "626-555-0456",
       "address": "2311 Los Robles Avenue, Pasadena, CA 91107",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2013-05-01",
+      "period_start": "2015-06-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -156,246 +156,10 @@
     "payer": {
       "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Caltech Employee Group",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-001234",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
-    },
-    "bio_narrative": "Bernadette Rostenkowski-Wolowitz is a 35-year-old female residing in Pasadena, CA, married to physicist Howard Wolowitz. She works as a microbiologist and has a well-established background in lab research. Bernadette has no significant previous medical history and maintains a healthy lifestyle. She enjoys hiking, has a keen interest in scientific advancements, and participates in local charity events. Recently, she has been experiencing episodic chest pains and palpitations that coincide with periods of stress at work. Understandably, her worries about cardiac health have led her to seek advice from her primary care physician for further evaluation. This current situation is a concern for her as she strives to balance her professional life with her family responsibilities."
-  },
-  "222": {
-    "first_name": "Max",
-    "last_name": "Black",
-    "gender": "female",
-    "dob": "1987-06-01",
-    "address": "23 Broadway St, Brooklyn, NY 11249, USA",
-    "telecom": "555-345-6789",
-    "race": "Caucasian",
-    "height": "5 ft 5 in",
-    "weight": "140 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Caroline Channing",
-      "telecom": "555-123-4567",
-      "address": "23 Broadway St, Brooklyn, NY 11249, USA",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2005-01-10",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith",
-      "managingOrganization": "Williamsburg Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Local 123",
-      "member_id": "MBR-987654321",
-      "policy_number": "POL-2025-001234",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
-    },
-    "bio_narrative": "Max Black, known for her witty and sarcastic sense of humor, has transitioned from her life as a waitress and joint business owner in a cupcake shop to dealing with medical concerns related to chronic kidney disease. Living in Brooklyn, New York, she manages her condition with the help of her close friend and emergency contact, Caroline Channing.\nHer lifestyle has undergone significant changes following the gradual decline in her kidney function. Max adheres to a low-sodium diet recommended by her healthcare providers, and frequently visits her general practitioner, Dr. Jane Smith, at Williamsburg Medical Center for routine check-ups and management of her CKD. Despite her health challenges, Max maintains a positive outlook on life and spends her free time enjoying Brooklyn's vibrant art scene.\nMax has no known family history of kidney disease, and her recent diagnostic tests indicate Stage 3a chronic kidney disease. Although her renal function is decreasing, current lab results do not necessitate immediate dialysis. Max is well-informed and understands that monitoring her condition closely and adhering to her healthcare plan is vital to delaying the progression of her kidney disease."
-  },
-  "223": {
-    "first_name": "George",
-    "last_name": "Costanza",
-    "gender": "male",
-    "dob": "1965-06-09",
-    "address": "129 West 81st Street, Apartment 5A, New York, NY 10024",
-    "telecom": "555-123-7800",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Elaine Benes",
-      "telecom": "555-987-6543",
-      "address": "55 Central Park West, New York, NY 10023",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2000-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Wilhelm Taylor, MD",
-      "managingOrganization": "New York Presbyterian Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-2025",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Vandelay Industries",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-012345",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
-    },
-    "bio_narrative": ""
-  },
-  "224": {
-    "first_name": "Ross",
-    "last_name": "Geller",
-    "gender": "male",
-    "dob": "1967-10-18",
-    "address": "90 Bedford St, Apt 20, New York, NY, 10014",
-    "telecom": "212-555-1234",
-    "race": "Caucasian",
-    "height": "6 ft 1 in",
-    "weight": "185 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Monica Geller",
-      "telecom": "212-555-2345",
-      "address": "90 Bedford St, Apt 20, New York, NY, 10014",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Leo Markus, MD",
-      "managingOrganization": "New York-Presbyterian Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Paleontology Society",
-      "member_id": "MBR-987654321",
-      "policy_number": "POL-2025-000001",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$1500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
-    },
-    "bio_narrative": ""
-  },
-  "225": {
-    "first_name": "Meredith",
-    "last_name": "Grey",
-    "gender": "female",
-    "dob": "1978-11-10",
-    "address": "123 Hospital Drive, Seattle, WA 98101",
-    "telecom": "206-555-0199",
-    "race": "Caucasian",
-    "height": "5 ft 5 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Derek Shepherd",
-      "telecom": "206-555-0100",
-      "address": "123 Hospital Drive, Seattle, WA 98101",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2005-04-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Miranda Bailey, MD",
-      "managingOrganization": "Seattle Grace Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-002",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-12345",
-      "group_name": "Seattle Medical Group",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-54321",
+      "group_name": "G&L Group",
       "member_id": "MBR-123456789",
       "policy_number": "POL-2025-123456",
       "effective_date": "2024-01-01",
@@ -410,6 +174,360 @@
         "subscriber_address": "Same as Patient"
       }
     },
-    "bio_narrative": "Meredith Grey is a seasoned and highly skilled surgeon at Seattle Grace Hospital, known for her dedication and exceptional surgical skills. She was born and raised in Seattle, Washington, and has a notable family history in medicine. Her mother, Ellis Grey, was a world-renowned surgeon and this legacy has been a significant driving force in Meredith's career.\n\nMedically, Meredith has faced numerous personal and professional challenges. She has a history of overcoming significant personal adversities which has fortified her resolve and determination to excel in her field. Her social history reflects a deep commitment to her profession, maintaining close relationships with her colleagues whom she considers as her family.\n\nDue to her extensive experience in the surgical field, Meredith is well aware of the implications of undergoing a liver transplant, given her diagnosis of cirrhosis. She has expressed a firm understanding of the procedure and the required postoperative care, which is crucial for a successful recovery. Despite the stigma and challenges of liver disease, her resilient personality and family support system make her a strong candidate for the transplantation process."
+    "bio_narrative": "Bernadette Rostenkowski-Wolowitz is a 35-year-old Caucasian female who resides in Pasadena, California. She is married to Howard Wolowitz and works as a microbiologist. Bernadette is a well-educated and articulate individual known for her sharp wit and quick temper. Having recently experienced episodes of chest pain and shortness of breath, Bernadette has been under the care of her spouse and primary physician, Dr. Howard Wolowitz, at Caltech Medical Clinic. No significant past medical history is noted, but current symptoms suggestive of coronary artery disease necessitate advanced imaging for better diagnostic clarity. Despite leading a busy professional life, she maintains a balance by engaging in community activities and spending quality time with her family."
+  },
+  "222": {
+    "first_name": "Max",
+    "last_name": "Black",
+    "gender": "female",
+    "dob": "1987-06-01",
+    "address": "23 Broadway St, Brooklyn, NY 11249, USA",
+    "telecom": "555-345-6789",
+    "race": "Caucasian",
+    "height": "5 ft 4 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Caroline Channing",
+      "telecom": "555-987-6543",
+      "address": "50 7th Ave, Brooklyn, NY 11217, USA",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith",
+      "managingOrganization": "Williamsburg Medical Center"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-54321",
+      "group_name": "Employer Group",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-000001",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$1000",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Max Black, a resilient entrepreneur and a Brooklyn native, has no previous recorded medical history until now as she navigates a sudden onset of chronic kidney disease. She operates her cupcake business with her business partner Caroline, often working long hours and managing stress. Max enjoys a social lifestyle with a balanced diet but was recently found to suffer from fatigue and swelling, leading to the discovery of her kidney issues. Despite her diagnosis of end-stage renal disease, Max continues to maintain a positive outlook and remains actively involved in her business."
+  },
+  "223": {
+    "first_name": "George",
+    "last_name": "Costanza",
+    "gender": "male",
+    "dob": "1965-06-09",
+    "address": "129 West 81st Street, Apartment 5A, New York, NY 10024",
+    "telecom": "555-123-7800",
+    "race": "Caucasian",
+    "height": "5 ft 8 in",
+    "weight": "180 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Elaine Benes",
+      "telecom": "555-987-6543",
+      "address": "225 East 73rd Street, Apartment 12B, New York, NY 10021",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Wilhelm Taylor, MD",
+      "managingOrganization": "New York Presbyterian Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-12345",
+      "group_name": "Manhattan Trust Inc.",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-987654",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "George Costanza, known for his distinctive bald head and neurotic tendencies, is a long-term resident of New York City. A single man with a vibrant social circle, often highlighted by his presence at Monk's Caf\u00e9 alongside friends. He is currently addressing his ongoing requirements for dialysis maintenance, underlining the necessity for potential vascular access advancements. George maintains an adherence to dietary guidance and outpatient follow-ups, crucial given his clinical landscape. His medical team, led by Dr. Wilhelm Taylor, closely monitors his health trajectory to ensure optimal long-term outcomes."
+  },
+  "224": {
+    "first_name": "Ross",
+    "last_name": "Geller",
+    "gender": "male",
+    "dob": "1967-10-18",
+    "address": "90 Bedford St, Apt 20, New York, NY, 10014",
+    "telecom": "212-555-1234",
+    "race": "Caucasian",
+    "height": "6 ft",
+    "weight": "170 lbs",
+    "maritalStatus": "Divorced",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Chandler Bing",
+      "telecom": "212-555-9876",
+      "address": "99 Park Ave, New York, NY, 10016",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2000-05-15",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Leo Markus, MD",
+      "managingOrganization": "New York-Presbyterian Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-12345",
+      "group_name": "Stark Industries",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-987654",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Ross Geller is a paleontologist living in New York. Known for his meticulous nature and sense of humor, Ross has been actively managing his health following his diagnosis with end-stage renal disease (ICD-10: N18.6). He has been on hemodialysis for several years, enabling him to maintain a decent quality of life while awaiting a renal transplant. Socially, Ross enjoys spending time with his family and is especially fond of indulging in scientific discussions with his close-knit group of friends. His personal history is free of significant medical procedures other than those related to monitoring and managing his renal condition. Ross speaks English fluently and his primary correspondence occurs via phone or in-person meetings with his healthcare provider, Dr. Leo Markus at New York-Presbyterian Hospital."
+  },
+  "225": {
+    "first_name": "Meredith",
+    "last_name": "Grey",
+    "gender": "female",
+    "dob": "1978-11-10",
+    "address": "123 Hospital Drive, Seattle, WA 98101",
+    "telecom": "206-555-0199",
+    "race": "Caucasian",
+    "height": "5 ft 8 in",
+    "weight": "145 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Cristina Yang",
+      "telecom": "206-555-0111",
+      "address": "310 Surgical Wing, Seattle, WA 98101",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Miranda Bailey, MD",
+      "managingOrganization": "Seattle Grace Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-002",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-12345",
+      "group_name": "Seattle Health Group",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-654321",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$1000",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": ""
+  },
+  "227": {
+    "first_name": "Aragorn",
+    "last_name": "II Elessar",
+    "gender": "male",
+    "dob": "1981-03-01",
+    "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
+    "telecom": "555-123-4567",
+    "race": "Caucasian",
+    "height": "6 ft 6 in",
+    "weight": "210 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Arwen Und\u00f3miel",
+      "telecom": "555-987-6543",
+      "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Gandalf Grey, MD",
+      "managingOrganization": "Middle-Earth Medical Center"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-73737",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Choice Plus PPO",
+      "plan_type": "PPO",
+      "group_id": "GRP-24680",
+      "group_name": "Middle-Earth Holdings",
+      "member_id": "MBR-112233445",
+      "policy_number": "POL-2025-012345",
+      "effective_date": "2021-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "SUB-112233",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Aragorn, known throughout Middle-Earth for his leadership and prowess, has transitioned from his adventurous paths to residing in the Shire, seeking tranquility. Although no specific health issues were recorded in his past, his current role still demands frequent exposure to varying environmental conditions. His efforts in governance require his presence in diverse settings with less than optimal air quality. This has likely influenced some of his respiratory symptoms observed. Despite these challenges, Aragorn maintains a robust lifestyle, partaking in regular physical activity and maintaining strong familial relationships with his spouse, Arwen Und\u00f3miel. His current concerns have led him to seek comprehensive examination to ensure optimal health given his social and official responsibilities."
+  },
+  "226": {
+    "first_name": "Ann",
+    "last_name": "Perkins",
+    "gender": "female",
+    "dob": "1982-09-10",
+    "address": "415 West Main Street, Pawnee, Indiana, 47998",
+    "telecom": "317-555-0199",
+    "race": "Caucasian",
+    "height": "5 ft 6 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Leslie Knope",
+      "telecom": "317-555-0147",
+      "address": "415 West Main Street, Pawnee, Indiana, 47998",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Walter Chang, MD",
+      "managingOrganization": "Pawnee General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-12345",
+      "group_name": "Bureau of Parks and Recreation",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-000123",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Ann Perkins, a dedicated nurse and public health advocate, resides in Pawnee, Indiana. Known for her compassionate nature, Ann has no significant personal or family medical history. She is single and focuses on community health and well-being. Despite occasional fatigue, her commitment to health advocacy remains strong. Ann seeks consultation for vague urinary symptoms, but her medical history shows no prior kidney-related issues. Her close friend Leslie Knope serves as her emergency contact and support system."
   }
 }
