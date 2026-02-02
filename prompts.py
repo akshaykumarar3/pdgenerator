@@ -197,8 +197,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            - `payer_name`: "UnitedHealthcare"
            - `plan_name`: "Medicare Advantage"
            - `plan_type`: "Medicare Advantage"
-           - `member_id`: Format "MBR-XXXXXXXXX" (9 digits)
-           - `group_id`: Format "GRP-XXXXX" (5 digits)
+           - `NPI`: Format "XXXXXXXXXX" (10 digits)
            - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
            - All other payer fields (deductible, copay, effective_date, subscriber details)
        - **Bio Narrative (PLAIN TEXT)**:
