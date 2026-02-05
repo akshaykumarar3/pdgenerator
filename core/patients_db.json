@@ -529,5 +529,115 @@
       }
     },
     "bio_narrative": "Ann Perkins, a dedicated nurse and public health advocate, resides in Pawnee, Indiana. Known for her compassionate nature, Ann has no significant personal or family medical history. She is single and focuses on community health and well-being. Despite occasional fatigue, her commitment to health advocacy remains strong. Ann seeks consultation for vague urinary symptoms, but her medical history shows no prior kidney-related issues. Her close friend Leslie Knope serves as her emergency contact and support system."
+  },
+  "236": {
+    "first_name": "Monica",
+    "last_name": "Geller",
+    "gender": "female",
+    "dob": "1969-04-22",
+    "address": "90 Bedford Street, New York, NY 10014",
+    "telecom": "212-555-0123",
+    "race": "Caucasian",
+    "height": "5 ft 6 in",
+    "weight": "125 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Ross Geller",
+      "telecom": "212-555-0145",
+      "address": "90 Bedford Street, New York, NY 10014",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Julia H. Cane, DDS",
+      "managingOrganization": "Dental Excellence Center, New York, NY"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "group_id": "GRP-99887",
+      "group_name": "Geller Family Dental",
+      "member_id": "MBR-098776543",
+      "policy_number": "POL-2025-112233",
+      "effective_date": "2021-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$40",
+      "deductible_amount": "$500",
+      "subscriber": {
+        "subscriber_id": "Unknown",
+        "subscriber_name": "Unknown",
+        "subscriber_relationship": "Self",
+        "subscriber_dob": "1980-01-01",
+        "subscriber_address": "Same as Patient"
+      }
+    },
+    "bio_narrative": "Monica Geller, a 56-year-old woman of Caucasian descent, hails from the vibrant city of New York. Known for her meticulous attention to detail and organizational skills, Monica has led a life filled with both professional success and personal adventures. As a former chef, her penchant for perfection extended into her culinary creations, delighting her many friends and family members.\n\nIn regards to her medical history, Monica has been relatively healthy but has recently encountered dental issues which have impacted her ability to enjoy her meals and maintain her professional endeavors in the culinary world. Her brother, Ross, frequently assists her, serving as her emergency contact.\n\nSocially, Monica maintains a wide circle of friends and is actively engaged in community activities. She often channels her energy into organizing events, workshops, and cooking classes, upholding her belief that everyone should enjoy a well-prepared meal.\n\nMonica's current dental concerns necessitate a comprehensive approach to care, emphasizing the restoration of her oral health so she can continue her vibrant lifestyle uninterrupted. The impression and custom oral prosthesis are seen as integral to addressing her dental wear, attributed to years of clenching and grinding, a common affliction among high-performing individuals in stressful professions."
+  },
+  "239": {
+    "first_name": "Siobhan",
+    "last_name": "Roy",
+    "gender": "female",
+    "dob": "1988-01-01",
+    "address": "123 Park Ave, New York, NY 10171",
+    "telecom": "555-0199",
+    "race": "Caucasian",
+    "height": "5 ft 8 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Tom Wambsgans",
+      "telecom": "555-123-4567",
+      "address": "123 Park Ave, New York, NY 10171",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "9876543210",
+      "managingOrganization": "Mercy General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-0987654321",
+      "policy_number": "POL-2025-000001",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$1000"
+    },
+    "bio_narrative": "Siobhan Roy is a successful executive in the cutthroat media industry of New York City. Known for her sharp intellect and strong leadership qualities, she has been navigating the challenges of maintaining a work-life balance. In her high-stress role, managing family heritage and corporate ambitions, Siobhan's lifestyle involves long hours and frequent travel, often impacting her health-related priorities.\n\nDespite a generally healthy lifestyle, she has recently been experiencing episodic chest discomfort, particularly during high-stress periods or physical exertion. This, combined with a significant family history of cardiovascular disease, has led to the current request for further cardiac evaluation. \n\nOutside work, Siobhan is married to Tom Wambsgans, who is her primary support system at home. The couple resides in a luxurious townhouse in Manhattan, living a life that balances the social demands of their status with personal introspection. Siobhan maintains an active lifestyle, integrating regular workouts when her schedule permits, aiming to mitigate stress-driven health concerns. She is fluent in English, her primary language of communication, and prefers all medical communication in this language."
   }
 }

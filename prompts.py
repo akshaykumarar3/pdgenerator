@@ -158,6 +158,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            PATIENT_NAME: (Full Name)
            DOB: (YYYY-MM-DD)
            REPORT_DATE: (YYYY-MM-DD from Timeline)
+           PROVIDER_NPI: (NPI from Persona)
            CPT_CODES: (List relevant CPT codes from persona)
            ICD10_CODES: (List relevant ICD-10 codes from persona)
            ...
@@ -187,6 +188,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
+         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`: Format "XXXXXXXXXX" (10 digits)
          - **Clinical Coding (MANDATORY - Must be filled for report alignment)**:
            - `target_cpt_code`: CPT code for the requested procedure (e.g., "78452")
            - `target_cpt_description`: Full procedure description (e.g., "Myocardial perfusion imaging, multiple studies")
@@ -197,9 +199,8 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            - `payer_name`: "UnitedHealthcare"
            - `plan_name`: "Medicare Advantage"
            - `plan_type`: "Medicare Advantage"
-           - `NPI`: Format "XXXXXXXXXX" (10 digits)
            - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
-           - All other payer fields (deductible, copay, effective_date, subscriber details)
+           - All other payer fields (deductible, copay, effective_date)
        - **Bio Narrative (PLAIN TEXT)**:
          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
          - MUST reference the diagnosis codes and clinical history established in the persona.
