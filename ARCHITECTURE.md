@@ -42,8 +42,13 @@ graph TD
 This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to process user commands.
 
 * **Initialization**: Loads configuration (`cred/.env`) and database schema.
-* **Document Selection**: After Patient ID input, presents menu for Summary/Reports/Persona/All.
-* **Smart Duplicate Prevention**: Scans existing documents and passes titles to AI.
+* **Document Selection**: After Patient ID input, presents menu (default: **Persona + Reports + Summary**).
+* **Smart Duplicate Detection**:
+  * Scans existing documents in patient folder before generation
+  * Extracts document titles from PDF filenames (e.g., "DOC-221-001-CT_Scan.pdf" → "CT_Scan")
+  * Creates `existing_docs_map` to track existing documents by title
+  * Passes list of existing titles to AI Engine to prevent unnecessary duplicates
+  * Only generates multiple reports (e.g., Doc-221-001, Doc-221-002) when test case specifically requires different reports
 * **Persona Diversity Logic**:
   * Before processing, fetches **All Existing Patient Names** from `core/patient_db.py`.
   * Passes this list as an `exclusion_list` to the AI Engine to prevent duplicate characters.
@@ -163,22 +168,41 @@ pdgenerator/
 
 ## 6. Recent Architectural Changes
 
+### Smart Duplicate Detection (Feb 2026)
+
+* **Document Scanning**: Scans existing PDFs before generation to extract titles
+* **Intelligent Prevention**: Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
+* **AI Integration**: Passes existing document list to AI for smart decision-making
+* **Multiple Reports**: Only generates multiple reports when test case specifically requires different reports
+* **Tracking Map**: Added `existing_docs_map` to track documents by title for potential replacement
+
+### Updated Default Generation Mode (Feb 2026)
+
+* Changed default from "Summary + Reports" to "Persona + Reports + Summary"
+* Reordered menu options for better user experience
+* Comprehensive output by default for complete patient records
+
+### Code Cleanup (Feb 2026)
+
+* Removed `patch_prompts.py` and `patch_prompts_v2.py` (obsolete patching code)
+* Cleaner, more maintainable codebase
+
 ### Centralized Prompts (v2.0)
 
-- Created `prompts.py` to separate AI logic from code
-- All prompt strings moved out of `ai_engine.py`
-- User-friendly comments and editing guidelines
-- Easier maintenance and customization
+* Created `prompts.py` to separate AI logic from code
+* All prompt strings moved out of `ai_engine.py`
+* User-friendly comments and editing guidelines
+* Easier maintenance and customization
 
 ### AI-Only Image Generation
 
-- Removed `assets/` folder (static fallback images)
-- All images now AI-generated via DALL-E 3 / Imagen 3
-- Enhanced image prompts for medical-grade quality
-- `get_clinical_image()` in `pdf_generator.py` now returns `None`
+* Removed `assets/` folder (static fallback images)
+* All images now AI-generated via DALL-E 3 / Imagen 3
+* Enhanced image prompts for medical-grade quality
+* `get_clinical_image()` in `pdf_generator.py` now returns `None`
 
 ### Cross-Platform Support
 
-- Added Windows batch script (`run.bat`)
-- Platform-specific documentation
-- Example configuration files for easy onboarding
+* Added Windows batch script (`run.bat`)
+* Platform-specific documentation
+* Example configuration files for easy onboarding
