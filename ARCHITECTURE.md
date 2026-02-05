@@ -168,6 +168,13 @@ pdgenerator/
 
 ## 6. Recent Architectural Changes
 
+### Removed Standalone Image Generation (Feb 2026)
+
+* Removed AI image generation from document workflow
+* Documents no longer include standalone generated images  
+* Simplified generation process focuses on text-based clinical documents
+* Removed image folder creation and image path handling
+
 ### Smart Duplicate Detection (Feb 2026)
 
 * **Document Scanning**: Scans existing PDFs before generation to extract titles
@@ -193,13 +200,6 @@ pdgenerator/
 * All prompt strings moved out of `ai_engine.py`
 * User-friendly comments and editing guidelines
 * Easier maintenance and customization
-
-### AI-Only Image Generation
-
-* Removed `assets/` folder (static fallback images)
-* All images now AI-generated via DALL-E 3 / Imagen 3
-* Enhanced image prompts for medical-grade quality
-* `get_clinical_image()` in `pdf_generator.py` now returns `None`
 
 ### Cross-Platform Support
 

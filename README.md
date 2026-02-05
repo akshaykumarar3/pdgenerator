@@ -5,7 +5,7 @@
 [![Status](https://img.shields.io/badge/Status-Operational-brightgreen.svg)]()
 
 > **Automated Synthetic Healthcare Data Pipeline**
-> Generates high-fidelity clinical PDFs, medical imaging, and FHIR-compliant personas for testing Prior Authorization workflows.
+> Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
 
 ---
 
@@ -61,7 +61,6 @@ Results are saved in `generated_output/` (configurable):
 
 * `persona/*.pdf`: Patient Face Sheet & Bio
 * `patient-reports/<ID>/*.pdf`: Clinical documents
-* `patient-reports/<ID>/images/*.png`: AI-generated medical images
 * `logs/`: Execution logs
 
 ---
@@ -196,7 +195,7 @@ pdgenerator/
 
 ## 🚀 Key Features
 
-* **Multi-Modal AI**: Uses **GPT-4o / Gemini 2.5** (Text) and **DALL-E 3 / Imagen 3** (Medical Imaging)
+* **AI-Powered Generation**: Uses **GPT-4o / Gemini 2.5** for intelligent clinical document creation
 * **Interactive Workflow**: Continuous processing loop with admin purge commands
 * **Smart Duplicate Detection**:
   * Scans existing documents before generation
@@ -211,7 +210,7 @@ pdgenerator/
 * **Structured Data**: FHIR-compliant JSON objects
 * **Rich Clinical Narrative**: Comprehensive SOAP notes, Imaging Reports, Discharge Summaries
 * **Persona Consistency**: Maintains character identity across runs
-* **Advanced PDFs**: Embedded AI-generated images, barcode headers, realistic formatting
+* **Professional PDFs**: Realistic formatting with proper headers and structure
 
 ---
 

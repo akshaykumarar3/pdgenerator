@@ -7,7 +7,6 @@
 The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic healthcare data for testing Prior Authorization (PA) workflows. It generates:
 
 - **Clinical PDFs**: Lab reports, consult notes, imaging reports
-- **Medical Images**: AI-generated MRI/CT scans (DALL-E 3 / Imagen 3)
 - **Patient Personas**: FHIR-compliant patient records
 - **Clinical Summaries**: Aggregate patient overviews
 
@@ -83,11 +82,11 @@ purge_manager.py      → Data cleanup utilities
 - Helper functions: `get_clinical_data_prompt()`, `get_image_generation_prompt()`, etc.
 - Easy customization without touching core logic
 
-### AI-Generated Images Only
+### Removed Standalone Image Generation (Feb 2026)
 
-- Removed static asset images (`assets/` folder deleted)
-- All medical images now generated via DALL-E 3 or Imagen 3
-- Enhanced image prompts for higher quality, medical-grade outputs
+- Removed AI image generation from document workflow
+- Documents no longer include standalone generated images
+- Simplified generation process focuses on text-based clinical documents
 
 ### Windows Compatibility
 
@@ -178,5 +177,5 @@ TEST_MODE=true python3 generator.py
 5. **Multiple Reports**: Only generate multiple reports (e.g., Doc-221-001, Doc-221-002) when test case specifically requires different reports
 6. The `generation_mode` dict controls what gets generated (default: all three - persona, reports, summary)
 7. **Prompts are in `prompts.py`** - edit there, not in ai_engine.py
-8. Images are 100% AI-generated - no static fallbacks
-9. Default generation mode is now "Persona + Reports + Summary" for comprehensive output
+8. Default generation mode is now "Persona + Reports + Summary" for comprehensive output
+9. **No Standalone Images**: Image generation has been removed from the document workflow

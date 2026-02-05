@@ -122,51 +122,13 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
 
         # 7. Generate Documents (Reports - conditional)
-        generated_images = {} # Map title -> file_path
-        image_count = 0
-        
-        # Prepare Images Folder (Inside Patient's Report Folder)
         patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
-        img_folder = os.path.join(patient_report_folder, "images")
-        
-        if not os.path.exists(img_folder):
-            os.makedirs(img_folder, exist_ok=True)
 
         # REPORTS GENERATION (conditional)
         if generation_mode.get("reports", True) and result.documents:
             print(f"   📄 Generating {len(result.documents)} Report(s)...")
             doc_seq_counter = 1
             for doc in result.documents:
-                # Deduplication
-                base_title = doc.title_hint
-                # Generate Image if needed
-                image_path = None
-                img_asset = pdf_generator.get_clinical_image(doc.title_hint)
-                
-                if img_asset:
-                    pass
-                else:
-                    if any(x in doc.title_hint.lower() for x in ['mri', 'ct', 'xray', 'scan', 'image']):
-                        print(f"      🎨 Generating MRI/CT Scan for {doc.title_hint}...")
-                        try:
-                            image_filename = f"{doc.title_hint}_{int(datetime.datetime.now().timestamp())}.png"
-                            image_path = os.path.join(img_folder, image_filename)
-                            img_context = f"Medical imaging scan, {doc.title_hint}, distinct features: {doc.content[:100]}..."
-                            img_result = ai_engine.generate_clinical_image(img_context, doc.title_hint, output_path=image_path)
-                            
-                            if img_result:
-                                if img_result.startswith("http"):
-                                    import requests
-                                    img_data = requests.get(img_result).content
-                                    with open(image_path, 'wb') as f:
-                                        f.write(img_data)
-                                generated_images[doc.title_hint] = image_path 
-                                image_count += 1
-                            else:
-                                print(f"      ⚠️ Image Gen Skipped (None returned)")
-                        except Exception as e:
-                            print(f"      ⚠️ Image Generation failed: {e}")
-
                 # Construct Filename
                 seq_str = f"{doc_seq_counter:03d}"
                 doc_identifier = f"DOC-{patient_id}-{seq_str}"
@@ -184,7 +146,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                     else:
                         print(f"      ✅ AI Fixed the document.")
                 
-                # Create PDF
+                # Create PDF (without image)
                 pdf_path = pdf_generator.create_patient_pdf(
                     patient_id=patient_id, 
                     doc_type=final_filename_base, 
@@ -192,7 +154,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                     patient_persona=result.patient_persona,
                     doc_metadata=doc,
                     base_output_folder=patient_report_folder,
-                    image_path=image_path
+                    image_path=None  # No standalone images
                 )
                 print(f"      - Created: {os.path.basename(pdf_path)}")
                 doc_seq_counter += 1
@@ -204,7 +166,15 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
         # PERSONA GENERATION (conditional)
         if generation_mode.get("persona", False) and result.patient_persona:
             p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            persona_path = pdf_generator.create_persona_pdf(patient_id, p_full_name, result.patient_persona, result.documents, generated_images, mrn=current_mrn, output_folder=PERSONA_DIR)
+            persona_path = pdf_generator.create_persona_pdf(
+                patient_id, 
+                p_full_name, 
+                result.patient_persona, 
+                result.documents, 
+                image_map=None,  # No standalone images
+                mrn=current_mrn, 
+                output_folder=PERSONA_DIR
+            )
             print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
             
         # Summary PDF (Mock)
