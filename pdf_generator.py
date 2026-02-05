@@ -95,7 +95,8 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
             Paragraph(f"123 Medical Center Dr, Suite 100", style_sub),
             Paragraph(f"City, State, 12345", style_sub),
             Spacer(1, 4),
-            Paragraph(f"<b>Ordering Provider:</b><br/>{prov_name}", style_sub)
+            Paragraph(f"<b>Ordering Provider:</b><br/>{prov_name}", style_sub),
+            Paragraph(f"<b>NPI:</b> {getattr(patient_persona.provider, 'formatted_npi', 'N/A')}", style_sub)
         ]
         
         # Right Column: Patient Demographics & Accession
@@ -484,6 +485,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         data_provider.extend([
             ["General Practitioner:", getattr(pr, 'generalPractitioner', 'N/A')],
             ["Managing Organization:", getattr(pr, 'managingOrganization', 'N/A')],
+            ["NPI:", getattr(pr, 'formatted_npi', 'N/A')],
         ])
     else:
         data_provider.append(["Details:", "Not Provided"])
@@ -499,8 +501,6 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ["Payer Name:", getattr(payer, 'payer_name', 'N/A')],
             ["Plan Name:", getattr(payer, 'plan_name', 'N/A')],
             ["Plan Type:", getattr(payer, 'plan_type', 'N/A')],
-            ["Group ID:", getattr(payer, 'group_id', 'N/A')],
-            ["Group Name:", getattr(payer, 'group_name', 'N/A')],
             ["Member ID:", getattr(payer, 'member_id', 'N/A')],
             ["Policy Number:", getattr(payer, 'policy_number', 'N/A')],
             ["Effective Date:", getattr(payer, 'effective_date', 'N/A')],
@@ -508,17 +508,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ["Copay:", getattr(payer, 'copay_amount', 'N/A')],
             ["Deductible:", getattr(payer, 'deductible_amount', 'N/A')],
         ])
-        # Subscriber Details
-        sub = getattr(payer, 'subscriber', None)
-        if sub:
-            data_payer.extend([
-                [Paragraph("<b>SUBSCRIBER</b>", style_label), ""],
-                ["Subscriber ID:", getattr(sub, 'subscriber_id', 'N/A')],
-                ["Subscriber Name:", getattr(sub, 'subscriber_name', 'N/A')],
-                ["Relationship:", getattr(sub, 'subscriber_relationship', 'N/A')],
-                ["Subscriber DOB:", getattr(sub, 'subscriber_dob', 'N/A')],
-                ["Subscriber Address:", getattr(sub, 'subscriber_address', 'N/A')],
-            ])
+
     else:
         data_payer.append(["Details:", "Not Provided"])
     

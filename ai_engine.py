@@ -162,6 +162,7 @@ class PatientCommunication(BaseModel):
 class PatientProvider(BaseModel):
     """Care provider details - ALL fields required."""
     generalPractitioner: str = Field(..., description="Full name of primary care provider e.g. 'Dr. Jane Smith, MD'")
+    formatted_npi: str = Field(..., description="National Provider Identifier (10 digits) e.g. '1234567890'")
     managingOrganization: str = Field(..., description="Name of managing clinic/hospital e.g. 'Mercy General Hospital'")
 
 class PatientLink(BaseModel):
@@ -169,13 +170,7 @@ class PatientLink(BaseModel):
     other_patient: str = Field("N/A", description="ID of linked patient or 'N/A'")
     link_type: str = Field("N/A", description="Type of link: 'replaces', 'replaced-by', 'refer', 'seealso', or 'N/A'")
 
-class SubscriberDetails(BaseModel):
-    """Insurance subscriber details - person who holds the policy."""
-    subscriber_id: str = Field(default="Unknown", description="Subscriber/Member ID e.g. 'MEM-123456789'")
-    subscriber_name: str = Field(default="Unknown", description="Full name of policy holder")
-    subscriber_relationship: str = Field(default="Self", description="Relationship to patient: 'Self', 'Spouse', 'Child', 'Other'")
-    subscriber_dob: str = Field(default="1980-01-01", description="Subscriber date of birth YYYY-MM-DD")
-    subscriber_address: str = Field(default="Same as Patient", description="Subscriber address if different from patient")
+
 
 class PayerDetails(BaseModel):
     """Insurance/Payer information - ALL fields required."""
@@ -183,17 +178,12 @@ class PayerDetails(BaseModel):
     payer_name: str = Field(default="UnitedHealthcare", description="Full payer name e.g. 'UnitedHealthcare', 'Blue Cross Blue Shield', 'Aetna'")
     plan_name: str = Field(default="Choice Plus", description="Plan name e.g. 'Gold PPO', 'Choice Plus', 'Medicare Advantage'")
     plan_type: str = Field(default="PPO", description="Plan type: 'PPO', 'HMO', 'EPO', 'POS', 'Medicare', 'Medicaid'")
-    group_id: str = Field(default="GRP-99999", description="Group/Employer ID e.g. 'GRP-98765'")
-    group_name: str = Field(default="Employer Group", description="Group/Employer name e.g. 'Stark Industries', 'City of Pawnee'")
     member_id: str = Field(default="MBR-999999", description="Member ID on insurance card e.g. 'MBR-123456789'")
     policy_number: str = Field(default="POL-99999", description="Policy number e.g. 'POL-2025-001234'")
     effective_date: str = Field(default="2024-01-01", description="Coverage start date YYYY-MM-DD")
     termination_date: str = Field("ongoing", description="Coverage end date or 'ongoing'")
     copay_amount: str = Field(default="$25", description="Copay amount e.g. '$25', '$50'")
     deductible_amount: str = Field(default="$500", description="Annual deductible e.g. '$500', '$1500'")
-    
-    # Subscriber (policy holder)
-    subscriber: SubscriberDetails = Field(default_factory=SubscriberDetails, description="Policy holder details")
 
 class PatientPersona(BaseModel):
     """Complete FHIR-compliant patient persona - ALL fields populated."""

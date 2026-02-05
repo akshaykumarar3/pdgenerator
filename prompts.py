@@ -30,9 +30,20 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
 7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
 
+=== PERSONA DOCUMENT AS SOURCE OF TRUTH ===
+**CRITICAL**: The patient_persona document serves as the SINGLE SOURCE OF TRUTH. All generated reports MUST:
+- Reference ONLY the CPT codes, diagnosis codes (ICD-10), and procedures explicitly defined in the persona.
+- Maintain 100% consistency with persona demographics, medical history, and clinical details.
+- NEVER introduce new conditions, procedures, or codes not established in the persona.
+- Use the EXACT same coding throughout all documents.
+
 === CRITICAL PROJECT CONSTRAINTS ===
-A. **Data Density**:
-   - Documents: Minimum 5 distinct clinical documents.
+A. **Data Density (DYNAMIC)**:
+   - Generate documents based on CLINICAL COMPLEXITY, NOT a fixed number.
+   - Simple cases (single procedure, straightforward): 3-4 documents.
+   - Moderate cases (multiple conditions, some history): 5-6 documents.
+   - Complex cases (chronic conditions, multiple specialists, extensive history): 7-10 documents.
+   - Each document must add unique clinical value - NO filler documents.
 B. **Clinical Status**:
    - Target Procedure must be 'requested'.
    - Historical Procedures 'completed'.
@@ -43,7 +54,7 @@ D. **NAMING CONVENTION**:
    - Use names from: Friends, Marvel, Star Wars, etc. (as per constraints).
 E. **INSURANCE REQUIREMENT**:
    - Payer: ALWAYS "UnitedHealthcare" (UHC).
-   - Plan Types: Choice Plus PPO, Options PPO, Navigate HMO, or Compass HMO.
+   - Plan Name: "Medicare Advantage".
    - Include realistic member IDs, group IDs, policy numbers.
 """
 
@@ -107,15 +118,33 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
     3. **Clinical Status**:
        - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
        - All *historical* procedures must be implied as 'completed'.
-    4. **Medical Coding Requirements (CRITICAL)**:
-       - **ICD-10 Codes**: Generate REAL ICD-10-CM diagnosis codes that clinically support the medical necessity of the requested procedure.
-       - **CPT Code**: The procedure MUST be specified with its CPT code (e.g., "CPT 78452 - Myocardial perfusion imaging").
+    4. **Medical Coding Requirements (CRITICAL - PERSONA IS SOURCE OF TRUTH)**:
+       - **CPT Code (MANDATORY IN PERSONA)**: The target procedure MUST be specified with its CPT code (e.g., "CPT 78452 - Myocardial perfusion imaging").
+       - **ICD-10 Codes (MANDATORY IN PERSONA)**: Generate REAL ICD-10-CM diagnosis codes that clinically support the medical necessity of the requested procedure.
+       - **Persona Must Include**:
+         - `target_cpt_code`: The exact CPT code for the requested procedure.
+         - `target_cpt_description`: Full description of the procedure.
+         - `primary_diagnosis_codes`: List of primary ICD-10 codes justifying the procedure.
+         - `secondary_diagnosis_codes`: List of secondary/supporting ICD-10 codes.
+         - `procedure_history`: List of relevant past procedures with their CPT codes.
        - **Medical Necessity**: ICD-10 codes must be medically appropriate and commonly used to justify the CPT procedure.
        - **Code Format**: ICD-10 codes should follow the format (e.g., "I25.10" for atherosclerotic heart disease, "R07.9" for chest pain).
-    5. **Data Density (MANDATORY)**:
-       - **Documents**: Minimum 5 distinct clinical documents (e.g., Consult, Lab_Report, Imaging_Report, Discharge_Summary, Specialist_Note).
+       - **STRICT ALIGNMENT**: ALL reports MUST reference ONLY the codes defined in the persona. NO new codes may be introduced in reports.
+    5. **Data Density (DYNAMIC - Based on Clinical Complexity)**:
+       - **DO NOT default to a fixed number of documents.**
+       - Assess the clinical complexity and generate an APPROPRIATE number:
+         - **Simple procedures** (e.g., routine imaging, minor outpatient): 3-4 documents.
+         - **Moderate complexity** (e.g., surgical procedures, multiple conditions): 5-6 documents.
+         - **High complexity** (e.g., chronic disease, multiple specialists, prior authorizations needed): 7-10 documents.
+       - **Each document must provide UNIQUE clinical value**. No filler or redundant documents.
+       - **Document types to consider**: Consult Notes, Lab Reports, Imaging Reports, Procedure Notes, Discharge Summaries, Specialist Notes, Physical Therapy Notes, Prior Authorization Requests, Referral Letters, Medication Lists, Progress Notes.
     6. **Document Generation (CRITICAL Rules)**:
-       - Generate `documents` list with rich content.
+       - Generate `documents` list with rich, detailed content.
+       - **REPORT DETAIL REQUIREMENTS**:
+         - Each report must contain comprehensive clinical information relevant to its type.
+         - Include specific findings, measurements, interpretations, and clinical impressions.
+         - Reference the CPT and ICD-10 codes from the persona where clinically appropriate.
+         - Include detailed clinical narratives, not just summary statements.
        - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
        - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
        - **STRICT FORMATTING (VALIDATOR COMPLIANCE)**:
@@ -129,6 +158,9 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            PATIENT_NAME: (Full Name)
            DOB: (YYYY-MM-DD)
            REPORT_DATE: (YYYY-MM-DD from Timeline)
+           PROVIDER_NPI: (NPI from Persona)
+           CPT_CODES: (List relevant CPT codes from persona)
+           ICD10_CODES: (List relevant ICD-10 codes from persona)
            ...
            ```
          - **NO MARKDOWN BOLD**: Do not use `**Text**`.
@@ -136,11 +168,18 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
        - **METADATA**:
           - `service_date`: Must be logically consistent (Historical dates for evidence, recent for request).
           - `facility_name` & `provider_name`: Realistic and consistent.
-    7. **TIMELINE LOGIC (CRITICAL)**:
+    7. **PERSONA-REPORT ALIGNMENT (MANDATORY)**:
+       - **ZERO DEVIATION POLICY**: All generated reports MUST be in complete alignment with the persona document.
+       - All diagnoses mentioned in reports MUST use the ICD-10 codes from the persona.
+       - All procedures mentioned MUST use the CPT codes from the persona.
+       - Patient demographics, history, and clinical details MUST match the persona exactly.
+       - Any clinical findings MUST support the diagnoses listed in the persona.
+       - DO NOT introduce any new conditions, procedures, or codes not in the persona.
+    8. **TIMELINE LOGIC (CRITICAL)**:
        - **Target Procedure Date**: Future (e.g. 2-3 weeks from now).
        - **Historical Context**: All Consults, Labs, Imaging must be PAST dated.
        - Example: "Today is 2025-05-01. Requesting procedure for 2025-05-20. Evidence generated from 2025-04-15."
-    8. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
+    9. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
        - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
        {identity_constraint}
        - **Required Fields (ALL MUST BE FILLED)**:
@@ -149,17 +188,23 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
+         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`: Format "XXXXXXXXXX" (10 digits)
+         - **Clinical Coding (MANDATORY - Must be filled for report alignment)**:
+           - `target_cpt_code`: CPT code for the requested procedure (e.g., "78452")
+           - `target_cpt_description`: Full procedure description (e.g., "Myocardial perfusion imaging, multiple studies")
+           - `primary_diagnosis_codes`: List of primary ICD-10 codes [{{"code": "I25.10", "description": "Atherosclerotic heart disease"}}]
+           - `secondary_diagnosis_codes`: List of secondary ICD-10 codes [{{"code": "R07.9", "description": "Chest pain, unspecified"}}]
+           - `procedure_history`: List of past relevant procedures [{{"cpt": "93000", "description": "ECG", "date": "2024-01-15"}}]
          - **payer (MANDATORY - UnitedHealthcare ONLY)**:
            - `payer_name`: "UnitedHealthcare"
-           - `plan_name`: One of "Choice Plus PPO", "Options PPO", "Navigate HMO", "Compass HMO"
-           - `plan_type`: "PPO" or "HMO" (must match plan_name)
-           - `member_id`: Format "MBR-XXXXXXXXX" (9 digits)
-           - `group_id`: Format "GRP-XXXXX" (5 digits)
+           - `plan_name`: "Medicare Advantage"
+           - `plan_type`: "Medicare Advantage"
            - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
-           - All other payer fields (deductible, copay, effective_date, subscriber details)
+           - All other payer fields (deductible, copay, effective_date)
        - **Bio Narrative (PLAIN TEXT)**:
          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
-    9. **Output**: Return the `ClinicalDataPayload` JSON.
+         - MUST reference the diagnosis codes and clinical history established in the persona.
+    10. **Output**: Return the `ClinicalDataPayload` JSON.
     """
 
 # ============================================================================
