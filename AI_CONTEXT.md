@@ -34,8 +34,11 @@ purge_manager.py      → Data cleanup utilities
 ## Generation Workflow
 
 1. User enters Patient ID
-2. User selects generation mode (Summary/Reports/Persona/All)
-3. System scans for existing documents (duplicate prevention)
+2. User selects generation mode (default: **Persona + Reports + Summary**)
+3. System scans for existing documents (smart duplicate prevention)
+   - Extracts titles from existing PDFs
+   - Passes list to AI to avoid unnecessary duplicates
+   - Only generates multiple reports when test case requires it
 4. AI generates clinical data based on case context
 5. Documents are validated; invalid ones get AI repair
 6. PDFs are rendered and saved
@@ -53,37 +56,44 @@ purge_manager.py      → Data cleanup utilities
 - Prod: GPT-4o / Gemini 2.5 Pro
 - Test: GPT-4o-mini / Gemini 2.5 Flash
 
-## Recent Changes (Jan 2026)
+## Recent Changes (Feb 2026)
 
-### Centralized Prompts (NEW)
+### Smart Duplicate Detection (NEW)
+
+- **Intelligent Document Scanning**: Scans existing PDFs before generation
+- **Title Extraction**: Accurately extracts document titles from filenames
+- **Duplicate Prevention**: Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
+- **Multiple Reports**: Only generates multiple reports when test case specifically requires it
+- **AI Integration**: Passes existing document list to AI for smart decision-making
+
+### Updated Default Generation Mode (NEW)
+
+- **New Default**: "Persona + Reports + Summary" (previously "Summary + Reports")
+- **Reordered Menu**: More intuitive option ordering
+- **Comprehensive Output**: Generates complete patient records by default
+
+### Code Cleanup
+
+- Removed `patch_prompts.py` and `patch_prompts_v2.py` (obsolete patching code)
+- Cleaner codebase with better maintainability
+
+### Centralized Prompts
 
 - **`prompts.py`**: All AI instructions now in one file with user-friendly comments
 - Helper functions: `get_clinical_data_prompt()`, `get_image_generation_prompt()`, etc.
 - Easy customization without touching core logic
 
-### AI-Generated Images  Only (NEW)
+### AI-Generated Images Only
 
 - Removed static asset images (`assets/` folder deleted)
 - All medical images now generated via DALL-E 3 or Imagen 3
 - Enhanced image prompts for higher quality, medical-grade outputs
 
-### Windows Compatibility (NEW)
+### Windows Compatibility
 
 - Added `run.bat` for Windows users
 - Cross-platform documentation in README
 - Example configuration files in `cred/examples/`
-
-### Document Generation Enhancements
-
-- **Interactive Mode Selection**: Menu for Summary/Reports/Persona/All
-- **Smart Duplicate Prevention**: Scans existing titles, passes to AI
-- **Summary Template**: `templates/summary_template.json`
-
-### Refactoring
-
-- Removed SQL generation logic
-- Added AI-friendly validation with retry loop
-- Extracted helpers: document scanning, generation loops
 
 ### Bug Fixes
 
@@ -139,6 +149,7 @@ purge_manager.py      → Data cleanup utilities
 ## Testing
 
 **Windows:**
+
 ```cmd
 :: Syntax check
 python -m py_compile generator.py ai_engine.py prompts.py
@@ -149,6 +160,7 @@ python generator.py
 ```
 
 **Mac / Linux:**
+
 ```bash
 # Syntax check
 python3 -m py_compile generator.py ai_engine.py prompts.py
@@ -162,7 +174,9 @@ TEST_MODE=true python3 generator.py
 1. All dates use YYYY-MM-DD format
 2. Patient IDs are numeric strings (e.g., "210", "237")
 3. Document titles should use underscores, not spaces
-4. Existing documents inform AI to avoid duplicates
-5. The `generation_mode` dict controls what gets generated
-6. **Prompts are in `prompts.py`** - edit there, not in ai_engine.py
-7. Images are 100% AI-generated - no static fallbacks
+4. **Smart Duplicate Detection**: Existing documents are scanned and passed to AI to prevent unnecessary duplicates
+5. **Multiple Reports**: Only generate multiple reports (e.g., Doc-221-001, Doc-221-002) when test case specifically requires different reports
+6. The `generation_mode` dict controls what gets generated (default: all three - persona, reports, summary)
+7. **Prompts are in `prompts.py`** - edit there, not in ai_engine.py
+8. Images are 100% AI-generated - no static fallbacks
+9. Default generation mode is now "Persona + Reports + Summary" for comprehensive output

@@ -37,7 +37,7 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     if excluded_names is None:
         excluded_names = []
     if generation_mode is None:
-        generation_mode = {"summary": True, "reports": True, "persona": False}
+        generation_mode = {"summary": True, "reports": True, "persona": True}
         
     print(f"🚀 Starting Workflow for Patient ID: {patient_id}")
     print(f"\n📂 Loading Case Data for ID: {patient_id}...")
@@ -62,6 +62,8 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
     # Scan for existing documents (Smart Duplicate Prevention)
     patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
     existing_titles = []
+    existing_docs_map = {}  # Map title -> full filename for potential replacement
+    
     if os.path.exists(patient_report_folder):
         for f in os.listdir(patient_report_folder):
             if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
@@ -69,13 +71,16 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                 parts = os.path.splitext(f)[0].split("-")
                 if len(parts) >= 4:
                     title = "-".join(parts[3:])
+                    # Remove NAF suffix if present
                     if title.endswith("-NAF"):
                         title = title[:-4]
                     existing_titles.append(title)
+                    existing_docs_map[title] = f
     
     if existing_titles:
         print(f"      📥 Existing Documents Found: {len(existing_titles)}")
-        print(f"         Skipping duplicates: {', '.join(existing_titles[:5])}{'...' if len(existing_titles) > 5 else ''}")
+        print(f"         Documents: {', '.join(existing_titles[:5])}{'...' if len(existing_titles) > 5 else ''}")
+        print(f"         AI will avoid creating duplicates unless multiple reports are needed.")
     
     print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
     
@@ -360,21 +365,21 @@ def main():
         else:
             # Single Run -> Ask for Generation Mode
             print("\n📋 What to generate?")
-            print("   [1] Summary + Reports (default)")
-            print("   [2] Summary only")
-            print("   [3] Reports only")
-            print("   [4] Persona only")
-            print("   [5] All (Summary + Reports + Persona)")
+            print("   [1] Persona + Reports + Summary (default)")
+            print("   [2] Reports + Summary")
+            print("   [3] Summary only")
+            print("   [4] Reports only")
+            print("   [5] Persona only")
             mode_input = input("   Choice [1]: ").strip()
             
             # Parse mode
             mode_map = {
-                "1": {"summary": True, "reports": True, "persona": False},
-                "2": {"summary": True, "reports": False, "persona": False},
-                "3": {"summary": False, "reports": True, "persona": False},
-                "4": {"summary": False, "reports": False, "persona": True},
-                "5": {"summary": True, "reports": True, "persona": True},
-                "": {"summary": True, "reports": True, "persona": False},  # Default
+                "1": {"summary": True, "reports": True, "persona": True},   # New default: All
+                "2": {"summary": True, "reports": True, "persona": False},  # Reports + Summary
+                "3": {"summary": True, "reports": False, "persona": False}, # Summary only
+                "4": {"summary": False, "reports": True, "persona": False}, # Reports only
+                "5": {"summary": False, "reports": False, "persona": True}, # Persona only
+                "": {"summary": True, "reports": True, "persona": True},    # Default when Enter pressed
             }
             generation_mode = mode_map.get(mode_input, mode_map["1"])
             

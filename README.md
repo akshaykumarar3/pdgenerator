@@ -16,6 +16,7 @@ Already set up? Start generating immediately:
 ### Launch the Generator
 
 **Windows:**
+
 ```cmd
 run.bat
 :: OR
@@ -23,6 +24,7 @@ python generator.py
 ```
 
 **Mac / Linux:**
+
 ```bash
 ./run.sh
 # OR
@@ -46,11 +48,11 @@ After entering a Patient ID:
 
 ```
 📋 What to generate?
-   [1] Summary + Reports (default)
-   [2] Summary only
-   [3] Reports only
-   [4] Persona only
-   [5] All (Summary + Reports + Persona)
+   [1] Persona + Reports + Summary (default)
+   [2] Reports + Summary
+   [3] Summary only
+   [4] Reports only
+   [5] Persona only
 ```
 
 ### Output
@@ -81,6 +83,7 @@ cd pdgenerator
 ```
 
 **Windows (PowerShell or CMD):**
+
 ```cmd
 python -m venv venv
 venv\Scripts\activate
@@ -88,6 +91,7 @@ pip install -r requirements.txt
 ```
 
 **Mac / Linux:**
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
@@ -102,18 +106,21 @@ The system expects credentials in a `cred/` directory.
 2. **Create Environment File**: Copy the example and customize:
 
     **Windows:**
+
     ```cmd
     copy cred\examples\.env.example cred\.env
     notepad cred\.env
     ```
 
     **Mac / Linux:**
+
     ```bash
     cp cred/examples/.env.example cred/.env
     nano cred/.env
     ```
 
 3. **Fill in your credentials:**
+
     ```bash
     # Choose provider
     LLM_PROVIDER=openai  # or vertexai
@@ -191,6 +198,11 @@ pdgenerator/
 
 * **Multi-Modal AI**: Uses **GPT-4o / Gemini 2.5** (Text) and **DALL-E 3 / Imagen 3** (Medical Imaging)
 * **Interactive Workflow**: Continuous processing loop with admin purge commands
+* **Smart Duplicate Detection**:
+  * Scans existing documents before generation
+  * Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
+  * Only generates multiple reports when test case specifically requires it
+  * Intelligently replaces outdated documents when necessary
 * **AI-Friendly Validation**:
   * **Auto-Repair**: Invalid documents are automatically fixed by AI
   * **Fail-Safe**: Failed repairs saved with `-NAF` suffix (Not AI Friendly)
