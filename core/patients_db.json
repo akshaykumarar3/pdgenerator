@@ -160,7 +160,7 @@
     "address": "23 Broadway St, Brooklyn, NY 11249, USA",
     "telecom": "555-345-6789",
     "race": "Caucasian",
-    "height": "5 ft 4 in",
+    "height": "5 ft 6 in",
     "weight": "140 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
@@ -172,16 +172,17 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Caroline Channing",
-      "telecom": "555-987-6543",
-      "address": "50 7th Ave, Brooklyn, NY 11217, USA",
-      "gender": "female",
+      "name": "Lucas Scott",
+      "telecom": "555-123-4567",
+      "address": "23 Broadway St, Brooklyn, NY 11249, USA",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2025-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Jane Smith",
+      "formatted_npi": "0123456789",
       "managingOrganization": "Williamsburg Medical Center"
     },
     "link": {
@@ -189,27 +190,18 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "group_id": "GRP-54321",
-      "group_name": "Employer Group",
       "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-000001",
-      "effective_date": "2024-01-01",
+      "policy_number": "POL-2026-654321",
+      "effective_date": "2025-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$30",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "deductible_amount": "$500"
     },
-    "bio_narrative": "Max Black, a resilient entrepreneur and a Brooklyn native, has no previous recorded medical history until now as she navigates a sudden onset of chronic kidney disease. She operates her cupcake business with her business partner Caroline, often working long hours and managing stress. Max enjoys a social lifestyle with a balanced diet but was recently found to suffer from fatigue and swelling, leading to the discovery of her kidney issues. Despite her diagnosis of end-stage renal disease, Max continues to maintain a positive outlook and remains actively involved in her business."
+    "bio_narrative": "Max Black is a 38-year-old freelance writer residing in Brooklyn, NY. She has lived an active lifestyle and has recently been diagnosed with chronic kidney disease, stage 5 (N18.6), necessitating dialysis. She has undergone multiple tests to confirm this condition but remains hopeful and interested in managing her health proactively. She is aware of her family's medical history, with her father having hypertension. She is a non-smoker and consumes alcohol occasionally. Max is preparing for the insertion of a tunneled central venous catheter which is critical for her dialysis treatment."
   },
   "223": {
     "first_name": "George",
@@ -278,8 +270,8 @@
     "address": "90 Bedford St, Apt 20, New York, NY, 10014",
     "telecom": "212-555-1234",
     "race": "Caucasian",
-    "height": "6 ft",
-    "weight": "170 lbs",
+    "height": "6 ft 0 in",
+    "weight": "178 lbs",
     "maritalStatus": "Divorced",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -290,16 +282,17 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Chandler Bing",
-      "telecom": "212-555-9876",
-      "address": "99 Park Ave, New York, NY, 10016",
-      "gender": "male",
+      "name": "Monica Geller",
+      "telecom": "212-555-6789",
+      "address": "90 Bedford St, Apt 19, New York, NY, 10014",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2000-05-15",
+      "period_start": "2010-06-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Leo Markus, MD",
+      "formatted_npi": "9876543210",
       "managingOrganization": "New York-Presbyterian Hospital"
     },
     "link": {
@@ -311,23 +304,14 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "group_id": "GRP-12345",
-      "group_name": "Stark Industries",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-987654",
-      "effective_date": "2024-01-01",
+      "member_id": "MBR-123456",
+      "policy_number": "POL-2026-000001",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "deductible_amount": "$500"
     },
-    "bio_narrative": "Ross Geller is a paleontologist living in New York. Known for his meticulous nature and sense of humor, Ross has been actively managing his health following his diagnosis with end-stage renal disease (ICD-10: N18.6). He has been on hemodialysis for several years, enabling him to maintain a decent quality of life while awaiting a renal transplant. Socially, Ross enjoys spending time with his family and is especially fond of indulging in scientific discussions with his close-knit group of friends. His personal history is free of significant medical procedures other than those related to monitoring and managing his renal condition. Ross speaks English fluently and his primary correspondence occurs via phone or in-person meetings with his healthcare provider, Dr. Leo Markus at New York-Presbyterian Hospital."
+    "bio_narrative": "Ross Geller, a dedicated paleontologist, is currently managing end-stage renal disease (ICD-10: N18.6) that has required long-term dialysis (ICD-10: Z99.2). Residing in New York, Ross lives close to his family, including his sister Monica, and maintains a close-knit support system. Despite the challenges of his condition, he continues to pursue his academic interests and enjoys spending time with his children. Throughout his journey, he has shown compliance with his treatment plan and maintains a balanced lifestyle which includes dietary modifications necessary for his condition. The upcoming renal transplant with nephrectomy promises to significantly improve his quality of life."
   },
   "225": {
     "first_name": "Meredith",
@@ -337,9 +321,9 @@
     "address": "123 Hospital Drive, Seattle, WA 98101",
     "telecom": "206-555-0199",
     "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "170 lbs",
-    "maritalStatus": "Married",
+    "height": "5 ft 5 in",
+    "weight": "135 lbs",
+    "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -348,13 +332,13 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Spouse",
+      "relationship": "Emergency Contact",
       "name": "Derek Shepherd",
-      "telecom": "206-555-0198",
+      "telecom": "206-555-0123",
       "address": "123 Hospital Drive, Seattle, WA 98101",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "1999-07-25",
+      "period_start": "2005-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -367,18 +351,18 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-99999",
+      "payer_id": "UHC-2026",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000012",
-      "effective_date": "2024-01-01",
+      "member_id": "MBR-20267890",
+      "policy_number": "POL-2026-123456",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$30",
+      "copay_amount": "$20",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Meredith Grey, a 47-year-old Caucasian female, has a storied career as a renowned surgeon at Seattle Grace Hospital. She has been managing hypertension-related chronic kidney disease, necessitating a kidney transplant to improve her long-term health outlook. Her medical journey is marked by significant episodes such as managing type 2 diabetes mellitus and periodic mild depression, all controlled under vigilant medical supervision. Meredith has maintained a supportive family environment, married to renowned neurosurgeon Derek Shepherd. They have striven together to ensure both professional success and personal resilience amidst health challenges. Her robust medical knowledge facilitates her understanding of her treatment pathway, including necessary lifestyle adjustments and compliance with medical protocols to optimize transplant outcomes. Socially, Meredith remains actively involved in various outreach programs, drawing strength from both her past experiences and her family's unwavering support."
+    "bio_narrative": "Meredith Grey is a renowned surgeon residing in Seattle, WA. She has an extensive background in medical practice and research. Over the years, Meredith has been battling liver dysfunction, which has necessitated various medical evaluations and consultations. Despite these challenges, her dedication to her profession and family remains unwavering.\nMeredith maintains a healthy lifestyle, balanced diet, and is compliant with her medical regimen. She has a strong support system that includes her family and her colleagues at the hospital. Her ongoing health challenges have impacted her career, but her resilience and determination have kept her at the forefront of innovative medical procedures. Her primary focus now is receiving an organ transplant to improve her quality of life and continue her contributions to the field of medical science.\n\nMeredith's medical history is extensive. She has been diagnosed with an array of conditions that impact her daily life. These include liver dysfunction (K76.89), Type 2 Diabetes Mellitus (E11.9), and hyperlipidemia (E78.5). Her proactive approach to managing these conditions has included regular consultations with her healthcare providers and adherence to prescribed therapies.\nMeredith is currently under the care of Dr. Miranda Bailey, who is overseeing the transplant assessment process. This decision results from thorough interdisciplinary discussions focusing on Meredith\u2019s overall well-being and potential benefits of the transplant. The medical team continues to monitor her condition closely, ensuring comprehensive care that aligns with her health needs."
   },
   "227": {
     "first_name": "Aragorn II",
