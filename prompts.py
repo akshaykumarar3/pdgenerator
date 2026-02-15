@@ -379,7 +379,8 @@ def get_annotator_summary_prompt(
     case_details: dict,
     patient_persona: dict,
     generated_documents: list = None,
-    existing_summary: str = None
+    existing_summary: str = None,
+    search_results: dict = None
 ) -> str:
     """
     Generates prompt for creating annotator verification guide.
@@ -398,6 +399,7 @@ def get_annotator_summary_prompt(
         patient_persona: The generated patient persona object (dict or Pydantic)
         generated_documents: Optional list of generated documents
         existing_summary: Optional existing summary to update
+        search_results: Optional web search results for CPT/ICD codes
     
     Returns:
         Complete prompt string for annotator summary generation
@@ -410,18 +412,17 @@ def get_annotator_summary_prompt(
         persona_dict = patient_persona
     
     patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
-    patient_dob = persona_dict.get('dob', 'N/A')
-    patient_gender = persona_dict.get('gender', 'N/A')
+    patient_dob = persona_dict.get('dob', '')
+    patient_gender = persona_dict.get('gender', '')
+    bio_narrative = persona_dict.get('bio_narrative', '')
     
-    # Extract medical coding information
-    target_cpt = persona_dict.get('target_cpt_code', 'N/A')
-    target_cpt_desc = persona_dict.get('target_cpt_description', 'N/A')
-    primary_dx = persona_dict.get('primary_diagnosis_codes', [])
-    secondary_dx = persona_dict.get('secondary_diagnosis_codes', [])
-    
-    # Format diagnosis codes for display
-    primary_dx_str = ", ".join([f"{dx.get('code', 'N/A')} ({dx.get('description', 'N/A')})" for dx in primary_dx]) if primary_dx else "Not specified"
-    secondary_dx_str = ", ".join([f"{dx.get('code', 'N/A')} ({dx.get('description', 'N/A')})" for dx in secondary_dx]) if secondary_dx else "Not specified"
+    # Build patient info (only show fields with data)
+    patient_info_lines = [f"- Name: {patient_name}"]
+    if patient_dob:
+        patient_info_lines.append(f"- DOB: {patient_dob}")
+    if patient_gender:
+        patient_info_lines.append(f"- Gender: {patient_gender}")
+    patient_info_section = "\n".join(patient_info_lines)
     
     # Build document list if available
     documents_section = ""
@@ -445,18 +446,98 @@ The verification checklist section should indicate: "Reports pending - verificat
     if generated_documents and len(generated_documents) > 0:
         sections_instruction = """
 **REQUIRED SECTIONS (ALL 4):**
-1. **Case Explanation**: Detailed explanation of the procedure, clinical context, and expected outcome
-2. **Medical Details**: Persona-specific medical information and what is expected from this case
-3. **Patient Profile Summary**: Prior health concerns, procedure justification, and CPT code rationale
-4. **Verification Pointers**: Key elements to cross-verify from the likelihood analysis (approval/denial criteria)
+
+1. **Case Explanation**: 
+   - **CRITICAL**: Extract the TARGET CPT CODE and DESCRIPTION from the patient bio narrative above
+   - Start with: "Target Procedure: CPT [code] - [description]"
+   - Extract ALL CPT codes mentioned in the bio narrative
+   - Extract ALL ICD-10 codes with descriptions from the bio narrative
+   - Explain the clinical context and patient presentation
+   - Explain the expected outcome (Approval/Denial) with clear rationale
+   - Include clinical justification for the procedure
+   - **NEVER use "N/A"** - if a code is not in the bio narrative, state "See clinical documents for code details"
+
+2. **Medical Details**: 
+   - Key medical history elements from the persona
+   - How the diagnoses (ICD-10 codes) support or contradict the procedure request
+   - Unique or noteworthy aspects of this case
+   - Any complicating factors or special considerations
+   - Expected documentation elements
+
+3. **Patient Profile Summary**: 
+   - Prior health concerns and relevant medical history
+   - Medical necessity justification for the target procedure
+   - How the CPT code aligns with the patient's condition
+   - Procedure justification based on clinical profile
+   - Relevant social, lifestyle, or demographic factors
+
+4. **Verification Pointers**: 
+   - Key items to verify in the generated documents
+   - Supporting evidence that should be present
+   - Red flags or inconsistencies to watch for
+   - Document-specific expectations (what each document should contain)
 """
     else:
         sections_instruction = """
 **REQUIRED SECTIONS (3 of 4 - Documents Pending):**
-1. **Case Explanation**: Detailed explanation of the procedure, clinical context, and expected outcome
-2. **Medical Details**: Persona-specific medical information and what is expected from this case
-3. **Patient Profile Summary**: Prior health concerns, procedure justification, and CPT code rationale
-4. **Verification Pointers**: INDICATE "Reports pending - verification checklist will be available when clinical documents are generated."
+
+1. **Case Explanation**: 
+   - Start with a clear statement of the TARGET PROCEDURE including CPT code and full description
+   - Example: "Target Procedure: CPT 50360 - Renal Transplantation, Kidney Allotransplantation"
+   - Explain the clinical context and patient presentation
+   - List ALL CPT codes that will be referenced in this case
+   - List ALL ICD-10 codes with descriptions (primary and secondary diagnoses)
+   - Explain the expected outcome (Approval/Denial) with clear rationale
+   - Include clinical justification for the procedure
+
+2. **Medical Details**: 
+   - Key medical history elements from the persona
+   - How the diagnoses support or contradict the procedure request
+   - Unique or noteworthy aspects of this case
+   - Expected documentation elements when reports are generated
+
+3. **Patient Profile Summary**: 
+   - Prior health concerns and relevant medical history
+   - Medical necessity justification for the target procedure
+   - How the CPT code aligns with the patient's condition
+   - Procedure justification based on clinical profile
+
+4. **Verification Pointers**: 
+   INDICATE: "Reports pending - verification checklist will be available when clinical documents are generated."
+   INDICATE: "Reports pending - verification checklist will be available when clinical documents are generated."
+"""
+
+    # Build reference information section from web search
+    reference_section = ""
+    if search_results:
+        # Add CPT info if available
+        if search_results.get('cpt_info'):
+            cpt_info = search_results['cpt_info']
+            reference_section = f"""
+
+**REFERENCE INFORMATION (Authoritative Source):**
+
+Target CPT Code (from official medical coding database):
+- Code: {cpt_info.get('code', 'N/A')}
+- Official Description: {cpt_info.get('description', 'N/A')}
+- Source: {cpt_info.get('source_url', 'Authoritative medical coding database')}
+
+**IMPORTANT**: Use the official CPT description above when writing the case explanation. This is from an authoritative source and should be referenced accurately.
+"""
+        
+        # Add verification notes if present
+        if search_results.get('verification_notes'):
+            notes = search_results['verification_notes']
+            notes_text = '\n'.join([f"- {note}" for note in notes])
+            reference_section += f"""
+
+**DATA QUALITY NOTES (IMPORTANT - Include in Verification Section):**
+
+The following issues were detected during data preparation. These MUST be included in the verification checklist:
+
+{notes_text}
+
+**ACTION REQUIRED**: Add these notes to the "Verification Pointers" section so annotators know what needs manual verification.
 """
     
     return f"""
@@ -465,19 +546,18 @@ The verification checklist section should indicate: "Reports pending - verificat
 You are creating a comprehensive guide for clinical data annotators to verify and validate the generated patient data against expected outcomes. This is NOT a clinical document - it is an internal QA tool.
 
 **PATIENT INFORMATION:**
-- Name: {patient_name}
-- DOB: {patient_dob}
-- Gender: {patient_gender}
+{patient_info_section}
+
+{reference_section}
 
 **CLINICAL SCENARIO (SOURCE OF TRUTH):**
-- Procedure: {case_details['procedure']}
-- Target CPT Code: {target_cpt} - {target_cpt_desc}
-- Expected Outcome: {case_details['outcome']}
-- Clinical Context: {case_details['details']}
+- Expected Outcome: {case_details.get('outcome', 'Unknown')}
+- Clinical Context: {case_details.get('details', 'See patient bio narrative')}
 
-**MEDICAL CODING (FROM PERSONA):**
-- Primary Diagnoses (ICD-10): {primary_dx_str}
-- Secondary Diagnoses (ICD-10): {secondary_dx_str}
+**PATIENT BIO NARRATIVE (KEY SOURCE OF MEDICAL INFORMATION):**
+{bio_narrative if bio_narrative else 'Not available - extract from generated documents'}
+
+**IMPORTANT**: Extract ALL CPT codes and ICD-10 codes from the bio narrative above. Do NOT show "N/A" - if information is missing, extract it from the bio narrative or indicate it should be verified from the clinical documents.
 
 {documents_section}
 
@@ -487,10 +567,12 @@ You are creating a comprehensive guide for clinical data annotators to verify an
 
 ### 1. Case Explanation
 Provide a clear, concise explanation that includes:
+- **Extract CPT code and description from the patient bio narrative** (do not use "N/A")
 - What procedure is being requested (CPT code and description)
 - The clinical context and patient presentation
 - The expected outcome (Approval or Denial) and WHY this outcome is expected
 - The clinical rationale for this specific case
+- List all CPT and ICD-10 codes found in the bio narrative
 
 ### 2. Medical Details (Persona-Specific)
 Analyze the patient persona and explain:

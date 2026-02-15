@@ -176,7 +176,7 @@ def get_clinical_image(doc_title: str):
     """
     return None
 
-def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, output_folder: str = None):
+def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None):
     """
     Creates an Annotator Verification Guide PDF from the AI-generated summary.
     
@@ -187,6 +187,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
         patient_id: Patient ID
         annotator_summary: AnnotatorSummary object from AI
         case_details: Original case details dict
+        patient_persona: PatientPersona object (for extracting CPT/ICD codes)
         output_folder: Output directory path
     
     Returns:
@@ -255,21 +256,85 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(Paragraph(f"Patient ID: {patient_id} | For Internal QA Use Only", style_subtitle))
     Story.append(Spacer(1, 10))
     
-    # --- CASE OVERVIEW BOX ---
-    # Safely convert case details to strings (handles NaN from Excel)
-    procedure_str = str(case_details.get('procedure', 'N/A')) if case_details.get('procedure') is not None else 'N/A'
-    if procedure_str == 'nan':
-        procedure_str = 'N/A'
+    # --- EXTRACT MEDICAL CODES FROM AI RESPONSE ---
+    import re
     
+    target_cpt = "N/A"
+    target_cpt_desc = "N/A"
+    all_cpt_codes = []
+    all_icd_codes = []
+    
+    # Extract from case explanation text (AI should include codes here per prompt)
+    case_text = annotator_summary.case_explanation
+    
+    # Extract target procedure (should be at the start: "Target Procedure: CPT XXXXX - Description")
+    target_match = re.search(r'Target Procedure:\s*CPT\s*(\d+)\s*[-–]\s*([^\n]+)', case_text, re.IGNORECASE)
+    if target_match:
+        target_cpt = target_match.group(1).strip()
+        target_cpt_desc = target_match.group(2).strip()
+    
+    # Extract all CPT codes (format: "CPT XXXXX - Description" or "CPT XXXXX: Description")
+    cpt_matches = re.findall(r'CPT\s*(\d+)\s*[-–:]\s*([^\n,;]+)', case_text, re.IGNORECASE)
+    for code, desc in cpt_matches:
+        code_entry = f"{code.strip()} - {desc.strip()}"
+        if code_entry not in all_cpt_codes:
+            all_cpt_codes.append(code_entry)
+    
+    # Extract all ICD-10 codes (format: "ICD-10: XXX.XX - Description" or "ICD XXX.XX - Description")
+    icd_matches = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', case_text, re.IGNORECASE)
+    for code, desc in icd_matches:
+        code_entry = f"{code.strip()} - {desc.strip()}"
+        if code_entry not in all_icd_codes:
+            all_icd_codes.append(code_entry)
+    
+    # Also check medical details section for additional codes
+    medical_text = annotator_summary.medical_details
+    
+    # Extract additional ICD codes from medical details
+    icd_matches_2 = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', medical_text, re.IGNORECASE)
+    for code, desc in icd_matches_2:
+        code_entry = f"{code.strip()} - {desc.strip()}"
+        if code_entry not in all_icd_codes:
+            all_icd_codes.append(code_entry)
+    
+    # Fallback: try to extract from persona if available
+    if patient_persona and (not all_cpt_codes or not all_icd_codes):
+        # Extract from bio_narrative if available
+        if hasattr(patient_persona, 'bio_narrative') and patient_persona.bio_narrative:
+            bio_text = patient_persona.bio_narrative
+            
+            # Extract CPT from bio
+            bio_cpt_matches = re.findall(r'CPT\s*(\d+)\s*[-–:]\s*([^\n,;]+)', bio_text, re.IGNORECASE)
+            for code, desc in bio_cpt_matches:
+                code_entry = f"{code.strip()} - {desc.strip()}"
+                if code_entry not in all_cpt_codes:
+                    all_cpt_codes.append(code_entry)
+            
+            # Extract ICD from bio
+            bio_icd_matches = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', bio_text, re.IGNORECASE)
+            for code, desc in bio_icd_matches:
+                code_entry = f"{code.strip()} - {desc.strip()}"
+                if code_entry not in all_icd_codes:
+                    all_icd_codes.append(code_entry)
+    
+    # --- CASE OVERVIEW BOX (SIMPLIFIED) ---
+    # Only show Expected Outcome and Notes - no target procedure or CPT
     case_overview_data = [
-        [Paragraph("<b>Procedure:</b>", style_normal), Paragraph(procedure_str, style_normal)],
         [Paragraph("<b>Expected Outcome:</b>", style_normal), 
          Paragraph(f"<b>{annotator_summary.verification_pointers.expected_outcome}</b>", 
                   ParagraphStyle('outcome', parent=style_normal, 
                                 textColor=col_success if 'approval' in annotator_summary.verification_pointers.expected_outcome.lower() else col_warning))]
     ]
     
-    case_table = Table(case_overview_data, colWidths=[1.5*inch, 5*inch])
+    # Add notes if available
+    if hasattr(annotator_summary.verification_pointers, 'notes') and annotator_summary.verification_pointers.notes:
+        notes_text = "<br/>".join([f"• {note}" for note in annotator_summary.verification_pointers.notes])
+        case_overview_data.append([
+            Paragraph("<b>Verification Notes:</b>", style_normal),
+            Paragraph(notes_text, style_normal)
+        ])
+    
+    case_table = Table(case_overview_data, colWidths=[2*inch, 4.5*inch])
     case_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), col_light_bg),
         ('GRID', (0,0), (-1,-1), 1, colors.grey),
@@ -279,6 +344,9 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     ]))
     Story.append(case_table)
     Story.append(Spacer(1, 15))
+    
+    # --- REMOVED: Medical Coding Summary section (as per user request) ---
+    # All CPT and ICD codes are now in the case explanation text
     
     # --- SECTION 1: CASE EXPLANATION ---
     Story.append(Paragraph("1. Case Explanation", style_h2))

@@ -184,6 +184,80 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             try:
                 print(f"   📋 Generating Annotator Verification Guide...")
                 
+                # WEB SEARCH: Get official CPT code information (ONLY if enabled AND Excel data is missing)
+                search_results = None
+                verification_notes = []
+                
+                # Check if Excel has procedure data
+                procedure_text = case_data.get('procedure', '')
+                has_excel_procedure = procedure_text and str(procedure_text) != 'nan' and str(procedure_text).strip() != ''
+                
+                if not has_excel_procedure:
+                    verification_notes.append("⚠️ Procedure information missing from Excel - verify CPT code manually")
+                
+                try:
+                    from search_engine import MedicalSearchEngine
+                    search_engine = MedicalSearchEngine()
+                    
+                    # Only search if:
+                    # 1. Web search is enabled
+                    # 2. Excel data is missing or incomplete
+                    if search_engine.enabled and not has_excel_procedure:
+                        print(f"      ℹ️  Excel procedure data missing, attempting web search...")
+                        
+                        # Try to extract CPT from other fields or documents
+                        import re
+                        cpt_match = None
+                        
+                        # Try to find CPT in details field
+                        details_text = case_data.get('details', '')
+                        if details_text:
+                            cpt_match = re.search(r'CPT[:\s]*(\d{5})', str(details_text), re.IGNORECASE)
+                        
+                        if cpt_match:
+                            target_cpt = cpt_match.group(1)
+                            print(f"      🔍 Searching for CPT {target_cpt}...")
+                            
+                            cpt_info = search_engine.search_cpt_code(target_cpt)
+                            
+                            if cpt_info and cpt_info.description and len(cpt_info.description) > 20:
+                                print(f"      ✅ Found: {cpt_info.description[:50]}...")
+                                search_results = {
+                                    'cpt_info': {
+                                        'code': cpt_info.code,
+                                        'description': cpt_info.description,
+                                        'source_url': cpt_info.source_url
+                                    }
+                                }
+                                verification_notes.append(f"ℹ️ CPT {target_cpt} description from web search - verify accuracy")
+                            else:
+                                print(f"      ⚠️  CPT {target_cpt} search returned poor quality results")
+                                verification_notes.append(f"⚠️ CPT {target_cpt} found but description quality uncertain - manual verification required")
+                        else:
+                            print(f"      ⚠️  Could not extract CPT code from case data")
+                            verification_notes.append("⚠️ CPT code not found in case data - manual entry required")
+                    elif not search_engine.enabled:
+                        print(f"      ℹ️  Web search disabled")
+                        if not has_excel_procedure:
+                            verification_notes.append("⚠️ Web search disabled and Excel data missing - verify all codes manually")
+                    else:
+                        print(f"      ✅ Using Excel procedure data")
+                        
+                except ImportError:
+                    print(f"      ⚠️  search_engine module not available")
+                    if not has_excel_procedure:
+                        verification_notes.append("⚠️ Search unavailable and Excel data missing - manual verification required")
+                except Exception as search_error:
+                    print(f"      ⚠️  Search failed: {search_error}")
+                    if not has_excel_procedure:
+                        verification_notes.append(f"⚠️ Search failed - manual verification required")
+                
+                # Add verification notes to search results
+                if verification_notes:
+                    if not search_results:
+                        search_results = {}
+                    search_results['verification_notes'] = verification_notes
+                
                 # Generate AI-powered annotator summary
                 # Pass documents if available (for full summary), or None (for partial summary)
                 documents_for_summary = result.documents if generation_mode.get("reports", True) else None
@@ -191,19 +265,24 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                 annotator_summary = ai_engine.generate_annotator_summary(
                     case_details=case_data,
                     patient_persona=result.patient_persona,
-                    generated_documents=documents_for_summary
+                    generated_documents=documents_for_summary,
+                    search_results=search_results  # Pass search results AND verification notes to AI
                 )
                 
                 # Create PDF from structured summary
+                # Pass persona so PDF can extract CPT/ICD codes
                 sum_path = pdf_generator.create_annotator_summary_pdf(
                     patient_id=patient_id,
                     annotator_summary=annotator_summary,
                     case_details=case_data,
+                    patient_persona=result.patient_persona,  # NEW: Pass persona for code extraction
                     output_folder=patient_report_folder
                 )
                 
                 if sum_path and os.path.exists(sum_path):
                     print(f"   📊 Annotator Summary Created: {os.path.basename(sum_path)}")
+                    if verification_notes:
+                        print(f"      ⚠️  {len(verification_notes)} verification note(s) added to summary")
                 else:
                     print(f"   ⚠️  Annotator Summary creation failed.")
                     

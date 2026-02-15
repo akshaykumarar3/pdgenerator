@@ -80,3 +80,6 @@ uritemplate>=4.2.0
 urllib3>=2.6.0
 virtualenv>=20.35.4
 yarl>=1.22.0
+
+# Web Search for Medical Information
+tavily-python>=0.3.0

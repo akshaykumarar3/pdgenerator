@@ -526,7 +526,8 @@ def fix_document_content(content: str, errors: List[str]) -> str:
 def generate_annotator_summary(
     case_details: dict,
     patient_persona,
-    generated_documents: list = None
+    generated_documents: list = None,
+    search_results: dict = None
 ) -> AnnotatorSummary:
     """
     Generates an annotator verification guide for QA and validation.
@@ -542,6 +543,7 @@ def generate_annotator_summary(
         case_details: Dict with 'procedure', 'outcome', 'details'
         patient_persona: The generated patient persona (Pydantic object or dict)
         generated_documents: Optional list of generated documents
+        search_results: Optional web search results for CPT/ICD codes
     
     Returns:
         AnnotatorSummary object with verification guide content
@@ -553,7 +555,8 @@ def generate_annotator_summary(
     prompt = prompts.get_annotator_summary_prompt(
         case_details=case_details,
         patient_persona=patient_persona,
-        generated_documents=generated_documents
+        generated_documents=generated_documents,
+        search_results=search_results
     )
     
     try:
