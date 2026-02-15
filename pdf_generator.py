@@ -178,31 +178,27 @@ def get_clinical_image(doc_title: str):
 
 def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None):
     """
-    Creates an Annotator Verification Guide PDF from the AI-generated summary.
-    
-    This PDF serves as a QA tool for annotators to verify generated clinical data.
-    It replaces any existing summary PDF in the output folder.
+    Creates a PDF annotator verification guide.
     
     Args:
         patient_id: Patient ID
         annotator_summary: AnnotatorSummary object from AI
-        case_details: Original case details dict
-        patient_persona: PatientPersona object (for extracting CPT/ICD codes)
-        output_folder: Output directory path
+        case_details: Dict with case information
+        patient_persona: Optional patient persona object
+        output_folder: Output folder (defaults to generated_output/summary)
     
     Returns:
         Path to created PDF file
     """
-    # 1. Folder Management
-    if output_folder:
-        output_dir = output_folder
-    else:
-        output_dir = f"generated_output/patient-reports/{patient_id}"
-        
-    _ensure_folder(output_dir)
-
-    filename = f"Clinical_Summary_Patient_{patient_id}.pdf"
-    file_path = os.path.join(output_dir, filename)
+    if output_folder is None:
+        output_folder = os.path.join("generated_output", "summary")
+    
+    # Ensure output folder exists
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Output file path - directly in summary folder
+    output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}.pdf")
+    file_path = output_path
     
     # Remove existing summary if present (user requirement: replace existing)
     if os.path.exists(file_path):

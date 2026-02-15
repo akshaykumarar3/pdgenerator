@@ -17,6 +17,7 @@ DOCS_DIR = os.path.join(OUTPUT_DIR, "patient-reports") # Reports here
 LOGS_DIR = os.path.join(OUTPUT_DIR, "logs") # Moved to output dir
 SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
 PERSONAS_DIR = os.path.join(OUTPUT_DIR, "persona") # Singular 'persona' as per plan
+SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary") # Summary PDFs
 DB_PATH = patient_db.DB_PATH
 
 def confirm_action(message: str) -> bool:
@@ -28,12 +29,14 @@ def confirm_action(message: str) -> bool:
 def purge_all():
     """
     Clears ALL generated data:
-    1. Documents (including Personas folder, unless specified otherwise? Requirement says '--' clears all logs, documents and sqls.)
-    2. Logs
-    3. SQLs
-    4. Patient DB (Personas)
+    1. Documents
+    2. Summaries
+    3. Personas
+    4. Logs
+    5. SQLs
+    6. Patient DB
     """
-    if not confirm_action("This will WIPEOUT ALL logs, documents (including generated personas), SQLs, and the Patient Database."):
+    if not confirm_action("This will WIPEOUT ALL logs, documents, summaries, personas, SQLs, and the Patient Database."):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -42,33 +45,35 @@ def purge_all():
     # 1. Documents
     if os.path.exists(DOCS_DIR):
         shutil.rmtree(DOCS_DIR)
-        os.makedirs(DOCS_DIR) # Recreate empty root
+        os.makedirs(DOCS_DIR)
         print(f"      ✅ Deleted: {DOCS_DIR}/")
 
+    # 2. Summaries
+    if os.path.exists(SUMMARY_DIR):
+        shutil.rmtree(SUMMARY_DIR)
+        os.makedirs(SUMMARY_DIR)
+        print(f"      ✅ Deleted: {SUMMARY_DIR}/")
+
+    # 3. Personas
     if os.path.exists(PERSONAS_DIR):
         shutil.rmtree(PERSONAS_DIR)
         os.makedirs(PERSONAS_DIR)
         print(f"      ✅ Deleted: {PERSONAS_DIR}/")
 
-    # 2. Logs
+    # 4. Logs
     if os.path.exists(LOGS_DIR):
         shutil.rmtree(LOGS_DIR)
         os.makedirs(LOGS_DIR)
         print(f"      ✅ Deleted: {LOGS_DIR}/")
 
-    # 3. SQLs
-    # Delete all .sql files in sqls/ dir? Or just generated ones? Assume all for now or check pattern.
-    # Safe approach: Delete all files in sqls/
+    # 5. SQLs
     if os.path.exists(SQLS_DIR):
-        # We might want to keep templates if they exist there? 
-        # Usually templates are checking `data_loader.get_template_sql`.
-        # Taking "Clear all sqls generated" literally.
         files = glob.glob(os.path.join(SQLS_DIR, "*.sql"))
         for f in files:
             os.remove(f)
         print(f"      ✅ Deleted {len(files)} SQL files.")
 
-    # 4. Patient DB
+    # 6. Patient DB
     with open(DB_PATH, 'w') as f:
         json.dump({}, f)
     print(f"      ✅ Reset: {DB_PATH}")
@@ -124,6 +129,87 @@ def purge_documents():
         print(f"      ✅ Cleared: {DOCS_DIR}/ (excluding 'personas')")
     
     print("\n   ✨ Documents Purged.")
+
+def purge_summaries_only():
+    """
+    Deletes ONLY summary PDFs from the summary/ folder.
+    """
+    if not confirm_action("This will delete ALL Annotator Summary PDFs but preserve Reports and Personas."):
+        print("   ❌ Operation Cancelled.")
+        return
+
+    print("\n   🗑️  Purging Summaries Only...")
+    
+    count = 0
+    # Summaries are in summary/Clinical_Summary_Patient_{id}.pdf
+    if os.path.exists(SUMMARY_DIR):
+        summary_files = glob.glob(os.path.join(SUMMARY_DIR, "Clinical_Summary_Patient_*.pdf"))
+        for f in summary_files:
+            os.remove(f)
+            count += 1
+            print(f"      ✅ Deleted: {os.path.basename(f)}")
+    
+    print(f"\n   ✨ Deleted {count} summary file(s).")
+
+def purge_reports_only():
+    """
+    Deletes ONLY report PDFs (DOC-*.pdf) for all patients, preserving summaries and personas.
+    """
+    if not confirm_action("This will delete ALL Report PDFs but preserve Summaries and Personas."):
+        print("   ❌ Operation Cancelled.")
+        return
+
+    print("\n   🗑️  Purging Reports Only...")
+    
+    count = 0
+    # Reports are DOC-{id}-*.pdf files
+    if os.path.exists(DOCS_DIR):
+        for patient_folder in os.listdir(DOCS_DIR):
+            patient_path = os.path.join(DOCS_DIR, patient_folder)
+            if os.path.isdir(patient_path):
+                report_files = glob.glob(os.path.join(patient_path, "DOC-*.pdf"))
+                for f in report_files:
+                    os.remove(f)
+                    count += 1
+                    print(f"      ✅ Deleted: {os.path.basename(f)}")
+                
+                # Also delete images folder if it exists
+                images_dir = os.path.join(patient_path, "images")
+                if os.path.exists(images_dir):
+                    shutil.rmtree(images_dir)
+                    print(f"      ✅ Deleted: images/ for {patient_folder}")
+    
+    print(f"\n   ✨ Deleted {count} report file(s).")
+
+def purge_reports_and_summaries():
+    """
+    Deletes both reports and summaries, but preserves personas.
+    """
+    if not confirm_action("This will delete ALL Reports and Summaries but preserve Personas."):
+        print("   ❌ Operation Cancelled.")
+        return
+
+    print("\n   🗑️  Purging Reports and Summaries...")
+    
+    # Delete patient-reports directory
+    if os.path.exists(DOCS_DIR):
+        shutil.rmtree(DOCS_DIR)
+        os.makedirs(DOCS_DIR)
+        print(f"      ✅ Deleted: {DOCS_DIR}/")
+    
+    # Delete summary directory
+    if os.path.exists(SUMMARY_DIR):
+        shutil.rmtree(SUMMARY_DIR)
+        os.makedirs(SUMMARY_DIR)
+        print(f"      ✅ Deleted: {SUMMARY_DIR}/")
+    
+    # Clear logs
+    if os.path.exists(LOGS_DIR):
+        shutil.rmtree(LOGS_DIR)
+        os.makedirs(LOGS_DIR)
+        print(f"      ✅ Deleted: {LOGS_DIR}/")
+    
+    print("\n   ✨ Reports and Summaries Purged.")
 
 def purge_patient(patient_id: str):
     """

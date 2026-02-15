@@ -20,9 +20,10 @@ load_dotenv(env_path)
 OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
 PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
 REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
+SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary")
 
 # Validate/Create Directories
-for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
+for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR]:
     if not os.path.exists(d):
         os.makedirs(d, exist_ok=True)
         # print(f"📁 Verified Folder: {d}") # Noise reduction
@@ -275,12 +276,13 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                     patient_id=patient_id,
                     annotator_summary=annotator_summary,
                     case_details=case_data,
-                    patient_persona=result.patient_persona,  # NEW: Pass persona for code extraction
-                    output_folder=patient_report_folder
+                    patient_persona=result.patient_persona,
+                    output_folder=SUMMARY_DIR  # Use dedicated summary folder
                 )
                 
-                if sum_path and os.path.exists(sum_path):
+                if sum_path:
                     print(f"   📊 Annotator Summary Created: {os.path.basename(sum_path)}")
+                    # Show verification notes count if any
                     if verification_notes:
                         print(f"      ⚠️  {len(verification_notes)} verification note(s) added to summary")
                 else:
@@ -355,39 +357,95 @@ def main():
         print("\n❌ Critical: AI Connection Failed. Please check your credentials/internet.")
         return
 
+    # MAIN LOOP
     while True:
-        # 1. INPUT: ID or '*'
         print("\n" + "="*50)
-        target_input = input("🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit): ").strip().strip("'").strip('"')
-        
-        if not target_input:
-            print("❌ Error: Input required.")
-            continue
-            
-        # EXIT COMMAND
-        if target_input.lower() in ['q', 'exit', 'quit']:
-            print("👋 Exiting Clinical Data Generator. Goodbye!")
+        print("🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit):")
+        print("   💡 Tip: Use '225-fix CPT code' to include feedback")
+        print("   💡 Tip: Use '221,222,223' for multiple patients")
+        target_input = input("   ID: ").strip()
+
+        # 1. QUIT
+        if target_input.lower() in ['q', 'quit', 'exit']:
+            print("\n👋 Exiting Generator. Goodbye!\n")
             break
 
-        # 2. PURGE COMMANDS
+        # 2. PURGE COMMAND
         if target_input.startswith('--'):
-            if target_input == '--':
-                purge_manager.purge_all()
-            elif target_input == '--personas':
-                purge_manager.purge_personas()
-            elif target_input == '--documents':
-                purge_manager.purge_documents()
+            if len(target_input) == 2:
+                # Global Purge with Selective Menu
+                print("\n📋 What to delete?")
+                print("   [1] Persona + Reports + Summary (ALL)")
+                print("   [2] Reports + Summary")
+                print("   [3] Summary only")
+                print("   [4] Reports only")
+                print("   [5] Persona only")
+                print("   [6] Cancel")
+                purge_choice = input("   Choice [6]: ").strip() or "6"
+                
+                if purge_choice == "1":
+                    purge_manager.purge_all()
+                elif purge_choice == "2":
+                    purge_manager.purge_reports_and_summaries()
+                elif purge_choice == "3":
+                    purge_manager.purge_summaries_only()
+                elif purge_choice == "4":
+                    purge_manager.purge_reports_only()
+                elif purge_choice == "5":
+                    purge_manager.purge_personas()
+                elif purge_choice == "6":
+                    print("   ❌ Operation Cancelled.")
+                else:
+                    print("   ❌ Invalid choice. Operation Cancelled.")
             else:
                 # Specific Patient Purge (e.g. --233)
                 p_id = target_input[2:]
                 purge_manager.purge_patient(p_id)
             continue
 
-        # 3. LOGIC
-        if target_input == '*':
+        # 3. PARSE INPUT FOR FEEDBACK AND BATCH
+        # Check for feedback: "225-fix the CPT code"
+        feedback = ""
+        patient_ids = []
+        
+        if '-' in target_input and not target_input.startswith('--'):
+            # Split on first dash only
+            parts = target_input.split('-', 1)
+            base_input = parts[0].strip()
+            feedback = parts[1].strip() if len(parts) > 1 else ""
+        else:
+            base_input = target_input
+        
+        # Check for batch: comma-separated IDs or '*'
+        if ',' in base_input:
+            # Comma-separated patient IDs
+            patient_ids = [pid.strip() for pid in base_input.split(',') if pid.strip()]
+            print(f"\n🔄 Batch Mode: Processing {len(patient_ids)} patient(s)...")
+        elif base_input == '*':
+            # All missing patients
             print("\n🔄 Starting Batch Run for MISSING/INCOMPLETE patients...")
             all_ids = data_loader.get_all_patient_ids()
             print(f"   🔍 Found {len(all_ids)} potential patients in Excel.")
+            
+            # Ask for generation mode
+            print("\n📋 What to generate for batch?")
+            print("   [1] Persona + Reports + Summary (default)")
+            print("   [2] Reports + Summary")
+            print("   [3] Summary only")
+            print("   [4] Reports only")
+            print("   [5] Persona only")
+            mode_input = input("   Choice [1]: ").strip()
+            
+            # Parse mode
+            mode_map = {
+                "1": {"summary": True, "reports": True, "persona": True},
+                "2": {"summary": True, "reports": True, "persona": False},
+                "3": {"summary": True, "reports": False, "persona": False},
+                "4": {"summary": False, "reports": True, "persona": False},
+                "5": {"summary": False, "reports": False, "persona": True},
+                "": {"summary": True, "reports": True, "persona": True},
+            }
+            generation_mode = mode_map.get(mode_input, mode_map["1"])
             
             # OPTIMIZATION: Load names ONCE before loop
             current_names = patient_db.get_all_patient_names()
@@ -400,10 +458,9 @@ def main():
                     print(f"   ⏭️  Skipping {p_id} (Verified Complete)")
                 else:
                     print(f"\n▶️  Processing {p_id}...")
-                    print(f"\n▶️  Processing {p_id}...")
                     
                     # Pass the IN-MEMORY list implies efficiency
-                    new_name = process_patient_workflow(p_id, feedback="", excluded_names=current_names) 
+                    new_name = process_patient_workflow(p_id, feedback="", excluded_names=current_names, generation_mode=generation_mode) 
                     
                     # Optimize: Update local list immediately to avoid re-reading DB
                     if new_name:
@@ -412,9 +469,49 @@ def main():
                     count += 1
             
             print(f"\n✅ Batch Complete. Processed {count} patients.")
-
+            continue
         else:
-            # Single Run -> Ask for Generation Mode
+            # Single patient ID
+            patient_ids = [base_input]
+
+        # 4. PROCESS PATIENT(S)
+        if len(patient_ids) > 1:
+            # Batch processing for comma-separated IDs
+            # Ask for generation mode
+            print("\n📋 What to generate for batch?")
+            print("   [1] Persona + Reports + Summary (default)")
+            print("   [2] Reports + Summary")
+            print("   [3] Summary only")
+            print("   [4] Reports only")
+            print("   [5] Persona only")
+            mode_input = input("   Choice [1]: ").strip()
+            
+            # Parse mode
+            mode_map = {
+                "1": {"summary": True, "reports": True, "persona": True},
+                "2": {"summary": True, "reports": True, "persona": False},
+                "3": {"summary": True, "reports": False, "persona": False},
+                "4": {"summary": False, "reports": True, "persona": False},
+                "5": {"summary": False, "reports": False, "persona": True},
+                "": {"summary": True, "reports": True, "persona": True},
+            }
+            generation_mode = mode_map.get(mode_input, mode_map["1"])
+            
+            current_names = patient_db.get_all_patient_names()
+            
+            for idx, p_id in enumerate(patient_ids, 1):
+                print(f"\n▶️  Processing {idx}/{len(patient_ids)}: Patient {p_id}...")
+                
+                new_name = process_patient_workflow(p_id, feedback, excluded_names=current_names, generation_mode=generation_mode)
+                
+                if new_name:
+                    current_names.append(new_name)
+            
+            print(f"\n✅ Batch Complete. Processed {len(patient_ids)} patients.")
+        else:
+            # Single patient - ask for generation mode
+            p_id = patient_ids[0]
+            
             print("\n📋 What to generate?")
             print("   [1] Persona + Reports + Summary (default)")
             print("   [2] Reports + Summary")
@@ -434,18 +531,20 @@ def main():
             }
             generation_mode = mode_map.get(mode_input, mode_map["1"])
             
-            # Ask for Feedback
-            print("\n💡 Feedback Loop")
-            print("   Enter any specific instructions for the AI.")
-            feedback = input("   Feedback [Press Enter to skip]: ").strip()
+            # Ask for Feedback (unless already provided in input)
+            if not feedback:
+                print("\n💡 Feedback Loop")
+                print("   Enter any specific instructions for the AI.")
+                feedback = input("   Feedback [Press Enter to skip]: ").strip()
+            else:
+                print(f"\n💡 Feedback (from input): {feedback}")
             
-        # Fetch current names for exclusion (Single run can verify against DB fresh)
-        current_names = patient_db.get_all_patient_names()
-        process_patient_workflow(target_input, feedback, excluded_names=current_names, generation_mode=generation_mode)
+            # Fetch current names for exclusion
+            current_names = patient_db.get_all_patient_names()
+            process_patient_workflow(p_id, feedback, excluded_names=current_names, generation_mode=generation_mode)
 
-        # Final Verification (if single run)
-        if target_input != '*':
-            if check_patient_sync_status(target_input):
+            # Final Verification (if single run)
+            if check_patient_sync_status(p_id):
                  print("   ✅ Sync Verified: All referenced documents exist.")
             else:
                  # It might print the mismatch warning internally, but we state it here too

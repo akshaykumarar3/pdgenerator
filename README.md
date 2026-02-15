@@ -38,9 +38,12 @@ Once launched, you'll see: `🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | **`[Patient ID]`** | Generates data for a single patient. | `210` or `237` |
+| **`[ID]-[feedback]`** | Generates data with AI feedback included. | `225-use kidney transplant` |
+| **`[ID],[ID],[ID]`** | Batch mode for specific comma-separated patient IDs. | `221,222,223` |
 | **`*`** | Runs **Batch Mode** for all missing patients. | `*` |
 | **`q`** or **`exit`** | Quits the application. | `q` |
-| **`--`** | **PURGE ALL**. Deletes logs and documents. | `--` |
+| **`--`** | **SELECTIVE PURGE**. Shows menu to delete specific artifact types. | `--` |
+| **`--[ID]`** | Deletes all data for a specific patient. | `--225` |
 
 ### Document Selection
 
@@ -61,6 +64,7 @@ Results are saved in `generated_output/` (configurable):
 
 * `persona/*.pdf`: Patient Face Sheet & Bio
 * `patient-reports/<ID>/*.pdf`: Clinical documents
+* `summary/*.pdf`: Annotator verification summaries
 * `logs/`: Execution logs
 
 ---
@@ -145,6 +149,7 @@ The system expects credentials in a `cred/` directory.
 4. **Service Account Key** (Vertex AI only): Place your JSON key at `cred/gcp_auth_key.json`.
 
 **Web Search Setup** (Optional):
+
 * Get a free Tavily API key at [https://tavily.com](https://tavily.com) (1,000 searches/month free)
 * Enable with `ENABLE_WEB_SEARCH=true` in `.env`
 * Used to retrieve precise CPT/ICD descriptions when Excel data is incomplete
@@ -176,6 +181,7 @@ pdgenerator/
 ├── generated_output/           # Generated files (gitignored)
 │   ├── persona/                # Patient persona PDFs
 │   ├── patient-reports/        # Clinical documents & images
+│   ├── summary/                # Annotator verification summaries
 │   └── logs/                   # Execution logs
 │
 ├── prompts.py                  # ⚡ AI prompts configuration
