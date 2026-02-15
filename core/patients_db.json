@@ -7,8 +7,8 @@
     "address": "1234 Sacred Heart Drive, Chicago, IL 60614",
     "telecom": "555-555-1212",
     "race": "Caucasian",
-    "height": "6 ft 1 in",
-    "weight": "185 lbs",
+    "height": "6 ft 2 in",
+    "weight": "180 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -18,18 +18,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
+      "relationship": "Next of Kin",
       "name": "Elliot Reid",
-      "telecom": "555-555-5678",
-      "address": "1234 Sacred Heart Drive, Chicago, IL 60614",
+      "telecom": "555-555-3434",
+      "address": "678 Medical Lane, Chicago, IL 60614",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2000-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Christopher Turk, MD",
-      "formatted_npi": "9076523480",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Sacred Heart Hospital"
     },
     "link": {
@@ -37,18 +37,18 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-00000099",
-      "policy_number": "POL-2025-123456",
-      "effective_date": "2025-01-01",
+      "member_id": "MBR-123456",
+      "policy_number": "POL-2026-000001",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "John Dorian, a 44-year-old male of Caucasian descent, resides at 1234 Sacred Heart Drive, Chicago, IL. He has a history of atypical chest pain with no significant abnormalities noted in routine lab work or physical examinations. Despite these symptoms, previous assessments including an ECG conducted in January 2024 revealed normal cardiac function. John's primary language is English, and he resides alone. He is single without children. His primary care provider, Dr. Christopher Turk, oversees his health care needs at Sacred Heart Hospital. While maintaining an active lifestyle and working as a physician, John seeks evaluations for intermittent chest pain which has prompted a request for myocardial perfusion imaging for further insight into potential underlying cardiac conditions. John relies on UnitedHealthcare's Medicare Advantage for his health coverage. His emergency contact is Elliot Reid, a close friend and colleague, who shares his residential address."
+    "bio_narrative": "John Dorian, a 45-year-old male, has been a long-standing patient of Dr. Christopher Turk at Sacred Heart Hospital. Known for his affable demeanor and proactive approach to his health, John has been under observation due to repeated episodes of chest discomfort. John lives alone and works as an attending physician at Sacred Heart Hospital. His familial history includes instances of cardiovascular diseases. Despite no recent lifestyle changes, he experiences intermittent chest pain exacerbated by stress and workload. John\u2019s hobbies include jogging and playing the piano.\n\nJohn\u2019s primary evaluation unearthed concerns related to potential atherosclerotic heart disease as he occasionally reports discomfort upon physical exertion. Prior evaluations have been inconclusive due to the lack of confirmatory tests like ECG and active stress tests. The patient is supported by a strong network of colleagues and friends ensuring a robust psychosocial framework essential for his recovery and lifestyle management. Nonetheless, the initiation of further diagnostic imaging is under consideration to conclusively assess myocardial perfusion status.\n"
   },
   "220": {
     "first_name": "Tony",
@@ -337,9 +337,9 @@
     "address": "123 Hospital Drive, Seattle, WA 98101",
     "telecom": "206-555-0199",
     "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "145 lbs",
-    "maritalStatus": "Single",
+    "height": "5 ft 9 in",
+    "weight": "170 lbs",
+    "maritalStatus": "Married",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -348,17 +348,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Cristina Yang",
-      "telecom": "206-555-0111",
-      "address": "310 Surgical Wing, Seattle, WA 98101",
-      "gender": "female",
+      "relationship": "Spouse",
+      "name": "Derek Shepherd",
+      "telecom": "206-555-0198",
+      "address": "123 Hospital Drive, Seattle, WA 98101",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "1999-07-25",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Miranda Bailey, MD",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Seattle Grace Hospital"
     },
     "link": {
@@ -366,31 +367,22 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-002",
+      "payer_id": "UHC-99999",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "group_id": "GRP-12345",
-      "group_name": "Seattle Health Group",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-654321",
+      "member_id": "MBR-123456",
+      "policy_number": "POL-2026-000012",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$30",
-      "deductible_amount": "$1000",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "deductible_amount": "$500"
     },
-    "bio_narrative": ""
+    "bio_narrative": "Meredith Grey, a 47-year-old Caucasian female, has a storied career as a renowned surgeon at Seattle Grace Hospital. She has been managing hypertension-related chronic kidney disease, necessitating a kidney transplant to improve her long-term health outlook. Her medical journey is marked by significant episodes such as managing type 2 diabetes mellitus and periodic mild depression, all controlled under vigilant medical supervision. Meredith has maintained a supportive family environment, married to renowned neurosurgeon Derek Shepherd. They have striven together to ensure both professional success and personal resilience amidst health challenges. Her robust medical knowledge facilitates her understanding of her treatment pathway, including necessary lifestyle adjustments and compliance with medical protocols to optimize transplant outcomes. Socially, Meredith remains actively involved in various outreach programs, drawing strength from both her past experiences and her family's unwavering support."
   },
   "227": {
-    "first_name": "Aragorn",
-    "last_name": "II Elessar",
+    "first_name": "Aragorn II",
+    "last_name": "Elessar",
     "gender": "male",
     "dob": "1981-03-01",
     "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
@@ -413,11 +405,12 @@
       "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2005-06-15",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Gandalf Grey, MD",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Middle-Earth Medical Center"
     },
     "link": {
@@ -425,27 +418,18 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-73737",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Choice Plus PPO",
-      "plan_type": "PPO",
-      "group_id": "GRP-24680",
-      "group_name": "Middle-Earth Holdings",
-      "member_id": "MBR-112233445",
-      "policy_number": "POL-2025-012345",
-      "effective_date": "2021-01-01",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-001234",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "SUB-112233",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "deductible_amount": "$500"
     },
-    "bio_narrative": "Aragorn, known throughout Middle-Earth for his leadership and prowess, has transitioned from his adventurous paths to residing in the Shire, seeking tranquility. Although no specific health issues were recorded in his past, his current role still demands frequent exposure to varying environmental conditions. His efforts in governance require his presence in diverse settings with less than optimal air quality. This has likely influenced some of his respiratory symptoms observed. Despite these challenges, Aragorn maintains a robust lifestyle, partaking in regular physical activity and maintaining strong familial relationships with his spouse, Arwen Und\u00f3miel. His current concerns have led him to seek comprehensive examination to ensure optimal health given his social and official responsibilities."
+    "bio_narrative": "Aragorn II Elessar, known for his leadership and skills in battle, leads a balanced life deeply rooted in Middle-Earth. Married to Arwen Und\u00f3miel, he enjoys being an integral part of the Shire's community. He has maintained good health, engaging in regular physical activities such as riding and long travels across diverse terrains. Despite his active lifestyle, Aragorn has recently undergone detailed cardiovascular imaging to monitor symptoms associated with chest discomfort. The imaging results will aid in ensuring continued vitality. The procedure was medically necessary to assess potential atherosclerotic heart disease, for which he has a family predisposition. His physician, Dr. Gandalf Grey, oversees his healthcare needs, ensuring that any emergent symptoms are thoroughly evaluated. Aragorn values family and his heritage, recognizing healthcare as an integral aspect of his prolonged health and leadership."
   },
   "226": {
     "first_name": "Ann",
@@ -455,8 +439,8 @@
     "address": "415 West Main Street, Pawnee, Indiana, 47998",
     "telecom": "317-555-0199",
     "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "140 lbs",
+    "height": "5 ft 5 in",
+    "weight": "150 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -466,10 +450,10 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
+      "relationship": "Emergency Contact",
       "name": "Leslie Knope",
-      "telecom": "317-555-0147",
-      "address": "415 West Main Street, Pawnee, Indiana, 47998",
+      "telecom": "317-555-0123",
+      "address": "123 Maple Avenue, Pawnee, Indiana, 47998",
       "gender": "female",
       "organization": "N/A",
       "period_start": "2020-01-01",
@@ -477,6 +461,7 @@
     },
     "provider": {
       "generalPractitioner": "Dr. Walter Chang, MD",
+      "formatted_npi": "9876543210",
       "managingOrganization": "Pawnee General Hospital"
     },
     "link": {
@@ -488,23 +473,14 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "group_id": "GRP-12345",
-      "group_name": "Bureau of Parks and Recreation",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2025-000123",
-      "effective_date": "2025-01-01",
+      "member_id": "MBR-2025001",
+      "policy_number": "POL-2025-654321",
+      "effective_date": "2024-01-05",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "copay_amount": "$30",
+      "deductible_amount": "$1000"
     },
-    "bio_narrative": "Ann Perkins, a dedicated nurse and public health advocate, resides in Pawnee, Indiana. Known for her compassionate nature, Ann has no significant personal or family medical history. She is single and focuses on community health and well-being. Despite occasional fatigue, her commitment to health advocacy remains strong. Ann seeks consultation for vague urinary symptoms, but her medical history shows no prior kidney-related issues. Her close friend Leslie Knope serves as her emergency contact and support system."
+    "bio_narrative": "Ann Perkins is a highly sociable and empathetic nurse who often finds herself balancing her personal and professional life in Pawnee, Indiana. She has shown incredible dedication to her role despite the small-town setting and often collaborates with local council member Leslie Knope.\n\nAnn's current medical concern focuses on urinary tract health, which is a new issue for her, discovered during a routine check-up. Ann visits Dr. Walter Chang for further investigation into incidental findings in her urine blood tests, prompting consideration of a nephrostogram. Her generally good health and lack of significant prior urinary conditions make the procedure primarily investigative.\n\nWhile maintaining her career and staying active in community events, Ann stresses the importance of wellness checks and actively engages in promoting healthcare awareness in Pawnee. With a straightforward social history and no known familial renal issues, Ann anticipates resolving her current health concerns promptly."
   },
   "236": {
     "first_name": "Monica",
@@ -515,8 +491,8 @@
     "telecom": "212-555-0123",
     "race": "Caucasian",
     "height": "5 ft 6 in",
-    "weight": "125 lbs",
-    "maritalStatus": "Single",
+    "weight": "132 lbs",
+    "maritalStatus": "Divorced",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -527,15 +503,16 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Ross Geller",
-      "telecom": "212-555-0145",
+      "telecom": "212-555-0456",
       "address": "90 Bedford Street, New York, NY 10014",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2010-01-01",
+      "period_start": "2000-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Julia H. Cane, DDS",
+      "formatted_npi": "5961723490",
       "managingOrganization": "Dental Excellence Center, New York, NY"
     },
     "link": {
@@ -547,23 +524,14 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "group_id": "GRP-99887",
-      "group_name": "Geller Family Dental",
-      "member_id": "MBR-098776543",
-      "policy_number": "POL-2025-112233",
-      "effective_date": "2021-01-01",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-2026-987654",
+      "effective_date": "2025-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$40",
-      "deductible_amount": "$500",
-      "subscriber": {
-        "subscriber_id": "Unknown",
-        "subscriber_name": "Unknown",
-        "subscriber_relationship": "Self",
-        "subscriber_dob": "1980-01-01",
-        "subscriber_address": "Same as Patient"
-      }
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
     },
-    "bio_narrative": "Monica Geller, a 56-year-old woman of Caucasian descent, hails from the vibrant city of New York. Known for her meticulous attention to detail and organizational skills, Monica has led a life filled with both professional success and personal adventures. As a former chef, her penchant for perfection extended into her culinary creations, delighting her many friends and family members.\n\nIn regards to her medical history, Monica has been relatively healthy but has recently encountered dental issues which have impacted her ability to enjoy her meals and maintain her professional endeavors in the culinary world. Her brother, Ross, frequently assists her, serving as her emergency contact.\n\nSocially, Monica maintains a wide circle of friends and is actively engaged in community activities. She often channels her energy into organizing events, workshops, and cooking classes, upholding her belief that everyone should enjoy a well-prepared meal.\n\nMonica's current dental concerns necessitate a comprehensive approach to care, emphasizing the restoration of her oral health so she can continue her vibrant lifestyle uninterrupted. The impression and custom oral prosthesis are seen as integral to addressing her dental wear, attributed to years of clenching and grinding, a common affliction among high-performing individuals in stressful professions."
+    "bio_narrative": "Monica Geller, a vibrant and meticulous person residing in the heart of New York City, is known for her keen attention to detail and strong personal drive. She experienced significant dental challenges following multiple extractions, necessitating comprehensive prosthetic dental solutions. Monica upholds a health-conscious lifestyle and places high importance on her physical health, having no systemic conditions affecting her dental treatment. As a devoted sister and dependable friend, she remains actively engaged in her community, cherishing family bonds, particularly with her brother Ross. Her dental history highlights issues related to partial tooth loss due to trauma, which now brings her to consider a custom oral prosthesis for functional and aesthetic restoration."
   },
   "239": {
     "first_name": "Siobhan",
@@ -585,18 +553,222 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Roman Roy",
-      "telecom": "555-0200",
-      "address": "125 Park Ave, New York, NY 10171",
+      "name": "Connor Roy",
+      "telecom": "555-0150",
+      "address": "123 Park Ave, New York, NY 10171",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2023-01-01",
+      "period_start": "2024-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "9876543210",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Mercy General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Siobhan Roy, a vibrant and ambitious woman residing in New York\u2019s bustling cityscape, has been managing her work-life balance with great resilience. Despite a demanding career, she maintains an active lifestyle, enjoying yoga and occasional jogs through Central Park. However, over the recent months, she has reported intermittent episodes of chest pain and shortness of breath, particularly under physical stress. These symptoms have gradually intensified, prompting a thorough investigation into her cardiovascular health. Siobhan has no family history of heart disease, but her father's late development of diabetes has heightened her vigilance towards lifestyle-induced health risks. Her recent consultations and tests underscore a concerning pattern of coronary artery disease, necessitating advanced diagnostics and potential interventions to preserve her health and lifestyle."
+  },
+  "211": {
+    "first_name": "Rosa",
+    "last_name": "Diaz",
+    "gender": "female",
+    "dob": "1986-01-13",
+    "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
+    "telecom": "718-555-0101",
+    "race": "Hispanic",
+    "height": "5 ft 5 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Terry Jeffords",
+      "telecom": "718-555-0199",
+      "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Erin Bush, MD",
+      "formatted_npi": "9876543210",
+      "managingOrganization": "Brooklyn General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-2345",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-543212",
+      "policy_number": "POL-2025-654321",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Rosa Diaz, known for her tough demeanor and unparalleled work as a detective in the 78th Precinct, has recently been experiencing episodes of chest discomfort particularly during high-stress calls or physical training drills. Having led a relatively healthy lifestyle with rigorous fitness routines, she was initially dismissive of the symptoms, attributing them to work stress. However, the increasing frequency and intensity of these episodes prompted a medical consultation. \n\nHer family history is unremarkable except for a father who had hypertension. Rosa leads an active lifestyle, is a non-smoker, and occasionally indulges in a social drink. Despite her often abrasive personality, her social interactions are warm and caring, especially within her close circle at the precinct. \n\nAfter a preliminary ECG was conducted, the finding pointed to possible ischemic changes which necessitated further investigation through a cardiac stress test, aligning with the potential for coronary artery concerns suspected to be the underlying cause of her symptoms."
+  },
+  "212": {
+    "first_name": "Sandor",
+    "last_name": "Clegane",
+    "gender": "male",
+    "dob": "1965-03-23",
+    "address": "1 Castle Street, King's Landing, Westeros",
+    "telecom": "555-839-2999",
+    "race": "Caucasian",
+    "height": "6 ft 7 in",
+    "weight": "250 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Gregor Clegane",
+      "telecom": "555-123-9876",
+      "address": "1 Mountain Path, Clegane Keep, Westeros",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2020-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "King's Landing Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-0001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-000789",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$40",
+      "deductible_amount": "$1,000"
+    },
+    "bio_narrative": "Sandor Clegane, often known by the alias 'The Hound', is a 60-year-old male with a background steeped in conflict and personal challenges. He has spent the majority of his life serving as a protector, with his role entailing significant physical demand, injury risk, and exposure to traumatic events. Such a past has likely contributed to his current physical condition, yet Sandor exhibits a stoic endurance.\n\nDespite his solitary nature, frequently living off grids akin to rural life in Westeros, Sandor's external ruggedness masks an undisclosed vulnerability, particularly regarding his health. Historically, he has been reluctant to pursue medical assistance, viewing his ailments as either barriers that can be simply mounted over or burdens that need not be shared or bothered with health professionals.\n\nRecently, he has reported mid-sternal discomfort without decisive triggers, leading to concerns for potential undiagnosed coronary complications, especially due to lack of modern cardiovascular screening or preventative intervention. Hindered by mobility concerns, his conditions mandate discerning care, justifying the current request for Cardiac CT Angiography to ascertain any hidden coronary anomalies.\n\nSocially, Sandor maintains limited contacts, the notable exception being his brother, Gregor Clegane, albeit strained by a history of familial discord. His lifestyle is relatively austere, focused on pragmatic living over indulgence, characterized by an adherence to independence and limited reliance on medical establishments."
+  },
+  "213": {
+    "first_name": "Frodo",
+    "last_name": "Baggins",
+    "gender": "male",
+    "dob": "1980-09-22",
+    "address": "Bag End, Hobbiton, The Shire",
+    "telecom": "555-0199",
+    "race": "Hobbit",
+    "height": "3 ft 6 in",
+    "weight": "85 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Samwise Gamgee",
+      "telecom": "555-1234",
+      "address": "Bagshot Row, Hobbiton, The Shire",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2025-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Elrond",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Rivendell Cardiology Clinic"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-456789",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2023-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Frodo Baggins is a hobbit known for his adventurous spirit and resilience. Having returned to the peaceful life in the Shire, he finds himself occasionally troubled by health issues. Recently, he has experienced episodes of chest discomfort which have prompted further medical evaluations. His family history includes early-onset coronary artery disease, which necessitates careful monitoring and management of his cardiac health. Although living a simple life, Frodo has a strong support network with his friends in Hobbiton, most notably Samwise Gamgee, who serves as his trusted emergency contact. Frodo enjoys gardening as a pastime, which helps maintain his physical activity despite his small stature."
+  },
+  "214": {
+    "first_name": "Legolas",
+    "last_name": "Greenleaf",
+    "gender": "male",
+    "dob": "1985-06-15",
+    "address": "123 Elven Way, Mirkwood Forest, Middle-Earth, 00001",
+    "telecom": "555-123-5555",
+    "race": "Elven",
+    "height": "6 ft 3 in",
+    "weight": "180 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Thranduil Greenleaf",
+      "telecom": "555-321-5555",
+      "address": "125 Elven Way, Mirkwood Forest, Middle-Earth, 00001",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "1985-06-15",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Elrond Smith, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Rivendell Cardio Clinic"
     },
     "link": {
       "other_patient": "N/A",
@@ -608,12 +780,777 @@
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-987654321",
-      "policy_number": "POL-2026-123456",
+      "policy_number": "POL-2026-000001",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$50",
+      "deductible_amount": "$1000"
+    },
+    "bio_narrative": "Patient Legolas Greenleaf, a member of the Elven community known for his long-standing endurance and vitality, has encountered health issues impacting his heart. Legolas leads an active lifestyle in Mirkwood Forest, yet has been experiencing increased instances of fatigue and reduced stamina. Historically, he has managed symptoms of ischemic cardiomyopathy, attending regular cardio evaluations. Legolas remains unmarried, dedicating his focus to the preservation and well-being of his homeland. The close bond with his father Thranduil offers strong social support, crucial during this phase requiring ICD implantation to mitigate risk of heart failure progression."
+  },
+  "215": {
+    "first_name": "Kendall",
+    "last_name": "Roy",
+    "gender": "male",
+    "dob": "1981-06-10",
+    "address": "1200 5th Ave, New York, NY 10029",
+    "telecom": "212-555-0183",
+    "race": "Caucasian",
+    "height": "6 ft 2 in",
+    "weight": "198 lbs",
+    "maritalStatus": "Divorced",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Roman Roy",
+      "telecom": "212-555-0147",
+      "address": "1200 5th Ave, New York, NY 10029",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2025-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Manhattan Health Services"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-889900",
+      "policy_number": "POL-2025-345678",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$750"
+    },
+    "bio_narrative": "Kendall Roy is a 43-year-old male with a significant history of chronic type II heart failure following a myocardial infarction a few years ago. He has struggled with maintaining optimal cardiac function and is currently experiencing deteriorating symptoms, such as increased shortness of breath and fatigue. \n\nHis prior lifestyle included extensive travel and high-pressure business negotiations, which contributed to stress-related health issues. Kendall is divorced and maintains a close relationship with his family, particularly his brother Roman, who acts as his emergency contact.\n\nRecently, Kendall has been focusing on managing his health more proactively. He adheres to a strict medication regimen including Lisinopril, Metoprolol, and Furosemide, prescribed to optimize heart function and manage blood pressure. His commitment to improving his health is supported by his active involvement in cardiac rehabilitation programs and regular consults with cardiology specialists.\n\nDue to his reduced ejection fraction and the high risk of arrhythmias, an implantable cardioverter-defibrillator (ICD) has been recommended by his care team as a preventive measure against sudden cardiac events. He is currently navigating the healthcare system to ensure all necessary approvals and authorizations for this procedure.\n\nKendall's proactive approach to his medical care is also reflected in his diet and exercise modifications, aiming to reduce further cardiac stress. Regular follow-ups and monitoring ensure he remains on the right track toward managing his cardiovascular health effectively."
+  },
+  "216": {
+    "first_name": "Charles",
+    "last_name": "Boyle",
+    "gender": "male",
+    "dob": "1968-10-22",
+    "address": "430 Lord Street, Brooklyn, NY, 11221",
+    "telecom": "718-555-1212",
+    "race": "Caucasian",
+    "height": "5 ft 9 in",
+    "weight": "185 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Genevieve Mirren-Carter",
+      "telecom": "718-555-3434",
+      "address": "430 Lord Street, Brooklyn, NY, 11221",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2015-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Brooklyn Medical Center"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-9876543210",
+      "policy_number": "POL-2025-876543",
+      "effective_date": "2020-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$20",
+      "deductible_amount": "$1000"
+    },
+    "bio_narrative": "Charles Boyle is a dedicated detective with the NYPD. Known for his quirky personality and gourmand tastes, he's passionate about culinary adventures, often sharing his latest food exploits with his colleagues. Charles is married to Genevieve and they live together in Brooklyn, NY. He maintains a supportive social network through his work at the precinct.\n\nHealth-wise, Charles leads an active lifestyle but has a family history of heart disease, which naturally prompts some concern about his occasional chest discomfort. He implements light exercise routines as advised by his physician and checks his blood pressure regularly. His examination history indicates normal variation with no significant red flags except for sporadic chest pains, which remain under observation.\n\nCharles's decision to consider a PCI stems from a desire to proactively address his symptoms, despite current clinical assessments arguing for a conservative approach due to the lack of severe ischemic indicators. His case involves managing discomfort while aligning medical interventions with provided evidence norms."
+  },
+  "217": {
+    "first_name": "Cheyenne",
+    "last_name": "Lee",
+    "gender": "female",
+    "dob": "1995-12-03",
+    "address": "123 Retail Park Way, St. Louis, Missouri 63101",
+    "telecom": "555-555-1010",
+    "race": "Asian",
+    "height": "5 ft 6 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Bo Lee",
+      "telecom": "555-555-1111",
+      "address": "123 Retail Park Way, St. Louis, Missouri 63101",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2018-06-15",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Gregory House, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "St. Louis Cardiovascular Associates"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-002",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-5432101",
+      "policy_number": "POL-2025-002345",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Cheyenne Lee is a 29-year-old retail associate working in St. Louis, Missouri. She is married to Bo Lee, and they have a young child. Cheyenne is known for being enthusiastic and hardworking, balancing her commitments between a busy work schedule and family life.\\n\\nShe leads an active lifestyle and enjoys participating in community events. Despite her busy schedule, she tries to embrace a healthy routine, incorporating regular physical activity and balanced meals. However, the demands of her dual roles occasionally add to her stress levels.\\n\\nCheyenne has experienced intermittent chest pain over the past several months, which has been the primary reason for her recent medical consultations. Her family history is notable for ischemic heart disease, which prompted further evaluation. Previous cardiac evaluations included an exercise stress test that suggested possible ischemic changes, warranting additional investigations."
+  },
+  "218": {
+    "first_name": "Alex",
+    "last_name": "Karev",
+    "gender": "male",
+    "dob": "1980-02-10",
+    "address": "1436 NW Northrup St, Seattle, WA 98109",
+    "telecom": "206-555-8304",
+    "race": "Caucasian",
+    "height": "6 ft 1 in",
+    "weight": "210 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Meredith Grey",
+      "telecom": "206-555-1212",
+      "address": "620 South Main Street, Seattle, WA 98104",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Richard Webber, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Grey Sloan Memorial Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Alex Karev, a former surgical resident at Grey Sloan Memorial Hospital, now works as a pediatric surgeon. Originally from Iowa, Alex moved to Seattle after medical school to pursue his surgical career. Despite a rough upbringing and previous struggles with anger management, Alex has grown to be a dedicated and compassionate physician. He maintains an active lifestyle, enjoys cycling, and participates in local charity events. Recently, Alex has experienced intermittent chest pain, prompting a thorough cardiac evaluation by his colleagues at Grey Sloan. Despite the intensity of his job, Alex is committed to finding a balance between work and personal life, often spending time with friends and colleagues from the hospital."
+  },
+  "219": {
+    "first_name": "Christopher",
+    "last_name": "Turk",
+    "gender": "male",
+    "dob": "1975-02-07",
+    "address": "123 Healing Way, Los Angeles, CA 90033",
+    "telecom": "213-555-0199",
+    "race": "African American",
+    "height": "6 ft 1 in",
+    "weight": "210 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Carla Espinosa",
+      "telecom": "213-555-0101",
+      "address": "123 Healing Way, Los Angeles, CA 90033",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2000-06-15",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Michael Terry, MD",
+      "formatted_npi": "8765432109",
+      "managingOrganization": "Sacred Heart Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-3456789012",
+      "policy_number": "POL-2025-000123",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$40",
+      "deductible_amount": "$600"
+    },
+    "bio_narrative": "Christopher Turk, a 50-year-old African American male, is a well-respected general surgeon known for his meticulous surgical skills and jovial personality. He is happily married to Carla Espinosa, an experienced nurse, with whom he has two young children.\n\nTurk has a heart murmur and recent abnormal ECG findings that suggest potential coronary artery disease. Despite maintaining a healthy lifestyle, including regular exercise and a balanced diet, Turk has a family history of heart disease. His father experienced a myocardial infarction at a relatively young age, which has heightened Turk's vigilance concerning cardiovascular health.\n\nTurk's medical career at Sacred Heart Hospital in Los Angeles has provided him with comprehensive healthcare access and a strong network of medical professionals. His current concern of potential ischemia has prompted proactive measures to confirm and manage any cardiac risk. He has engaged with his primary care physician and upon recommendation, is undergoing further tests to ensure thorough evaluation.\n\nKnown for his humor and positive outlook, Turk remains optimistic and focused on maintaining his health to provide the best care for his family and patients."
+  },
+  "228": {
+    "first_name": "Arya",
+    "last_name": "Stark",
+    "gender": "female",
+    "dob": "2000-03-23",
+    "address": "Winterfell, The North",
+    "telecom": "555-123-4567",
+    "race": "Caucasian",
+    "height": "5 ft 1 in",
+    "weight": "120 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Jon Snow",
+      "telecom": "555-987-6543",
+      "address": "Castle Black, The Wall",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2024-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Sansa Stark, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Winterfell Health System"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Arya Stark is a 25-year-old female, residing at Winterfell, known for her strong will and adventurous spirit. She has recently begun to experience persistent fatigue and unexplained bruising, leading her to seek medical advice. Raised in the noble family of Stark, Arya was trained in survival and combat at a young age, skills which she values greatly in her day-to-day life. This adventurous past may contribute to her recent physical complaints.\nSocially, Arya has maintained close ties with her family, especially her brother Jon Snow, who serves as her emergency contact. Despite her rigorous lifestyle, she has had no previous medical issues noted until her current condition. Her family has no notable history of hematological disorders, making her current symptoms particularly concerning.\nGiven her adventurous demeanor, Arya prefers direct communication and values straightforward discussions about her health. Her decision to pursue a needle biopsy under CT guidance illustrates her proactive approach to her health management."
+  },
+  "229": {
+    "first_name": "Glenn",
+    "last_name": "Sturgis",
+    "gender": "male",
+    "dob": "1953-11-30",
+    "address": "48 Cloud 9 Ave, St. Louis, MO 63101",
+    "telecom": "555-0150",
+    "race": "Caucasian",
+    "height": "5 ft 9 in",
+    "weight": "180 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Jerusha Sturgis",
+      "telecom": "555-0123",
+      "address": "48 Cloud 9 Ave, St. Louis, MO 63101",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "1980-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Samuel Carter, MD",
+      "formatted_npi": "9876543210",
+      "managingOrganization": "St. Louis Community Healthcare"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-101010101",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$20",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Glenn Sturgis, a male in his early seventies, has a rich history as a manager at a local St. Louis store, known for his kind nature and commitment to community. Despite no significant personal medical history prior to this episode, Glenn's recent onset of atypical chest pain prompted a series of evaluations. His primary care physician, Dr. Samuel Carter, initiated these investigations following a concerning episode of exertional discomfort. Given Glenn's occupational stress and lifestyle factors, myocardial perfusion imaging has been requested to assess the potential coronary artery disease, supported by symptoms of chest pain and existing diagnosis of atherosclerosis.\n\nOn the social front, Glenn is married to his high school sweetheart, Jerusha, and spends his weekends volunteering at local community events. His lifestyle is notably active, although potential heart issues have curtailed some physical activities. He is a social individual, often recounting tales of store adventures, reflecting an engaging community presence. Family history is largely unremarkable, but Glenn's proactive health measures remain pivotal, especially in the context of recent health developments.\n\nGlenn's health insurance through UnitedHealthcare's Medicare Advantage plan ensures access to essential services. With his modest copay and deductible, Glenn and his care team are focused on obtaining the necessary authorization for the myocardial perfusion imaging to comprehensively evaluate his cardiac status."
+  },
+  "230": {
+    "first_name": "Jesse",
+    "last_name": "Pinkman",
+    "gender": "male",
+    "dob": "1984-09-24",
+    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
+    "telecom": "505-123-4567",
+    "race": "Caucasian",
+    "height": "5 ft 8 in",
+    "weight": "150 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Walter White",
+      "telecom": "505-765-4321",
+      "address": "308 Negra Arroyo Lane, Albuquerque, NM",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Saul Goodman, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Albuquerque General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456",
+      "policy_number": "POL-2025-893675",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$50",
+      "deductible_amount": "$1500"
+    },
+    "bio_narrative": "Jesse Pinkman is an individual with a history of challenging circumstances, including his involvement in the drug scene. Despite this, he is someone with potential for change and growth. Jesse has had difficulty maintaining stable employment and relationships due to his past decisions and lifestyle choices, which have contributed to a lack of professional and personal stability. Nonetheless, Jesse is actively seeking ways to improve his life.\n\nCurrently, Jesse struggles predominantly with issues related to his previous lifestyle, such as social reintegration and maintaining a healthy lifestyle. On the medical front, he reports discomfort and functional difficulties associated with severe malocclusion and related jaw issues. This condition affects his eating and speech to a degree, although it has yet to significantly impair his daily functioning to the point of undeniable necessity for surgical correction.\n\nSocially, Jesse is working on developing healthier coping mechanisms and building a support system. He maintains sporadic contact with his family and seeks occasional guidance from his former chemistry teacher. Jesse is insured through UnitedHealthcare, benefiting from a Medicare Advantage plan. He continues to receive primary care oversight from Dr. Saul Goodman at Albuquerque General Hospital and relies on emergency contact support from Walter White. Jesse's journey reflects the complexity of intertwining personal challenges with medical needs, underscored by his efforts to reconcile both realms in pursuit of stability and health."
+  },
+  "231": {
+    "first_name": "Gina",
+    "last_name": "Linetti",
+    "gender": "female",
+    "dob": "1988-04-20",
+    "address": "99 Plymouth St, Brooklyn, NY 11201",
+    "telecom": "555-012-3456",
+    "race": "Caucasian",
+    "height": "5 ft 7 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Jake Peralta",
+      "telecom": "555-987-6543",
+      "address": "100 Gunther Ave, Brooklyn, NY 11221",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Susan Bennett, DDS",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "New York Dental Clinic"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-568742139",
+      "policy_number": "POL-2026-000001",
       "effective_date": "2025-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$30",
-      "deductible_amount": "$600"
+      "deductible_amount": "$1000"
     },
-    "bio_narrative": "Siobhan Roy is a spirited, career-driven individual residing in New York City. Her familial lineage includes significant cardiac history, with both her father's and grandfather's early incidences of heart disease. She maintains an active lifestyle, often indulging in marathon running. However, recent months have seen a troubling influx of chest pain episodes, typically during physical exertion. Medical evaluations confirmed a path leaning towards atherosclerotic heart disease. Siobhan is conscientious about her health, dutifully adhering to prescribed medications and regular consultations with Dr. Jane Smith. The proposed procedure, Myocardial Perfusion Imaging, is critical in delineating potential ischemic influences on her cardiac condition."
+    "bio_narrative": "Gina Linetti, a vibrant and humorous individual, presents with a background suitable for a tech-savvy environment, having previously worked in precinct administration. She enjoys social networking and often finds herself involved in community gatherings. Recently, she has pursued orthodontic evaluation due to her awareness of misalignment issues which date back to her teenage years. Her family history indicates a trend towards dental malocclusions, with both her parents having undergone orthodontic treatments. An initial orthodontic consultation revealed a Class II malocclusion with significant overjet and deep bite, verified by cephalometric analysis."
+  },
+  "232": {
+    "first_name": "Leslie",
+    "last_name": "Knope",
+    "gender": "female",
+    "dob": "1975-01-18",
+    "address": "19 Crescent St, Pawnee, Indiana, 47955",
+    "telecom": "555-123-4567",
+    "race": "Caucasian",
+    "height": "5 ft 4 in",
+    "weight": "146 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Ron Swanson",
+      "telecom": "555-987-6543",
+      "address": "23 Meadow Lane, Pawnee, Indiana, 47955",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Ellie Sattler, DDS",
+      "formatted_npi": "9876543210",
+      "managingOrganization": "Pawnee General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-20257584",
+      "policy_number": "POL-2025-759302",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$45",
+      "deductible_amount": "$700"
+    },
+    "bio_narrative": "Leslie Knope is a revered public servant from the town of Pawnee, Indiana, known for her enthusiasm, love for waffles, and dedication to her community. Despite her hectic schedule and political aspirations, Leslie has maintained excellent health and is rarely seen without a smile.\n\nShe lives a vibrant and active life, participating in numerous community activities and social events. With strong relationships among her friends and colleagues at the Parks and Recreation department, Leslie's personal and professional life often entwine, providing her with a strong support network.\n\nLeslie presents now seeking advice on a Bilateral Sagittal Split Osteotomy (BSSO) primarily for personal reasons related to aesthetics and minor discomfort she experiences during prolonged speaking engagements. She denies any chronic medical conditions, has no history of surgeries or significant injuries, and describes her lifestyle as energetic yet balanced by spontaneous relaxation when free of her demanding job.\n\nLeslie values her friendships deeply and relies on Ron Swanson, a close friend and emergency contact, for counsel and support in health and other personal matters."
+  },
+  "233": {
+    "first_name": "Luke",
+    "last_name": "Skywalker",
+    "gender": "male",
+    "dob": "1977-05-14",
+    "address": "1447 S Hill St, Los Angeles, CA 90015, USA",
+    "telecom": "555-783-6712",
+    "race": "Caucasian",
+    "height": "5 ft 9 in",
+    "weight": "175 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Leia Organa",
+      "telecom": "555-783-6719",
+      "address": "123 Rebel Way, Los Angeles, CA 90015, USA",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2022-09-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Owen Lars, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Coruscant Medical Center"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-LUKE1977",
+      "policy_number": "POL-2025-042113",
+      "effective_date": "2023-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Luke Skywalker, originally from a moisture farming background on Tattooine, is an active outdoorsman with no significant past medical history. Recently, he has experienced symptoms suggestive of obstructive sleep apnea, including loud snoring and witnessed apneas during sleep. He is seeking medical care to address these issues. Despite a lack of prior history, his family history is notable for respiratory ailments, which makes the diagnostic process pivotal. Luke relies on his close family ties, particularly his sister Leia Organa, who serves as his emergency contact. His social history reflects a predominantly healthy lifestyle with no tobacco use."
+  },
+  "234": {
+    "first_name": "Carmela",
+    "last_name": "Soprano",
+    "gender": "female",
+    "dob": "1960-03-29",
+    "address": "Crestwood Avenue, North Caldwell, New Jersey",
+    "telecom": "555-0133",
+    "race": "Caucasian",
+    "height": "5 ft 7 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Tony Soprano",
+      "telecom": "555-0129",
+      "address": "Crestwood Avenue, North Caldwell, New Jersey",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "1985-05-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Anthony Cipolla, DDS",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Meadowlands Dental Group"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2025-000123",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$50",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Carmela Soprano, a Caucasian female born on March 29, 1960, resides in North Caldwell, New Jersey. Married to Anthony Soprano since 1985, she has two children, A.J. and Meadow. Known for her meticulous nature and supportive family role, Carmela has been a dedicated homemaker, focusing on the wellbeing and education of her family.\n\nMedically, Carmela has had routine dental care, presenting occasionally with periodontal issues, which are currently being addressed. Her recent evaluations revealed a significant maxillary bone loss, necessitating a bone graft to preserve her dental health and facilitate future implant placements.\n\nCarmela is proactive in her health management, regularly engaging with her primary care provider, Dr. Anthony Cipolla, DDS at Meadowlands Dental Group, and focused on maintaining her health to ensure she actively participates in her family's activities and social commitments."
+  },
+  "235": {
+    "first_name": "Leonard",
+    "last_name": "Hofstadter",
+    "gender": "male",
+    "dob": "1980-05-17",
+    "address": "2311 North Los Robles Avenue, Pasadena, CA 91101",
+    "telecom": "555-987-6543",
+    "race": "Caucasian",
+    "height": "5 ft 6 in",
+    "weight": "150 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Sheldon Cooper",
+      "telecom": "555-123-4567",
+      "address": "2311 North Los Robles Avenue, Pasadena, CA 91101",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "9988776655",
+      "managingOrganization": "Mercy General Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-987654321",
+      "policy_number": "POL-2025-123456",
+      "effective_date": "2025-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Leonard Hofstadter, a theoretical physicist with a penchant for academia, has a clinical focus prompted by episodic chest discomfort that arises during high stress periods. Living in Pasadena, California, he balances his demanding career with recreational interests that include science fiction and comics. Despite no prior significant medical history, he recognizes the need for due diligence regarding personal health.\n\nSocially, Leonard is well-spoken and maintains several deep connections, notably his bond with Sheldon Cooper, a fellow scientist and roommate. Their dynamic often balances Leonard's cautious nature with Sheldon's eccentricity, enhancing Leonard's supportive role.\n\nFamilial ties hold relevance due to a documented history of cardiovascular issues on the paternal side, which places Leonard at potential risk for ischemic conditions. Consequently, his physician, Dr. Jane Smith, advocates for proactive cardiovascular monitoring anchored by incidents of discomfort suggestive of underlying myocardial challenges.\n\nHis health-conscious attitude lends itself to routine check-ups, embodying a preventative healthcare strategy. Leonard aligns with UnitedHealthcare's Medicare Advantage plan, reflecting a commitment to comprehensive health coverage aligned with his goals of rigorous academic and personal well-being. His current clinical trajectory focuses on addressing and mitigating emerging cardiovascular risks through structured evaluation and imaging that informs potential interventions."
+  },
+  "237": {
+    "first_name": "Hermione",
+    "last_name": "Granger",
+    "gender": "female",
+    "dob": "1980-09-19",
+    "address": "12 Grimmauld Place, London, UK",
+    "telecom": "0171-555-4271",
+    "race": "Caucasian",
+    "height": "5 ft 5 in",
+    "weight": "130 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Ronald Weasley",
+      "telecom": "0171-555-1234",
+      "address": "12 Grimmauld Place, London, UK",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2002-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Luna Lovegood, MD",
+      "formatted_npi": "6213456789",
+      "managingOrganization": "St. Mungo's Hospital for Magical Maladies and Injuries"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-987654321",
+      "policy_number": "POL-2025-987654",
+      "effective_date": "2023-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Hermione Granger is a well-known figure in the magical community, having played a significant role in defeating dark forces. With a background rich in academic excellence and bravery, she approaches her health with the same meticulous care she applies to spellcraft. Hermione has been experiencing persistent lower back pain, leading to medical consultations. Despite being physically active and maintaining a healthy lifestyle, symptom persistency has prompted further medical evaluation, particularly to rule out potential abdominal causes. Her medical history is otherwise unremarkable, and she maintains a stable family life with her husband, Ron. She places great focus on problem-solving and is actively engaged in pursuing clarity about her health condition."
+  },
+  "238": {
+    "first_name": "Hank",
+    "last_name": "Schrader",
+    "gender": "male",
+    "dob": "1970-03-13",
+    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
+    "telecom": "505-555-0199",
+    "race": "Caucasian",
+    "height": "6 ft 0 in",
+    "weight": "220 lbs",
+    "maritalStatus": "Married",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Marie Schrader",
+      "telecom": "505-555-0200",
+      "address": "308 Negra Arroyo Lane, Albuquerque, NM",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "1995-06-15",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jane Smith, MD",
+      "formatted_npi": "1122334455",
+      "managingOrganization": "Albuquerque Medical Clinic"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC-001",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-123456",
+      "policy_number": "POL-2025-000001",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "bio_narrative": "Hank Schrader is a dedicated law enforcement officer living in Albuquerque, New Mexico. He is married to Marie Schrader and has a strong family orientation. Hank prides himself on his tough exterior and resilience. Historically, he has been in good health, attributing his vigorous physique to regular exercise and keen interest in physical fitness, which suits his line of work involving tactical raids and operations.\n\nMedically, Hank has maintained regular check-ups and has shown no significant health concerns until the current year, where he explores cosmetic or reconstructive options due to facial trauma suffered during a work-related incident. Nevertheless, recent assessments indicate the absence of critical anomalies. Socially, Hank is known for his assertive personality, occasionally clashing with the softer side shown in his private life. The tight-knit Albuquerque community respects Hank for his commitment to public safety and grassroots community movements against local crime."
   }
 }

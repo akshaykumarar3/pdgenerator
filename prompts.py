@@ -367,6 +367,212 @@ REPAIR INSTRUCTIONS:
 RETURN ONLY THE FIXED CONTENT (no explanations, no code blocks)."""
 
 # ============================================================================
+# ANNOTATOR SUMMARY PROMPT - Verification Guide Generation
+# ============================================================================
+# This prompt generates an annotator-focused verification guide that helps
+# validate the generated clinical data against expected outcomes.
+# 
+# WHEN TO USE: After persona (and optionally documents) are generated
+# PURPOSE: Create actionable guidance for manual verification and QA
+
+def get_annotator_summary_prompt(
+    case_details: dict,
+    patient_persona: dict,
+    generated_documents: list = None,
+    existing_summary: str = None
+) -> str:
+    """
+    Generates prompt for creating annotator verification guide.
+    
+    FLEXIBLE GENERATION:
+    - If generated_documents is provided: Full summary with all 4 sections
+    - If generated_documents is None/empty: Partial summary (case explanation + patient profile)
+    
+    This supports the production workflow where:
+    1. Persona is generated first
+    2. Reports are attached later based on requirements
+    3. Summary can be regenerated when reports are added
+    
+    Args:
+        case_details: Dict with 'procedure', 'outcome', 'details'
+        patient_persona: The generated patient persona object (dict or Pydantic)
+        generated_documents: Optional list of generated documents
+        existing_summary: Optional existing summary to update
+    
+    Returns:
+        Complete prompt string for annotator summary generation
+    """
+    
+    # Extract persona details safely
+    if hasattr(patient_persona, 'model_dump'):
+        persona_dict = patient_persona.model_dump()
+    else:
+        persona_dict = patient_persona
+    
+    patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
+    patient_dob = persona_dict.get('dob', 'N/A')
+    patient_gender = persona_dict.get('gender', 'N/A')
+    
+    # Extract medical coding information
+    target_cpt = persona_dict.get('target_cpt_code', 'N/A')
+    target_cpt_desc = persona_dict.get('target_cpt_description', 'N/A')
+    primary_dx = persona_dict.get('primary_diagnosis_codes', [])
+    secondary_dx = persona_dict.get('secondary_diagnosis_codes', [])
+    
+    # Format diagnosis codes for display
+    primary_dx_str = ", ".join([f"{dx.get('code', 'N/A')} ({dx.get('description', 'N/A')})" for dx in primary_dx]) if primary_dx else "Not specified"
+    secondary_dx_str = ", ".join([f"{dx.get('code', 'N/A')} ({dx.get('description', 'N/A')})" for dx in secondary_dx]) if secondary_dx else "Not specified"
+    
+    # Build document list if available
+    documents_section = ""
+    if generated_documents and len(generated_documents) > 0:
+        doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in generated_documents])
+        documents_section = f"""
+**GENERATED CLINICAL DOCUMENTS ({len(generated_documents)} total):**
+{doc_list}
+
+You MUST analyze these documents to create the verification checklist.
+"""
+    else:
+        documents_section = """
+**CLINICAL DOCUMENTS STATUS:**
+Reports are pending. Clinical documents will be attached later based on requirements.
+The verification checklist section should indicate: "Reports pending - verification pointers will be available when clinical documents are generated."
+"""
+    
+    # Determine which sections to generate
+    sections_instruction = ""
+    if generated_documents and len(generated_documents) > 0:
+        sections_instruction = """
+**REQUIRED SECTIONS (ALL 4):**
+1. **Case Explanation**: Detailed explanation of the procedure, clinical context, and expected outcome
+2. **Medical Details**: Persona-specific medical information and what is expected from this case
+3. **Patient Profile Summary**: Prior health concerns, procedure justification, and CPT code rationale
+4. **Verification Pointers**: Key elements to cross-verify from the likelihood analysis (approval/denial criteria)
+"""
+    else:
+        sections_instruction = """
+**REQUIRED SECTIONS (3 of 4 - Documents Pending):**
+1. **Case Explanation**: Detailed explanation of the procedure, clinical context, and expected outcome
+2. **Medical Details**: Persona-specific medical information and what is expected from this case
+3. **Patient Profile Summary**: Prior health concerns, procedure justification, and CPT code rationale
+4. **Verification Pointers**: INDICATE "Reports pending - verification checklist will be available when clinical documents are generated."
+"""
+    
+    return f"""
+**TASK: Generate an Annotator Verification Guide**
+
+You are creating a comprehensive guide for clinical data annotators to verify and validate the generated patient data against expected outcomes. This is NOT a clinical document - it is an internal QA tool.
+
+**PATIENT INFORMATION:**
+- Name: {patient_name}
+- DOB: {patient_dob}
+- Gender: {patient_gender}
+
+**CLINICAL SCENARIO (SOURCE OF TRUTH):**
+- Procedure: {case_details['procedure']}
+- Target CPT Code: {target_cpt} - {target_cpt_desc}
+- Expected Outcome: {case_details['outcome']}
+- Clinical Context: {case_details['details']}
+
+**MEDICAL CODING (FROM PERSONA):**
+- Primary Diagnoses (ICD-10): {primary_dx_str}
+- Secondary Diagnoses (ICD-10): {secondary_dx_str}
+
+{documents_section}
+
+{sections_instruction}
+
+**DETAILED INSTRUCTIONS FOR EACH SECTION:**
+
+### 1. Case Explanation
+Provide a clear, concise explanation that includes:
+- What procedure is being requested (CPT code and description)
+- The clinical context and patient presentation
+- The expected outcome (Approval or Denial) and WHY this outcome is expected
+- The clinical rationale for this specific case
+
+### 2. Medical Details (Persona-Specific)
+Analyze the patient persona and explain:
+- Key medical history elements relevant to this case
+- How the patient's diagnoses (ICD-10 codes) support or contradict the procedure request
+- What makes this case unique or noteworthy
+- Any complicating factors or considerations
+- What the annotator should expect to see in the clinical documentation
+
+### 3. Patient Profile Summary
+Create a comprehensive summary that includes:
+- Prior health concerns and medical history
+- Why this patient needs this specific procedure (medical necessity)
+- How the CPT code aligns with the patient's condition
+- Justification for the procedure based on the patient's clinical profile
+- Any relevant social or lifestyle factors that impact the case
+
+### 4. Verification Pointers (KEY SECTION FOR ANNOTATORS)
+{f'''
+Create an actionable checklist based on the expected outcome ({case_details['outcome']}):
+
+**If Expected Outcome is APPROVAL:**
+- List specific evidence that MUST be present in the documents to support approval
+- Identify which documents should contain supporting findings
+- Note any critical test results or clinical findings that justify the procedure
+- Highlight alignment between diagnoses and procedure request
+
+**If Expected Outcome is DENIAL:**
+- List red flags or missing evidence that should lead to denial
+- Identify gaps in clinical justification
+- Note any contradictory findings or lack of medical necessity
+- Highlight misalignment between diagnoses and procedure request
+
+**General Verification Items:**
+- CPT code accuracy and appropriateness
+- ICD-10 code validity and medical necessity support
+- Consistency across all documents (demographics, dates, findings)
+- Completeness of clinical documentation
+- Alignment with expected outcome
+''' if generated_documents and len(generated_documents) > 0 else 'Indicate that reports are pending and verification checklist will be completed when clinical documents are available.'}
+
+**OUTPUT FORMAT:**
+Return a structured JSON object with the following schema:
+
+{{
+    "case_explanation": "Detailed explanation of procedure, context, and expected outcome...",
+    "medical_details": "Persona-specific medical information and case expectations...",
+    "patient_profile_summary": "Prior health concerns, procedure justification, CPT rationale...",
+    "verification_pointers": {{
+        "expected_outcome": "{case_details['outcome']}",
+        "key_verification_items": [
+            "Item 1 to verify...",
+            "Item 2 to verify...",
+            ...
+        ],
+        "supporting_evidence_checklist": [
+            "Evidence 1 that should be present...",
+            "Evidence 2 that should be present...",
+            ...
+        ],
+        "red_flags": [
+            "Red flag 1 to watch for...",
+            "Red flag 2 to watch for...",
+            ...
+        ],
+        "document_references": [
+            {{"document": "Document name", "should_contain": "What this document should demonstrate"}},
+            ...
+        ]
+    }}
+}}
+
+**CRITICAL RULES:**
+1. Write for an ANNOTATOR audience, not a clinical audience
+2. Be specific and actionable - avoid vague statements
+3. Reference actual CPT and ICD-10 codes from the persona
+4. Align verification pointers with the expected outcome
+5. Make it easy for annotators to validate the data quality
+6. If documents are not available, clearly indicate pending status
+"""
+
+# ============================================================================
 # CHARACTER UNIVERSES - For Patient Name Diversity
 # ============================================================================
 # List of fictional universes to source patient names from.

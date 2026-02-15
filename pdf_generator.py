@@ -176,6 +176,201 @@ def get_clinical_image(doc_title: str):
     """
     return None
 
+def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, output_folder: str = None):
+    """
+    Creates an Annotator Verification Guide PDF from the AI-generated summary.
+    
+    This PDF serves as a QA tool for annotators to verify generated clinical data.
+    It replaces any existing summary PDF in the output folder.
+    
+    Args:
+        patient_id: Patient ID
+        annotator_summary: AnnotatorSummary object from AI
+        case_details: Original case details dict
+        output_folder: Output directory path
+    
+    Returns:
+        Path to created PDF file
+    """
+    # 1. Folder Management
+    if output_folder:
+        output_dir = output_folder
+    else:
+        output_dir = f"generated_output/patient-reports/{patient_id}"
+        
+    _ensure_folder(output_dir)
+
+    filename = f"Clinical_Summary_Patient_{patient_id}.pdf"
+    file_path = os.path.join(output_dir, filename)
+    
+    # Remove existing summary if present (user requirement: replace existing)
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+            print(f"      🔄 Replaced existing summary")
+        except Exception as e:
+            print(f"      ⚠️  Could not remove old summary: {e}")
+    
+    doc = SimpleDocTemplate(file_path, pagesize=letter,
+                            rightMargin=50, leftMargin=50,
+                            topMargin=50, bottomMargin=50)
+
+    # Styles
+    styles = getSampleStyleSheet()
+    
+    # Custom Colors
+    col_primary = colors.HexColor('#2c3e50')  # Dark blue
+    col_secondary = colors.HexColor('#e74c3c')  # Red for verification
+    col_success = colors.HexColor('#27ae60')  # Green for approval
+    col_warning = colors.HexColor('#f39c12')  # Orange for denial
+    col_light_bg = colors.HexColor('#ecf0f1')  # Light gray background
+    
+    # Custom Styles
+    style_title = ParagraphStyle('MainTitle', parent=styles['Heading1'], 
+                                textColor=col_primary, fontSize=20, alignment=1,
+                                spaceAfter=10, spaceBefore=0)
+    
+    style_subtitle = ParagraphStyle('SubTitle', parent=styles['Normal'],
+                                   textColor=col_secondary, fontSize=12, alignment=1,
+                                   fontName='Helvetica-Bold', spaceAfter=20)
+    
+    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], 
+                             textColor=col_primary, backColor=col_light_bg,
+                             borderPadding=8, borderLeftWidth=4, borderColor=col_secondary,
+                             spaceBefore=15, spaceAfter=10)
+    
+    style_h3 = ParagraphStyle('SubSecTitle', parent=styles['Heading3'],
+                             textColor=col_secondary, spaceBefore=10, spaceAfter=5)
+    
+    style_normal = ParagraphStyle('Body', parent=styles['Normal'], 
+                                 leading=14, fontSize=10, spaceAfter=6)
+    
+    style_bullet = ParagraphStyle('Bullet', parent=style_normal, 
+                                 leftIndent=20, bulletIndent=10)
+    
+    Story = []
+
+    # --- HEADER ---
+    Story.append(Paragraph("ANNOTATOR VERIFICATION GUIDE", style_title))
+    Story.append(Paragraph(f"Patient ID: {patient_id} | For Internal QA Use Only", style_subtitle))
+    Story.append(Spacer(1, 10))
+    
+    # --- CASE OVERVIEW BOX ---
+    # Safely convert case details to strings (handles NaN from Excel)
+    procedure_str = str(case_details.get('procedure', 'N/A')) if case_details.get('procedure') is not None else 'N/A'
+    if procedure_str == 'nan':
+        procedure_str = 'N/A'
+    
+    case_overview_data = [
+        [Paragraph("<b>Procedure:</b>", style_normal), Paragraph(procedure_str, style_normal)],
+        [Paragraph("<b>Expected Outcome:</b>", style_normal), 
+         Paragraph(f"<b>{annotator_summary.verification_pointers.expected_outcome}</b>", 
+                  ParagraphStyle('outcome', parent=style_normal, 
+                                textColor=col_success if 'approval' in annotator_summary.verification_pointers.expected_outcome.lower() else col_warning))]
+    ]
+    
+    case_table = Table(case_overview_data, colWidths=[1.5*inch, 5*inch])
+    case_table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,-1), col_light_bg),
+        ('GRID', (0,0), (-1,-1), 1, colors.grey),
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+    ]))
+    Story.append(case_table)
+    Story.append(Spacer(1, 15))
+    
+    # --- SECTION 1: CASE EXPLANATION ---
+    Story.append(Paragraph("1. Case Explanation", style_h2))
+    Story.append(Spacer(1, 5))
+    
+    # Format the case explanation text
+    case_exp_text = annotator_summary.case_explanation.replace('\n', '<br/>')
+    Story.append(Paragraph(case_exp_text, style_normal))
+    Story.append(Spacer(1, 10))
+    
+    # --- SECTION 2: MEDICAL DETAILS ---
+    Story.append(Paragraph("2. Medical Details (Persona-Specific)", style_h2))
+    Story.append(Spacer(1, 5))
+    
+    medical_details_text = annotator_summary.medical_details.replace('\n', '<br/>')
+    Story.append(Paragraph(medical_details_text, style_normal))
+    Story.append(Spacer(1, 10))
+    
+    # --- SECTION 3: PATIENT PROFILE SUMMARY ---
+    Story.append(Paragraph("3. Patient Profile Summary", style_h2))
+    Story.append(Spacer(1, 5))
+    
+    profile_text = annotator_summary.patient_profile_summary.replace('\n', '<br/>')
+    Story.append(Paragraph(profile_text, style_normal))
+    Story.append(Spacer(1, 10))
+    
+    # --- SECTION 4: VERIFICATION POINTERS ---
+    Story.append(Paragraph("4. Verification Checklist", style_h2))
+    Story.append(Spacer(1, 5))
+    
+    vp = annotator_summary.verification_pointers
+    
+    # Key Verification Items
+    if vp.key_verification_items:
+        Story.append(Paragraph("<b>Key Verification Items:</b>", style_h3))
+        for item in vp.key_verification_items:
+            Story.append(Paragraph(f"☐ {item}", style_bullet))
+        Story.append(Spacer(1, 8))
+    
+    # Supporting Evidence Checklist
+    if vp.supporting_evidence_checklist:
+        Story.append(Paragraph("<b>Supporting Evidence Checklist:</b>", style_h3))
+        for evidence in vp.supporting_evidence_checklist:
+            Story.append(Paragraph(f"✓ {evidence}", style_bullet))
+        Story.append(Spacer(1, 8))
+    
+    # Red Flags
+    if vp.red_flags and len(vp.red_flags) > 0:
+        Story.append(Paragraph("<b>Red Flags to Watch For:</b>", style_h3))
+        for flag in vp.red_flags:
+            Story.append(Paragraph(f"⚠ {flag}", 
+                                 ParagraphStyle('redflag', parent=style_bullet, textColor=col_warning)))
+        Story.append(Spacer(1, 8))
+    
+    # Document References
+    if vp.document_references and len(vp.document_references) > 0:
+        Story.append(Paragraph("<b>Document References:</b>", style_h3))
+        Story.append(Spacer(1, 5))
+        
+        doc_ref_data = [['Document', 'Should Contain']]
+        for ref in vp.document_references:
+            doc_name = ref.get('document', 'N/A')
+            should_contain = ref.get('should_contain', 'N/A')
+            doc_ref_data.append([
+                Paragraph(doc_name, style_normal),
+                Paragraph(should_contain, style_normal)
+            ])
+        
+        if len(doc_ref_data) > 1:
+            doc_ref_table = Table(doc_ref_data, colWidths=[2*inch, 4.5*inch])
+            doc_ref_table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#34495e')),
+                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+                ('VALIGN', (0,0), (-1,-1), 'TOP'),
+                ('TOPPADDING', (0,0), (-1,-1), 6),
+                ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+            ]))
+            Story.append(doc_ref_table)
+    
+    Story.append(Spacer(1, 15))
+    
+    # --- FOOTER ---
+    footer_text = f"<i>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | This document is for internal QA purposes only</i>"
+    Story.append(Paragraph(footer_text, 
+                          ParagraphStyle('footer', parent=style_normal, 
+                                        fontSize=8, textColor=colors.grey, alignment=1)))
+
+    doc.build(Story)
+    return file_path
+
 def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = None):
     """
     Creates a highly styled Clinical Summary PDF using the template structure.

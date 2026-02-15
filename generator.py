@@ -177,38 +177,40 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
             )
             print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
             
-        # Summary PDF (Mock)
-        # Use Persona data if available, else fallback
-        p_name = "Unknown"
-        p_dob = "1990-01-01"
-        p_gender = "Unknown"
         
-        if result.patient_persona:
-            p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            p_dob = result.patient_persona.dob
-            p_gender = result.patient_persona.gender
-            
-        summary_data = {
-           "name": p_name,
-           "dob": p_dob, 
-           "gender": p_gender,
-           "mrn": current_mrn,
-           "provider": "Dr. Sarah Smith", # Could extract from persona provider too
-           "facility": "General Hospital",
-           "procedure": case_data['procedure'],
-           "outcome": case_data['outcome'],
-           "rationale": result.changes_summary,
-           "diagnoses": [{"code": "DX.001", "condition": "Primary Diagnosis", "status": "Active", "date": "2025-01-01"}],
-           "timeline": [{"date": "2025-01-01", "title": "Clinical Encounter", "details": ["Patient presented for evaluation."]}]
-        }
-        
-        # SUMMARY GENERATION (conditional)
+        # ANNOTATOR SUMMARY GENERATION (conditional) - AFTER all documents
+        # This is the NEW annotator-focused verification guide
         if generation_mode.get("summary", True):
-            sum_path = pdf_generator.create_patient_summary_pdf(patient_id, summary_data, output_folder=patient_report_folder)
-            if sum_path and os.path.exists(sum_path):
-                print(f"   📊 Summary PDF Created: {os.path.basename(sum_path)}")
-            else:
-                print(f"   ⚠️ Summary PDF creation skipped or failed.")
+            try:
+                print(f"   📋 Generating Annotator Verification Guide...")
+                
+                # Generate AI-powered annotator summary
+                # Pass documents if available (for full summary), or None (for partial summary)
+                documents_for_summary = result.documents if generation_mode.get("reports", True) else None
+                
+                annotator_summary = ai_engine.generate_annotator_summary(
+                    case_details=case_data,
+                    patient_persona=result.patient_persona,
+                    generated_documents=documents_for_summary
+                )
+                
+                # Create PDF from structured summary
+                sum_path = pdf_generator.create_annotator_summary_pdf(
+                    patient_id=patient_id,
+                    annotator_summary=annotator_summary,
+                    case_details=case_data,
+                    output_folder=patient_report_folder
+                )
+                
+                if sum_path and os.path.exists(sum_path):
+                    print(f"   📊 Annotator Summary Created: {os.path.basename(sum_path)}")
+                else:
+                    print(f"   ⚠️  Annotator Summary creation failed.")
+                    
+            except Exception as e:
+                print(f"   ⚠️  Annotator Summary Generation Failed: {e}")
+                # Continue processing even if summary fails
+        
         # Processing complete
 
         # Return the new name for caching

@@ -284,6 +284,21 @@ class ClinicalDataPayload(BaseModel):
     documents: List[GeneratedDocument]
     patient_persona: PatientPersona
 
+class VerificationPointers(BaseModel):
+    """Verification checklist for annotators."""
+    expected_outcome: str = Field(..., description="Expected outcome (Approval/Denial)")
+    key_verification_items: List[str] = Field(..., description="List of key items to verify")
+    supporting_evidence_checklist: List[str] = Field(..., description="Evidence that should be present")
+    red_flags: List[str] = Field(default_factory=list, description="Red flags to watch for")
+    document_references: List[Dict[str, str]] = Field(default_factory=list, description="Document references with expected content")
+
+class AnnotatorSummary(BaseModel):
+    """Annotator verification guide - created after persona and documents are generated."""
+    case_explanation: str = Field(..., description="Explanation of procedure, context, and expected outcome")
+    medical_details: str = Field(..., description="Persona-specific medical information and case expectations")
+    patient_profile_summary: str = Field(..., description="Prior health concerns, procedure justification, CPT rationale")
+    verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
+
 
 def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None, existing_filenames: List[str] = None) -> 'FinalResult':
 
@@ -507,3 +522,118 @@ def fix_document_content(content: str, errors: List[str]) -> str:
     except Exception as e:
         print(f"   ⚠️ Repair Failed: {e}")
         return content # Return original if fix fails
+
+def generate_annotator_summary(
+    case_details: dict,
+    patient_persona,
+    generated_documents: list = None
+) -> AnnotatorSummary:
+    """
+    Generates an annotator verification guide for QA and validation.
+    
+    This function creates a comprehensive guide that helps annotators verify
+    the generated clinical data against expected outcomes.
+    
+    FLEXIBLE GENERATION:
+    - If generated_documents is provided: Full summary with all 4 sections
+    - If generated_documents is None/empty: Partial summary (case explanation + patient profile)
+    
+    Args:
+        case_details: Dict with 'procedure', 'outcome', 'details'
+        patient_persona: The generated patient persona (Pydantic object or dict)
+        generated_documents: Optional list of generated documents
+    
+    Returns:
+        AnnotatorSummary object with verification guide content
+    """
+    
+    print(f"   📋 Generating Annotator Verification Guide...")
+    
+    # Get prompt from centralized prompts module
+    prompt = prompts.get_annotator_summary_prompt(
+        case_details=case_details,
+        patient_persona=patient_persona,
+        generated_documents=generated_documents
+    )
+    
+    try:
+        # Convert system prompt to user prompt for Vertex AI compatibility
+        system_role = "user" if PROVIDER == "vertexai" else "system"
+        
+        system_prompt = """You are an expert clinical data analyst creating verification guides for annotators.
+Your task is to analyze patient data and create actionable checklists for quality assurance.
+Focus on being specific, clear, and helpful for non-clinical annotators."""
+        
+        kwargs = {
+            "model": MODEL_NAME,
+            "response_model": AnnotatorSummary,
+            "messages": [
+                {"role": system_role, "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ]
+        }
+        
+        if PROVIDER == "vertexai":
+            print(f"   [DEBUG] Calling Vertex AI for Annotator Summary - Model: {MODEL_NAME}")
+            
+            try:
+                model_instance = client.client
+                from vertexai.generative_models import GenerationConfig
+                
+                # Prepare Prompt
+                msgs = kwargs['messages']
+                full_prompt = f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
+                
+                resp = model_instance.generate_content(
+                    full_prompt,
+                    generation_config=GenerationConfig(
+                        response_mime_type="application/json",
+                    )
+                )
+                
+                print(f"   [DEBUG] Annotator Summary Response Length: {len(resp.text)}")
+                
+                # Parse response
+                import json
+                try:
+                    raw_text = resp.text.strip()
+                    if raw_text.startswith("```json"):
+                        raw_text = raw_text[7:]
+                    if raw_text.endswith("```"):
+                        raw_text = raw_text[:-3]
+                    
+                    data = json.loads(raw_text)
+                    if isinstance(data, list) and len(data) > 0:
+                        data = data[0]
+                    
+                    summary_obj = AnnotatorSummary.model_validate(data)
+                except Exception as e:
+                    print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
+                    summary_obj = AnnotatorSummary.model_validate_json(resp.text)
+                
+                print(f"   ✅ Annotator Summary Generated Successfully")
+                return summary_obj
+                
+            except Exception as e:
+                print(f"   ❌ Vertex AI Annotator Summary Failed: {e}")
+                raise e
+        
+        # OPENAI PATH
+        print(f"   [DEBUG] Calling OpenAI for Annotator Summary - Model: {MODEL_NAME}")
+        completion_resp = client.chat.completions.create_with_completion(**kwargs)
+        
+        # Handle Instructor Tuple Return
+        if isinstance(completion_resp, tuple):
+            summary_obj = completion_resp[0]
+        else:
+            summary_obj = completion_resp
+        
+        if summary_obj is None:
+            raise ValueError("AI returned no response for annotator summary")
+        
+        print(f"   ✅ Annotator Summary Generated Successfully")
+        return summary_obj
+        
+    except Exception as e:
+        print(f"   ❌ Annotator Summary Generation Failed: {e}")
+        raise e
