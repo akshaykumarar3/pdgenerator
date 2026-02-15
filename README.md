@@ -132,12 +132,23 @@ The system expects credentials in a `cred/` directory.
     GCP_LOCATION=us-central1
     GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
     
+    # Optional: Web Search Integration
+    ENABLE_WEB_SEARCH=false  # Set to true to enable
+    TAVILY_API_KEY=your_tavily_key  # Get free key at https://tavily.com
+    SEARCH_CACHE_TTL=24  # Cache duration in hours
+    
     # Optional
     OUTPUT_DIR=generated_output
     TEST_MODE=false
     ```
 
 4. **Service Account Key** (Vertex AI only): Place your JSON key at `cred/gcp_auth_key.json`.
+
+**Web Search Setup** (Optional):
+* Get a free Tavily API key at [https://tavily.com](https://tavily.com) (1,000 searches/month free)
+* Enable with `ENABLE_WEB_SEARCH=true` in `.env`
+* Used to retrieve precise CPT/ICD descriptions when Excel data is incomplete
+* Adds verification notes when data quality is uncertain
 
 ---
 
@@ -171,6 +182,7 @@ pdgenerator/
 ├── ai_engine.py                # LLM interaction (OpenAI/Vertex AI)
 ├── generator.py                # Main orchestrator & REPL loop
 ├── pdf_generator.py            # PDF rendering (ReportLab)
+├── search_engine.py            # 🔍 Web search for medical codes (Tavily API)
 ├── doc_validator.py            # Document validation
 ├── data_loader.py              # Excel case data loading
 ├── history_manager.py          # Conversation history
@@ -187,7 +199,7 @@ pdgenerator/
 ### Key Files to Customize
 
 * **`prompts.py`** - Edit AI behavior and instructions
-* **`cred/.env`** - Configure API keys and settings
+* **`cred/.env`** - Configure API keys and settings (including web search)
 * **`core/UAT Plan.xlsx`** - Add patient test cases
 * **`templates/summary_template.json`** - Modify PDF layouts
 
@@ -196,6 +208,15 @@ pdgenerator/
 ## 🚀 Key Features
 
 * **AI-Powered Generation**: Uses **GPT-4o / Gemini 2.5** for intelligent clinical document creation
+* **Web Search Integration** (Optional):
+  * 🔍 Retrieves precise CPT/ICD code descriptions from authoritative sources (AAPC, CMS)
+  * ⚠️ Automatic verification notes for missing/uncertain data
+  * 💾 24-hour caching to reduce API costs
+  * ✅ Conservative strategy: Excel data prioritized, search only when needed
+* **Annotator Verification Guide**:
+  * Simplified PDF layout with expected outcome and verification notes
+  * All CPT/ICD codes embedded in narrative (no redundant tables)
+  * Data quality alerts for manual review
 * **Interactive Workflow**: Continuous processing loop with admin purge commands
 * **Smart Duplicate Detection**:
   * Scans existing documents before generation

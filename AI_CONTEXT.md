@@ -17,6 +17,7 @@ generator.py          → Main orchestrator, REPL loop
 ai_engine.py          → LLM interaction (OpenAI/Vertex AI)
 prompts.py            → Centralized AI prompts & instructions
 pdf_generator.py      → PDF rendering (ReportLab)
+search_engine.py      → 🔍 Web search for medical codes (Tavily API)
 doc_validator.py      → Document structure validation
 data_loader.py        → Excel case data loading
 history_manager.py    → Conversation history
@@ -29,6 +30,7 @@ purge_manager.py      → Data cleanup utilities
 - **PatientPersona**: FHIR-compliant patient with demographics, contacts, insurance
 - **GeneratedDocument**: Clinical document with title_hint, content, date
 - **ClinicalDataPayload**: Combined persona + documents + summary
+- **AnnotatorSummary**: Verification guide with case explanation, medical details, verification pointers
 
 ## Generation Workflow
 
@@ -38,9 +40,13 @@ purge_manager.py      → Data cleanup utilities
    - Extracts titles from existing PDFs
    - Passes list to AI to avoid unnecessary duplicates
    - Only generates multiple reports when test case requires it
-4. AI generates clinical data based on case context
-5. Documents are validated; invalid ones get AI repair
-6. PDFs are rendered and saved
+4. **Web Search** (if enabled and Excel data incomplete):
+   - Checks Excel for procedure/CPT data
+   - Searches Tavily API for official CPT/ICD descriptions
+   - Adds verification notes for data quality issues
+5. AI generates clinical data based on case context + search results
+6. Documents are validated; invalid ones get AI repair
+7. PDFs are rendered and saved
 
 ## Configuration
 
@@ -49,6 +55,9 @@ purge_manager.py      → Data cleanup utilities
 - `LLM_PROVIDER`: `openai` or `vertexai`
 - `TEST_MODE`: `true` for fast/cheap models
 - `OUTPUT_DIR`: Where generated files are saved
+- `ENABLE_WEB_SEARCH`: `true` to enable medical code lookup (default: `false`)
+- `TAVILY_API_KEY`: API key for web search (get free at <https://tavily.com>)
+- `SEARCH_CACHE_TTL`: Cache duration in hours (default: 24)
 
 **Models**:
 
@@ -57,7 +66,25 @@ purge_manager.py      → Data cleanup utilities
 
 ## Recent Changes (Feb 2026)
 
-### Smart Duplicate Detection (NEW)
+### Web Search Integration (NEW - Feb 15, 2026)
+
+- **Medical Code Lookup**: Retrieves precise CPT/ICD descriptions from authoritative sources (AAPC, CMS)
+- **Verification Notes System**: Automatically adds notes when data quality is uncertain
+- **Conservative Strategy**: Prioritizes Excel data, only searches when data is missing/incomplete
+- **Quality Thresholds**: Rejects poor quality search results (< 20 chars)
+- **Caching**: 24-hour file-based cache to reduce API costs
+- **Data Models**: `CPTCodeInfo`, `ICD10CodeInfo`, `PolicyCriteria`
+- **Configuration**: Optional feature, disabled by default
+
+### Annotator Summary Improvements (NEW - Feb 15, 2026)
+
+- **Simplified PDF Layout**: Removed redundant sections (Target Procedure, Medical Coding Summary table)
+- **Clean Table**: Only shows Expected Outcome and Verification Notes
+- **Bio Narrative Extraction**: Extracts CPT/ICD codes from patient bio instead of non-existent fields
+- **No More N/A**: Removed all "N/A" fallbacks, only shows fields with actual data
+- **Embedded Codes**: All CPT/ICD codes now in narrative text for better context
+
+### Smart Duplicate Detection
 
 - **Intelligent Document Scanning**: Scans existing PDFs before generation
 - **Title Extraction**: Accurately extracts document titles from filenames
@@ -65,7 +92,7 @@ purge_manager.py      → Data cleanup utilities
 - **Multiple Reports**: Only generates multiple reports when test case specifically requires it
 - **AI Integration**: Passes existing document list to AI for smart decision-making
 
-### Updated Default Generation Mode (NEW)
+### Updated Default Generation Mode
 
 - **New Default**: "Persona + Reports + Summary" (previously "Summary + Reports")
 - **Reordered Menu**: More intuitive option ordering

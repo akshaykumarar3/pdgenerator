@@ -17,6 +17,7 @@ graph TD
         Generator --> Loader["Data Loader (data_loader.py)"]
         Generator --> AI["AI Engine (ai_engine.py)"]
         Generator --> PDF["PDF Factory (pdf_generator.py)"]
+        Generator --> Search["Search Engine (search_engine.py)"]
         Generator --> History["History Manager (history_manager.py)"]
         Generator --> DB["Patient DB (core/patient_db.py)"]
         Generator --> Val["Doc Validator (doc_validator.py)"]
@@ -25,6 +26,11 @@ graph TD
     subgraph "External AI Services"
         AI --> LLMText["LLM (Text/Logic)"]
         AI --> LLMImage["LLM (Image Generation)"]
+    end
+    
+    subgraph "External Data Services"
+        Search --> Tavily["Tavily API (Medical Search)"]
+        Search --> Cache["Search Cache (.search_cache/)"]
     end
     
     subgraph "Outputs (Configurable)"
@@ -90,8 +96,32 @@ Converts structured data into professional clinical documents using `reportlab`.
 
 * **Features**: HTML Sanitization, Dynamic Templates (Consult vs Lab), AI-generated image embedding
 * **Image Strategy**: 100% AI-generated images (no static fallbacks)
+* **Annotator Summary**: Simplified layout with expected outcome and verification notes only
 
-### E. Purge Manager (`purge_manager.py`)
+### E. Search Engine (`search_engine.py`) 🔍 NEW
+
+Retrieves precise medical information from authoritative sources when Excel data is incomplete.
+
+* **Purpose**: Enhance data quality by fetching official CPT/ICD descriptions and policy criteria
+* **API Integration**: Uses Tavily API optimized for LLM applications
+* **Key Features**:
+  * CPT code lookup from AAPC, CMS, AMA
+  * ICD-10 code lookup from official databases
+  * Insurance policy criteria search
+  * File-based caching (24-hour TTL) to reduce API costs
+  * Quality thresholds to reject poor results
+* **Data Models**:
+  * `CPTCodeInfo`: Code, description, indications, source URL
+  * `ICD10CodeInfo`: Code, description, category, source URL
+  * `PolicyCriteria`: Coverage requirements, prior auth status
+* **Search Strategy**:
+  1. **Excel Data First**: Always prioritize data from Excel file
+  2. **Search Only When Needed**: Only search if Excel data is missing/incomplete
+  3. **Quality Validation**: Reject results with description < 20 characters
+  4. **Verification Notes**: Add notes when data quality is uncertain
+* **Configuration**: `ENABLE_WEB_SEARCH`, `TAVILY_API_KEY`, `SEARCH_CACHE_TTL` in `.env`
+
+### F. Purge Manager (`purge_manager.py`)
 
 Handles data lifecycle and cleanup.
 
