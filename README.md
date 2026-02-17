@@ -69,6 +69,53 @@ Results are saved in `generated_output/` (configurable):
 
 ---
 
+## ✨ Key Features
+
+### Prior Authorization Workflow Support
+
+**Future Procedure Dates**: All personas include expected procedure dates (7-90 days in the future) for realistic PA workflows.
+
+**Complete PA Request Forms**: Each persona includes a comprehensive Prior Authorization request section with:
+* Requesting provider with credentials
+* Urgency level (Routine/Urgent/Emergency)
+* Clinical justification (medical necessity)
+* Supporting ICD-10 diagnoses
+* Previous treatments attempted
+* Expected clinical outcome
+
+**Facility Location**: Realistic healthcare facility addresses matching patient locality:
+* Facility name and department
+* Complete street address
+* City, state, and ZIP code
+* Automatically matched to patient's state
+
+### Temporal Consistency
+
+All generated data follows a realistic timeline:
+* **Medical History**: 6 months to 5 years before procedure
+* **Recent Encounters**: 1-12 weeks before procedure
+* **Lab Results**: 1-4 weeks before procedure
+* **Today**: Current date
+* **Procedure Date**: 7-90 days in the future
+
+### Document Coherence
+
+When generating documents in different modes (persona only, reports only, summary only), the system ensures consistency:
+* Reports reference the same facility and dates from the persona
+* Summaries align with existing persona and reports
+* No contradictory information across documents
+
+### FHIR-Compliant Data
+
+* Complete patient demographics
+* Biometrics (race, height, weight)
+* Emergency contacts
+* Insurance/payer details (UnitedHealthcare standardized)
+* Provider information with NPI
+* Medical coding (ICD-10, CPT)
+
+---
+
 ## 🛠️ Installation & Setup
 
 ### 1. Prerequisites

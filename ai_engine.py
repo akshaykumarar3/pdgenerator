@@ -154,6 +154,30 @@ class PatientContact(BaseModel):
     period_start: str = Field(..., description="Date contact relationship started (YYYY-MM-DD)")
     period_end: str = Field("ongoing", description="Date contact relationship ended or 'ongoing'")
 
+# ===== DATA MODELS (Pydantic) =====
+
+class FacilityDetails(BaseModel):
+    """Healthcare facility information for procedure location"""
+    facility_name: str = Field(..., description="Name of hospital/clinic (e.g., 'St. Mary's Medical Center', 'Memorial Hospital')")
+    street_address: str = Field(..., description="Street address (e.g., '123 Main Street')")
+    city: str = Field(..., description="City name")
+    state: str = Field(..., description="2-letter state code (e.g., 'CA', 'NY', 'TX')")
+    zip_code: str = Field(..., description="5-digit ZIP code matching city/state")
+    department: str = Field(..., description="Department/unit (e.g., 'Cardiology Department', 'Surgical Center', 'Radiology')")
+    
+    def full_address(self) -> str:
+        """Returns formatted full address"""
+        return f"{self.facility_name}\n{self.street_address}\n{self.city}, {self.state} {self.zip_code}"
+
+class PARequestDetails(BaseModel):
+    """Prior Authorization Request Form Details"""
+    requesting_provider: str = Field(..., description="Name and credentials of requesting physician (e.g., 'Dr. John Smith, MD, FACC')")
+    urgency_level: str = Field(..., description="Routine, Urgent, or Emergency")
+    clinical_justification: str = Field(..., description="Medical necessity explanation (2-3 sentences explaining why procedure is needed)")
+    supporting_diagnoses: List[str] = Field(..., description="ICD-10 codes with descriptions supporting the request (e.g., ['I25.10 - Atherosclerotic heart disease'])")
+    previous_treatments: str = Field(default="None", description="Prior treatments attempted, if any")
+    expected_outcome: str = Field(..., description="Expected clinical outcome (e.g., 'Improved cardiac function', 'Pain relief')")
+
 class PatientCommunication(BaseModel):
     """Patient communication preferences."""
     language: str = Field(..., description="Primary language e.g. 'English', 'Spanish'")
@@ -192,7 +216,7 @@ class PatientPersona(BaseModel):
     last_name: str = Field(..., description="Patient last name")
     gender: str = Field(..., description="'male', 'female', 'other'")
     dob: str = Field(..., description="Date of birth YYYY-MM-DD")
-    address: str = Field(..., description="Full home address")
+    address: str = Field(..., description="Full home address with city, state, ZIP")
     telecom: str = Field(..., description="Main phone number e.g. '555-555-5555'")
     
     # Biometrics (New Requirements)
@@ -216,6 +240,14 @@ class PatientPersona(BaseModel):
     
     # Insurance/Payer - MANDATORY
     payer: PayerDetails = Field(..., description="Insurance/Payer details - MUST populate ALL fields including subscriber")
+    
+    # NEW: Procedure Scheduling & Location
+    expected_procedure_date: str = Field(..., description="Expected date for the procedure (YYYY-MM-DD format, MUST be 7-90 days in the FUTURE from today)")
+    procedure_requested: str = Field(..., description="Full name of the procedure being requested (e.g., 'Coronary Artery Bypass Graft')")
+    procedure_facility: FacilityDetails = Field(..., description="Healthcare facility where procedure will be performed - MUST be in same state as patient address")
+    
+    # NEW: Prior Authorization Request
+    pa_request: PARequestDetails = Field(..., description="Prior Authorization request form details")
     
     # Narrative
     bio_narrative: Optional[str] = Field(default="", description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")

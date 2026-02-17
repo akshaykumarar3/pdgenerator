@@ -7,6 +7,8 @@ import pdf_generator
 import history_manager
 import requests
 import datetime
+from datetime import timedelta
+import random
 import core.patient_db as patient_db
 import purge_manager
 from doc_validator import validate_structure
@@ -27,6 +29,91 @@ for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR]:
     if not os.path.exists(d):
         os.makedirs(d, exist_ok=True)
         # print(f"📁 Verified Folder: {d}") # Noise reduction
+
+# ===== DATE CALCULATION HELPERS =====
+
+def calculate_procedure_date() -> str:
+    """
+    Calculate a future procedure date (7-90 days from today).
+    
+    Returns:
+        ISO format date string (YYYY-MM-DD)
+    """
+    today = datetime.datetime.now()
+    days_ahead = random.randint(7, 90)
+    procedure_date = today + timedelta(days=days_ahead)
+    return procedure_date.strftime("%Y-%m-%d")
+
+def calculate_encounter_date(procedure_date_str: str, days_before: int) -> str:
+    """
+    Calculate encounter date relative to procedure date.
+    
+    Args:
+        procedure_date_str: Procedure date in YYYY-MM-DD format
+        days_before: Number of days before procedure (positive integer)
+    
+    Returns:
+        ISO format date string (YYYY-MM-DD)
+    """
+    procedure_date = datetime.datetime.strptime(procedure_date_str, "%Y-%m-%d")
+    encounter_date = procedure_date - timedelta(days=days_before)
+    return encounter_date.strftime("%Y-%m-%d")
+
+def get_today_date() -> str:
+    """
+    Get today's date in ISO format.
+    
+    Returns:
+        ISO format date string (YYYY-MM-DD)
+    """
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+# ===== DOCUMENT COHERENCE HELPERS =====
+
+def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
+    """
+    Load existing documents for context to ensure coherence.
+    
+    Args:
+        patient_id: Patient ID
+        generation_mode: Dict with 'persona', 'reports', 'summary' flags
+    
+    Returns:
+        Dict with 'persona', 'reports', 'summary' context strings
+    """
+    context = {
+        "persona": None,
+        "reports": [],
+        "summary": None,
+        "procedure_date": None,
+        "facility": None
+    }
+    
+    # Load existing persona if not generating it
+    if not generation_mode.get("persona", False):
+        existing_patient = patient_db.load_patient(patient_id)
+        if existing_patient:
+            context["persona"] = existing_patient
+            # Extract key temporal/facility info
+            context["procedure_date"] = existing_patient.get("expected_procedure_date")
+            facility_data = existing_patient.get("procedure_facility")
+            if facility_data:
+                context["facility"] = f"{facility_data.get('facility_name')}, {facility_data.get('city')}, {facility_data.get('state')}"
+    
+    # Load existing reports if not generating them
+    if not generation_mode.get("reports", False):
+        patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+        if os.path.exists(patient_report_folder):
+            report_files = [f for f in os.listdir(patient_report_folder) if f.endswith(".pdf")]
+            context["reports"] = report_files[:5]  # Limit to 5 for context
+    
+    # Load existing summary if not generating it
+    if not generation_mode.get("summary", False):
+        summary_file = os.path.join(SUMMARY_DIR, f"{patient_id}-summary.pdf")
+        if os.path.exists(summary_file):
+            context["summary"] = summary_file
+    
+    return context
 
 def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None, generation_mode: dict = None) -> str:
     """

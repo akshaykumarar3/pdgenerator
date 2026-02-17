@@ -12,6 +12,8 @@ Edit these prompts carefully to modify AI behavior.
 5. Use f-string placeholders (e.g., {case_details['procedure']}) for dynamic values
 """
 
+import datetime
+
 # ============================================================================
 # SYSTEM PROMPT - Core AI Behavior
 # ============================================================================
@@ -175,11 +177,49 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
        - Patient demographics, history, and clinical details MUST match the persona exactly.
        - Any clinical findings MUST support the diagnoses listed in the persona.
        - DO NOT introduce any new conditions, procedures, or codes not in the persona.
-    8. **TIMELINE LOGIC (CRITICAL)**:
-       - **Target Procedure Date**: Future (e.g. 2-3 weeks from now).
-       - **Historical Context**: All Consults, Labs, Imaging must be PAST dated.
-       - Example: "Today is 2025-05-01. Requesting procedure for 2025-05-20. Evidence generated from 2025-04-15."
-    9. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
+    8. **TEMPORAL CONSISTENCY (CRITICAL - NEW REQUIREMENT)**:
+       - **Today's Date**: {datetime.datetime.now().strftime("%Y-%m-%d")}
+       - **Expected Procedure Date**: MUST be 7-90 days in the FUTURE from today
+       - **Timeline Requirements**:
+         * Medical history events: 6 months to 5 years BEFORE procedure date
+         * Recent encounters/consultations: 1-12 weeks BEFORE procedure date
+         * Lab results/diagnostic tests: 1-4 weeks BEFORE procedure date
+         * ALL dates in documents must be BEFORE the procedure date
+       - **Example Timeline**:
+         * Today: 2026-02-17
+         * Procedure Date: 2026-03-15 (27 days in future)
+         * Recent Consultation: 2026-02-10 (5 days before today)
+         * Lab Results: 2026-02-05 (12 days before today)
+         * Medical History: 2024-08-15 (18 months ago)
+    9. **FACILITY LOCATION (CRITICAL - NEW REQUIREMENT)**:
+       - **Procedure Facility**: Generate a realistic healthcare facility where the procedure will be performed
+       - **Requirements**:
+         * Facility MUST be in the SAME STATE as patient's home address
+         * Use realistic hospital/clinic names (e.g., "Memorial Hospital", "St. Mary's Medical Center", "[City] Regional Hospital")
+         * Include appropriate department for procedure type (e.g., "Cardiology Department", "Surgical Center", "Radiology")
+         * Generate valid street address and 5-digit ZIP code matching the city/state
+         * Facility should be appropriate for the procedure complexity
+       - **Examples**:
+         * Patient in Boston, MA → "Massachusetts General Hospital, Cardiology Department, 55 Fruit Street, Boston, MA 02114"
+         * Patient in Los Angeles, CA → "Cedars-Sinai Medical Center, Surgical Center, 8700 Beverly Blvd, Los Angeles, CA 90048"
+         * Patient in Houston, TX → "Houston Methodist Hospital, Radiology Department, 6565 Fannin Street, Houston, TX 77030"
+    10. **PRIOR AUTHORIZATION REQUEST (CRITICAL - NEW REQUIREMENT)**:
+       - **PA Request Form**: Generate complete Prior Authorization request details
+       - **Required Fields**:
+         * `requesting_provider`: Realistic physician name with credentials (e.g., "Dr. Sarah Johnson, MD, FACC")
+         * `urgency_level`: "Routine", "Urgent", or "Emergency" (based on clinical scenario)
+         * `clinical_justification`: 2-3 sentences explaining medical necessity for the procedure
+         * `supporting_diagnoses`: List of ICD-10 codes with descriptions that support the PA request
+         * `previous_treatments`: Prior treatments attempted (or "None" if first-line treatment)
+         * `expected_outcome`: Expected clinical benefit (e.g., "Improved cardiac function", "Pain relief", "Diagnosis confirmation")
+       - **Example PA Request**:
+         * Requesting Provider: "Dr. Michael Chen, MD, FACC"
+         * Urgency: "Routine"
+         * Justification: "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning."
+         * Supporting Diagnoses: ["I25.10 - Atherosclerotic heart disease", "R07.9 - Chest pain, unspecified"]
+         * Previous Treatments: "Conservative management with beta-blockers and lifestyle modifications"
+         * Expected Outcome: "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
+    11. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
        - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
        {identity_constraint}
        - **Required Fields (ALL MUST BE FILLED)**:
@@ -195,6 +235,11 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            - `primary_diagnosis_codes`: List of primary ICD-10 codes [{{"code": "I25.10", "description": "Atherosclerotic heart disease"}}]
            - `secondary_diagnosis_codes`: List of secondary ICD-10 codes [{{"code": "R07.9", "description": "Chest pain, unspecified"}}]
            - `procedure_history`: List of past relevant procedures [{{"cpt": "93000", "description": "ECG", "date": "2024-01-15"}}]
+         - **NEW MANDATORY FIELDS (Temporal & Facility)**:
+           - `expected_procedure_date`: Future date (YYYY-MM-DD, 7-90 days from today)
+           - `procedure_requested`: Full procedure name
+           - `procedure_facility`: FacilityDetails object (name, address, city, state, ZIP, department)
+           - `pa_request`: PARequestDetails object (all PA form fields)
          - **payer (MANDATORY - UnitedHealthcare ONLY)**:
            - `payer_name`: "UnitedHealthcare"
            - `plan_name`: "Medicare Advantage"
@@ -204,7 +249,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
        - **Bio Narrative (PLAIN TEXT)**:
          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
          - MUST reference the diagnosis codes and clinical history established in the persona.
-    10. **Output**: Return the `ClinicalDataPayload` JSON.
+    12. **Output**: Return the `ClinicalDataPayload` JSON.
     """
 
 # ============================================================================

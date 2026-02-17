@@ -341,6 +341,63 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(case_table)
     Story.append(Spacer(1, 15))
     
+    # --- PRIOR AUTHORIZATION REQUEST FORM (NEW) ---
+    # Check if new PA fields exist
+    pa_request = getattr(patient_persona, 'pa_request', None)
+    procedure_facility = getattr(patient_persona, 'procedure_facility', None)
+    expected_procedure_date = getattr(patient_persona, 'expected_procedure_date', None)
+    procedure_requested = getattr(patient_persona, 'procedure_requested', None)
+    
+    if pa_request and procedure_facility and expected_procedure_date:
+        Story.append(Paragraph("II. PRIOR AUTHORIZATION REQUEST", style_h2))
+        Story.append(Spacer(1, 10))
+        
+        # Procedure Information Box
+        proc_info_text = f"""
+        <b>Requested Procedure:</b> {procedure_requested or 'N/A'}<br/>
+        <b>Expected Procedure Date:</b> {expected_procedure_date}<br/>
+        <br/>
+        <b>Procedure Facility:</b><br/>
+        {procedure_facility.facility_name}<br/>
+        {procedure_facility.department}<br/>
+        {procedure_facility.street_address}<br/>
+        {procedure_facility.city}, {procedure_facility.state} {procedure_facility.zip_code}
+        """
+        
+        proc_box = Paragraph(proc_info_text, style_normal)
+        proc_table = Table([[proc_box]], colWidths=[6.5*inch])
+        proc_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#e8f4f8")),
+            ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#3498db")),
+            ('LEFTPADDING', (0,0), (-1,-1), 10),
+            ('RIGHTPADDING', (0,0), (-1,-1), 10),
+            ('TOPPADDING', (0,0), (-1,-1), 10),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+        ]))
+        Story.append(proc_table)
+        Story.append(Spacer(1, 15))
+        
+        # PA Request Details
+        pa_data = [
+            [Paragraph("<b>AUTHORIZATION DETAILS</b>", style_h3), ""], # Changed style_label to style_h3
+            ["Requesting Provider:", getattr(pa_request, 'requesting_provider', 'N/A')],
+            ["Urgency Level:", getattr(pa_request, 'urgency_level', 'N/A')],
+            ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
+            ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
+            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None')],
+            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A')],
+        ]
+        
+        pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
+        pa_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (0,-1), colors.HexColor("#fff3cd")),
+            ('GRID', (0,0), (-1,-1), 1, colors.grey),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+        ]))
+        Story.append(pa_table)
+        Story.append(Spacer(1, 20))
+    
     # --- REMOVED: Medical Coding Summary section (as per user request) ---
     # All CPT and ICD codes are now in the case explanation text
     
@@ -791,9 +848,70 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         t.setStyle(table_style)
         Story.append(t)
         Story.append(Spacer(1, 8))
+    Story.append(Spacer(1, 20))
     
-    # --- BIO & HISTORY ---
-    Story.append(Paragraph("II. MEDICAL BIOGRAPHY & HISTORY", style_h2))
+    # --- PRIOR AUTHORIZATION REQUEST FORM (NEW) ---
+    pa_request = getattr(p, 'pa_request', None)
+    procedure_facility = getattr(p, 'procedure_facility', None)
+    expected_procedure_date = getattr(p, 'expected_procedure_date', None)
+    procedure_requested = getattr(p, 'procedure_requested', None)
+    
+    section_number = 2  # Start at II
+    
+    if pa_request and procedure_facility and expected_procedure_date:
+        Story.append(Paragraph(f"II. PRIOR AUTHORIZATION REQUEST", style_h2))
+        Story.append(Spacer(1, 10))
+        
+        # Procedure Information Box
+        proc_info_text = f"""
+        <b>Requested Procedure:</b> {procedure_requested or 'N/A'}<br/>
+        <b>Expected Procedure Date:</b> {expected_procedure_date}<br/>
+        <br/>
+        <b>Procedure Facility:</b><br/>
+        {procedure_facility.facility_name}<br/>
+        {procedure_facility.department}<br/>
+        {procedure_facility.street_address}<br/>
+        {procedure_facility.city}, {procedure_facility.state} {procedure_facility.zip_code}
+        """
+        
+        proc_box = Paragraph(proc_info_text, style_normal)
+        proc_table = Table([[proc_box]], colWidths=[6.5*inch])
+        proc_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#e8f4f8")),
+            ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#3498db")),
+            ('LEFTPADDING', (0,0), (-1,-1), 10),
+            ('RIGHTPADDING', (0,0), (-1,-1), 10),
+            ('TOPPADDING', (0,0), (-1,-1), 10),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+        ]))
+        Story.append(proc_table)
+        Story.append(Spacer(1, 15))
+        
+        # PA Request Details
+        pa_data = [
+            [Paragraph("<b>AUTHORIZATION DETAILS</b>", style_h3), ""],
+            ["Requesting Provider:", getattr(pa_request, 'requesting_provider', 'N/A')],
+            ["Urgency Level:", getattr(pa_request, 'urgency_level', 'N/A')],
+            ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
+            ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
+            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None')],
+            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A')],
+        ]
+        
+        pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
+        pa_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (0,-1), colors.HexColor("#fff3cd")),
+            ('GRID', (0,0), (-1,-1), 1, colors.grey),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+        ]))
+        Story.append(pa_table)
+        Story.append(Spacer(1, 20))
+        section_number = 3  # Next section will be III
+    
+    # --- BIO NARRATIVE ---
+    section_roman = ["I", "II", "III", "IV", "V"][section_number - 1]
+    Story.append(Paragraph(f"{section_roman}. MEDICAL BIOGRAPHY & HISTORY", style_h2))
     
     if p.bio_narrative:
         for line in p.bio_narrative.split('\n'):

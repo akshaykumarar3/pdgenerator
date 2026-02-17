@@ -27,7 +27,14 @@ purge_manager.py      → Data cleanup utilities
 
 ## Key Data Models (ai_engine.py)
 
-- **PatientPersona**: FHIR-compliant patient with demographics, contacts, insurance
+- **FacilityDetails**: Healthcare facility information (name, address, city, state, ZIP, department)
+- **PARequestDetails**: Prior Authorization request form (provider, urgency, justification, diagnoses, treatments, outcome)
+- **PatientPersona**: FHIR-compliant patient with:
+  - Demographics, contacts, insurance
+  - **NEW**: `expected_procedure_date` (7-90 days future)
+  - **NEW**: `procedure_requested` (procedure name)
+  - **NEW**: `procedure_facility` (FacilityDetails object)
+  - **NEW**: `pa_request` (PARequestDetails object)
 - **GeneratedDocument**: Clinical document with title_hint, content, date
 - **ClinicalDataPayload**: Combined persona + documents + summary
 - **AnnotatorSummary**: Verification guide with case explanation, medical details, verification pointers
@@ -47,6 +54,55 @@ purge_manager.py      → Data cleanup utilities
 5. AI generates clinical data based on case context + search results
 6. Documents are validated; invalid ones get AI repair
 7. PDFs are rendered and saved
+
+## Temporal Consistency & PA Workflow
+
+### Future Procedure Dates
+
+All personas include `expected_procedure_date` (7-90 days in future) for realistic Prior Authorization workflows.
+
+**Timeline Requirements**:
+
+- Medical history: 6 months to 5 years BEFORE procedure
+- Recent encounters: 1-12 weeks BEFORE procedure
+- Lab results: 1-4 weeks BEFORE procedure
+- Procedure date: 7-90 days in FUTURE
+
+**Date Calculation Functions** (`generator.py`):
+
+```python
+calculate_procedure_date()      # Returns date 7-90 days ahead
+calculate_encounter_date(...)   # Calculates relative dates
+get_today_date()                # Returns current date
+```
+
+### Prior Authorization Request Forms
+
+Each persona includes a complete PA request section with:
+
+- `requesting_provider`: Physician with credentials
+- `urgency_level`: Routine/Urgent/Emergency
+- `clinical_justification`: Medical necessity (2-3 sentences)
+- `supporting_diagnoses`: ICD-10 codes supporting request
+- `previous_treatments`: Prior treatments attempted
+- `expected_outcome`: Expected clinical benefit
+
+### Facility Location
+
+Realistic healthcare facilities matching patient locality:
+
+- `facility_name`: Hospital/clinic name
+- `street_address`, `city`, `state`, `zip_code`: Complete address
+- `department`: Appropriate for procedure type
+- **Constraint**: Facility MUST be in same state as patient
+
+### Document Coherence
+
+`load_existing_context()` function ensures consistency across generation modes:
+
+- Extracts `procedure_date` and `facility` from existing persona
+- Reports/summaries reference same facility and dates
+- No contradictory information across documents
 
 ## Configuration
 
