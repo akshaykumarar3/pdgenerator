@@ -341,7 +341,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(case_table)
     Story.append(Spacer(1, 15))
     
-    # --- PRIOR AUTHORIZATION REQUEST FORM (NEW) ---
+    # --- PRIOR AUTHORIZATION REQUEST FORM ---
     # Check if new PA fields exist
     pa_request = getattr(patient_persona, 'pa_request', None)
     procedure_facility = getattr(patient_persona, 'procedure_facility', None)
@@ -379,13 +379,13 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
         
         # PA Request Details
         pa_data = [
-            [Paragraph("<b>AUTHORIZATION DETAILS</b>", style_h3), ""], # Changed style_label to style_h3
-            ["Requesting Provider:", getattr(pa_request, 'requesting_provider', 'N/A')],
-            ["Urgency Level:", getattr(pa_request, 'urgency_level', 'N/A')],
+            [Paragraph("<b>PRIOR AUTHORIZATION DETAILS</b>", style_h3), ""], # Changed style_label to style_h3
+            ["Requesting Provider:", Paragraph(getattr(pa_request, 'requesting_provider', 'N/A'), style_normal)],
+            ["Urgency Level:", Paragraph(getattr(pa_request, 'urgency_level', 'N/A'), style_normal)],
             ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
             ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
-            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None')],
-            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A')],
+            ["Previous Treatments:", Paragraph(getattr(pa_request, 'previous_treatments', 'None'), style_normal)],
+            ["Expected Outcome:", Paragraph(getattr(pa_request, 'expected_outcome', 'N/A'), style_normal)],
         ]
         
         pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])

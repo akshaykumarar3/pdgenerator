@@ -8,7 +8,7 @@
     "telecom": "555-555-1212",
     "race": "Caucasian",
     "height": "6 ft 0 in",
-    "weight": "185 lbs",
+    "weight": "180 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -18,18 +18,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Carla Espinosa",
+      "relationship": "Next of Kin",
+      "name": "Cheryl Jenkins",
       "telecom": "555-123-4567",
-      "address": "2345 Doctor's Way, Chicago, IL 60614",
+      "address": "2034 Elm Street, Chicago, IL 60707",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2015-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Christopher Turk, MD",
-      "formatted_npi": "9876543210",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Sacred Heart Hospital"
     },
     "link": {
@@ -41,14 +41,35 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-999999",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2024-01-01",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2026-345678",
+      "effective_date": "2025-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
-      "deductible_amount": "$500"
+      "deductible_amount": "$1500"
     },
-    "bio_narrative": "John Dorian is a 45-year-old male residing in Chicago, Illinois. As a typically healthy individual, he enjoys an active lifestyle and maintains a balanced diet. His family history is notable for cardiovascular conditions, which has prompted regular check-ups. Recently, he visited Dr. Turk for episodes of chest discomfort that occur sporadically and are not provoked by physical exertion.\n\nHis clinical picture suggests stable ischemic heart disease. Despite the lack of acute episodes or exertional symptoms, monitoring and preventative care have been strongly advised. His previous medical engagements include regular general practice visits and an ECG conducted on January 15, 2024, which showed no concerning changes. To mitigate potential risks, he is on a regimen of aspirin, atorvastatin, and metoprolol.\n\nDr. Turk has requested a Myocardial Perfusion Imaging (SPECT) to evaluate coronary perfusion comprehensively; however, the absence of recent supporting diagnostic tests might challenge insurance authorization. John remains proactive in his health management, understanding the relevance of this imaging in addressing his symptoms and potential risks."
+    "bio_narrative": "John Dorian is a 45-year-old single male living in Chicago. He presents with persistent episodes of chest pain that have been ongoing for several months. Despite previous consultations, further diagnostics such as ECG or stress tests have not been performed. He has no significant prior medical history, though family history suggests predispositions to cardiac conditions. A healthy lifestyle enthusiast, Mr. Dorian\u2019s symptoms have been sporadic, often occurring unexpectedly. In recent weeks, these symptoms have prompted a re-evaluation towards non-invasive imaging methodologies to gain clarity on underlying issues. Mr. Dorian continues to maintain open communication with his primary care provider, Dr. Christopher Turk, at Sacred Heart Hospital, as he navigates this period of medical uncertainty.",
+    "expected_procedure_date": "2026-03-15",
+    "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
+    "procedure_facility": {
+      "facility_name": "Chicago Cardiology Center",
+      "street_address": "5678 Cardiology Lane",
+      "city": "Chicago",
+      "state": "IL",
+      "zip_code": "60614",
+      "department": "Radiology"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Christopher Turk, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Mr. John Dorian requires myocardial perfusion imaging to assess ongoing chest pain suggestive of possible coronary artery issues. Despite the lack of further diagnostic tests such as an ECG or stress tests, symptoms have persisted, necessitating further imaging.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "None",
+      "expected_outcome": "To confirm or rule out coronary artery disease as a cause for ongoing cardiac symptoms."
+    }
   },
   "220": {
     "first_name": "Tony",
@@ -517,8 +538,8 @@
     "address": "123 Park Ave, New York, NY 10171",
     "telecom": "555-0199",
     "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "140 lbs",
+    "height": "5 ft 6 in",
+    "weight": "150 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -530,11 +551,11 @@
     "contact": {
       "relationship": "Next of Kin",
       "name": "Kendall Roy",
-      "telecom": "555-1234",
-      "address": "456 Main St, New York, NY 10171",
+      "telecom": "555-1122",
+      "address": "230 Riverside Dr, New York, NY 10025",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2015-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -547,18 +568,39 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-123456789",
       "policy_number": "POL-2026-123456",
-      "effective_date": "2024-01-01",
+      "effective_date": "2022-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Siobhan Roy is a high-functioning professional with a demanding career, who has experienced recurrent episodes of chest discomfort over the past year. Despite her active lifestyle, she has been dealing with a known history of atherosclerotic heart disease, compounded by intermittent chest pains that have raised concerns about possible coronary insufficiency. Her family history is significant for cardiovascular disease, which provides further impetus for comprehensive cardiac assessment. In addressing these issues, Myocardial Perfusion Imaging has been recommended to investigate potential ischemic changes further."
+    "bio_narrative": "Siobhan Roy, a 38-year-old advertising executive residing in New York City, has been experiencing persistent episodes of chest pain over the past year. Known for her dedication to work, Siobhan has had a history of high stress levels and lives a moderately active lifestyle. Despite maintaining a balanced diet and exercise routine, she has family history of cardiovascular diseases which contribute to her current health issues. To date, Siobhan has undergone several evaluations including an ECG and stress tests that pointed towards a need for further investigation into potential coronary artery disease. The upcoming myocardial perfusion imaging is critical in determining the extent of any atherosclerotic changes in her coronary arteries, directly supporting the medical claim under her UnitedHealthcare Medicare Advantage plan. The clinical assessment thus far includes normal stress test results, but the imaging study is expected to provide more definitive insight into her cardiac function and perfusion, ensuring her continued wellbeing.",
+    "expected_procedure_date": "2026-03-28",
+    "procedure_requested": "Myocardial perfusion imaging",
+    "procedure_facility": {
+      "facility_name": "New York Presbyterian Hospital",
+      "street_address": "622 W 168th St",
+      "city": "New York",
+      "state": "NY",
+      "zip_code": "10032",
+      "department": "Cardiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Sarah Johnson, MD, FACC",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
+      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
+    }
   },
   "211": {
     "first_name": "Rosa",
@@ -568,7 +610,7 @@
     "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
     "telecom": "718-555-0101",
     "race": "Hispanic",
-    "height": "5 ft 7 in",
+    "height": "5 ft 8 in",
     "weight": "150 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
@@ -579,13 +621,13 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
+      "relationship": "Emergency Contact",
       "name": "Jake Peralta",
-      "telecom": "718-555-0181",
-      "address": "99th Precinct, 1 Police Plaza, New York, NY",
+      "telecom": "718-555-0123",
+      "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2010-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -602,14 +644,35 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-1234567890",
-      "policy_number": "POL-2026-654321",
-      "effective_date": "2025-01-01",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2026-000001",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
+      "copay_amount": "$30",
+      "deductible_amount": "$1000"
     },
-    "bio_narrative": "Rosa Diaz is a highly skilled detective at the 78th Precinct, known for her sharp wit, toughness, and no-nonsense attitude.\n\n***Medical History:***\nRosa has had recurring episodes of exertional chest pain suggestive of underlying ischemic heart conditions. Her heart evaluations have shown atherosclerotic heart disease and episodic chest discomfort (I25.10, R07.9). She has undergone multiple cardiac evaluations including ECG (CPT 93000) with nonspecific findings.\n\nHer family history indicates a predisposition to cardiac conditions, with both parents having had significant clinical cardiovascular events in their later years.\n\n***Lifestyle:***\nRosa leads an active lifestyle and practices krav maga. Despite her tough exterior, she manages her work-related stress effectively through regular physical activity and enjoys spending her downtime reading in quiet environments like her precinct's rooftop.\n\nRosa is unmarried and her next of kin is her work partner Jake Peralta, indicating a supportive professional network."
+    "bio_narrative": "Rosa Diaz, a tough and direct detective working in Brooklyn's 78th Precinct, has been dealing with persistent chest pain that has prompted a deeper look into her cardiovascular health. Known for her stoic demeanor, Rosa is not one to seek medical advice unless necessary; however, the recurrence of pain, especially during her physically demanding job, led to medical consultations.\n\nHer medical history is marked by stress-related hypertension managed with beta blockers and lifestyle modifications. Despite her rigorous daily routine, she maintains a robust health profile thanks to a balanced diet and regular physical activity. Family history reveals paternal heart disease, adding to the caution needed in managing her symptoms.\n\nRosa's commitment to her health is evident in her willingness to undertake recommended diagnostic procedures and lifestyle changes, aiming to keep her at peak performance both personally and professionally.",
+    "expected_procedure_date": "2026-03-15",
+    "procedure_requested": "Stress Test",
+    "procedure_facility": {
+      "facility_name": "Brooklyn General Hospital",
+      "street_address": "514 7th Avenue",
+      "city": "Brooklyn",
+      "state": "NY",
+      "zip_code": "11215",
+      "department": "Cardiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Erin Bush, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient Rosa Diaz presents with persistent exertional chest pain and previous abnormal ECG findings necessitating a Stress Test to further evaluate coronary perfusion and detect ischemic episodes under stress.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "Initial trials with beta blockers and lifestyle adjustments.",
+      "expected_outcome": "Identify any ischemic changes during exertion to guide further treatment."
+    }
   },
   "212": {
     "first_name": "Sandor",
@@ -620,28 +683,28 @@
     "telecom": "555-839-2999",
     "race": "Caucasian",
     "height": "6 ft 6 in",
-    "weight": "220 lbs",
+    "weight": "240 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
     "communication": {
-      "language": "English",
+      "language": "Common Tongue",
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
+      "relationship": "Next of Kin",
       "name": "Gregor Clegane",
-      "telecom": "555-123-4567",
-      "address": "2 Castle Rock, King's Landing, Westeros",
+      "telecom": "555-839-3000",
+      "address": "Red Keep, King's Landing, Westeros",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2010-05-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "2233445566",
+      "formatted_npi": "1234567890",
       "managingOrganization": "King's Landing Hospital"
     },
     "link": {
@@ -653,14 +716,35 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-88888888",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2025-01-01",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2026-000123",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Sandor Clegane, famously known as the \"Hound,\" resides in King's Landing, Westeros. His towering stature and gruff demeanor are well-known. Despite his rugged life as a fighter, Sandor's recent medical history shows concerns consistent with standard health issues for someone of his age and lifestyle. A past of chest pain and diagnosed atherosclerotic heart disease (ICD-10: I25.10) has made it necessary for routine cardiac evaluations. Sandor remains vigilant about his heart health, following up on recommended diagnostics while sustaining an active lifestyle fitting his past, balancing his inherent toughness with the medical prudence advised by Dr. Jane Smith.\n\nSandor's ongoing adherence to medical recommendations and commitment to understanding his condition reflect a broader transition towards proactive health management, especially in light of his suspected coronary anomaly requiring further investigation through a Cardiac CT Angiography (CPT 75574). This modern medical challenge echoes his life's narrative of overcoming formidable obstacles with tenacity."
+    "bio_narrative": "Sandor Clegane, widely known for his formidable stature, has led a life of adventure as both swordsman and knight protector. Despite past battles, his recent health has prompted medical attention particularly concerning cardiovascular issues. With a history suggestive of cardiac concerns and now symptoms aligning with ischemic heart disease as noted by intermittent chest pain and hypertension, his current medical strategy involves imaging via Cardiac CT Angiography (CTA). The decision aligns with Sandor's preference for proactive management, reflecting his practical approach to battle both on and off the field of combat. Genetic predispositions tracked within the family, notably related to his brother Gregor, underscore the hereditary risk factors debated within his consultations.",
+    "expected_procedure_date": "2026-03-15",
+    "procedure_requested": "Cardiac CT Angiography (CTA)",
+    "procedure_facility": {
+      "facility_name": "King's Landing Regional Health Center",
+      "street_address": "770 High Road",
+      "city": "King's Landing",
+      "state": "WL",
+      "zip_code": "12345",
+      "department": "Radiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Jane Smith, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient requires extended cardiac visualization to identify potential coronary anomalies. Initial imaging was inconclusive, necessitating further detailed visualization by Cardiac CT Angiography (CTA) for comprehensive evaluation and planning of any necessary interventions.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "Medication adjustment for hypertension",
+      "expected_outcome": "Definitive identification of coronary anomalies and targeted treatment."
+    }
   },
   "213": {
     "first_name": "Frodo",
@@ -772,9 +856,9 @@
     "address": "1200 5th Ave, New York, NY 10029",
     "telecom": "212-555-0183",
     "race": "Caucasian",
-    "height": "6 ft 2 in",
-    "weight": "198 lbs",
-    "maritalStatus": "Divorced",
+    "height": "6 ft 1 in",
+    "weight": "180 lbs",
+    "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -785,16 +869,16 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Logan Roy",
-      "telecom": "212-555-0184",
-      "address": "1200 5th Ave, New York, NY 10029",
+      "telecom": "212-555-0101",
+      "address": "1000 5th Ave, New York, NY 10028",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2005-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "9876543210",
+      "formatted_npi": "0101010101",
       "managingOrganization": "Manhattan Health Services"
     },
     "link": {
@@ -806,14 +890,35 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-123456",
+      "member_id": "MBR-987654321",
+      "policy_number": "POL-2026-654321",
       "effective_date": "2025-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
+      "copay_amount": "$20",
+      "deductible_amount": "$1000"
     },
-    "bio_narrative": "Kendall Roy, a 44-year-old male, is a prominent media executive living in New York City. Known for his high-stress lifestyle, Kendall has a history of heart disease in his family. Diagnosed with dilated cardiomyopathy three years ago, Kendall has been under the care of Dr. Jane Smith at Manhattan Health Services. Despite treatment with medications including beta-blockers and ACE inhibitors, his condition remains challenging. His persistently low ejection fraction necessitates the consideration for an implantable cardioverter defibrillator (ICD) to prevent sudden cardiac complications. Kendall is supported by his father, Logan Roy, as the primary emergency contact. He is divorced and lives in New York, continuing to manage his demanding career while addressing his health needs. Fluent in English, Kendall is enrolled in a Medicare Advantage plan through UnitedHealthcare."
+    "bio_narrative": "Kendall Roy, born June 10, 1981, resides at 1200 5th Avenue, New York. A known figure in media circles, Kendall is perceived as resolute yet deeply introspective. Clinically, Kendall's journey with heart failure due to reduced ejection fraction (<35%) has been a challenge, influencing his lifestyle significantly. Despite optimal medical therapy with medications like beta-blockers and ACE inhibitors, his condition has necessitated further interventions. A hospitalization in December 2025 marked a pivotal moment, triggering the need for more aggressive strategies in managing his cardiac health. Engaging fully with his care plan under Dr. Jane Smith at Manhattan Health Services, Kendall now faces the prospect of an ICD implant to mitigate the high risk of life-threatening arrhythmias.",
+    "expected_procedure_date": "2026-03-16",
+    "procedure_requested": "Implantable Cardioverter Defibrillator (ICD) implantation",
+    "procedure_facility": {
+      "facility_name": "Mount Sinai Hospital",
+      "street_address": "1 Gustave L. Levy Place",
+      "city": "New York",
+      "state": "NY",
+      "zip_code": "10029",
+      "department": "Cardiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Jane Smith, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient Kendall Roy has an EF<35% indicative of high sudden cardiac death risk. ICD implantation is critical to prevent life-threatening arrhythmias.",
+      "supporting_diagnoses": [
+        "I50.22 - Chronic systolic heart failure",
+        "I42.9 - Cardiomyopathy, unspecified"
+      ],
+      "previous_treatments": "Optimization of heart failure medications and lifestyle modifications.",
+      "expected_outcome": "Prevention of sudden cardiac death and improved survival rates."
+    }
   },
   "216": {
     "first_name": "Charles",
@@ -927,7 +1032,7 @@
     "race": "Caucasian",
     "height": "6 ft 0 in",
     "weight": "185 lbs",
-    "maritalStatus": "Single",
+    "maritalStatus": "Divorced",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -936,18 +1041,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Meredith Grey",
-      "telecom": "206-555-1234",
-      "address": "935 Evergreen Terrace, Seattle, WA 98103",
+      "relationship": "Next of Kin",
+      "name": "Izzie Stevens",
+      "telecom": "206-555-6732",
+      "address": "1436 NW Northrup St, Seattle, WA 98109",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2009-05-19",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Richard Webber, MD",
-      "formatted_npi": "1234567890",
+      "formatted_npi": "9876543210",
       "managingOrganization": "Grey Sloan Memorial Hospital"
     },
     "link": {
@@ -955,18 +1060,38 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000001",
+      "plan_type": "Medicare",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2026-003456",
       "effective_date": "2025-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Alex Karev is a highly skilled surgeon affiliated with Grey Sloan Memorial Hospital, renowned for his abilities in pediatric surgery. Recently, Alex has been experiencing episodes of chest pain prompting further cardiological evaluation. With no significant past cardiac events, Alex's family history includes mentions of heart disease, warranting careful examination. Outside of medicine, Alex is known for his dedication and commitment to both patients and colleagues, occasionally exhibiting a gruff exterior that belies a deeply caring nature."
+    "bio_narrative": "Alex Karev is a 46-year-old male residing in Seattle, known for his background in a compelling career as a surgical resident transitioning into a prominent figure at Grey Sloan Memorial Hospital. Recently, he has experienced episodes of chest pain, primarily undiagnosed, warranting further cardiovascular evaluation. Alex's personal life is marked by tenacity in the face of adversity, balancing his dedication to medical practice with familial commitments. His medical history includes sporadic instances of chest discomfort, prompting initial ECG assessments with non-pathological results, yet his clinical narrative compels further investigation through advanced imaging techniques like Echocardiography.",
+    "expected_procedure_date": "2026-03-26",
+    "procedure_requested": "Echocardiography + Doppler and color flow",
+    "procedure_facility": {
+      "facility_name": "Grey Sloan Memorial Hospital",
+      "street_address": "525 Alaska Way S",
+      "city": "Seattle",
+      "state": "WA",
+      "zip_code": "98104",
+      "department": "Cardiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Richard Webber, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient complains of persistent chest pain without significant findings from previous ECG studies. An Echocardiography is necessary to explore potential structural or functional abnormalities in cardiac flow and function.",
+      "supporting_diagnoses": [
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "None",
+      "expected_outcome": "Clarification of symptoms and exclusion of structural abnormalities"
+    }
   },
   "219": {
     "first_name": "Christopher",
