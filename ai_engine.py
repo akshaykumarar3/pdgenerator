@@ -195,6 +195,49 @@ class PatientLink(BaseModel):
     link_type: str = Field("N/A", description="Type of link: 'replaces', 'replaced-by', 'refer', 'seealso', or 'N/A'")
 
 
+class MedicationEntry(BaseModel):
+    """A single medication record (current, past, or ongoing)."""
+    brand: str = Field(..., description="Brand name of medication e.g. 'Lipitor'")
+    generic_name: str = Field(..., description="Generic name + strength e.g. 'Atorvastatin 20mg'")
+    dosage: str = Field(..., description="Dosage instructions e.g. '1 tablet daily', 'BID'")
+    qty: str = Field(..., description="Quantity dispensed e.g. '30 tablets', '90 day supply'")
+    prescribed_by: str = Field(..., description="Prescribing physician e.g. 'Dr. Jane Smith, MD'")
+    status: str = Field(..., description="'current', 'past', or 'ongoing'")
+    start_date: str = Field(..., description="Start date YYYY-MM-DD")
+    end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
+    reason: str = Field(..., description="Clinical reason/indication for this medication")
+
+
+class AllergyEntry(BaseModel):
+    """A single allergy or adverse reaction record."""
+    allergen: str = Field(..., description="Allergen name e.g. 'Penicillin', 'Peanuts', 'Latex'")
+    allergy_type: str = Field(..., description="'Drug', 'Food', 'Environmental', 'Latex', 'Other'")
+    reaction: str = Field(..., description="Allergic reaction description e.g. 'Hives', 'Anaphylaxis', 'Rash'")
+    severity: str = Field(..., description="'Mild', 'Moderate', 'Severe', 'Life-threatening'")
+    onset_date: str = Field(default="Unknown", description="Date allergy was first recorded YYYY-MM-DD or 'Unknown'")
+
+
+class VaccinationEntry(BaseModel):
+    """A single vaccination record."""
+    vaccine_name: str = Field(..., description="Vaccine name e.g. 'Influenza', 'COVID-19 BNT162b2', 'Hepatitis B'")
+    vaccine_type: str = Field(..., description="Vaccine platform: 'Inactivated', 'mRNA', 'Live-attenuated', 'Toxoid', 'Subunit', 'Viral vector', 'Other'")
+    date_administered: str = Field(..., description="Date administered YYYY-MM-DD")
+    administered_by: str = Field(..., description="Administering provider or facility e.g. 'Dr. Smith', 'CVS Pharmacy'")
+    dose_number: str = Field(default="1", description="Dose number e.g. '1', '2', 'Booster'")
+    reason: str = Field(..., description="Reason for vaccination: 'Routine Immunization', 'Travel', 'Occupational', 'Post-exposure Prophylaxis', 'Catch-up', 'Other'")
+
+
+class TherapyEntry(BaseModel):
+    """A single therapy or behavioral health session record."""
+    therapy_type: str = Field(..., description="Type: 'Physical', 'Occupational', 'Behavioral', 'Cognitive-Behavioral (CBT)', 'Speech', 'Respiratory', 'Cardiac Rehab', 'Aquatic', 'Other'")
+    provider: str = Field(..., description="Therapist/provider name e.g. 'Dr. Amy Reed, PT'")
+    facility: str = Field(..., description="Facility or clinic name")
+    start_date: str = Field(..., description="Start date YYYY-MM-DD")
+    end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
+    frequency: str = Field(..., description="Frequency e.g. '2x/week', 'Weekly', 'Daily'")
+    status: str = Field(..., description="'Active', 'Completed', 'Discontinued'")
+    reason: str = Field(..., description="Clinical reason/referral justification")
+    notes: str = Field(default="", description="Additional clinical notes or observations")
 
 class PayerDetails(BaseModel):
     """Insurance/Payer information - ALL fields required."""
@@ -251,6 +294,29 @@ class PatientPersona(BaseModel):
     
     # Narrative
     bio_narrative: Optional[str] = Field(default="", description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
+
+    # ── NEW: Medications, Allergies, Vaccinations, Therapy ──────────────────
+    medications: List[MedicationEntry] = Field(
+        default_factory=list,
+        description="All medications (current, past, ongoing) - include brand, generic, dosage, prescribed_by, status, reason"
+    )
+    allergies: List[AllergyEntry] = Field(
+        default_factory=list,
+        description="All known allergies and adverse reactions - include allergen type and severity"
+    )
+    vaccinations: List[VaccinationEntry] = Field(
+        default_factory=list,
+        description="Complete vaccination history - include vaccine type (mRNA, Inactivated etc.) and clinical reason"
+    )
+    therapies: List[TherapyEntry] = Field(
+        default_factory=list,
+        description="Therapy and behavioral health history - include Physical, Occupational, CBT, Speech, etc."
+    )
+    behavioral_notes: Optional[str] = Field(
+        default="",
+        description="Observational behavioral notes: medication adherence, lifestyle habits, mental health flags, substance use history"
+    )
+
 
 from doc_validator import format_clinical_document
 

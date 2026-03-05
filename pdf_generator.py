@@ -909,8 +909,100 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         Story.append(Spacer(1, 20))
         section_number = 3  # Next section will be III
     
+    # --- CLINICAL HISTORY & MEDICATIONS (NEW SECTIONS) ---
+    medications_list = getattr(p, 'medications', [])
+    allergies_list = getattr(p, 'allergies', [])
+    vaccinations_list = getattr(p, 'vaccinations', [])
+    therapies_list = getattr(p, 'therapies', [])
+    
+    if medications_list or allergies_list or vaccinations_list or therapies_list:
+        section_roman = ["I", "II", "III", "IV", "V", "VI"][section_number - 1]
+        Story.append(Paragraph(f"{section_roman}. CLINICAL HISTORY & ACTIVE CARE", style_h2))
+        Story.append(Spacer(1, 10))
+        section_number += 1
+        
+        # 1. Medications
+        if medications_list:
+            Story.append(Paragraph("<b>Current & Past Medications</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            med_data = [["Medication / Generic", "Qty", "Prescriber", "Status & Dates", "Reason"]]
+            for m in medications_list:
+                m_name = m.brand_name.strip() if m.brand_name and m.brand_name.strip() else m.generic_name
+                if m.brand_name and m.generic_name: m_name = f"{m.brand_name} ({m.generic_name})"
+                dates = f"{m.start_date} to {m.end_date}"
+                med_data.append([
+                    Paragraph(m_name, style_normal),
+                    Paragraph(m.qty or "N/A", style_normal),
+                    Paragraph(m.prescribed_by or "N/A", style_normal),
+                    Paragraph(f"{m.status}<br/>{dates}", style_normal),
+                    Paragraph(m.reason or "N/A", style_normal)
+                ])
+            t = Table(med_data, colWidths=[1.8*inch, 0.6*inch, 1.2*inch, 1.3*inch, 1.5*inch])
+            t.setStyle(table_style)
+            Story.append(t)
+            Story.append(Spacer(1, 10))
+            
+        # 2. Allergies
+        if allergies_list:
+            Story.append(Paragraph("<b>Allergies & Adverse Reactions</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            alg_data = [["Allergen & Type", "Reaction", "Severity", "Onset Date"]]
+            for a in allergies_list:
+                alg_data.append([
+                    Paragraph(f"<b>{a.allergen}</b><br/>{a.allergy_type}", style_normal),
+                    Paragraph(a.reaction or "N/A", style_normal),
+                    Paragraph(a.severity_level or "N/A", style_normal),
+                    Paragraph(a.onset_date or "N/A", style_normal)
+                ])
+            t = Table(alg_data, colWidths=[2.0*inch, 2.0*inch, 1.2*inch, 1.2*inch])
+            t.setStyle(table_style)
+            Story.append(t)
+            Story.append(Spacer(1, 10))
+            
+        # 3. Vaccinations
+        if vaccinations_list:
+            Story.append(Paragraph("<b>Immunization Record</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            vax_data = [["Vaccine & Type", "Date", "Provider / Dose", "Reason"]]
+            for v in vaccinations_list:
+                vax_data.append([
+                    Paragraph(f"<b>{v.vaccine_name}</b><br/>{v.vaccine_type}", style_normal),
+                    Paragraph(v.date_administered or "N/A", style_normal),
+                    Paragraph(f"{v.administered_by or 'N/A'}<br/>Dose: {v.dose_number}", style_normal),
+                    Paragraph(v.reason or "N/A", style_normal)
+                ])
+            t = Table(vax_data, colWidths=[2.0*inch, 1.0*inch, 1.5*inch, 1.9*inch])
+            t.setStyle(table_style)
+            Story.append(t)
+            Story.append(Spacer(1, 10))
+
+        # 4. Therapies
+        if therapies_list:
+            Story.append(Paragraph("<b>Therapy & Behavioral Health</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            th_data = [["Type & Reason", "Provider / Facility", "Frequency / Status"]]
+            for th in therapies_list:
+                th_data.append([
+                    Paragraph(f"<b>{th.therapy_type}</b><br/>{th.reason or ''}", style_normal),
+                    Paragraph(f"{th.provider_name or ''}<br/>{th.facility_name or ''}", style_normal),
+                    Paragraph(f"{th.frequency or ''}<br/>{th.status or ''}", style_normal)
+                ])
+            t = Table(th_data, colWidths=[2.5*inch, 2.5*inch, 1.4*inch])
+            t.setStyle(table_style)
+            Story.append(t)
+            
+            # Behavioral Notes
+            beh_notes = getattr(p, 'behavioral_notes', None)
+            if beh_notes:
+                Story.append(Spacer(1, 5))
+                Story.append(Paragraph("<b>Behavioral Context Notes:</b>", style_normal))
+                Story.append(Spacer(1, 3))
+                Story.append(Paragraph(beh_notes, style_normal))
+                
+            Story.append(Spacer(1, 10))
+    
     # --- BIO NARRATIVE ---
-    section_roman = ["I", "II", "III", "IV", "V"][section_number - 1]
+    section_roman = ["I", "II", "III", "IV", "V", "VI"][section_number - 1]
     Story.append(Paragraph(f"{section_roman}. MEDICAL BIOGRAPHY & HISTORY", style_h2))
     
     if p.bio_narrative:

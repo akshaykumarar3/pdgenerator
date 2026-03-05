@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PD Generator — Clinical Data Studio</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f14;
+            --surface: #141720;
+            --surface2: #1c2030;
+            --surface3: #232840;
+            --border: #2a3050;
+            --border2: #3a4268;
+            --accent: #4f7fff;
+            --accent2: #6c9dff;
+            --accent-glow: rgba(79, 127, 255, .18);
+            --green: #22c55e;
+            --green-dim: rgba(34, 197, 94, .15);
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, .15);
+            --purple: #a78bfa;
+            --teal: #14b8a6;
+            --text: #e2e8f0;
+            --text2: #94a3b8;
+            --text3: #64748b;
+            --radius: 10px;
+            --radius-lg: 16px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 4px;
+        }
+
+        /* ── HEADER ── */
+        .app-header {
+            background: linear-gradient(135deg, #111827 0%, #1a2035 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, .5);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -.3px;
+        }
+
+        .logo-text span {
+            color: var(--accent2);
+        }
+
+        #status-badge {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text2);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        #status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text3);
+            transition: background .3s;
+        }
+
+        #status-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+            animation: pulse 2s infinite;
+        }
+
+        #status-dot.offline {
+            background: var(--red);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        /* ── LAYOUT ── */
+        .main {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-inner {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+            position: sticky;
+            bottom: 0;
+        }
+
+        .content {
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: border-color .2s;
+        }
+
+        .card:hover {
+            border-color: var(--border2);
+        }
+
+        .card-header {
+            padding: 14px 18px;
+            background: var(--surface3);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .card-header:hover {
+            background: #282e4a;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 18px;
+            word-wrap: break-word;
+        }
+
+        .card-body.collapsed {
+            display: none;
+        }
+
+        /* ── FORMS ── */
+        label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text2);
+            display: block;
+            margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            padding: 9px 12px;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+            word-wrap: break-word;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        select option {
+            background: var(--surface3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        /* ── CHECK PILLS ── */
+        .check-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .check-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all .2s;
+            user-select: none;
+        }
+
+        .check-pill input {
+            display: none;
+        }
+
+        .check-pill.checked {
+            background: var(--accent-glow);
+            border-color: var(--accent);
+            color: var(--accent2);
+        }
+
+        .check-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--text3);
+            transition: background .2s;
+        }
+
+        .check-pill.checked .check-dot {
+            background: var(--accent2);
+        }
+
+        /* ── TOGGLE ── */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .toggle-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text2);
+        }
+
+        .toggle-desc {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 2px;
+        }
+
+        .switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            border-radius: 11px;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .slider::before {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--text3);
+            top: 2px;
+            left: 2px;
+            transition: .3s;
+        }
+
+        .switch input:checked+.slider {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .switch input:checked+.slider::before {
+            transform: translateX(18px);
+            background: #fff;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-ghost {
+            background: var(--surface3);
+            color: var(--text2);
+            border: 1px solid var(--border);
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--border2);
+            color: var(--text);
+        }
+
+        .btn-danger {
+            background: var(--red-dim);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, .3);
+            font-size: 11px;
+            padding: 4px 9px;
+        }
+
+        .btn-danger:hover {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .btn-add {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, .25);
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+
+        .btn-add:hover {
+            background: var(--green);
+            color: #000;
+        }
+
+        .btn-generate {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            background: linear-gradient(135deg, #4f7fff, #7c3aed);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px rgba(79, 127, 255, .35);
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(79, 127, 255, .45);
+        }
+
+        .btn-generate:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── DYNAMIC TABLES ── */
+        .table-overflow {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dynamic-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+            /* Force scroll on small screens */
+        }
+
+        .dynamic-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dynamic-table td {
+            padding: 5px 4px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .dynamic-table td input,
+        .dynamic-table td select {
+            padding: 6px 8px;
+            font-size: 12px;
+            min-width: 120px;
+        }
+
+        .dynamic-table td:last-child {
+            width: 36px;
+            padding-left: 6px;
+        }
+
+        .section-add-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        /* ── LOG CONSOLE ── */
+        #log-console {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            background: #080a10;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            height: 280px;
+            overflow-y: auto;
+            color: #b0c4de;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(3px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .log-line {
+            animation: fadeIn .15s ease-in;
+        }
+
+        .log-line.success {
+            color: var(--green);
+        }
+
+        .log-line.error {
+            color: var(--red);
+        }
+
+        .log-line.warn {
+            color: var(--yellow);
+        }
+
+        .log-line.info {
+            color: var(--accent2);
+        }
+
+        /* ── PROGRESS ── */
+        #job-progress {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-wrap {
+            height: 4px;
+            background: var(--surface3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--purple));
+            border-radius: 4px;
+            animation: prog-anim 1.5s ease infinite;
+        }
+
+        @keyframes prog-anim {
+            0% {
+                width: 0%;
+                margin-left: 0%
+            }
+
+            50% {
+                width: 60%;
+                margin-left: 20%
+            }
+
+            100% {
+                width: 0%;
+                margin-left: 100%
+            }
+        }
+
+        .job-status-text {
+            font-size: 11px;
+            color: var(--text2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── OUTPUT FILES ── */
+        #output-files {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 40px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            animation: fadeIn .2s ease-in;
+            text-decoration: none;
+        }
+
+        .file-item:hover {
+            border-color: var(--accent);
+            background: #282e4a;
+        }
+
+        .file-item .file-icon {
+            font-size: 15px;
+        }
+
+        .file-type {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .file-type.report {
+            background: rgba(79, 127, 255, .15);
+            color: var(--accent2);
+        }
+
+        .file-type.persona {
+            background: rgba(167, 139, 250, .15);
+            color: var(--purple);
+        }
+
+        .file-type.summary {
+            background: rgba(20, 184, 166, .15);
+            color: var(--teal);
+        }
+
+        .file-name {
+            color: var(--text);
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .empty-msg {
+            color: var(--text3);
+            font-size: 12px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ── PATIENT SUMMARY ── */
+        #patient-summary {
+            display: none;
+            margin-top: 8px;
+            background: linear-gradient(135deg, rgba(79, 127, 255, .08), rgba(167, 139, 250, .05));
+            border: 1px solid rgba(79, 127, 255, .2);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            font-size: 12px;
+            animation: fadeIn .3s ease;
+        }
+
+        .ps-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent2);
+            margin-bottom: 6px;
+        }
+
+        .ps-row {
+            display: flex;
+            gap: 6px;
+            color: var(--text2);
+            margin-top: 3px;
+        }
+
+        .ps-label {
+            color: var(--text3);
+            font-weight: 500;
+            min-width: 70px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        .badge-green {
+            background: rgba(34, 197, 94, .12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, .25);
+        }
+
+        .badge-yellow {
+            background: rgba(245, 158, 11, .1);
+            color: var(--yellow);
+            border: 1px solid rgba(245, 158, 11, .2);
+        }
+
+        /* ── CHEVRON ── */
+        .chevron {
+            display: inline-block;
+            transition: transform .25s;
+            color: var(--text3);
+            font-size: 13px;
+        }
+
+        .chevron.open {
+            transform: rotate(180deg);
+        }
+
+        /* ── CHANGES SUMMARY PANEL ── */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .summary-block {
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+        }
+
+        .summary-block h4 {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .summary-block h4.clr-yellow {
+            color: var(--yellow);
+        }
+
+        .summary-block h4.clr-green {
+            color: var(--green);
+        }
+
+        .summary-block h4.clr-purple {
+            color: var(--purple);
+        }
+
+        .summary-block h4.clr-teal {
+            color: var(--teal);
+        }
+
+        .sum-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .sum-key {
+            color: var(--text3);
+            font-weight: 500;
+            min-width: 110px;
+            flex-shrink: 0;
+        }
+
+        .sum-val {
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .sum-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 7px;
+            border-radius: 8px;
+            margin: 2px 2px 0 0;
+        }
+
+        .tag-on {
+            background: rgba(34, 197, 94, .12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, .25);
+        }
+
+        .tag-off {
+            background: rgba(100, 116, 139, .1);
+            color: var(--text3);
+            border: 1px solid var(--border);
+        }
+
+        .tag-opt {
+            background: rgba(245, 158, 11, .1);
+            color: var(--yellow);
+            border: 1px solid rgba(245, 158, 11, .25);
+        }
+
+        .log-event {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 3px 0;
+            color: var(--text2);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .log-event:last-child {
+            border-bottom: none;
+        }
+
+        .ai-narrative {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 140px;
+            overflow-y: auto;
+        }
+
+        /* ── UTILS ── */
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .mt-12 {
+            margin-top: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ HEADER ═══════════════════════════════════════════════════════════ -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="logo-icon">🏥</div>
+            <div>
+                <div class="logo-text">PD <span>Generator</span></div>
+                <div style="font-size:10px;color:var(--text3);margin-top:-2px;">Clinical Data Studio · Texas</div>
+            </div>
+        </div>
+        <div id="status-badge">
+            <div id="status-dot"></div>
+            <span id="status-text">Connecting…</span>
+        </div>
+    </header>
+
+    <!-- ═══ MAIN ══════════════════════════════════════════════════════════════ -->
+    <div class="main">
+
+        <!-- ────────────────── SIDEBAR ────────────────── -->
+        <aside class="sidebar">
+            <div class="sidebar-inner">
+
+                <!-- Patient selector -->
+                <div>
+                    <label>🎯 Patient ID</label>
+                    <select id="patient-select" onchange="onPatientChange()">
+                        <option value="">— Select patient —</option>
+                    </select>
+                    <div id="patient-summary"></div>
+                </div>
+
+                <!-- Generation sections -->
+                <div>
+                    <label>📦 Generate</label>
+                    <div class="check-group">
+                        <label class="check-pill checked" onclick="togglePill(this,'gen_persona')">
+                            <input type="checkbox" id="gen_persona" checked>
+                            <div class="check-dot"></div> Persona
+                        </label>
+                        <label class="check-pill checked" onclick="togglePill(this,'gen_reports')">
+                            <input type="checkbox" id="gen_reports" checked>
+                            <div class="check-dot"></div> Reports
+                        </label>
+                        <label class="check-pill checked" onclick="togglePill(this,'gen_summary')">
+                            <input type="checkbox" id="gen_summary" checked>
+                            <div class="check-dot"></div> Summary
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PA optimization toggle -->
+                <div class="card">
+                    <div class="card-body" style="padding:12px 14px;">
+                        <div class="toggle-row">
+                            <div>
+                                <div class="toggle-label">⚡ PA Approval Optimization</div>
+                                <div class="toggle-desc">Strengthen clinical justification for likely-denied cases</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="pa-optimize">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback -->
+                <div>
+                    <label>💬 Feedback / Instructions</label>
+                    <textarea id="feedback" rows="8"
+                        placeholder="Enter detailed instructions for the AI…&#10;&#10;Examples:&#10;• Use a 55-year-old diabetic patient&#10;• Strengthen clinical justification for SPECT imaging&#10;• Add a recent hospitalization in the history&#10;• Use Tony Stark as the patient character"></textarea>
+                    <div style="font-size:10px;color:var(--text3);margin-top:4px;">Multi-line · No character limit</div>
+                </div>
+
+            </div>
+            <div class="sidebar-footer">
+                <button class="btn-generate" id="btn-generate" onclick="startGeneration()">
+                    🚀 Generate Clinical Data
+                </button>
+            </div>
+        </aside>
+
+        <!-- ────────────────── CONTENT ────────────────── -->
+        <section class="content">
+
+            <!-- MEDICATIONS -->
+            <div class="card" id="card-meds">
+                <div class="card-header" onclick="toggleCard('meds')">
+                    <div class="card-title">💊 Medications</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <span id="count-meds" style="font-size:11px;color:var(--text3);"></span>
+                        <span class="chevron open" id="chev-meds">▼</span>
+                    </div>
+                </div>
+                <div class="card-body" id="body-meds">
+                    <div class="table-overflow">
+                        <table class="dynamic-table">
+                            <thead>
+                                <tr>
+                                    <th>Brand</th>
+                                    <th>Generic / Dosage</th>
+                                    <th>Qty</th>
+                                    <th>Prescribed By</th>
+                                    <th>Status</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Reason</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-meds"></tbody>
+                        </table>
+                    </div>
+                    <div class="section-add-row">
+                        <button class="btn btn-add" onclick="addMed()">+ Add Medication</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALLERGIES -->
+            <div class="card" id="card-allergies">
+                <div class="card-header" onclick="toggleCard('allergies')">
+                    <div class="card-title">⚠️ Allergies</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <span id="count-allergies" style="font-size:11px;color:var(--text3);"></span>
+                        <span class="chevron open" id="chev-allergies">▼</span>
+                    </div>
+                </div>
+                <div class="card-body" id="body-allergies">
+                    <div class="table-overflow">
+                        <table class="dynamic-table">
+                            <thead>
+                                <tr>
+                                    <th>Allergen</th>
+                                    <th>Type</th>
+                                    <th>Reaction</th>
+                                    <th>Severity</th>
+                                    <th>Onset Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-allergies"></tbody>
+                        </table>
+                    </div>
+                    <div class="section-add-row">
+                        <button class="btn btn-add" onclick="addAllergy()">+ Add Allergy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VACCINATIONS -->
+            <div class="card" id="card-vax">
+                <div class="card-header" onclick="toggleCard('vax')">
+                    <div class="card-title">💉 Vaccinations</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <span id="count-vax" style="font-size:11px;color:var(--text3);"></span>
+                        <span class="chevron open" id="chev-vax">▼</span>
+                    </div>
+                </div>
+                <div class="card-body" id="body-vax">
+                    <div class="table-overflow">
+                        <table class="dynamic-table">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine Name</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Administered By</th>
+                                    <th>Dose #</th>
+                                    <th>Reason</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-vax"></tbody>
+                        </table>
+                    </div>
+                    <div class="section-add-row">
+                        <button class="btn btn-add" onclick="addVax()">+ Add Vaccination</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THERAPY & BEHAVIORAL HEALTH -->
+            <div class="card" id="card-therapy">
+                <div class="card-header" onclick="toggleCard('therapy')">
+                    <div class="card-title">🧠 Therapy &amp; Behavioral Health</div>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <span id="count-therapy" style="font-size:11px;color:var(--text3);"></span>
+                        <span class="chevron open" id="chev-therapy">▼</span>
+                    </div>
+                </div>
+                <div class="card-body" id="body-therapy">
+                    <div class="table-overflow">
+                        <table class="dynamic-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Provider</th>
+                                    <th>Facility</th>
+                                    <th>Frequency</th>
+                                    <th>Status</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Reason</th>
+                                    <th>Notes</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-therapy"></tbody>
+                        </table>
+                    </div>
+                    <div class="section-add-row">
+                        <button class="btn btn-add" onclick="addTherapy()">+ Add Therapy</button>
+                    </div>
+                    <div class="mt-12">
+                        <label>📝 Behavioral Notes</label>
+                        <textarea id="behavioral-notes" rows="3"
+                            placeholder="Medication adherence, lifestyle habits, substance use, mental health observations…"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENERATION LOG -->
+            <div class="card">
+                <div class="card-header" style="cursor:default;">
+                    <div class="card-title">🖥 Generation Log</div>
+                    <button class="btn btn-ghost" onclick="clearLog()">Clear</button>
+                </div>
+                <div class="card-body">
+                    <div id="job-progress">
+                        <div class="progress-bar-wrap">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <div class="job-status-text">⏳ <span id="job-status-text">Running…</span></div>
+                    </div>
+                    <div id="log-console"><span style="color:var(--text3);">Awaiting generation…</span></div>
+                </div>
+            </div>
+
+            <!-- CHANGES SUMMARY (shown after generation) -->
+            <div class="card" id="changes-panel" style="display:none;">
+                <div class="card-header" style="cursor:default;">
+                    <div class="card-title">📋 Generation Summary — What Changed</div>
+                    <button class="btn btn-ghost"
+                        onclick="document.getElementById('changes-panel').style.display='none'">✕ Dismiss</button>
+                </div>
+                <div class="card-body" id="changes-panel-body"></div>
+            </div>
+
+            <!-- OUTPUT FILES -->
+            <div class="card">
+                <div class="card-header" style="cursor:default;">
+                    <div class="card-title">📂 Generated Output</div>
+                    <button class="btn btn-ghost" id="refresh-files-btn" onclick="refreshOutputFiles()"
+                        style="display:none;">↻ Refresh</button>
+                </div>
+                <div class="card-body">
+                    <div id="output-files">
+                        <div class="empty-msg">No files yet — run a generation to see output here</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════════ -->
+    <script>
+        /* ── CONFIG ─────────────────────────────────────────────────────────── */
+        const API = 'http://localhost:5001';
+        let currentJobId = null;
+        let pollTimer = null;
+        let logIndex = 0;
+        let currentPatient = null;
+
+        /* ── SERVER HEALTH ──────────────────────────────────────────────────── */
+        async function checkStatus() {
+            try {
+                await fetch(`${API}/api/status`, { signal: AbortSignal.timeout(3000) });
+                document.getElementById('status-dot').className = 'online';
+                document.getElementById('status-text').textContent = 'Server Online';
+            } catch {
+                document.getElementById('status-dot').className = 'offline';
+                document.getElementById('status-text').textContent = 'Server Offline';
+            }
+        }
+        setInterval(checkStatus, 5000);
+        checkStatus();
+
+        /* ── PATIENT LIST ───────────────────────────────────────────────────── */
+        async function loadPatients() {
+            try {
+                const r = await fetch(`${API}/api/patients`);
+                const data = await r.json();
+                const sel = document.getElementById('patient-select');
+                sel.innerHTML = '<option value="">— Select patient —</option>';
+                (data.patients || []).forEach(id => {
+                    const o = document.createElement('option');
+                    o.value = id; o.textContent = `Patient ${id}`;
+                    sel.appendChild(o);
+                });
+            } catch { appendLog('⚠️ Could not load patient list. Is the server running?', 'warn'); }
+        }
+        loadPatients();
+
+        /* ── PATIENT CHANGE ─────────────────────────────────────────────────── */
+        async function onPatientChange() {
+            const id = document.getElementById('patient-select').value;
+            currentPatient = id || null;
+            const sumEl = document.getElementById('patient-summary');
+            document.getElementById('refresh-files-btn').style.display = id ? 'inline-flex' : 'none';
+
+            if (!id) { sumEl.style.display = 'none'; clearAllSections(); clearOutputFiles(); return; }
+
+            try {
+                const r = await fetch(`${API}/api/patient/${id}`);
+                const data = await r.json();
+
+                if (data.found && data.data) {
+                    const p = data.data;
+                    const name = `${p.first_name || ''} ${p.last_name || ''}`.trim() || 'Unknown';
+                    sumEl.innerHTML = `
+        <div class="ps-name">${name} <span class="badge badge-green">Existing Patient</span></div>
+        <div class="ps-row"><span class="ps-label">DOB:</span>${p.dob || '—'}</div>
+        <div class="ps-row"><span class="ps-label">Gender:</span>${p.gender || '—'}</div>
+        <div class="ps-row"><span class="ps-label">Address:</span>${p.address || '—'}</div>
+        <div class="ps-row"><span class="ps-label">Insurance:</span>${(p.payer || {}).payer_name || 'UnitedHealthcare'} · ${(p.payer || {}).plan_name || '—'}</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--text3);">🔒 Identity locked — medications, allergies, vaccinations, therapies will be kept consistent</div>`;
+                    sumEl.style.display = 'block';
+
+                    /* Pre-fill tables from existing record */
+                    prefillSection('meds', p.medications || []);
+                    prefillSection('allergies', p.allergies || []);
+                    prefillSection('vax', p.vaccinations || []);
+                    prefillSection('therapy', p.therapies || []);
+                    if (p.behavioral_notes) document.getElementById('behavioral-notes').value = p.behavioral_notes;
+                } else {
+                    sumEl.innerHTML = `
+        <div class="ps-name">Patient ${id} <span class="badge badge-yellow">New Patient</span></div>
+        <div style="color:var(--text3);font-size:11px;margin-top:4px;">
+          No existing record — AI will generate a fresh Texas-based profile.<br>
+          Leave sections below blank to randomize, or fill them in to constrain.
+        </div>`;
+                    sumEl.style.display = 'block';
+                    clearAllSections();
+                }
+                refreshOutputFiles();
+            } catch { sumEl.style.display = 'none'; }
+        }
+
+        /* ── PREFILL / CLEAR ────────────────────────────────────────────────── */
+        function clearAllSections() {
+            ['meds', 'allergies', 'vax', 'therapy'].forEach(s => {
+                document.getElementById(`tbody-${s}`).innerHTML = '';
+                updateCount(s);
+            });
+            document.getElementById('behavioral-notes').value = '';
+        }
+        function prefillSection(sec, items) {
+            document.getElementById(`tbody-${sec}`).innerHTML = '';
+            const fn = { meds: addMed, allergies: addAllergy, vax: addVax, therapy: addTherapy }[sec];
+            items.forEach(item => fn && fn(item));
+            updateCount(sec);
+        }
+        function updateCount(sec) {
+            const n = document.getElementById(`tbody-${sec}`).rows.length;
+            const el = document.getElementById(`count-${sec}`);
+            if (el) el.textContent = n > 0 ? `${n} entr${n === 1 ? 'y' : 'ies'}` : '';
+        }
+
+        /* ── ADD ROW HELPERS ────────────────────────────────────────────────── */
+        function appendRow(sec, html) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = html;
+            document.getElementById(`tbody-${sec}`).appendChild(tr);
+            updateCount(sec);
+        }
+        function removeRow(btn) {
+            const tr = btn.closest('tr');
+            const sec = tr.closest('tbody').id.replace('tbody-', '');
+            tr.style.opacity = '0'; tr.style.transition = 'opacity .2s';
+            setTimeout(() => { tr.remove(); updateCount(sec); }, 200);
+        }
+        const sel = (v, opt) => v === opt ? 'selected' : '';
+        const esc = s => String(s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+
+        function addMed(d = {}) {
+            appendRow('meds', `
+    <td><input type="text" placeholder="Lipitor" value="${esc(d.brand)}"/></td>
+    <td><input type="text" placeholder="Atorvastatin 20mg" value="${esc(d.generic_name)}"/></td>
+    <td><input type="text" placeholder="30 tabs" value="${esc(d.qty)}"/></td>
+    <td><input type="text" placeholder="Dr. Smith, MD" value="${esc(d.prescribed_by)}"/></td>
+    <td><select>
+      <option value="current" ${sel(d.status, 'current')}>Current</option>
+      <option value="past" ${sel(d.status, 'past')}>Past</option>
+      <option value="ongoing" ${sel(d.status, 'ongoing')}>Ongoing</option>
+    </select></td>
+    <td><input type="date" value="${esc(d.start_date)}"/></td>
+    <td><input type="text" placeholder="ongoing" value="${esc(d.end_date || 'ongoing')}"/></td>
+    <td><input type="text" placeholder="Reason…" value="${esc(d.reason)}"/></td>
+    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
+        }
+
+        function addAllergy(d = {}) {
+            appendRow('allergies', `
+    <td><input type="text" placeholder="Penicillin" value="${esc(d.allergen)}"/></td>
+    <td><select>
+      <option value="Drug" ${sel(d.allergy_type, 'Drug')}>Drug</option>
+      <option value="Food" ${sel(d.allergy_type, 'Food')}>Food</option>
+      <option value="Environmental" ${sel(d.allergy_type, 'Environmental')}>Environmental</option>
+      <option value="Latex" ${sel(d.allergy_type, 'Latex')}>Latex</option>
+      <option value="Other" ${sel(d.allergy_type, 'Other')}>Other</option>
+    </select></td>
+    <td><input type="text" placeholder="Hives, Anaphylaxis…" value="${esc(d.reaction)}"/></td>
+    <td><select>
+      <option value="Mild" ${sel(d.severity, 'Mild')}>Mild</option>
+      <option value="Moderate" ${sel(d.severity, 'Moderate')}>Moderate</option>
+      <option value="Severe" ${sel(d.severity, 'Severe')}>Severe</option>
+      <option value="Life-threatening" ${sel(d.severity, 'Life-threatening')}>Life-threatening</option>
+    </select></td>
+    <td><input type="date" value="${esc(d.onset_date)}"/></td>
+    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
+        }
+
+        function addVax(d = {}) {
+            appendRow('vax', `
+    <td><input type="text" placeholder="Influenza" value="${esc(d.vaccine_name)}"/></td>
+    <td><select>
+      <option value="Inactivated" ${sel(d.vaccine_type, 'Inactivated')}>Inactivated</option>
+      <option value="mRNA" ${sel(d.vaccine_type, 'mRNA')}>mRNA</option>
+      <option value="Live-attenuated" ${sel(d.vaccine_type, 'Live-attenuated')}>Live-attenuated</option>
+      <option value="Toxoid" ${sel(d.vaccine_type, 'Toxoid')}>Toxoid</option>
+      <option value="Subunit" ${sel(d.vaccine_type, 'Subunit')}>Subunit</option>
+      <option value="Viral vector" ${sel(d.vaccine_type, 'Viral vector')}>Viral vector</option>
+      <option value="Other" ${sel(d.vaccine_type, 'Other')}>Other</option>
+    </select></td>
+    <td><input type="date" value="${esc(d.date_administered)}"/></td>
+    <td><input type="text" placeholder="CVS Pharmacy" value="${esc(d.administered_by)}"/></td>
+    <td><input type="text" placeholder="1" style="width:54px" value="${esc(d.dose_number || '1')}"/></td>
+    <td><select>
+      <option value="Routine Immunization" ${sel(d.reason, 'Routine Immunization')}>Routine</option>
+      <option value="Travel" ${sel(d.reason, 'Travel')}>Travel</option>
+      <option value="Occupational" ${sel(d.reason, 'Occupational')}>Occupational</option>
+      <option value="Post-exposure Prophylaxis" ${sel(d.reason, 'Post-exposure Prophylaxis')}>Post-exposure</option>
+      <option value="Catch-up" ${sel(d.reason, 'Catch-up')}>Catch-up</option>
+    </select></td>
+    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
+        }
+
+        function addTherapy(d = {}) {
+            appendRow('therapy', `
+    <td><select>
+      <option value="Physical"                  ${sel(d.therapy_type, 'Physical')}>Physical</option>
+      <option value="Occupational"              ${sel(d.therapy_type, 'Occupational')}>Occupational</option>
+      <option value="Behavioral"                ${sel(d.therapy_type, 'Behavioral')}>Behavioral</option>
+      <option value="Cognitive-Behavioral (CBT)"${sel(d.therapy_type, 'Cognitive-Behavioral (CBT)')}>CBT</option>
+      <option value="Speech"                    ${sel(d.therapy_type, 'Speech')}>Speech</option>
+      <option value="Respiratory"               ${sel(d.therapy_type, 'Respiratory')}>Respiratory</option>
+      <option value="Cardiac Rehab"             ${sel(d.therapy_type, 'Cardiac Rehab')}>Cardiac Rehab</option>
+      <option value="Aquatic"                   ${sel(d.therapy_type, 'Aquatic')}>Aquatic</option>
+      <option value="Other"                     ${sel(d.therapy_type, 'Other')}>Other</option>
+    </select></td>
+    <td><input type="text" placeholder="Dr. Amy Reed, PT" value="${esc(d.provider)}"/></td>
+    <td><input type="text" placeholder="TX Rehab Center" value="${esc(d.facility)}"/></td>
+    <td><input type="text" placeholder="2x/week" value="${esc(d.frequency)}"/></td>
+    <td><select>
+      <option value="Active"        ${sel(d.status, 'Active')}>Active</option>
+      <option value="Completed"     ${sel(d.status, 'Completed')}>Completed</option>
+      <option value="Discontinued"  ${sel(d.status, 'Discontinued')}>Discontinued</option>
+    </select></td>
+    <td><input type="date" value="${esc(d.start_date)}"/></td>
+    <td><input type="text" placeholder="ongoing" value="${esc(d.end_date || 'ongoing')}"/></td>
+    <td><input type="text" placeholder="Referral reason…" value="${esc(d.reason)}"/></td>
+    <td><input type="text" placeholder="Notes…" value="${esc(d.notes)}"/></td>
+    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
+        }
+
+        /* ── CARD TOGGLE ────────────────────────────────────────────────────── */
+        function toggleCard(id) {
+            const body = document.getElementById(`body-${id}`);
+            const chev = document.getElementById(`chev-${id}`);
+            const col = body.classList.toggle('collapsed');
+            if (chev) chev.classList.toggle('open', !col);
+        }
+
+        /* ── CHECK PILLS ────────────────────────────────────────────────────── */
+        function togglePill(label, cbId) {
+            const cb = document.getElementById(cbId);
+            cb.checked = !cb.checked;
+            label.classList.toggle('checked', cb.checked);
+        }
+
+        /* ── COLLECT DATA ───────────────────────────────────────────────────── */
+        function collectRows(sec) {
+            return [...document.getElementById(`tbody-${sec}`).rows].map(tr => {
+                const inputs = [...tr.querySelectorAll('input,select')];
+                return inputs.reduce((obj, el, i) => ({ ...obj, [i]: el.value }), {});
+            });
+        }
+        function collectMeds() {
+            return [...document.getElementById('tbody-meds').rows].map(tr => {
+                const i = tr.querySelectorAll('input,select');
+                return {
+                    brand: i[0].value, generic_name: i[1].value, qty: i[2].value,
+                    prescribed_by: i[3].value, status: i[4].value, start_date: i[5].value,
+                    end_date: i[6].value, reason: i[7].value
+                };
+            });
+        }
+        function collectAllergies() {
+            return [...document.getElementById('tbody-allergies').rows].map(tr => {
+                const i = tr.querySelectorAll('input,select');
+                return {
+                    allergen: i[0].value, allergy_type: i[1].value, reaction: i[2].value,
+                    severity: i[3].value, onset_date: i[4].value
+                };
+            });
+        }
+        function collectVax() {
+            return [...document.getElementById('tbody-vax').rows].map(tr => {
+                const i = tr.querySelectorAll('input,select');
+                return {
+                    vaccine_name: i[0].value, vaccine_type: i[1].value, date_administered: i[2].value,
+                    administered_by: i[3].value, dose_number: i[4].value, reason: i[5].value
+                };
+            });
+        }
+        function collectTherapies() {
+            return [...document.getElementById('tbody-therapy').rows].map(tr => {
+                const i = tr.querySelectorAll('input,select');
+                return {
+                    therapy_type: i[0].value, provider: i[1].value, facility: i[2].value,
+                    frequency: i[3].value, status: i[4].value, start_date: i[5].value,
+                    end_date: i[6].value, reason: i[7].value, notes: i[8].value
+                };
+            });
+        }
+
+        /* ── GENERATE ───────────────────────────────────────────────────────── */
+        async function startGeneration() {
+            const patientId = document.getElementById('patient-select').value;
+            if (!patientId) { alert('Please select a patient first.'); return; }
+
+            const btn = document.getElementById('btn-generate');
+            btn.disabled = true; btn.textContent = '⏳ Generating…';
+            clearLog(); showProgress(true);
+            document.getElementById('changes-panel').style.display = 'none';
+
+            const payload = {
+                patient_id: patientId,
+                feedback: document.getElementById('feedback').value.trim(),
+                generation_mode: {
+                    persona: document.getElementById('gen_persona').checked,
+                    reports: document.getElementById('gen_reports').checked,
+                    summary: document.getElementById('gen_summary').checked,
+                },
+                pa_optimize: document.getElementById('pa-optimize').checked,
+                medications: collectMeds().filter(m => m.brand || m.generic_name),
+                allergies: collectAllergies().filter(a => a.allergen),
+                vaccinations: collectVax().filter(v => v.vaccine_name),
+                therapies: collectTherapies().filter(t => t.therapy_type),
+                behavioral_notes: document.getElementById('behavioral-notes').value.trim(),
+            };
+
+            try {
+                const r = await fetch(`${API}/api/generate`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const data = await r.json();
+                if (!data.job_id) throw new Error(data.error || 'No job_id returned');
+                currentJobId = data.job_id; logIndex = 0;
+                appendLog(`📋 Job started: ${data.job_id}`, 'info');
+                startPolling();
+            } catch (e) {
+                appendLog(`❌ Failed to start: ${e.message}`, 'error');
+                btn.disabled = false; btn.textContent = '🚀 Generate Clinical Data';
+                showProgress(false);
+            }
+        }
+
+        /* ── POLLING ────────────────────────────────────────────────────────── */
+        function startPolling() {
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = setInterval(pollJob, 2000);
+        }
+        async function pollJob() {
+            if (!currentJobId) return;
+            try {
+                const r = await fetch(`${API}/api/job/${currentJobId}?since=${logIndex}`);
+                const data = await r.json();
+
+                (data.logs || []).forEach(line => appendLog(line));
+                logIndex = data.log_total;
+                document.getElementById('job-status-text').textContent = `Status: ${data.status}`;
+
+                if (data.status === 'done' || data.status === 'error') {
+                    clearInterval(pollTimer); pollTimer = null; showProgress(false);
+                    const btn = document.getElementById('btn-generate');
+                    btn.disabled = false; btn.textContent = '🚀 Generate Clinical Data';
+
+                    if (data.status === 'done') {
+                        appendLog('✅ Generation complete!', 'success');
+                        document.getElementById('refresh-files-btn').style.display = 'inline-flex';
+                        await refreshOutputFiles();
+                    } else {
+                        appendLog('❌ Generation failed.', 'error');
+                    }
+                    buildSummaryPanel(data);
+                }
+            } catch (e) { appendLog(`⚠️ Poll error: ${e.message}`, 'warn'); }
+        }
+
+        /* ── CHANGES SUMMARY PANEL ──────────────────────────────────────────── */
+        function buildSummaryPanel(data) {
+            const ctx = data.request_context || {};
+            const logs = data.all_logs || [];
+            const succeeded = data.status === 'done';
+            const panel = document.getElementById('changes-panel');
+            const body = document.getElementById('changes-panel-body');
+
+            /* Milestone log lines */
+            const milestones = [/🚀/, /🧠/, /📄.*generat/i, /✅.*creat|saved|complet/i,
+                /👤.*persona/i, /📊.*annotator/i, /💾.*saved/i,
+                /Processing.*patient/i, /Case Found/i, /History Found/i];
+            const keyLines = logs.filter(l => milestones.some(p => p.test(l))).slice(0, 10);
+
+            /* Docs created */
+            const docsCreated = logs.filter(l => /Created:.*DOC-/i.test(l));
+            const personaOk = logs.some(l => /Persona Created:/i.test(l));
+            const summaryOk = logs.some(l => /Annotator Summary Created:/i.test(l));
+            const patientName = data.result || '(see log)';
+
+            /* Section tags */
+            const gm = ctx.generation_mode || {};
+            const secTags = [
+                { k: 'Persona', on: gm.persona },
+                { k: 'Reports', on: gm.reports },
+                { k: 'Summary', on: gm.summary },
+            ].map(s => `<span class="sum-tag ${s.on ? 'tag-on' : 'tag-off'}">${s.on ? '✓' : '✕'} ${s.k}</span>`).join('');
+
+            const dataTags = [
+                { k: `💊 ${ctx.medication_count || 0} Meds`, v: ctx.medication_count },
+                { k: `⚠️ ${ctx.allergy_count || 0} Allergies`, v: ctx.allergy_count },
+                { k: `💉 ${ctx.vaccination_count || 0} Vaccines`, v: ctx.vaccination_count },
+                { k: `🧠 ${ctx.therapy_count || 0} Therapies`, v: ctx.therapy_count },
+            ].map(d => `<span class="sum-tag ${d.v ? 'tag-on' : 'tag-off'}">${d.k}</span>`).join('');
+
+            const fbPreview = (ctx.feedback || '').slice(0, 220) || '<em style="color:var(--text3)">No feedback provided</em>';
+            const aiNote = data.changes_summary || '<em style="color:var(--text3)">AI narrative will appear here on next run once history_manager captures it.</em>';
+
+            body.innerHTML = `
+    <div style="margin-bottom:14px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;
+      background:${succeeded ? 'rgba(34,197,94,.08)' : 'rgba(239,68,68,.08)'};
+      border:1px solid ${succeeded ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'};
+      color:${succeeded ? 'var(--green)' : 'var(--red)'};">
+      ${succeeded ? `✅ Generation completed &nbsp;·&nbsp; Patient: <strong>${esc(patientName)}</strong>`
+                    : '❌ Generation encountered an error — see log for details'}
+    </div>
+    <div class="summary-grid">
+
+      <div class="summary-block">
+        <h4 class="clr-yellow">⚡ What Was Requested</h4>
+        <div class="sum-row"><span class="sum-key">Sections:</span><span class="sum-val">${secTags}</span></div>
+        <div class="sum-row"><span class="sum-key">Data provided:</span><span class="sum-val">${dataTags}</span></div>
+        <div class="sum-row"><span class="sum-key">PA Optimize:</span>
+          <span class="sum-val"><span class="sum-tag ${ctx.pa_optimize ? 'tag-opt' : 'tag-off'}">
+            ${ctx.pa_optimize ? '⚡ ON — Strongest Justification' : 'OFF'}</span></span></div>
+        <div class="sum-row" style="align-items:flex-start;">
+          <span class="sum-key">Feedback:</span>
+          <span class="sum-val" style="color:var(--text2);">${fbPreview}${(ctx.feedback || '').length > 220 ? '…' : ''}</span>
+        </div>
+      </div>
+
+      <div class="summary-block">
+        <h4 class="clr-green">✅ What Was Produced</h4>
+        <div class="sum-row"><span class="sum-key">Patient name:</span><span class="sum-val">${esc(patientName)}</span></div>
+        <div class="sum-row"><span class="sum-key">Reports:</span>
+          <span class="sum-val">${docsCreated.length ? docsCreated.length + ' document(s)' : '—'}</span></div>
+        ${docsCreated.map(l => `<div class="log-event">📄 ${esc(l.replace(/.*Created:/, '').trim())}</div>`).join('')}
+        <div class="sum-row"><span class="sum-key">Persona:</span><span class="sum-val">${personaOk ? '✓ Created' : '—'}</span></div>
+        <div class="sum-row"><span class="sum-key">Summary:</span><span class="sum-val">${summaryOk ? '✓ Created' : '—'}</span></div>
+      </div>
+
+      <div class="summary-block">
+        <h4 class="clr-teal">📍 Key Events</h4>
+        ${keyLines.length
+                    ? keyLines.map(l => `<div class="log-event">${esc(l)}</div>`).join('')
+                    : '<span style="color:var(--text3);font-size:12px;">No milestone events captured</span>'}
+      </div>
+
+      <div class="summary-block">
+        <h4 class="clr-purple">🧠 AI Changes Narrative</h4>
+        <div class="ai-narrative">${aiNote}</div>
+      </div>
+
+    </div>`;
+
+            panel.style.display = 'block';
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        /* ── OUTPUT FILES ───────────────────────────────────────────────────── */
+        async function refreshOutputFiles() {
+            const id = currentPatient || document.getElementById('patient-select').value;
+            if (!id) return;
+            try {
+                const r = await fetch(`${API}/api/output/${id}`);
+                const data = await r.json();
+                renderOutputFiles(data.files || []);
+            } catch { }
+        }
+        function renderOutputFiles(files) {
+            const el = document.getElementById('output-files');
+            if (!files.length) {
+                el.innerHTML = '<div class="empty-msg">No generated files yet</div>';
+                return;
+            }
+
+            const id = currentPatient || document.getElementById('patient-select').value;
+
+            el.innerHTML = files.map(f => `
+                <a href="${API}/api/download/${id}/${f.type}/${f.name}" target="_blank" class="file-item">
+                    <span class="file-icon">📄</span>
+                    <span class="file-type ${f.type}">${f.type}</span>
+                    <span class="file-name">${esc(f.name)}</span>
+                </a>
+            `).join('');
+        }
+        function clearOutputFiles() {
+            document.getElementById('output-files').innerHTML = '<div class="empty-msg">No files yet — run a generation to see output here</div>';
+        }
+
+        /* ── LOG ────────────────────────────────────────────────────────────── */
+        function appendLog(text, cls = '') {
+            const con = document.getElementById('log-console');
+            if (con.querySelector('span[style]')) con.innerHTML = '';
+            const line = document.createElement('div');
+            if (!cls) {
+                if (/✅|success|complete/i.test(text)) cls = 'success';
+                else if (/❌|error|failed/i.test(text)) cls = 'error';
+                else if (/⚠️|warn/i.test(text)) cls = 'warn';
+                else if (/🚀|📋|📄|💾|📊|👤|🧠/i.test(text)) cls = 'info';
+            }
+            line.className = `log-line ${cls}`;
+            line.textContent = text;
+            con.appendChild(line);
+            con.scrollTop = con.scrollHeight;
+        }
+        function clearLog() {
+            document.getElementById('log-console').innerHTML = '<span style="color:var(--text3);">Log cleared.</span>';
+            logIndex = 0;
+        }
+        function showProgress(show) {
+            document.getElementById('job-progress').style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+
+</html>

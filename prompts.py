@@ -32,12 +32,37 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
 7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
 
+=== MANDATORY PERSONA SECTIONS ===
+Every generated patient persona MUST include ALL of the following sections. No empty lists allowed for new patients:
+
+A. **Medications** (5-10 entries typical):
+   - Mix of current, past, and ongoing medications appropriate for the patient's conditions
+   - Include brand name, generic + dosage, qty, prescribing physician, status, start/end dates, clinical reason
+   - Medications must align with ICD-10 diagnoses in the persona
+
+B. **Allergies** (1-5 entries typical):
+   - Include drug, food, and/or environmental allergies as clinically appropriate
+   - For each: allergen, allergy_type (Drug/Food/Environmental/Latex/Other), reaction, severity, onset_date
+
+C. **Vaccinations** (3-10 entries typical - full history):
+   - Include routine + condition-specific vaccines
+   - For each: vaccine_name, vaccine_type (Inactivated/mRNA/Live-attenuated/Toxoid/Subunit/Viral vector)
+   - MUST include dose_number and reason (Routine Immunization/Travel/Occupational/Post-exposure Prophylaxis/Catch-up)
+
+D. **Therapies** (0-4 entries as clinically appropriate):
+   - Physical therapy, occupational therapy, behavioral/CBT therapy, speech therapy, cardiac rehab, etc.
+   - For each: therapy_type, provider, facility, frequency, status (Active/Completed/Discontinued), reason, notes
+
+E. **Behavioral Notes**:
+   - Concise free-text observations: medication adherence, lifestyle habits, mental health flags, substance use history
+
 === PERSONA DOCUMENT AS SOURCE OF TRUTH ===
 **CRITICAL**: The patient_persona document serves as the SINGLE SOURCE OF TRUTH. All generated reports MUST:
 - Reference ONLY the CPT codes, diagnosis codes (ICD-10), and procedures explicitly defined in the persona.
 - Maintain 100% consistency with persona demographics, medical history, and clinical details.
 - NEVER introduce new conditions, procedures, or codes not established in the persona.
 - Use the EXACT same coding throughout all documents.
+- Reference medications, allergies, and therapy history where clinically relevant.
 
 === CRITICAL PROJECT CONSTRAINTS ===
 A. **Data Density (DYNAMIC)**:
@@ -58,7 +83,15 @@ E. **INSURANCE REQUIREMENT**:
    - Payer: ALWAYS "UnitedHealthcare" (UHC).
    - Plan Name: "Medicare Advantage".
    - Include realistic member IDs, group IDs, policy numbers.
+F. **GEOGRAPHIC CONSTRAINT (MANDATORY — ALL PATIENTS)**:
+   - ALL patients MUST be located in **Texas, USA**.
+   - Patient home address: must be a real Texas city (e.g., Houston, Dallas, San Antonio, Austin, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Lubbock).
+   - Procedure facility: MUST be in Texas. Use real Texas hospitals (e.g., "Houston Methodist Hospital", "UT Southwestern Medical Center, Dallas", "Baylor Scott & White Medical Center, Temple", "Texas Children's Hospital, Houston", "Memorial Hermann, Houston").
+   - Managing organization / GP clinic: MUST be in Texas.
+   - Emergency contact address: MUST be in Texas (or adjacent state if clinically sensible).
+   - State code in all addresses: ALWAYS "TX".
 """
+
 
 # ============================================================================
 # CLINICAL DATA GENERATION PROMPT - Main Document Generation
@@ -246,11 +279,39 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
            - `plan_type`: "Medicare Advantage"
            - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
            - All other payer fields (deductible, copay, effective_date)
-       - **Bio Narrative (PLAIN TEXT)**:
-         - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
-         - MUST reference the diagnosis codes and clinical history established in the persona.
-    12. **Output**: Return the `ClinicalDataPayload` JSON.
-    """
+        - **Bio Narrative (PLAIN TEXT)**:
+          - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
+          - MUST reference the diagnosis codes and clinical history established in the persona.
+     12. **MEDICATIONS (MANDATORY — min 3 entries)**:
+        - ALL medications MUST be realistic and clinically appropriate for the ICD-10 diagnoses.
+        - Mix statuses: some 'current', some 'past', some 'ongoing'.
+        - Each MUST have: brand, generic_name (with strength), dosage, qty, prescribed_by (realistic physician), status, start_date, end_date, reason.
+        - If user provided medications → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
+     13. **ALLERGIES (MANDATORY — min 1 entry)**:
+        - Each MUST have: allergen, allergy_type (Drug/Food/Environmental/Latex/Other), reaction, severity, onset_date.
+        - Drug allergies should be clinically relevant (e.g., patient on penicillin-based antibiotic should NOT have penicillin allergy).
+        - If user provided allergies → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
+     14. **VACCINATIONS (MANDATORY — min 4 entries, full history)**:
+        - Include standard adult vaccines + condition-specific vaccines.
+        - Each MUST have: vaccine_name, vaccine_type (Inactivated/mRNA/Live-attenuated/Toxoid/Subunit/Viral vector/Other), date_administered, administered_by, dose_number, reason.
+        - Reason options: 'Routine Immunization', 'Travel', 'Occupational', 'Post-exposure Prophylaxis', 'Catch-up'.
+        - If user provided vaccinations → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
+     15. **THERAPIES (Generate 0-4 entries based on clinical profile)**:
+        - Types: Physical / Occupational / Behavioral / Cognitive-Behavioral (CBT) / Speech / Respiratory / Cardiac Rehab / Aquatic / Other.
+        - Each MUST have: therapy_type, provider, facility, start_date, end_date, frequency, status (Active/Completed/Discontinued), reason, notes.
+        - If user provided therapies → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
+     16. **BEHAVIORAL NOTES (MANDATORY)**:
+        - A concise paragraph covering: medication adherence behaviour, lifestyle habits (diet, exercise, smoking, alcohol), mental health flags, substance use history.
+        - Must be clinically realistic and consistent with patient's diagnoses and social history.
+        - If patient is EXISTING → reproduce behavioral_notes verbatim from locked constraint.
+     17. **PA APPROVAL STRATEGY**:
+        - If the user feedback contains \"PA APPROVAL OPTIMIZATION\" instruction:
+          → Generate all clinical documents with the STRONGEST possible medical justification.
+          → Include comprehensive clinical evidence, detailed findings, thorough rationale.
+          → Ensure ICD-10 codes and clinical history strongly support the PA request.
+          → The annotator summary will still accurately label the expected approval/denial outcome.
+     18. **Output**: Return the `ClinicalDataPayload` JSON.
+     """
 
 # ============================================================================
 # IDENTITY CONSTRAINTS - Patient Identity Generation Rules
@@ -262,17 +323,60 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
     Generates constraint for maintaining existing patient identity.
     
     WHEN TO USE: Patient already exists, updating their records.
-    EFFECT: Locks demographics, updates only clinical narrative.
+    EFFECT: Locks ALL persona fields including medications/allergies/vaccinations/therapies.
     """
+    # Build locked medication list
+    med_lock = ""
+    meds = existing_persona.get('medications', [])
+    if meds:
+        med_lines = []
+        for m in meds:
+            if isinstance(m, dict):
+                med_lines.append(f"      - [{m.get('status','').upper()}] {m.get('brand','')} ({m.get('generic_name','')}) {m.get('dosage','')} | By: {m.get('prescribed_by','')} | Reason: {m.get('reason','')}")
+        med_lock = "\n    - Medications (LOCK EXACTLY):\n" + "\n".join(med_lines)
+
+    allergy_lock = ""
+    allergies = existing_persona.get('allergies', [])
+    if allergies:
+        a_lines = []
+        for a in allergies:
+            if isinstance(a, dict):
+                a_lines.append(f"      - {a.get('allergen','')} ({a.get('allergy_type','')}) | {a.get('reaction','')} | {a.get('severity','')}")
+        allergy_lock = "\n    - Allergies (LOCK EXACTLY):\n" + "\n".join(a_lines)
+
+    vax_lock = ""
+    vaccinations = existing_persona.get('vaccinations', [])
+    if vaccinations:
+        v_lines = []
+        for v in vaccinations:
+            if isinstance(v, dict):
+                v_lines.append(f"      - {v.get('vaccine_name','')} ({v.get('vaccine_type','')}) | {v.get('date_administered','')} | Reason: {v.get('reason','')}")
+        vax_lock = "\n    - Vaccinations (LOCK EXACTLY):\n" + "\n".join(v_lines)
+
+    therapy_lock = ""
+    therapies = existing_persona.get('therapies', [])
+    if therapies:
+        t_lines = []
+        for t in therapies:
+            if isinstance(t, dict):
+                t_lines.append(f"      - [{t.get('status','').upper()}] {t.get('therapy_type','')} | {t.get('provider','')} | {t.get('frequency','')}")
+        therapy_lock = "\n    - Therapies (LOCK EXACTLY):\n" + "\n".join(t_lines)
+
+    behavioral_lock = ""
+    b_notes = existing_persona.get('behavioral_notes', '')
+    if b_notes:
+        behavioral_lock = f"\n    - Behavioral Notes (LOCK EXACTLY): {b_notes}"
+
     return f"""
-    **STRICT IDENTITY LOCK (EXISTING PATIENT):**
-    You MUST use the following demographics. DO NOT CHANGE THEM.
+    **STRICT IDENTITY LOCK (EXISTING PATIENT) — CONSISTENCY ENFORCEMENT:**
+    This patient already exists in the database. ALL fields below are IMMUTABLE. DO NOT change any of them.
+    You MUST reproduce these values verbatim in the output persona.
     - Name: {existing_persona.get('first_name')} {existing_persona.get('last_name')}
     - DOB: {existing_persona.get('dob')}
     - Gender: {existing_persona.get('gender')}
     - Address: {existing_persona.get('address')}
     - Telecom: {existing_persona.get('telecom')}
-    - Provider: {(existing_persona.get('provider') or {}).get('generalPractitioner')} ({(existing_persona.get('provider') or {}).get('managingOrganization')})
+    - Provider: {(existing_persona.get('provider') or {{}}).get('generalPractitioner')} ({(existing_persona.get('provider') or {{}}).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{behavioral_lock}
     - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}).
     """
 
