@@ -229,8 +229,17 @@ class VaccinationEntry(BaseModel):
 
 class TherapyEntry(BaseModel):
     """A single therapy or behavioral health session record."""
-    therapy_type: str = Field(..., description="Type: 'Physical', 'Occupational', 'Behavioral', 'Cognitive-Behavioral (CBT)', 'Speech', 'Respiratory', 'Cardiac Rehab', 'Aquatic', 'Other'")
+    therapy_type: str = Field(..., description=(
+        "Type: 'Physical', 'Occupational', 'Mental Health / Psychotherapy', "
+        "'Medication Management (Psychiatry)', 'Cognitive-Behavioral (CBT)', "
+        "'Dialectical Behavior (DBT)', 'EMDR', 'Group Therapy', 'Speech', "
+        "'Respiratory', 'Cardiac Rehab', 'Pulmonary Rehab', 'Aquatic', 'Other'"
+    ))
+    cpt_code: str = Field(..., description="Applicable CPT, HCPCS, or CDT code e.g. '97110', '90834', 'H0035'")
+    cpt_description: str = Field(..., description="Full description of the CPT/HCPCS/CDT code")
+    icd10_codes: List[str] = Field(default_factory=list, description="Supporting ICD-10 diagnosis codes e.g. ['M54.5 - Low back pain', 'F32.1 - Major depressive disorder']")
     provider: str = Field(..., description="Therapist/provider name e.g. 'Dr. Amy Reed, PT'")
+    provider_npi: str = Field(default="", description="Provider NPI (10 digits) if known")
     facility: str = Field(..., description="Facility or clinic name")
     start_date: str = Field(..., description="Start date YYYY-MM-DD")
     end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
@@ -238,6 +247,60 @@ class TherapyEntry(BaseModel):
     status: str = Field(..., description="'Active', 'Completed', 'Discontinued'")
     reason: str = Field(..., description="Clinical reason/referral justification")
     notes: str = Field(default="", description="Additional clinical notes or observations")
+
+
+class VitalSigns(BaseModel):
+    """Patient vital signs at a point in time. Fields may be null if not recorded."""
+    recorded_date: str = Field(..., description="Date vitals were recorded YYYY-MM-DD")
+    blood_pressure: Optional[str] = Field(None, description="e.g. '130/85 mmHg' or null if not recorded")
+    heart_rate: Optional[str] = Field(None, description="e.g. '78 bpm' or null")
+    blood_sugar_fasting: Optional[str] = Field(None, description="e.g. '95 mg/dL' or null")
+    blood_sugar_postprandial: Optional[str] = Field(None, description="2-hour post-meal glucose e.g. '140 mg/dL' or null")
+    bmi: Optional[str] = Field(None, description="e.g. '27.4 kg/m²' or null")
+    oxygen_saturation: Optional[str] = Field(None, description="e.g. '98%' or null")
+    temperature: Optional[str] = Field(None, description="e.g. '98.6°F' or null")
+    respiratory_rate: Optional[str] = Field(None, description="e.g. '16 breaths/min' or null")
+
+
+class SocialHistory(BaseModel):
+    """Patient social, lifestyle, and behavioral history. Fields may be null for some patients."""
+    tobacco_use: Optional[str] = Field(None, description="'Never', 'Former smoker - quit YYYY', 'Current - N packs/day', or null")
+    tobacco_frequency: Optional[str] = Field(None, description="How often e.g. '1 pack/day for 10 years', or null")
+    alcohol_use: Optional[str] = Field(None, description="'Non-drinker', 'Social/Occasional', 'Moderate - N drinks/week', 'Heavy', or null")
+    alcohol_frequency: Optional[str] = Field(None, description="e.g. '2-3 beers on weekends', or null")
+    illicit_drug_use: Optional[str] = Field(None, description="'None', 'Former - substance, quit YYYY', 'Current - substance', or null")
+    substance_history: Optional[str] = Field(None, description="Past substance use disorder or treatment history, or null")
+    last_medical_visit: Optional[str] = Field(None, description="Date of last appointment YYYY-MM-DD, or null")
+    last_visit_reason: Optional[str] = Field(None, description="Reason for last visit, or null")
+    missed_appointment: Optional[bool] = Field(None, description="True if patient recently missed an appointment, or null")
+    missed_appointment_reason: Optional[str] = Field(None, description="Reason appointment was missed, or null")
+    early_visit_reason: Optional[str] = Field(None, description="Reason patient came early/unscheduled, or null")
+    mental_health_history: Optional[str] = Field(None, description="Past mental health diagnoses e.g. 'Depression (2020-2022)', or null")
+    mental_health_current: Optional[str] = Field(None, description="Current mental health status / PHQ-9 / GAD-7 screening result, or null")
+    exercise_habits: Optional[str] = Field(None, description="e.g. 'Walks 3x/week', 'Sedentary', or null")
+    diet_notes: Optional[str] = Field(None, description="Dietary patterns e.g. 'Low sodium diet', 'High fat diet', or null")
+    family_history_relevant: Optional[str] = Field(None, description="Relevant family medical history, or null")
+
+
+class EncounterRecord(BaseModel):
+    """A single clinical encounter with full documentation."""
+    encounter_date: str = Field(..., description="Date of encounter YYYY-MM-DD — must follow temporal timeline")
+    encounter_type: str = Field(..., description="'Office Visit', 'ER Visit', 'Telehealth', 'Follow-up', 'Specialist Consult', 'Pre-op Evaluation'")
+    purpose_of_visit: str = Field(..., description="Primary reason patient came in — concise 1-2 sentence statement")
+    provider: str = Field(..., description="Full name and credentials of encounter provider")
+    provider_npi: str = Field(default="", description="Provider NPI if known")
+    facility: str = Field(..., description="Facility/clinic name")
+    vital_signs: Optional[VitalSigns] = Field(None, description="Vitals recorded at this encounter, or null")
+    chief_complaint: str = Field(..., description="Patient's chief complaint in their own words")
+    doctor_note: str = Field(..., description="Full SOAP note — includes HPI, Review of Systems, Physical Exam, Assessment, Plan")
+    observations: List[str] = Field(default_factory=list, description="Clinical observations made during encounter")
+    procedures_performed: List[str] = Field(default_factory=list, description="Procedures with CPT codes e.g. ['93000 - 12-lead ECG', '99213 - E&M Office Visit']")
+    diagnoses: List[str] = Field(default_factory=list, description="ICD-10 diagnoses with codes e.g. ['I25.10 - Atherosclerotic heart disease']")
+    medications_prescribed: List[str] = Field(default_factory=list, description="Medications ordered at this encounter")
+    care_team: List[str] = Field(default_factory=list, description="All providers on care team for this encounter")
+    progress_notes: str = Field(..., description="Clinical progress notes — status relative to prior visits, response to treatment, plan adjustments")
+    follow_up_instructions: str = Field(default="", description="Follow-up plan given to patient")
+
 
 class PayerDetails(BaseModel):
     """Insurance/Payer information - ALL fields required."""
@@ -295,7 +358,7 @@ class PatientPersona(BaseModel):
     # Narrative
     bio_narrative: Optional[str] = Field(default="", description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
 
-    # ── NEW: Medications, Allergies, Vaccinations, Therapy ──────────────────
+    # ── Clinical Arrays ─────────────────────────────────────────────────────
     medications: List[MedicationEntry] = Field(
         default_factory=list,
         description="All medications (current, past, ongoing) - include brand, generic, dosage, prescribed_by, status, reason"
@@ -310,11 +373,29 @@ class PatientPersona(BaseModel):
     )
     therapies: List[TherapyEntry] = Field(
         default_factory=list,
-        description="Therapy and behavioral health history - include Physical, Occupational, CBT, Speech, etc."
+        description="Therapy and behavioral health history with CPT/HCPCS codes and ICD-10 diagnoses"
     )
     behavioral_notes: Optional[str] = Field(
         default="",
         description="Observational behavioral notes: medication adherence, lifestyle habits, mental health flags, substance use history"
+    )
+
+    # ── Encounters & Social History ─────────────────────────────────────────
+    encounters: List[EncounterRecord] = Field(
+        default_factory=list,
+        description="2-5 chronological clinical encounters, each with full SOAP note, vitals, care team, and procedures"
+    )
+    social_history: Optional[SocialHistory] = Field(
+        None,
+        description="Patient social and lifestyle history — tobacco, alcohol, drug use, last visit, mental health"
+    )
+    vital_signs_current: Optional[VitalSigns] = Field(
+        None,
+        description="Most recent vital signs reading"
+    )
+    gender_specific_history: Optional[str] = Field(
+        None,
+        description="Gender-specific clinical history: OB/GYN for female patients (gravida, para, last Pap, mammogram), urologic for male (PSA, prostate)"
     )
 
 

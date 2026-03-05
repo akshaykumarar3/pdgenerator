@@ -39,7 +39,7 @@ def format_clinical_text(text: str) -> str:
 
 # ... (get_clinical_image, create_patient_summary_pdf remain same) ...
 
-def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None):
+def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     """
     Generates a PDF report for a given patient and document type.
     Embeds clinical images if relevant.
@@ -48,12 +48,12 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     # Use the passed folder directly - assuming it is the FULL path to the patient's report folder
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
-        
+
     if doc_type.startswith("DOC-"):
         filename = f"{doc_type}.pdf" if not doc_type.endswith(".pdf") else doc_type
     else:
-        filename = f"Patient_{patient_id}_{doc_type}.pdf"
-        
+        filename = f"Patient_{patient_id}_v{version}_{doc_type}.pdf"
+
     file_path = os.path.join(patient_folder, filename)
     
     doc = SimpleDocTemplate(file_path, pagesize=letter, rightMargin=50, leftMargin=50, topMargin=50, bottomMargin=50)
@@ -176,28 +176,30 @@ def get_clinical_image(doc_title: str):
     """
     return None
 
-def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None):
+
+def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: int = 1):
     """
     Creates a PDF annotator verification guide.
-    
+
     Args:
         patient_id: Patient ID
         annotator_summary: AnnotatorSummary object from AI
         case_details: Dict with case information
         patient_persona: Optional patient persona object
         output_folder: Output folder (defaults to generated_output/summary)
-    
+        version: Version number for filename
+
     Returns:
         Path to created PDF file
     """
     if output_folder is None:
         output_folder = os.path.join("generated_output", "summary")
-    
+
     # Ensure output folder exists
     os.makedirs(output_folder, exist_ok=True)
-    
-    # Output file path - directly in summary folder
-    output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}.pdf")
+
+    # Output file path — versioned
+    output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}-v{version}.pdf")
     file_path = output_path
     
     # Remove existing summary if present (user requirement: replace existing)
@@ -703,7 +705,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     doc.build(Story)
     return file_path
 
-def create_persona_pdf(patient_id: str, patient_name: str, persona: object, generated_reports: list = None, image_map: dict = None, mrn: str = "N/A", output_folder: str = "documents/personas"):
+def create_persona_pdf(patient_id: str, patient_name: str, persona: object, generated_reports: list = None, image_map: dict = None, mrn: str = "N/A", output_folder: str = "documents/personas", version: int = 1):
     """
     Generates a comprehensive Patient Master Record from Structured Data.
     - **Header**: Official Record Title.
@@ -712,10 +714,9 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
     - **Clinical Assets**: Reports & Images.
     """
     persona_folder = output_folder
-    _ensure_folder(persona_folder)
-
-    safe_name = patient_name.replace(" ", "_").replace("/", "-")
-    filename = f"{patient_id}-{safe_name}-persona.pdf"
+    os.makedirs(output_folder, exist_ok=True)
+    safe_name = patient_name.replace(' ', '_').replace('/', '-')
+    filename = f"{patient_id}-{safe_name}-persona-v{version}.pdf"
     file_path = os.path.join(persona_folder, filename)
 
     doc = SimpleDocTemplate(file_path, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
@@ -976,21 +977,29 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             Story.append(t)
             Story.append(Spacer(1, 10))
 
-        # 4. Therapies
+        # 4. Therapies (expanded — CPT codes + ICD-10)
         if therapies_list:
-            Story.append(Paragraph("<b>Therapy & Behavioral Health</b>", style_h3))
+            Story.append(Paragraph("<b>Therapy &amp; Behavioral Health</b>", style_h3))
             Story.append(Spacer(1, 5))
-            th_data = [["Type & Reason", "Provider / Facility", "Frequency / Status"]]
+            th_data = [["Type", "CPT Code", "Provider / Facility", "Frequency / Status", "ICD-10 Diagnoses"]]
             for th in therapies_list:
+                provider = getattr(th, 'provider', '') or ''
+                facility = getattr(th, 'facility', '') or ''
+                cpt_code = getattr(th, 'cpt_code', 'N/A') or 'N/A'
+                cpt_desc = getattr(th, 'cpt_description', '') or ''
+                icd_codes = getattr(th, 'icd10_codes', []) or []
+                icd_str = '<br/>'.join(icd_codes[:3]) if icd_codes else 'N/A'
                 th_data.append([
-                    Paragraph(f"<b>{th.therapy_type}</b><br/>{th.reason or ''}", style_normal),
-                    Paragraph(f"{th.provider_name or ''}<br/>{th.facility_name or ''}", style_normal),
-                    Paragraph(f"{th.frequency or ''}<br/>{th.status or ''}", style_normal)
+                    Paragraph(f"<b>{getattr(th, 'therapy_type', '')}</b><br/>{getattr(th, 'reason', '') or ''}", style_normal),
+                    Paragraph(f"<b>{cpt_code}</b><br/><i>{cpt_desc}</i>", style_normal),
+                    Paragraph(f"{provider}<br/>{facility}", style_normal),
+                    Paragraph(f"{getattr(th, 'frequency', '') or ''}<br/>{getattr(th, 'status', '') or ''}", style_normal),
+                    Paragraph(icd_str, style_normal)
                 ])
-            t = Table(th_data, colWidths=[2.5*inch, 2.5*inch, 1.4*inch])
+            t = Table(th_data, colWidths=[1.4*inch, 1.2*inch, 1.5*inch, 1.0*inch, 1.3*inch])
             t.setStyle(table_style)
             Story.append(t)
-            
+
             # Behavioral Notes
             beh_notes = getattr(p, 'behavioral_notes', None)
             if beh_notes:
@@ -998,7 +1007,80 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                 Story.append(Paragraph("<b>Behavioral Context Notes:</b>", style_normal))
                 Story.append(Spacer(1, 3))
                 Story.append(Paragraph(beh_notes, style_normal))
-                
+
+            Story.append(Spacer(1, 10))
+
+        # 5. Social History
+        sh = getattr(p, 'social_history', None)
+        if sh:
+            Story.append(Paragraph("<b>Social &amp; Lifestyle History</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            sh_data = [
+                ["Tobacco Use", getattr(sh, 'tobacco_use', None) or "(not recorded)"],
+                ["Tobacco Frequency", getattr(sh, 'tobacco_frequency', None) or "(not recorded)"],
+                ["Alcohol Use", getattr(sh, 'alcohol_use', None) or "(not recorded)"],
+                ["Alcohol Frequency", getattr(sh, 'alcohol_frequency', None) or "(not recorded)"],
+                ["Illicit Drug Use", getattr(sh, 'illicit_drug_use', None) or "(not recorded)"],
+                ["Exercise Habits", getattr(sh, 'exercise_habits', None) or "(not recorded)"],
+                ["Diet Notes", getattr(sh, 'diet_notes', None) or "(not recorded)"],
+                ["Last Medical Visit", getattr(sh, 'last_medical_visit', None) or "(not recorded)"],
+                ["Last Visit Reason", getattr(sh, 'last_visit_reason', None) or "(not recorded)"],
+                ["Mental Health History", getattr(sh, 'mental_health_history', None) or "(not recorded)"],
+                ["Mental Health (Current)", getattr(sh, 'mental_health_current', None) or "(not recorded)"],
+                ["Family History", getattr(sh, 'family_history_relevant', None) or "(not recorded)"],
+            ]
+            missed = getattr(sh, 'missed_appointment', None)
+            if missed is True:
+                sh_data.append(["Missed Appointment", f"YES — {getattr(sh, 'missed_appointment_reason', 'reason unknown') or 'reason unknown'}"])
+            elif missed is False:
+                sh_data.append(["Missed Appointment", "No"])
+            early = getattr(sh, 'early_visit_reason', None)
+            if early:
+                sh_data.append(["Early Visit Reason", early])
+            t = Table(sh_data, colWidths=[2.2*inch, 4.2*inch])
+            t.setStyle(TableStyle([
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f4f8')),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ]))
+            Story.append(t)
+            Story.append(Spacer(1, 10))
+
+        # 6. Current Vital Signs
+        vs = getattr(p, 'vital_signs_current', None)
+        if vs:
+            Story.append(Paragraph("<b>Current Vital Signs</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            vs_data = [
+                ["Recorded Date", getattr(vs, 'recorded_date', 'N/A') or 'N/A'],
+                ["Blood Pressure", getattr(vs, 'blood_pressure', None) or "(not recorded)"],
+                ["Heart Rate", getattr(vs, 'heart_rate', None) or "(not recorded)"],
+                ["BMI", getattr(vs, 'bmi', None) or "(not recorded)"],
+                ["O2 Saturation", getattr(vs, 'oxygen_saturation', None) or "(not recorded)"],
+                ["Temperature", getattr(vs, 'temperature', None) or "(not recorded)"],
+                ["Respiratory Rate", getattr(vs, 'respiratory_rate', None) or "(not recorded)"],
+                ["Blood Sugar (Fasting)", getattr(vs, 'blood_sugar_fasting', None) or "(not recorded)"],
+                ["Blood Sugar (Post-meal)", getattr(vs, 'blood_sugar_postprandial', None) or "(not recorded)"],
+            ]
+            t = Table(vs_data, colWidths=[2.2*inch, 4.2*inch])
+            t.setStyle(TableStyle([
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 9),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+                ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f5e9')),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ]))
+            Story.append(t)
+            Story.append(Spacer(1, 10))
+
+        # 7. Gender-Specific History
+        gsh = getattr(p, 'gender_specific_history', None)
+        if gsh:
+            Story.append(Paragraph("<b>Gender-Specific Medical History</b>", style_h3))
+            Story.append(Spacer(1, 5))
+            Story.append(Paragraph(gsh, style_normal))
             Story.append(Spacer(1, 10))
     
     # --- BIO NARRATIVE ---

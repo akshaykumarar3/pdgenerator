@@ -33,63 +33,83 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
 
 === MANDATORY PERSONA SECTIONS ===
-Every generated patient persona MUST include ALL of the following sections. No empty lists allowed for new patients:
+Every generated patient persona MUST include ALL of the following. No empty lists allowed for new patients:
 
-A. **Medications** (5-10 entries typical):
+A. **Medications** (5-10 entries):
    - Mix of current, past, and ongoing medications appropriate for the patient's conditions
    - Include brand name, generic + dosage, qty, prescribing physician, status, start/end dates, clinical reason
-   - Medications must align with ICD-10 diagnoses in the persona
+   - Medications must align with ICD-10 diagnoses
 
-B. **Allergies** (1-5 entries typical):
+B. **Allergies** (1-5 entries):
    - Include drug, food, and/or environmental allergies as clinically appropriate
    - For each: allergen, allergy_type (Drug/Food/Environmental/Latex/Other), reaction, severity, onset_date
 
-C. **Vaccinations** (3-10 entries typical - full history):
+C. **Vaccinations** (3-10 entries — full history):
    - Include routine + condition-specific vaccines
-   - For each: vaccine_name, vaccine_type (Inactivated/mRNA/Live-attenuated/Toxoid/Subunit/Viral vector)
-   - MUST include dose_number and reason (Routine Immunization/Travel/Occupational/Post-exposure Prophylaxis/Catch-up)
+   - For each: vaccine_name, vaccine_type, dose_number, reason, date_administered, administered_by
 
-D. **Therapies** (0-4 entries as clinically appropriate):
-   - Physical therapy, occupational therapy, behavioral/CBT therapy, speech therapy, cardiac rehab, etc.
-   - For each: therapy_type, provider, facility, frequency, status (Active/Completed/Discontinued), reason, notes
+D. **Therapies** (0-4 entries — with procedure codes):
+   - Supported types: Physical, Occupational, Mental Health / Psychotherapy, Medication Management (Psychiatry),
+     Cognitive-Behavioral (CBT), Dialectical Behavior (DBT), EMDR, Group Therapy,
+     Speech, Respiratory, Cardiac Rehab, Pulmonary Rehab, Aquatic, Other
+   - EACH therapy MUST include: therapy_type, provider, provider_npi, facility, start_date, end_date,
+     frequency, status (Active/Completed/Discontinued), reason, notes,
+     cpt_code (CPT / HCPCS / CDT), cpt_description, icd10_codes (list of supporting ICD-10 codes)
 
-E. **Behavioral Notes**:
-   - Concise free-text observations: medication adherence, lifestyle habits, mental health flags, substance use history
+E. **Social History** (SocialHistory object — some fields may be null at random):
+   - tobacco_use, tobacco_frequency, alcohol_use, alcohol_frequency, illicit_drug_use, substance_history
+   - last_medical_visit (date), last_visit_reason
+   - missed_appointment (bool), missed_appointment_reason, early_visit_reason
+   - mental_health_history, mental_health_current (PHQ-9/GAD-7 result if applicable)
+   - exercise_habits, diet_notes, family_history_relevant
+   - RULE: Fields may be null for some patients (random), UNLESS feedback explicitly specifies them
+
+F. **Encounters** (2-5 chronological encounters — ALL required):
+   - Each encounter MUST have: encounter_date, encounter_type, purpose_of_visit, provider, provider_npi,
+     facility, chief_complaint, doctor_note (full SOAP note), vital_signs (or null),
+     observations, procedures_performed (with CPT codes), diagnoses (with ICD-10),
+     medications_prescribed, care_team, progress_notes, follow_up_instructions
+   - Encounters MUST be ordered chronologically and match the temporal timeline
+   - Encounter types: Office Visit, ER Visit, Telehealth, Follow-up, Specialist Consult, Pre-op Evaluation
+   - doctor_note MUST include: HPI, Review of Systems, Physical Exam findings, Assessment, Plan
+
+G. **Vital Signs** (VitalSigns object — fields may be null for some patients):
+   - blood_pressure, heart_rate, blood_sugar_fasting, blood_sugar_postprandial, bmi, oxygen_saturation,
+     temperature, respiratory_rate
+   - RULE: Some fields may be null at random for realism (e.g., blood sugar not recorded if not diabetic)
+   - Record current vitals in vital_signs_current AND within each encounter's vital_signs
+
+H. **Gender-Specific History** (gender_specific_history — text or null):
+   - Female: gravida/para, last Pap smear, mammogram, OB/GYN history
+   - Male: PSA, prostate screening, urologic history
+   - Other/null: if not clinically relevant
+
+I. **Behavioral Notes** (free text):
+   - Concise paragraph: medication adherence, lifestyle, mental health flags, substance use history
 
 === PERSONA DOCUMENT AS SOURCE OF TRUTH ===
-**CRITICAL**: The patient_persona document serves as the SINGLE SOURCE OF TRUTH. All generated reports MUST:
-- Reference ONLY the CPT codes, diagnosis codes (ICD-10), and procedures explicitly defined in the persona.
+**CRITICAL**: The patient_persona document is the SINGLE SOURCE OF TRUTH. All generated reports MUST:
+- Reference ONLY the CPT codes, ICD-10 codes, and procedures defined in the persona.
 - Maintain 100% consistency with persona demographics, medical history, and clinical details.
 - NEVER introduce new conditions, procedures, or codes not established in the persona.
-- Use the EXACT same coding throughout all documents.
 - Reference medications, allergies, and therapy history where clinically relevant.
+- Include per-document DOCTOR NOTES and PROGRESS NOTES based on the encounter records.
 
 === CRITICAL PROJECT CONSTRAINTS ===
 A. **Data Density (DYNAMIC)**:
    - Generate documents based on CLINICAL COMPLEXITY, NOT a fixed number.
-   - Simple cases (single procedure, straightforward): 3-4 documents.
-   - Moderate cases (multiple conditions, some history): 5-6 documents.
-   - Complex cases (chronic conditions, multiple specialists, extensive history): 7-10 documents.
-   - Each document must add unique clinical value - NO filler documents.
+   - Simple cases: 3-4 documents. Moderate: 5-6. Complex: 7-10.
+   - No filler documents.
 B. **Clinical Status**:
-   - Target Procedure must be 'requested'.
-   - Historical Procedures 'completed'.
-C. **NO AI RESIDUE**:
-   - No "[Redacted]" or "Jane Doe". Use realistic names from Pop Culture Universes (e.g. Characters).
-   - Authenticity: 100%.
-D. **NAMING CONVENTION**:
-   - Use names from: Friends, Marvel, Star Wars, etc. (as per constraints).
-E. **INSURANCE REQUIREMENT**:
-   - Payer: ALWAYS "UnitedHealthcare" (UHC).
-   - Plan Name: "Medicare Advantage".
-   - Include realistic member IDs, group IDs, policy numbers.
-F. **GEOGRAPHIC CONSTRAINT (MANDATORY — ALL PATIENTS)**:
-   - ALL patients MUST be located in **Texas, USA**.
-   - Patient home address: must be a real Texas city (e.g., Houston, Dallas, San Antonio, Austin, Fort Worth, El Paso, Arlington, Corpus Christi, Plano, Lubbock).
-   - Procedure facility: MUST be in Texas. Use real Texas hospitals (e.g., "Houston Methodist Hospital", "UT Southwestern Medical Center, Dallas", "Baylor Scott & White Medical Center, Temple", "Texas Children's Hospital, Houston", "Memorial Hermann, Houston").
-   - Managing organization / GP clinic: MUST be in Texas.
-   - Emergency contact address: MUST be in Texas (or adjacent state if clinically sensible).
-   - State code in all addresses: ALWAYS "TX".
+   - Target Procedure must be 'requested'. Historical Procedures 'completed'.
+C. **NO AI RESIDUE**: No "[Redacted]" or "Jane Doe". Use Pop Culture character names.
+D. **NAMING CONVENTION**: Use names from: Friends, Marvel, Star Wars, etc.
+E. **INSURANCE**: ALWAYS "UnitedHealthcare", Plan: "Medicare Advantage".
+F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
+   - ALL patients MUST be in **Texas, USA**.
+   - Addresses: real TX cities (Houston, Dallas, San Antonio, Austin, etc.).
+   - Facilities: real TX hospitals (Houston Methodist, UT Southwestern, etc.).
+   - State code: ALWAYS "TX".
 """
 
 
@@ -173,33 +193,36 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          - **High complexity** (e.g., chronic disease, multiple specialists, prior authorizations needed): 7-10 documents.
        - **Each document must provide UNIQUE clinical value**. No filler or redundant documents.
        - **Document types to consider**: Consult Notes, Lab Reports, Imaging Reports, Procedure Notes, Discharge Summaries, Specialist Notes, Physical Therapy Notes, Prior Authorization Requests, Referral Letters, Medication Lists, Progress Notes.
-    6. **Document Generation (CRITICAL Rules)**:
-       - Generate `documents` list with rich, detailed content.
-       - **REPORT DETAIL REQUIREMENTS**:
-         - Each report must contain comprehensive clinical information relevant to its type.
-         - Include specific findings, measurements, interpretations, and clinical impressions.
-         - Reference the CPT and ICD-10 codes from the persona where clinically appropriate.
-         - Include detailed clinical narratives, not just summary statements.
-       - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
-       - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
-       - **STRICT FORMATTING (VALIDATOR COMPLIANCE)**:
-         - **MUST START WITH**: `--- REPORT START ---`
-         - **MUST END WITH**: `--- REPORT END ---`
-         - **MUST HAVE METADATA BLOCK**:
-           ```text
-           [REPORT_METADATA]
-           PATIENT_ID: (Use Case ID)
-           MRN: (Current MRN)
-           PATIENT_NAME: (Full Name)
-           DOB: (YYYY-MM-DD)
-           REPORT_DATE: (YYYY-MM-DD from Timeline)
-           PROVIDER_NPI: (NPI from Persona)
-           CPT_CODES: (List relevant CPT codes from persona)
-           ICD10_CODES: (List relevant ICD-10 codes from persona)
-           ...
-           ```
-         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
-         - **NO TRIPLE QUOTES**: Do not use `'''`.
+     6. **Document Generation (CRITICAL Rules)**:
+        - Generate `documents` list with rich, detailed content.
+        - **NO START/END MARKERS**: Do NOT use '--- REPORT START ---' or '--- REPORT END ---'. Begin documents directly.
+        - **REPORT DETAIL REQUIREMENTS**:
+          - Each report must contain comprehensive clinical information relevant to its type.
+          - Include specific findings, measurements, interpretations, and clinical impressions.
+          - Reference the CPT and ICD-10 codes from the persona where clinically appropriate.
+          - Include detailed clinical narratives including doctor notes and progress notes.
+          - Reference relevant encounters from the patient's encounter history.
+        - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
+        - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
+        - **DOCUMENT STRUCTURE**:
+          - Header: Facility name, address, patient name, MRN, DOB, service date, provider, NPI
+          - Body: Clinical content appropriate to document type
+          - Footer: Provider signature, credentials, date
+        - **METADATA BLOCK (still required within document body)**:
+          ```text
+          [REPORT_METADATA]
+          PATIENT_ID: (Use Case ID)
+          MRN: (Current MRN)
+          PATIENT_NAME: (Full Name)
+          DOB: (YYYY-MM-DD)
+          REPORT_DATE: (YYYY-MM-DD from Timeline)
+          PROVIDER_NPI: (NPI from Persona)
+          CPT_CODES: (List relevant CPT codes from persona)
+          ICD10_CODES: (List relevant ICD-10 codes from persona)
+          ...
+          ```
+        - **NO MARKDOWN BOLD**: Do not use `**Text**`.
+        - **NO TRIPLE QUOTES**: Do not use `'''`.
        - **METADATA**:
           - `service_date`: Must be logically consistent (Historical dates for evidence, recent for request).
           - `facility_name` & `provider_name`: Realistic and consistent.
@@ -289,28 +312,71 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
         - If user provided medications → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
      13. **ALLERGIES (MANDATORY — min 1 entry)**:
         - Each MUST have: allergen, allergy_type (Drug/Food/Environmental/Latex/Other), reaction, severity, onset_date.
-        - Drug allergies should be clinically relevant (e.g., patient on penicillin-based antibiotic should NOT have penicillin allergy).
+        - Drug allergies should be clinically relevant.
         - If user provided allergies → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
      14. **VACCINATIONS (MANDATORY — min 4 entries, full history)**:
         - Include standard adult vaccines + condition-specific vaccines.
         - Each MUST have: vaccine_name, vaccine_type (Inactivated/mRNA/Live-attenuated/Toxoid/Subunit/Viral vector/Other), date_administered, administered_by, dose_number, reason.
         - Reason options: 'Routine Immunization', 'Travel', 'Occupational', 'Post-exposure Prophylaxis', 'Catch-up'.
         - If user provided vaccinations → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
-     15. **THERAPIES (Generate 0-4 entries based on clinical profile)**:
-        - Types: Physical / Occupational / Behavioral / Cognitive-Behavioral (CBT) / Speech / Respiratory / Cardiac Rehab / Aquatic / Other.
-        - Each MUST have: therapy_type, provider, facility, start_date, end_date, frequency, status (Active/Completed/Discontinued), reason, notes.
+     15. **THERAPIES (Generate 0-4 entries based on clinical profile, with procedure codes)**:
+        - Supported types: Physical, Occupational, Mental Health / Psychotherapy, Medication Management (Psychiatry),
+          CBT, DBT, EMDR, Group Therapy, Speech, Respiratory, Cardiac Rehab, Pulmonary Rehab, Aquatic, Other.
+        - Each MUST have: therapy_type, provider, provider_npi, facility, start_date, end_date, frequency,
+          status (Active/Completed/Discontinued), reason, notes,
+          cpt_code (CPT/HCPCS/CDT code e.g. '97110', '90834', 'H0035', 'G0463'),
+          cpt_description (full code description),
+          icd10_codes (list of supporting ICD-10 codes).
         - If user provided therapies → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
      16. **BEHAVIORAL NOTES (MANDATORY)**:
-        - A concise paragraph covering: medication adherence behaviour, lifestyle habits (diet, exercise, smoking, alcohol), mental health flags, substance use history.
-        - Must be clinically realistic and consistent with patient's diagnoses and social history.
-        - If patient is EXISTING → reproduce behavioral_notes verbatim from locked constraint.
-     17. **PA APPROVAL STRATEGY**:
-        - If the user feedback contains \"PA APPROVAL OPTIMIZATION\" instruction:
+        - A concise paragraph: medication adherence, lifestyle habits (diet, exercise, smoking, alcohol), mental health flags, substance use history.
+        - Must be consistent with social_history fields.
+        - If patient is EXISTING → reproduce behavioral_notes verbatim.
+     17. **SOCIAL HISTORY (SocialHistory object — MANDATORY)**:
+        - Generate social_history object with all fields. Some may be null at random (realistic variation).
+        - tobacco_use, tobacco_frequency, alcohol_use, alcohol_frequency, illicit_drug_use, substance_history
+        - last_medical_visit (YYYY-MM-DD), last_visit_reason
+        - missed_appointment (true/false/null), missed_appointment_reason, early_visit_reason
+        - mental_health_history, mental_health_current (PHQ-9/GAD-7 if applicable, else null)
+        - exercise_habits, diet_notes, family_history_relevant
+        - RULE: If feedback adds or removes a field, override the random null with the specified value.
+     18. **VITAL SIGNS (vital_signs_current — MANDATORY)**:
+        - Generate vital_signs_current. Some sub-fields may be null for realism.
+        - Required: recorded_date. Optional (randomly null): blood_pressure, heart_rate, blood_sugar_fasting,
+          blood_sugar_postprandial, bmi, oxygen_saturation, temperature, respiratory_rate.
+        - Clinically consistent (e.g., blood sugar readings present for diabetic patients).
+     19. **ENCOUNTERS (2-5 chronological encounters — MANDATORY)**:
+        - Generate encounters list ordered from oldest to most recent.
+        - Each encounter MUST have:
+          * encounter_date (YYYY-MM-DD, must respect temporal timeline)
+          * encounter_type: Office Visit / ER Visit / Telehealth / Follow-up / Specialist Consult / Pre-op Evaluation
+          * purpose_of_visit: 1-2 sentence description of why the patient came in
+          * provider + provider_npi, facility
+          * chief_complaint: patient's own words
+          * doctor_note: Full SOAP note (Subjective, Objective, Assessment, Plan) — 2-4 paragraphs
+          * vital_signs (VitalSigns object or null)
+          * observations: list of clinical observations
+          * procedures_performed: ['CPT 99213 - E&M Office Visit Level 3', '93000 - 12-lead ECG']
+          * diagnoses: ['I25.10 - Atherosclerotic heart disease']
+          * medications_prescribed: list of medications ordered
+          * care_team: list of all providers involved
+          * progress_notes: clinical progress relative to prior visits
+          * follow_up_instructions: instructions given to patient
+        - LAST encounter should be the most recent pre-procedure evaluation.
+     20. **GENDER-SPECIFIC HISTORY (gender_specific_history)**:
+        - Female patients: Include OB/GYN history (gravida/para), last Pap smear date, mammogram date.
+        - Male patients: Include PSA level (if age-appropriate), prostate screening history, urologic history.
+        - If not clinically applicable: set to null.
+     21. **DOCUMENTS — NO START/END MARKERS**:
+        - Clinical documents MUST NOT contain '--- REPORT START ---' or '--- REPORT END ---' markers.
+        - Begin documents directly with the document header (facility name, patient info, document title).
+        - Each document should include: Header, Patient Demographics, Clinical Content, Provider Signature.
+        - Documents must reference encounter records and be consistent with persona data.
+     22. **PA APPROVAL STRATEGY**:
+        - If the user feedback contains "PA APPROVAL OPTIMIZATION" instruction:
           → Generate all clinical documents with the STRONGEST possible medical justification.
           → Include comprehensive clinical evidence, detailed findings, thorough rationale.
-          → Ensure ICD-10 codes and clinical history strongly support the PA request.
-          → The annotator summary will still accurately label the expected approval/denial outcome.
-     18. **Output**: Return the `ClinicalDataPayload` JSON.
+     23. **Output**: Return the `ClinicalDataPayload` JSON.
      """
 
 # ============================================================================

@@ -1,9 +1,5 @@
 # Clinical Data Generator (v2.0)
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
-[![AI Provider](https://img.shields.io/badge/AI-Google%20Vertex%20AI-green.svg)](https://cloud.google.com/vertex-ai)
-[![Status](https://img.shields.io/badge/Status-Operational-brightgreen.svg)]()
-
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
 
@@ -11,61 +7,97 @@
 
 ## 🚀 Quick Start
 
-Already set up? Start generating immediately:
+### Option A — Web UI (Recommended)
 
-### Launch the Generator
+The fastest way to use the generator is through the interactive browser interface.
 
-**Windows:**
-
-```cmd
-run.bat
-:: OR
-python generator.py
-```
-
-**Mac / Linux:**
+**Step 1:** Start the API server
 
 ```bash
+# Mac / Linux
+API_PORT=5001 venv/bin/python api_server.py
+
+# Windows
+set API_PORT=5001 && venv\Scripts\python api_server.py
+```
+
+> **Note (macOS):** Port 5000 is reserved by AirPlay Receiver by default. Use `API_PORT=5001` or disable AirPlay Receiver in System Settings → General → AirDrop & Handoff.
+
+**Step 2:** Open `ui/index.html` in your browser (no web server needed — just double-click the file).
+
+---
+
+### Option B — Command Line
+
+```bash
+# Mac / Linux
 ./run.sh
 # OR
 python3 generator.py
+
+# Windows
+run.bat
+# OR
+python generator.py
 ```
 
-### Interactive Commands
-
-Once launched, you'll see: `🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit):`
+#### Interactive Commands
 
 | Command | Description | Example |
 | :--- | :--- | :--- |
 | **`[Patient ID]`** | Generates data for a single patient. | `210` or `237` |
-| **`[ID]-[feedback]`** | Generates data with AI feedback included. | `225-use kidney transplant` |
-| **`[ID],[ID],[ID]`** | Batch mode for specific comma-separated patient IDs. | `221,222,223` |
-| **`*`** | Runs **Batch Mode** for all missing patients. | `*` |
-| **`q`** or **`exit`** | Quits the application. | `q` |
-| **`--`** | **SELECTIVE PURGE**. Shows menu to delete specific artifact types. | `--` |
+| **`[ID]-[feedback]`** | Generates data with AI feedback. | `225-use kidney transplant` |
+| **`[ID],[ID],[ID]`** | Batch mode for specific IDs. | `221,222,223` |
+| **`*`** | Runs Batch Mode for all missing patients. | `*` |
+| **`q`** / **`exit`** | Quits the application. | `q` |
+| **`--`** | Shows menu to delete specific artifact types. | `--` |
 | **`--[ID]`** | Deletes all data for a specific patient. | `--225` |
 
-### Document Selection
+---
 
-After entering a Patient ID:
+## 🖥️ Web UI Features
 
-```
-📋 What to generate?
-   [1] Persona + Reports + Summary (default)
-   [2] Reports + Summary
-   [3] Summary only
-   [4] Reports only
-   [5] Persona only
-```
+The `ui/index.html` interface provides a rich, dark-themed clinical data studio.
 
-### Output
+### Sidebar Controls
 
-Results are saved in `generated_output/` (configurable):
+- **Patient ID** — Select an existing patient or leave blank for a new one
+- **Generate Selected Patient** — Toggle which documents to create: Persona, Reports, Summary
+- **Generate All Patients (Batch)** — 🔁 Automatically generate documents for all patients in the database sequentially
+- **Purge Data** — 🗑️ Open a management modal to permanently clear specific generated data, personas, or the entire database
+- **PA Approval Optimization** — Strengthens clinical justifications for cases likely to be denied
+- **Feedback / Instructions** — Multi-line instruction field (no character limit)
 
-* `persona/*.pdf`: Patient Face Sheet & Bio
-* `patient-reports/<ID>/*.pdf`: Clinical documents
-* `summary/*.pdf`: Annotator verification summaries
-* `logs/`: Execution logs
+### Clinical Data Input Tabs
+
+Enter structured clinical history that will be locked into the patient persona and incorporated into all generated documents:
+
+| Tab | Fields |
+| :--- | :--- |
+| **Medications** | Brand, Generic/Dosage, Qty, Prescribed By, Status, Start, End, Reason |
+| **Allergies** | Allergen, Type, Reaction, Severity, Onset Date |
+| **Vaccinations** | Name, Type, Date, Administered By, Dose #, Reason |
+| **Therapy & Behavioral Health** | Type, Provider, Facility, Frequency, Status, Dates, Reason, Notes |
+
+All rows are addable, removable, and pre-filled from an existing patient's stored record.
+
+### Live Generation Log
+
+A real-time console streams progress events as the AI runs, including milestones for persona creation, document generation, and any fixes applied.
+
+### Generated Output
+
+After generation, all documents (Reports, Persona, Summary) are listed as clickable links that open the PDF inline in a new browser tab.
+You will also see a **💾 Save as Template** button next to each document, which allows you to save that specific document as the global baseline template (archiving any previous template automatically).
+
+### Changes Summary Panel
+
+After each run, a 2×2 summary panel is shown:
+
+- **What Was Requested** — Sections chosen, data counts, PA optimize flag, feedback preview
+- **What Was Produced** — Patient name, document count, status
+- **Key Events** — Milestone log entries
+- **AI Changes Narrative** — The AI's own description of what changed
 
 ---
 
@@ -73,46 +105,46 @@ Results are saved in `generated_output/` (configurable):
 
 ### Prior Authorization Workflow Support
 
-**Future Procedure Dates**: All personas include expected procedure dates (7-90 days in the future) for realistic PA workflows.
+- **PA Optimization**: Toggle to automatically strengthen clinical justifications for likely-rejected cases
+- **Complete PA Request Forms**: Requesting provider, urgency level, clinical justification, ICD-10 diagnoses, previous treatments, expected outcome
+- **Future Procedure Dates**: Procedure dates set 7–90 days in the future for realistic PA workflows
 
-**Complete PA Request Forms**: Each persona includes a comprehensive Prior Authorization request section with:
-* Requesting provider with credentials
-* Urgency level (Routine/Urgent/Emergency)
-* Clinical justification (medical necessity)
-* Supporting ICD-10 diagnoses
-* Previous treatments attempted
-* Expected clinical outcome
+### Clinical Data Sections
 
-**Facility Location**: Realistic healthcare facility addresses matching patient locality:
-* Facility name and department
-* Complete street address
-* City, state, and ZIP code
-* Automatically matched to patient's state
+Medications, allergies, vaccinations, therapies, and behavioral notes are:
+
+- Captured via the interactive UI
+- Stored persistently in the patient database
+- Rendered into the **Persona PDF** as structured tables
+- Locked for existing patients to ensure consistency across regenerations
+
+### Texas Geographic Constraint
+
+All generated patient data — demographics, providers, facilities, addresses — is constrained to **Texas, USA** with realistic TX hospital names, addresses, and ZIP codes.
 
 ### Temporal Consistency
 
 All generated data follows a realistic timeline:
-* **Medical History**: 6 months to 5 years before procedure
-* **Recent Encounters**: 1-12 weeks before procedure
-* **Lab Results**: 1-4 weeks before procedure
-* **Today**: Current date
-* **Procedure Date**: 7-90 days in the future
+
+- **Medical History**: 6 months to 5 years before procedure
+- **Recent Encounters**: 1–12 weeks before procedure
+- **Lab Results**: 1–4 weeks before procedure
+- **Procedure Date**: 7–90 days in the future
 
 ### Document Coherence
 
 When generating documents in different modes (persona only, reports only, summary only), the system ensures consistency:
-* Reports reference the same facility and dates from the persona
-* Summaries align with existing persona and reports
-* No contradictory information across documents
+
+- Reports reference the same facility and dates from the persona
+- Summaries align with existing persona and reports
+- No contradictory information across documents
 
 ### FHIR-Compliant Data
 
-* Complete patient demographics
-* Biometrics (race, height, weight)
-* Emergency contacts
-* Insurance/payer details (UnitedHealthcare standardized)
-* Provider information with NPI
-* Medical coding (ICD-10, CPT)
+- Complete patient demographics, biometrics (race, height, weight)
+- Emergency contacts, insurance/payer details
+- Provider information with NPI
+- Medical coding (ICD-10, CPT)
 
 ---
 
@@ -120,185 +152,184 @@ When generating documents in different modes (persona only, reports only, summar
 
 ### 1. Prerequisites
 
-* Python 3.10+
-* Google Cloud Platform Project with **Vertex AI API** enabled (if using Vertex AI)
-* OpenAI API Key (if using OpenAI)
+- Python 3.10+
+- OpenAI API Key **or** Google Cloud Vertex AI credentials
 
 ### 2. Environment Setup
 
 ```bash
-# Clone repository
 git clone <repo-url>
 cd pdgenerator
-```
 
-**Windows (PowerShell or CMD):**
+# Mac / Linux
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
-```cmd
+# Windows
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-**Mac / Linux:**
+### 3. Configuration (`cred/.env`)
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+mkdir cred
+cp cred/examples/.env.example cred/.env
 ```
 
-### 3. Configuration (`cred/`)
+Fill in `cred/.env`:
 
-The system expects credentials in a `cred/` directory.
+```bash
+# Choose provider
+LLM_PROVIDER=openai          # or vertexai
 
-1. **Create Directory**: `mkdir cred`
-2. **Create Environment File**: Copy the example and customize:
+# OpenAI
+OPENAI_API_KEY=sk-your-key-here
 
-    **Windows:**
+# OR Vertex AI
+GCP_PROJECT_ID=your-project-id
+GCP_LOCATION=us-central1
+GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
 
-    ```cmd
-    copy cred\examples\.env.example cred\.env
-    notepad cred\.env
-    ```
+# Output directory (absolute path recommended)
+OUTPUT_DIR=/path/to/generated_output
 
-    **Mac / Linux:**
+# API server port (default: 5000; use 5001 on macOS)
+API_PORT=5001
 
-    ```bash
-    cp cred/examples/.env.example cred/.env
-    nano cred/.env
-    ```
+# Optional: Web Search
+ENABLE_WEB_SEARCH=false
+TAVILY_API_KEY=your_tavily_key
+```
 
-3. **Fill in your credentials:**
-
-    ```bash
-    # Choose provider
-    LLM_PROVIDER=openai  # or vertexai
-    
-    # OpenAI
-    OPENAI_API_KEY=sk-your-key-here
-    
-    # OR Vertex AI
-    GCP_PROJECT_ID=your-project-id
-    GCP_LOCATION=us-central1
-    GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
-    
-    # Optional: Web Search Integration
-    ENABLE_WEB_SEARCH=false  # Set to true to enable
-    TAVILY_API_KEY=your_tavily_key  # Get free key at https://tavily.com
-    SEARCH_CACHE_TTL=24  # Cache duration in hours
-    
-    # Optional
-    OUTPUT_DIR=generated_output
-    TEST_MODE=false
-    ```
-
-4. **Service Account Key** (Vertex AI only): Place your JSON key at `cred/gcp_auth_key.json`.
-
-**Web Search Setup** (Optional):
-
-* Get a free Tavily API key at [https://tavily.com](https://tavily.com) (1,000 searches/month free)
-* Enable with `ENABLE_WEB_SEARCH=true` in `.env`
-* Used to retrieve precise CPT/ICD descriptions when Excel data is incomplete
-* Adds verification notes when data quality is uncertain
+**Vertex AI only:** Place your service account JSON at `cred/gcp_auth_key.json`.
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 pdgenerator/
-├── cred/                       # Credentials (gitignored, create manually)
-│   ├── .env                    # Your configuration (copy from examples)
-│   ├── gcp_auth_key.json       # GCP service account (if using Vertex AI)
-│   └── examples/               # Example configuration files
-│       └── .env.example        # Template for .env
+├── cred/                       # Credentials (gitignored)
+│   ├── .env                    # Configuration
+│   └── examples/.env.example   # Template
 │
 ├── core/                       # Reference data & patient database
-│   ├── UAT Plan.xlsx           # Patient test cases & scenarios
-│   ├── mockdata_schema.sql     # Database schema reference
-│   ├── seed_template.sql       # SQL template for patient records
-│   ├── Sample persona.pdf      # Example output
+│   ├── UAT Plan.xlsx           # Patient test cases
 │   ├── patient_db.py           # Patient database module
 │   └── patients_db.json        # Patient records (auto-generated)
 │
-├── templates/                  # PDF layout templates
-│   └── summary_template.json   # Clinical summary structure
+├── ui/
+│   └── index.html              # Interactive web UI
+│
+├── templates/
+│   └── summary_template.json   # Clinical summary PDF layout
 │
 ├── generated_output/           # Generated files (gitignored)
 │   ├── persona/                # Patient persona PDFs
-│   ├── patient-reports/        # Clinical documents & images
+│   ├── patient-reports/<ID>/   # Clinical report PDFs
 │   ├── summary/                # Annotator verification summaries
-│   └── logs/                   # Execution logs
+│   └── logs/                   # Generation history per patient
 │
-├── prompts.py                  # ⚡ AI prompts configuration
-├── ai_engine.py                # LLM interaction (OpenAI/Vertex AI)
-├── generator.py                # Main orchestrator & REPL loop
+├── api_server.py               # Flask REST API (serves the UI)
+├── generator.py                # Main orchestrator & CLI loop
+├── ai_engine.py                # LLM interaction + Pydantic models
 ├── pdf_generator.py            # PDF rendering (ReportLab)
-├── search_engine.py            # 🔍 Web search for medical codes (Tavily API)
-├── doc_validator.py            # Document validation
+├── prompts.py                  # AI prompt configuration
+├── search_engine.py            # Web search for medical codes (Tavily)
+├── doc_validator.py            # Document structure validation
 ├── data_loader.py              # Excel case data loading
-├── history_manager.py          # Conversation history
+├── history_manager.py          # Per-patient generation history
 ├── purge_manager.py            # Data cleanup utilities
 │
-├── run.bat                     # Windows launcher
-├── run.sh                      # Mac/Linux launcher
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── AI_CONTEXT.md               # AI assistant reference
-└── ARCHITECTURE.md             # System architecture docs
+├── run.bat                     # Windows CLI launcher
+├── run.sh                      # Mac/Linux CLI launcher
+└── requirements.txt
 ```
 
 ### Key Files to Customize
 
-* **`prompts.py`** - Edit AI behavior and instructions
-* **`cred/.env`** - Configure API keys and settings (including web search)
-* **`core/UAT Plan.xlsx`** - Add patient test cases
-* **`templates/summary_template.json`** - Modify PDF layouts
+| File | Purpose |
+| :--- | :--- |
+| `prompts.py` | Edit AI behaviour and generation instructions |
+| `cred/.env` | Configure API keys, output path, port |
+| `core/UAT Plan.xlsx` | Patient test cases |
+| `templates/summary_template.json` | PDF layout structure |
 
 ---
 
-## 🚀 Key Features
+## 🚀 Server Management
 
-* **AI-Powered Generation**: Uses **GPT-4o / Gemini 2.5** for intelligent clinical document creation
-* **Web Search Integration** (Optional):
-  * 🔍 Retrieves precise CPT/ICD code descriptions from authoritative sources (AAPC, CMS)
-  * ⚠️ Automatic verification notes for missing/uncertain data
-  * 💾 24-hour caching to reduce API costs
-  * ✅ Conservative strategy: Excel data prioritized, search only when needed
-* **Annotator Verification Guide**:
-  * Simplified PDF layout with expected outcome and verification notes
-  * All CPT/ICD codes embedded in narrative (no redundant tables)
-  * Data quality alerts for manual review
-* **Interactive Workflow**: Continuous processing loop with admin purge commands
-* **Smart Duplicate Detection**:
-  * Scans existing documents before generation
-  * Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
-  * Only generates multiple reports when test case specifically requires it
-  * Intelligently replaces outdated documents when necessary
-* **AI-Friendly Validation**:
-  * **Auto-Repair**: Invalid documents are automatically fixed by AI
-  * **Fail-Safe**: Failed repairs saved with `-NAF` suffix (Not AI Friendly)
-* **Centralized Prompts**: All AI instructions in `prompts.py` for easy editing
-* **Configurable Output**: Custom output paths via `.env`
-* **Structured Data**: FHIR-compliant JSON objects
-* **Rich Clinical Narrative**: Comprehensive SOAP notes, Imaging Reports, Discharge Summaries
-* **Persona Consistency**: Maintains character identity across runs
-* **Professional PDFs**: Realistic formatting with proper headers and structure
+The Web UI requires the Flask backend server (`api_server.py`) to be running.
+
+**Start the Server:**
+
+```bash
+# Mac/Linux
+source venv/bin/activate
+python api_server.py
+
+# Windows
+venv\Scripts\activate
+python api_server.py
+```
+
+*The server runs on port 5000 by default. Access the UI by opening `ui/index.html` in your browser.*
+
+**Stop the Server:**
+
+- If running in a terminal, press `Ctrl + C`.
+- If running in the background, find the process and kill it:
+
+  ```bash
+  # Find process ID (PID)
+  lsof -i :5000
+  # Kill process
+  kill -9 <PID>
+  ```
+
+**Restart the Server:**
+Simply stop the server using `Ctrl + C` or `kill`, and start it again using the start command.
+
+---
+
+## 🌐 API Reference
+
+The `api_server.py` Flask server exposes multiple endpoints to power the UI and batch processing.
+
+### 📚 Interactive Swagger API Docs
+
+We have integrated full **Swagger OpenAPI documentation**. To explore the interactive API details, test endpoints, and view payloads, visit:
+👉 **[http://localhost:5001/apidocs](http://localhost:5001/apidocs)** *(assuming port 5001)*
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| GET | `/api/status` | Health check |
+| GET | `/api/patients` | List all patient IDs from Excel |
+| GET | `/api/patient/<id>` | Fetch stored patient record |
+| POST | `/api/generate` | Trigger single patient generation |
+| POST | `/api/generate_all` | 🔁 Trigger batch generation for all patients |
+| POST | `/api/purge` | 🗑️ Purge specific databases or generated files |
+| POST | `/api/template/save` | 💾 Save a generated document as a global template |
+| GET | `/api/job/<job_id>?since=N` | Poll job status + incremental logs |
+| GET | `/api/output/<patient_id>` | List all generated PDFs for a patient |
+| GET | `/api/download/<id>/<type>/<file>` | Serve PDF inline in browser |
 
 ---
 
 ## 🔐 Credentials Management
 
-* **`.gitignore`**: The `cred/` folder is ignored by default (except `cred/examples/`)
-* **Templates**: Use `cred/examples/.env.example` to reconstruct your environment
-* **Security**: Never commit API keys or service account files
+- The `cred/` folder is gitignored by default (except `cred/examples/`)
+- Never commit API keys or service account files
+- Use `cred/examples/.env.example` to reconstruct your environment
 
 ---
 
 ## 🏗️ Architecture
 
-For a deep dive into the code structure, module interactions, and how to extend the system, please refer to the [Architecture Documentation](ARCHITECTURE.md).
+For a deep dive into the code structure, module interactions, and how to extend the system, refer to [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 

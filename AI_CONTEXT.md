@@ -12,7 +12,7 @@ The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic
 
 ## Core Architecture
 
-```
+```text
 generator.py          → Main orchestrator, REPL loop
 ai_engine.py          → LLM interaction (OpenAI/Vertex AI)
 prompts.py            → Centralized AI prompts & instructions
@@ -158,6 +158,14 @@ Realistic healthcare facilities matching patient locality:
 
 - Removed `patch_prompts.py` and `patch_prompts_v2.py` (obsolete patching code)
 - Cleaner codebase with better maintainability
+
+### Phase 9-11 Updates (March 2026)
+
+- **UI Responsive Layout**: Log and Summary panels are alongside each other (side-by-side flex). All UI cards are vertically resizable.
+- **Batch Generation (`/api/generate_all`)**: Processes all patients sequentially via the backend instead of triggering 30 parallel frontend requests.
+- **Purge Management (`/api/purge`)**: Non-blocking modal in the UI to selectively or entirely wipe Generated Documents, Summaries, Personas, or the entire Patient Database.
+- **Save as Template (`/api/template/save`)**: Allows users to save a generated document into the `templates/` folder as a global template, archiving older templates automatically to `templates/archive/`.
+- **API Swagger Documentation**: Added `flasgger` to auto-generate OpenAPI spec pages at `/apidocs`.
 
 ### Centralized Prompts
 

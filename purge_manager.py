@@ -20,13 +20,14 @@ PERSONAS_DIR = os.path.join(OUTPUT_DIR, "persona") # Singular 'persona' as per p
 SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary") # Summary PDFs
 DB_PATH = patient_db.DB_PATH
 
-def confirm_action(message: str) -> bool:
-    """Asks user for confirmation."""
+def confirm_action(message: str, force: bool = False) -> bool:
+    """Asks user for confirmation, or skips if force=True."""
+    if force: return True
     print(f"\n⚠️  WARNING: {message}")
     response = input("   Are you sure? This cannot be undone. (y/n): ").strip().lower()
     return response == 'y'
 
-def purge_all():
+def purge_all(force: bool = False):
     """
     Clears ALL generated data:
     1. Documents
@@ -35,8 +36,9 @@ def purge_all():
     4. Logs
     5. SQLs
     6. Patient DB
+    7. Records
     """
-    if not confirm_action("This will WIPEOUT ALL logs, documents, summaries, personas, SQLs, and the Patient Database."):
+    if not confirm_action("This will WIPEOUT ALL logs, documents, summaries, personas, SQLs, and the Patient Database.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -80,13 +82,13 @@ def purge_all():
 
     print("\n   ✨ Purge Complete.")
 
-def purge_personas():
+def purge_personas(force: bool = False):
     """
     Clears:
     1. patients_db.json
     2. documents/personas/ folder
     """
-    if not confirm_action("This will clear ALL Personas from DB and delete the 'documents/personas' folder."):
+    if not confirm_action("This will clear ALL Personas from DB and delete the 'documents/personas' folder.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -104,11 +106,11 @@ def purge_personas():
     
     print("\n   ✨ Personas Purged.")
 
-def purge_documents():
+def purge_documents(force: bool = False):
     """
     Clears `documents/` folder content EXCEPT `documents/personas/`.
     """
-    if not confirm_action("This will clear ALL Patient Documents (PDFs/Images) but PRESERVE Personas."):
+    if not confirm_action("This will clear ALL Patient Documents (PDFs/Images) but PRESERVE Personas.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -130,11 +132,11 @@ def purge_documents():
     
     print("\n   ✨ Documents Purged.")
 
-def purge_summaries_only():
+def purge_summaries_only(force: bool = False):
     """
     Deletes ONLY summary PDFs from the summary/ folder.
     """
-    if not confirm_action("This will delete ALL Annotator Summary PDFs but preserve Reports and Personas."):
+    if not confirm_action("This will delete ALL Annotator Summary PDFs but preserve Reports and Personas.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -151,11 +153,11 @@ def purge_summaries_only():
     
     print(f"\n   ✨ Deleted {count} summary file(s).")
 
-def purge_reports_only():
+def purge_reports_only(force: bool = False):
     """
     Deletes ONLY report PDFs (DOC-*.pdf) for all patients, preserving summaries and personas.
     """
-    if not confirm_action("This will delete ALL Report PDFs but preserve Summaries and Personas."):
+    if not confirm_action("This will delete ALL Report PDFs but preserve Summaries and Personas.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -181,11 +183,11 @@ def purge_reports_only():
     
     print(f"\n   ✨ Deleted {count} report file(s).")
 
-def purge_reports_and_summaries():
+def purge_reports_and_summaries(force: bool = False):
     """
     Deletes both reports and summaries, but preserves personas.
     """
-    if not confirm_action("This will delete ALL Reports and Summaries but preserve Personas."):
+    if not confirm_action("This will delete ALL Reports and Summaries but preserve Personas.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -211,7 +213,7 @@ def purge_reports_and_summaries():
     
     print("\n   ✨ Reports and Summaries Purged.")
 
-def purge_patient(patient_id: str):
+def purge_patient(patient_id: str, force: bool = False):
     """
     Clears data for a SPECIFIC patient:
     1. Documents/Images (folder)
@@ -219,7 +221,7 @@ def purge_patient(patient_id: str):
     3. Log entry (file)
     4. DB Entry
     """
-    if not confirm_action(f"This will delete ALL data for Patient ID '{patient_id}'."):
+    if not confirm_action(f"This will delete ALL data for Patient ID '{patient_id}'.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 

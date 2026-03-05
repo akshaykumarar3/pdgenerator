@@ -1251,7 +1251,7 @@
     "race": "Caucasian",
     "height": "5 ft 11 in",
     "weight": "180 lbs",
-    "maritalStatus": "Single",
+    "maritalStatus": "Married",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -1260,13 +1260,13 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
+      "relationship": "Spouse",
       "name": "Rosa Diaz",
-      "telecom": "718-555-3434",
-      "address": "1256 Monte Street, Brooklyn, NY, 11221",
+      "telecom": "718-555-1213",
+      "address": "430 Lord Street, Brooklyn, NY, 11221",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2000-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -1284,34 +1284,238 @@
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2025-01-01",
+      "policy_number": "POL-2025-001234",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Charles Boyle is a 57-year-old Caucasian male residing in Brooklyn, NY. He has led a fairly active lifestyle with a stable job in parks and recreation, enjoying spending time with his close-knit group of friends and colleagues. Over the past year, he has experienced episodes of chest discomfort, primarily occurring after exertion or emotional stress. Previously, he was advised on lifestyle modifications and underwent conservative management with beta-blockers; however, his symptoms have persisted. Charles's health history includes a consistent record of monitoring through regular cardiology evaluations, yet he remains cautious about potential heart conditions. His emergency contact is a trusted friend, Rosa Diaz. Charles continues to seek medical assessments to ensure his ongoing cardiovascular health.",
-    "expected_procedure_date": "2026-03-29",
+    "bio_narrative": "",
+    "expected_procedure_date": "2026-03-20",
     "procedure_requested": "Percutaneous Coronary Intervention (PCI)",
     "procedure_facility": {
-      "facility_name": "Brooklyn Medical Center",
-      "street_address": "543 Union Street",
-      "city": "Brooklyn",
-      "state": "NY",
-      "zip_code": "11201",
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
       "department": "Cardiology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Jane Smith, MD, FACC",
+      "requesting_provider": "Dr. Michael Chen, MD, FACC",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with stable angina characterized primarily by discomfort on exertion. The patient has undergone conservative management but continues to experience chest discomfort. Despite normal physical examination findings and routine ECG, further evaluation with Percutaneous Coronary Intervention (PCI) is considered to rule out the potential for coronary artery obstruction, but no immediate indication for the intervention.",
+      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Percutaneous Coronary Intervention (PCI) is advised to prevent potential acute coronary syndrome.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Trial of beta-blockers and lifestyle modifications.",
-      "expected_outcome": "Confirmatory diagnosis of coronary flow improvement potentially guiding future revascularization planning."
-    }
+      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
+      "expected_outcome": "Definitive restoration of adequate coronary blood flow to alleviate chest pain and potential ischemic damage."
+    },
+    "medications": [
+      {
+        "brand": "Toprol XL",
+        "generic_name": "Metoprolol Succinate 50mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "ongoing",
+        "start_date": "2025-11-01",
+        "end_date": "ongoing",
+        "reason": "Hypertension"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "ongoing",
+        "start_date": "2025-09-15",
+        "end_date": "ongoing",
+        "reason": "Hyperlipidemia"
+      },
+      {
+        "brand": "Nitrostat",
+        "generic_name": "Nitroglycerin 0.4mg",
+        "dosage": "Sublingual as needed for chest pain",
+        "qty": "0.4mg tablets",
+        "prescribed_by": "Dr. John Doe, MD",
+        "status": "current",
+        "start_date": "2026-01-10",
+        "end_date": "ongoing",
+        "reason": "Angina"
+      },
+      {
+        "brand": "Crestor",
+        "generic_name": "Rosuvastatin 10mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "past",
+        "start_date": "2024-06-01",
+        "end_date": "2025-08-31",
+        "reason": "Hyperlipidemia management"
+      },
+      {
+        "brand": "Aspirin",
+        "generic_name": "Aspirin 81mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "ongoing",
+        "start_date": "2025-11-01",
+        "end_date": "ongoing",
+        "reason": "Cardiovascular event prevention"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "1990-05-01"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-01",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 BNT162b2",
+        "vaccine_type": "mRNA",
+        "date_administered": "2026-02-01",
+        "administered_by": "Walgreens Pharmacy",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus-diphtheria",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2025-03-01",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2025-06-15",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "1",
+        "reason": "Occupational"
+      },
+      {
+        "vaccine_name": "Pneumococcal",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2024-11-01",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "93797",
+        "cpt_description": "Physician or other qualified health care professional services for outpatient cardiac rehabilitation; with exercise, individualized treatment plan",
+        "icd10_codes": [
+          "I25.10"
+        ],
+        "provider": "Dr. Lauren Howards, PT",
+        "provider_npi": "2345678910",
+        "facility": "Brooklyn Heart Center",
+        "start_date": "2025-12-01",
+        "end_date": "2026-02-01",
+        "frequency": "3x/week",
+        "status": "Completed",
+        "reason": "Improvement of cardiac function",
+        "notes": ""
+      }
+    ],
+    "behavioral_notes": "Adheres to a medication regimen for hypertension and hyperlipidemia. Exercise includes walking 3x per week. Follows a low sodium diet. Has a history of moderate alcohol use, though currently reduced consumption. No tobacco or drug use. Mental health is stable with ongoing support from family.",
+    "encounters": [
+      {
+        "encounter_date": "2026-01-20",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Follow-up on chest pain and review of medication effectivity.",
+        "provider": "Dr. Jane Smith, MD",
+        "provider_npi": "1234567890",
+        "facility": "Brooklyn Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-01-20",
+          "blood_pressure": "130/85 mmHg",
+          "heart_rate": "82 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "25.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.6\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "Persistent chest pain episodes.",
+        "doctor_note": "HPI: The patient reports ongoing episodes of chest pain, notably when under stress or exertion. Denies nausea, vomiting, or diaphoresis. ROS: Negative for significant weight changes, no palpitations, no dizziness. Physical Exam: General: Well-appearing male in no acute distress. Cardiovascular: Regular rate and rhythm. Lungs: Clear to auscultation. Assessment: Stable angina. Continue current medication regimen, consider further investigation with stress test. Plan: Order exercise ECG stress test. Follow-up in 2 weeks.",
+        "observations": [],
+        "procedures_performed": [
+          "99213 - E&M Office Visit Level 3"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "medications_prescribed": [
+          "Nitrostat"
+        ],
+        "care_team": [
+          "Dr. Jane Smith, MD"
+        ],
+        "progress_notes": "No significant weight changes noted. Stable vitals. Angina symptoms persist despite medication",
+        "follow_up_instructions": "Schedule stress test in 2 weeks."
+      },
+      {
+        "encounter_date": "2026-02-10",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Review stress test results and discuss potential interventions.",
+        "provider": "Dr. Jane Smith, MD",
+        "provider_npi": "1234567890",
+        "facility": "Brooklyn Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-02-10",
+          "blood_pressure": "132/87 mmHg",
+          "heart_rate": "78 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Chest pain on exertion.",
+        "doctor_note": "HPI: Reviewing the results of recent stress test, the patient continues to report chest discomfort during moderate physical activities. ROS: Clear of cardiovascular abnormalities, no stroke symptoms, breathlessness or edema. Physical Exam: Cardiovascular exam: No new murmurs, gallops or rubs. Normal pulse rate. Assessment: Continued stable angina with stress-induced symptoms. Plan: Consider coronary angiography for further evaluation of coronary perfusion status, especially given persistent symptoms. Discuss possibility of PCI if significant lesions identified.",
+        "observations": [],
+        "procedures_performed": [
+          "73090 - Coronary Angiography"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Jane Smith, MD"
+        ],
+        "progress_notes": "Chest pain continues upon exertion. Stress test was inconclusive but symptomatic chest pain persists.",
+        "follow_up_instructions": "Proceed with coronary angiography for further evaluation."
+      }
+    ],
+    "social_history": null,
+    "vital_signs_current": null,
+    "gender_specific_history": "PSA levels within normal range. Regular urologic check-ups, no significant findings."
   },
   "217": {
     "first_name": "Cheyenne",
@@ -1393,7 +1597,7 @@
     "address": "1436 NW Northrup St, Seattle, WA 98109",
     "telecom": "206-555-8304",
     "race": "Caucasian",
-    "height": "6 ft",
+    "height": "6 ft 0 in",
     "weight": "185 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
@@ -1406,16 +1610,16 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Meredith Grey",
-      "telecom": "206-555-0123",
-      "address": "6214 Holman Rd NW, Seattle, WA 98117",
+      "telecom": "206-555-5192",
+      "address": "1515 SE Davison St, Seattle, WA 98105",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2026-01-01",
+      "period_start": "2010-06-15",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Richard Webber, MD",
-      "formatted_npi": "9876543210",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Grey Sloan Memorial Hospital"
     },
     "link": {
@@ -1428,33 +1632,126 @@
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-654321",
-      "effective_date": "2026-01-01",
+      "policy_number": "POL-2026-000123",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Alex Karev is originally from Iowa and has led a life full of challenges, driving him to pursue a career in medicine. He is known for his resilience, often helping patients beyond their clinical needs. He boasts a robust athletic background, emphasizing fitness throughout his life, standing 6 feet tall and weighing 185 pounds. Socially, Alex maintains a tight circle of friends with whom he often shares his Seattle home life. He has experienced intermittent chest pain recently, leading to his current medical consultation. Despite the discomfort, his history is relatively unremarkable aside from previous normal ECG tests. His ongoing support is from his close colleague and friend Meredith Grey.",
-    "expected_procedure_date": "2026-04-01",
-    "procedure_requested": "Echocardiography + Doppler and color flow",
+    "bio_narrative": "",
+    "expected_procedure_date": "2026-03-25",
+    "procedure_requested": "Echocardiography with Doppler and color flow",
     "procedure_facility": {
       "facility_name": "Grey Sloan Memorial Hospital",
-      "street_address": "123 Hospital Drive",
+      "street_address": "325 Ninth Avenue",
       "city": "Seattle",
       "state": "WA",
-      "zip_code": "98109",
+      "zip_code": "98104",
       "department": "Cardiology Department"
     },
     "pa_request": {
       "requesting_provider": "Dr. Richard Webber, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Requested procedure is based on patient's reporting of persistent chest pain. Despite routine nature, insufficient alarming findings in previous assessments such as ECG.",
+      "clinical_justification": "Patient presents with persisting chest pain and elevated blood pressure levels despite initial medical management. An echocardiogram with Doppler is medically indicated to evaluate potential underlying cardiac abnormalities and assess valvular functions.",
       "supporting_diagnoses": [
-        "R07.9 - Chest pain, unspecified"
+        "R07.9 - Chest pain, unspecified",
+        "I10 - Essential (primary) hypertension"
       ],
-      "previous_treatments": "None",
-      "expected_outcome": "Procedural reassurance to rule out potential underlying cardiac conditions."
-    }
+      "previous_treatments": "Initiation of metoprolol and lifestyle modifications",
+      "expected_outcome": "Accurate diagnosis of any underlying cardiac conditions to inform targeted therapy."
+    },
+    "medications": [
+      {
+        "brand": "Lopressor",
+        "generic_name": "Metoprolol 50mg",
+        "dosage": "50 mg BID",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Richard Webber, MD",
+        "status": "current",
+        "start_date": "2025-12-01",
+        "end_date": "ongoing",
+        "reason": "Essential hypertension"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Miranda Bailey, MD",
+        "status": "ongoing",
+        "start_date": "2025-08-15",
+        "end_date": "ongoing",
+        "reason": "Hyperlipidemia"
+      },
+      {
+        "brand": "Lisinopril",
+        "generic_name": "Lisinopril 10mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Maggie Pierce, MD",
+        "status": "past",
+        "start_date": "2025-01-15",
+        "end_date": "2025-11-30",
+        "reason": "Hypertension control"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "2000-05-20"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-15",
+        "administered_by": "Grey Sloan Memorial Hospital",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 Moderna",
+        "vaccine_type": "mRNA",
+        "date_administered": "2024-03-20",
+        "administered_by": "Grey Sloan Memorial Hospital",
+        "dose_number": "2",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tdap",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2023-08-10",
+        "administered_by": "Grey Sloan Memorial Hospital",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2023-05-18",
+        "administered_by": "Grey Sloan Memorial Hospital",
+        "dose_number": "3",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Physical",
+        "provider": "Dr. Callie Torres, PT",
+        "facility": "Grey Sloan Memorial Hospital",
+        "start_date": "2025-09-01",
+        "end_date": "2025-10-01",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Post-operative rehabilitation for knee surgery",
+        "notes": "Successful recovery observed, full range of motion achieved."
+      }
+    ],
+    "behavioral_notes": "Alex Karev displays good medication adherence, actively follows dietary modifications to manage hypertension. Non-smoker, occasional social drinker, and engages in regular physical activity, which he enjoys as stress relief. Manages work-related stress effectively through mindfulness practices and therapy sessions."
   },
   "219": {
     "first_name": "Christopher",

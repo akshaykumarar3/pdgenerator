@@ -9,8 +9,11 @@ import requests
 import datetime
 from datetime import timedelta
 import random
+import shutil
+import re
 import core.patient_db as patient_db
 import purge_manager
+import patient_record_writer
 from doc_validator import validate_structure
 from dotenv import load_dotenv
 
@@ -28,7 +31,65 @@ SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary")
 for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR]:
     if not os.path.exists(d):
         os.makedirs(d, exist_ok=True)
-        # print(f"📁 Verified Folder: {d}") # Noise reduction
+
+# ===== VERSION HELPERS =====
+
+def get_persona_version(patient_id: str) -> int:
+    """
+    Scan the persona directory for existing files for this patient.
+    Returns next version number (e.g., if v2 exists, returns 3).
+    """
+    max_v = 0
+    prefix = f"{patient_id}-"
+    if os.path.isdir(PERSONA_DIR):
+        for fname in os.listdir(PERSONA_DIR):
+            if fname.startswith(prefix) and fname.endswith(".pdf"):
+                m = re.search(r'-v(\d+)', fname)
+                if m:
+                    max_v = max(max_v, int(m.group(1)))
+    return max_v + 1
+
+
+def archive_patient_files(patient_id: str, dirs_to_archive: list):
+    """
+    Move existing versioned PDFs for patient_id from each dir to a subfolder 'archive/'.
+    Only files matching the patient pattern are archived.
+    """
+    for folder in dirs_to_archive:
+        if not os.path.isdir(folder):
+            continue
+        archive_dir = os.path.join(folder, "archive")
+        os.makedirs(archive_dir, exist_ok=True)
+        # Patterns: persona dir has flat files; reports dir has patient_id subfolder
+        search_dir = folder
+        prefix_patterns = [f"{patient_id}-", f"DOC-{patient_id}-", f"Clinical_Summary_Patient_{patient_id}"]
+        for fname in os.listdir(search_dir):
+            if fname == "archive":
+                continue
+            if any(fname.startswith(p) for p in prefix_patterns) and fname.endswith(".pdf"):
+                src = os.path.join(search_dir, fname)
+                dst = os.path.join(archive_dir, fname)
+                try:
+                    shutil.move(src, dst)
+                except Exception as e:
+                    print(f"      ⚠️  Archive move failed for {fname}: {e}")
+
+    # Also archive in patient-specific reports subfolder
+    rpt_folder = os.path.join(REPORTS_DIR, patient_id)
+    if os.path.isdir(rpt_folder):
+        archive_dir = os.path.join(rpt_folder, "archive")
+        os.makedirs(archive_dir, exist_ok=True)
+        for fname in os.listdir(rpt_folder):
+            if fname == "archive":
+                continue
+            if fname.endswith(".pdf"):
+                src = os.path.join(rpt_folder, fname)
+                dst = os.path.join(archive_dir, fname)
+                try:
+                    shutil.move(src, dst)
+                except Exception as e:
+                    print(f"      ⚠️  Archive move failed for {fname}: {e}")
+
 
 # ===== DATE CALCULATION HELPERS =====
 
@@ -194,35 +255,78 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
 
         seen_titles = {}
         # 6. Save/Update Patient DB
-        # Structured Persona Object is now available
         if result.patient_persona:
             db_entry = result.patient_persona.model_dump()
-            # Flatten or keep nested? Keep nested as per user JSON requirement.
-            # We map Pydantic fields to the "p_" fields user requested roughly, or just store the clean object.
-            # actually user wants "p_telecom", etc. 
-            # Ideally we adapt it, but for now let's save the RAW structured data which has everything.
-            # Then the export logic (not this file) can transform it.
-            # Or we can just store the Pydantic dump which is very clean.
-            
             patient_db.save_patient(patient_id, db_entry)
-            
             p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
             print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
 
-        # 7. Generate Documents (Reports - conditional)
-        patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+        # ═══ VERSION & ARCHIVE STEP ═══════════════════════════════════════════
+        # Persona version is always auto-incremented when persona is being generated.
+        # Existing version is read from persona dir; if persona mode is off, scan
+        # reports dir to find the current version to match.
+        doc_version = get_persona_version(patient_id)
+        print(f"   🔖 Document Version: v{doc_version}")
 
-        # REPORTS GENERATION (conditional)
+        # Archive ONLY the file types that will be regenerated in this run
+        # (never move a file to archive unless its replacement is about to be written)
+        dirs_to_archive = []
+        if generation_mode.get("persona", False):
+            dirs_to_archive.append(PERSONA_DIR)
+        if generation_mode.get("summary", True):
+            dirs_to_archive.append(SUMMARY_DIR)
+        if dirs_to_archive:
+            archive_patient_files(patient_id, dirs_to_archive)
+        if generation_mode.get("reports", True):
+            # Archive existing reports for this patient separately
+            rpt_folder = os.path.join(REPORTS_DIR, patient_id)
+            if os.path.isdir(rpt_folder):
+                archive_dir = os.path.join(rpt_folder, "archive")
+                os.makedirs(archive_dir, exist_ok=True)
+                for fname in os.listdir(rpt_folder):
+                    if fname == "archive":
+                        continue
+                    if fname.endswith(".pdf"):
+                        try:
+                            shutil.move(os.path.join(rpt_folder, fname),
+                                        os.path.join(archive_dir, fname))
+                        except Exception:
+                            pass
+
+        current_year = datetime.datetime.now().year
+        current_mrn = f"MRN-{patient_id}-{current_year}"
+        patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
+        docs_written = []
+
+        # ═══ ORDER 1: PERSONA ══════════════════════════════════════════════
+        if generation_mode.get("persona", False) and result.patient_persona:
+            p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
+            persona_path = pdf_generator.create_persona_pdf(
+                patient_id,
+                p_full_name,
+                result.patient_persona,
+                result.documents,
+                image_map=None,
+                mrn=current_mrn,
+                output_folder=PERSONA_DIR,
+                version=doc_version
+            )
+            pf = os.path.basename(persona_path)
+            docs_written.append(pf)
+            print(f"   👤 Persona Created: {pf}")
+        else:
+            p_full_name = p_name if 'p_name' in locals() else patient_id
+
+        # ═══ ORDER 2: REPORTS ═══════════════════════════════════════════════
         if generation_mode.get("reports", True) and result.documents:
-            print(f"   📄 Generating {len(result.documents)} Report(s)...")
+            print(f"   📄 Generating {len(result.documents)} Report(s) at v{doc_version}...")
             doc_seq_counter = 1
             for doc in result.documents:
-                # Construct Filename
                 seq_str = f"{doc_seq_counter:03d}"
-                doc_identifier = f"DOC-{patient_id}-{seq_str}"
+                # New versioned filename: DOC-{id}-v{N}-{seq}-{title}
+                doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
                 final_filename_base = f"{doc_identifier}-{doc.title_hint}"
-                
-                # Validation & Repair
+
                 is_valid, errors = validate_structure(doc.content)
                 if not is_valid:
                     print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
@@ -233,155 +337,97 @@ def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names
                         final_filename_base += "-NAF"
                     else:
                         print(f"      ✅ AI Fixed the document.")
-                
-                # Create PDF (without image)
+
                 pdf_path = pdf_generator.create_patient_pdf(
-                    patient_id=patient_id, 
-                    doc_type=final_filename_base, 
-                    content=doc.content, 
+                    patient_id=patient_id,
+                    doc_type=final_filename_base,
+                    content=doc.content,
                     patient_persona=result.patient_persona,
                     doc_metadata=doc,
                     base_output_folder=patient_report_folder,
-                    image_path=None  # No standalone images
+                    image_path=None,
+                    version=doc_version
                 )
-                print(f"      - Created: {os.path.basename(pdf_path)}")
+                rf = os.path.basename(pdf_path)
+                docs_written.append(rf)
+                print(f"      - Created: {rf}")
                 doc_seq_counter += 1
-            
-        # GENERATE PERSONA (New Requirement)
-        current_year = datetime.datetime.now().year
-        current_mrn = f"MRN-{patient_id}-{current_year}" # Centralized MRN
 
-        # PERSONA GENERATION (conditional)
-        if generation_mode.get("persona", False) and result.patient_persona:
-            p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            persona_path = pdf_generator.create_persona_pdf(
-                patient_id, 
-                p_full_name, 
-                result.patient_persona, 
-                result.documents, 
-                image_map=None,  # No standalone images
-                mrn=current_mrn, 
-                output_folder=PERSONA_DIR
-            )
-            print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
-            
-        
-        # ANNOTATOR SUMMARY GENERATION (conditional) - AFTER all documents
-        # This is the NEW annotator-focused verification guide
+        # ═══ ORDER 3: SUMMARY ═══════════════════════════════════════════════
         if generation_mode.get("summary", True):
             try:
-                print(f"   📋 Generating Annotator Verification Guide...")
-                
-                # WEB SEARCH: Get official CPT code information (ONLY if enabled AND Excel data is missing)
+                print(f"   📋 Generating Annotator Verification Guide at v{doc_version}...")
+
                 search_results = None
                 verification_notes = []
-                
-                # Check if Excel has procedure data
+
                 procedure_text = case_data.get('procedure', '')
                 has_excel_procedure = procedure_text and str(procedure_text) != 'nan' and str(procedure_text).strip() != ''
-                
+
                 if not has_excel_procedure:
                     verification_notes.append("⚠️ Procedure information missing from Excel - verify CPT code manually")
-                
+
                 try:
                     from search_engine import MedicalSearchEngine
                     search_engine = MedicalSearchEngine()
-                    
-                    # Only search if:
-                    # 1. Web search is enabled
-                    # 2. Excel data is missing or incomplete
                     if search_engine.enabled and not has_excel_procedure:
-                        print(f"      ℹ️  Excel procedure data missing, attempting web search...")
-                        
-                        # Try to extract CPT from other fields or documents
-                        import re
-                        cpt_match = None
-                        
-                        # Try to find CPT in details field
                         details_text = case_data.get('details', '')
+                        cpt_match = None
                         if details_text:
                             cpt_match = re.search(r'CPT[:\s]*(\d{5})', str(details_text), re.IGNORECASE)
-                        
                         if cpt_match:
                             target_cpt = cpt_match.group(1)
-                            print(f"      🔍 Searching for CPT {target_cpt}...")
-                            
                             cpt_info = search_engine.search_cpt_code(target_cpt)
-                            
                             if cpt_info and cpt_info.description and len(cpt_info.description) > 20:
-                                print(f"      ✅ Found: {cpt_info.description[:50]}...")
-                                search_results = {
-                                    'cpt_info': {
-                                        'code': cpt_info.code,
-                                        'description': cpt_info.description,
-                                        'source_url': cpt_info.source_url
-                                    }
-                                }
-                                verification_notes.append(f"ℹ️ CPT {target_cpt} description from web search - verify accuracy")
-                            else:
-                                print(f"      ⚠️  CPT {target_cpt} search returned poor quality results")
-                                verification_notes.append(f"⚠️ CPT {target_cpt} found but description quality uncertain - manual verification required")
-                        else:
-                            print(f"      ⚠️  Could not extract CPT code from case data")
-                            verification_notes.append("⚠️ CPT code not found in case data - manual entry required")
-                    elif not search_engine.enabled:
-                        print(f"      ℹ️  Web search disabled")
-                        if not has_excel_procedure:
-                            verification_notes.append("⚠️ Web search disabled and Excel data missing - verify all codes manually")
-                    else:
-                        print(f"      ✅ Using Excel procedure data")
-                        
-                except ImportError:
-                    print(f"      ⚠️  search_engine module not available")
-                    if not has_excel_procedure:
-                        verification_notes.append("⚠️ Search unavailable and Excel data missing - manual verification required")
-                except Exception as search_error:
-                    print(f"      ⚠️  Search failed: {search_error}")
-                    if not has_excel_procedure:
-                        verification_notes.append(f"⚠️ Search failed - manual verification required")
-                
-                # Add verification notes to search results
+                                search_results = {'cpt_info': {'code': cpt_info.code, 'description': cpt_info.description, 'source_url': cpt_info.source_url}}
+                except Exception:
+                    pass
+
                 if verification_notes:
-                    if not search_results:
-                        search_results = {}
+                    search_results = search_results or {}
                     search_results['verification_notes'] = verification_notes
-                
-                # Generate AI-powered annotator summary
-                # Pass documents if available (for full summary), or None (for partial summary)
+
                 documents_for_summary = result.documents if generation_mode.get("reports", True) else None
-                
                 annotator_summary = ai_engine.generate_annotator_summary(
                     case_details=case_data,
                     patient_persona=result.patient_persona,
                     generated_documents=documents_for_summary,
-                    search_results=search_results  # Pass search results AND verification notes to AI
+                    search_results=search_results
                 )
-                
-                # Create PDF from structured summary
-                # Pass persona so PDF can extract CPT/ICD codes
+
                 sum_path = pdf_generator.create_annotator_summary_pdf(
                     patient_id=patient_id,
                     annotator_summary=annotator_summary,
                     case_details=case_data,
                     patient_persona=result.patient_persona,
-                    output_folder=SUMMARY_DIR  # Use dedicated summary folder
+                    output_folder=SUMMARY_DIR,
+                    version=doc_version
                 )
-                
+
                 if sum_path:
-                    print(f"   📊 Annotator Summary Created: {os.path.basename(sum_path)}")
-                    # Show verification notes count if any
-                    if verification_notes:
-                        print(f"      ⚠️  {len(verification_notes)} verification note(s) added to summary")
+                    sf = os.path.basename(sum_path)
+                    docs_written.append(sf)
+                    print(f"   📊 Annotator Summary Created: {sf}")
                 else:
                     print(f"   ⚠️  Annotator Summary creation failed.")
-                    
+
             except Exception as e:
                 print(f"   ⚠️  Annotator Summary Generation Failed: {e}")
-                # Continue processing even if summary fails
-        
-        # Processing complete
 
-        # Return the new name for caching
+        # ═══ PATIENT TEXT RECORD ═══════════════════════════════════════════════
+        if result.patient_persona:
+            try:
+                rec_path = patient_record_writer.write_patient_record(
+                    patient_id=patient_id,
+                    persona=result.patient_persona,
+                    version=doc_version,
+                    docs_generated=docs_written,
+                    feedback=feedback
+                )
+                print(f"   📝 Patient Record Updated: {os.path.basename(rec_path)}")
+            except Exception as e:
+                print(f"   ⚠️  Patient Record write failed: {e}")
+
         return p_full_name if 'p_full_name' in locals() else None
 
     except Exception as e:

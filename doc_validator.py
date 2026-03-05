@@ -76,7 +76,7 @@ def format_clinical_document(metadata: dict, structured_content: dict) -> str:
     if "narrative" in structured_content:
         narrative_block = f"\n[CLINICAL_TEXT]\n{structured_content['narrative']}\n"
         
-    final_doc = f"--- REPORT START ---\n{header}\n{chr(10).join(body_parts)}{narrative_block}\n--- REPORT END ---"
+    final_doc = f"{header}\n{chr(10).join(body_parts)}{narrative_block}\n"
     return final_doc
 
 # CONFIG
@@ -92,23 +92,20 @@ def validate_structure(document_text: str) -> tuple[bool, list[str]]:
     Returns (IsValid, ListOfErrors).
     """
     errors = []
-    
-    # Rule 1: Markers
-    if "--- REPORT START ---" not in document_text:
-        errors.append("Missing Start Marker")
-    if "--- REPORT END ---" not in document_text:
-        errors.append("Missing End Marker")
-        
+
+    # Rule 1: Must NOT contain old start/end markers (strip artifact)
+    # (We no longer require them; presence is not an error, just ignored)
+
     # Rule 2: Metadata Header
     if VALIDATION_CONFIG["require_metadata_block"] and "[REPORT_METADATA]" not in document_text:
         errors.append("Missing [REPORT_METADATA]")
-        
+
     # Rule 3: Key fields
     required_keys = ["PATIENT_ID:", "MRN:", "PATIENT_NAME:", "DOB:", "REPORT_DATE:"]
     for key in required_keys:
         if key not in document_text:
-             errors.append(f"Missing Metadata Field: {key}")
-             
+            errors.append(f"Missing Metadata Field: {key}")
+
     # Rule 4: Ban Forbidden Patterns
     if not VALIDATION_CONFIG["allow_triple_quotes"] and '"""' in document_text:
         errors.append("Triple quotes detected")
@@ -116,11 +113,10 @@ def validate_structure(document_text: str) -> tuple[bool, list[str]]:
         errors.append("Redaction detected")
     if not VALIDATION_CONFIG["allow_markdown_bold"] and "**" in document_text:
         errors.append("Markdown bold detected")
-        
+
     if errors:
-        # print(f"   ⚠️ Validation Failed: {errors}") # Noise reduction
         return False, errors
-        
+
     return True, []
 
 def sanitize_narrative(text: str, identity_map: dict) -> str:

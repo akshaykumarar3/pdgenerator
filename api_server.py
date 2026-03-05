@@ -25,6 +25,34 @@ import core.patient_db as patient_db
 app = Flask(__name__)
 CORS(app)  # Allow all origins so the file:// UI can call us
 
+# ─── Swagger Setup ────────────────────────────────────────────────────────────
+from flasgger import Swagger
+
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec_1',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/"
+}
+
+template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "Clinical Data Generator API",
+        "description": "REST Services for synthesizing clinical PDFs and Patient Personas.",
+        "version": "2.0.0"
+    }
+}
+swagger = Swagger(app, config=swagger_config, template=template)
+
 # ─── In-memory job store ──────────────────────────────────────────────────────
 # { job_id: { status, logs: [], error, result } }
 _jobs: dict = {}
@@ -188,19 +216,90 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
             _jobs[job_id]["logs"].append(f"❌ {err_msg}")
 
 
+def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
+    """Background worker for batch processing all patients."""
+    try:
+        def log_cb(msg):
+            with _jobs_lock:
+                _jobs[job_id]["logs"].append(msg)
+
+        all_ids = data_loader.get_all_patient_ids()
+        log_cb(f"🚀 Starting BATCH generation for {len(all_ids)} patients.")
+
+        success_count = 0
+        from generator import process_patient_workflow
+
+        for p_id in all_ids:
+            log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
+            try:
+                # Capture logs using the existing context manager redirect approach
+                import sys, io
+                original_stdout = sys.stdout
+                sys.stdout = io.StringIO()
+
+                try:
+                    current_names = patient_db.get_all_patient_names()
+                    result_name = process_patient_workflow(
+                        patient_id=p_id,
+                        feedback=feedback,
+                        excluded_names=current_names,
+                        generation_mode=generation_mode
+                    )
+                finally:
+                    # Flush captured stdouts as logs
+                    output = sys.stdout.getvalue()
+                    sys.stdout = original_stdout
+                    for line in output.splitlines():
+                        if line.strip():
+                            log_cb(line)
+
+                success_count += 1
+                log_cb(f"✅ {p_id} completed successfully (Result: {result_name})")
+
+            except Exception as pe:
+                log_cb(f"❌ Failed processing {p_id}: {pe}")
+                
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "done"
+            _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(all_ids)} OK"
+            _jobs[job_id]["logs"].append(f"🏁 Batch run finished.")
+
+    except Exception as e:
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "error"
+            _jobs[job_id]["error"] = str(e)
+            _jobs[job_id]["logs"].append(f"❌ Fatal Batch Exception: {str(e)}")
+
+
 # ═══════════════════════════════════════════════════════════════════════════════
 #  ROUTES
 # ═══════════════════════════════════════════════════════════════════════════════
 
 @app.route("/api/status")
 def api_status():
-    """Health check."""
+    """
+    Health check.
+    ---
+    tags:
+      - System
+    responses:
+      200:
+        description: Returns server online status
+    """
     return jsonify({"ok": True, "timestamp": datetime.now().isoformat()})
 
 
 @app.route("/api/patients")
 def api_patients():
-    """Return all patient IDs from the Excel plan."""
+    """
+    Return all patient IDs from the Excel plan.
+    ---
+    tags:
+      - Patients
+    responses:
+      200:
+        description: List of patient IDs
+    """
     try:
         ids = data_loader.get_all_patient_ids()
         return jsonify({"patients": ids})
@@ -219,7 +318,30 @@ def api_get_patient(patient_id: str):
 
 @app.route("/api/generate", methods=["POST"])
 def api_generate():
-    """Spawn a background generation job. Returns job_id immediately."""
+    """
+    Spawn a background generation job. Returns job_id immediately.
+    ---
+    tags:
+      - Generation
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            patient_id:
+              type: string
+            generation_mode:
+              type: object
+            pa_optimize:
+              type: boolean
+            feedback:
+              type: string
+    responses:
+      202:
+        description: Job queued
+    """
     body = request.get_json(force=True) or {}
     patient_id     = str(body.get("patient_id", "")).strip()
     feedback       = body.get("feedback", "")
@@ -268,9 +390,66 @@ def api_generate():
     return jsonify({"job_id": job_id, "status": "queued"})
 
 
+@app.route("/api/generate_all", methods=["POST"])
+def api_generate_all():
+    """
+    Spawn a background batch generation job for all patients.
+    ---
+    tags:
+      - Generation
+    responses:
+      202:
+        description: Batch Job queued
+    """
+    body = request.get_json(force=True) or {}
+    feedback       = body.get("feedback", "")
+    generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
+    pa_optimize    = bool(body.get("pa_optimize", False))
+
+    job_id = str(uuid.uuid4())
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "status": "queued",
+            "logs": [f"🚀 BATCH Job {job_id} queued"],
+            "error": None,
+            "result": None,
+            "changes_summary": None,
+            "patient_id": "BATCH",
+            "created_at": datetime.now().isoformat(),
+            "request_context": {
+                "feedback": feedback,
+                "generation_mode": generation_mode,
+                "pa_optimize": pa_optimize,
+                "is_batch": True
+            }
+        }
+
+    t = threading.Thread(
+        target=_run_batch_generation,
+        args=(job_id, feedback, generation_mode, pa_optimize),
+        daemon=True
+    )
+    t.start()
+
+    return jsonify({"job_id": job_id, "status": "queued"})
+
+
 @app.route("/api/job/<job_id>")
 def api_job_status(job_id: str):
-    """Poll job status + latest log lines."""
+    """
+    Poll job status + latest log lines.
+    ---
+    tags:
+      - Generation
+    parameters:
+      - in: path
+        name: job_id
+        type: string
+        required: true
+    responses:
+      200:
+        description: Job details and logs
+    """
     with _jobs_lock:
         job = _jobs.get(job_id)
 
@@ -297,32 +476,58 @@ def api_job_status(job_id: str):
 
 @app.route("/api/output/<patient_id>")
 def api_output(patient_id: str):
-    """List all generated output files for a patient."""
+    """
+    List all generated output files for a patient.
+    ---
+    tags:
+      - Output
+    parameters:
+      - in: path
+        name: patient_id
+        type: string
+        required: true
+    responses:
+      200:
+        description: Files array
+    """
     files = []
 
-    # Reports
+    # Reports (exclude archive subfolder)
     report_folder = os.path.join(REPORTS_DIR, patient_id)
     if os.path.exists(report_folder):
         for f in sorted(os.listdir(report_folder)):
-            if f.endswith(".pdf"):
-                files.append({"type": "report", "name": f,
-                               "path": os.path.join(report_folder, f)})
+            if f.endswith(".pdf") and f != "archive":
+                full_path = os.path.join(report_folder, f)
+                if os.path.isfile(full_path):
+                    files.append({"type": "report", "name": f, "path": full_path})
 
-    # Persona
+    # Persona (match any -persona-vN.pdf pattern for versioned files)
     if os.path.exists(PERSONA_DIR):
         for f in sorted(os.listdir(PERSONA_DIR)):
-            if f.startswith(f"PERSONA-{patient_id}") and f.endswith(".pdf"):
-                files.append({"type": "persona", "name": f,
-                               "path": os.path.join(PERSONA_DIR, f)})
+            fp = os.path.join(PERSONA_DIR, f)
+            if str(patient_id) in f and f.endswith(".pdf") and "-persona" in f and os.path.isfile(fp):
+                files.append({"type": "persona", "name": f, "path": fp})
 
-    # Summary
+    # Summary (versioned)
     if os.path.exists(SUMMARY_DIR):
         for f in sorted(os.listdir(SUMMARY_DIR)):
-            if patient_id in f and f.endswith(".pdf"):
-                files.append({"type": "summary", "name": f,
-                               "path": os.path.join(SUMMARY_DIR, f)})
+            fp = os.path.join(SUMMARY_DIR, f)
+            if str(patient_id) in f and f.endswith(".pdf") and os.path.isfile(fp):
+                files.append({"type": "summary", "name": f, "path": fp})
 
     return jsonify({"patient_id": patient_id, "files": files})
+
+
+@app.route("/api/record/<patient_id>")
+def api_get_patient_record(patient_id: str):
+    """Return the human-readable patient text record."""
+    records_dir = os.path.join(OUTPUT_DIR, "records")
+    record_path = os.path.join(records_dir, f"{patient_id}-record.txt")
+    if not os.path.exists(record_path):
+        return jsonify({"error": "Record not found", "patient_id": patient_id}), 404
+    with open(record_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    return jsonify({"patient_id": patient_id, "record": content})
 
 
 @app.route("/api/download/<patient_id>/<file_type>/<filename>")
@@ -337,7 +542,121 @@ def api_download_file(patient_id: str, file_type: str, filename: str):
     else:
         return jsonify({"error": "Invalid file type"}), 400
     
-    return send_from_directory(directory, filename)
+    # Force inline viewing by explicitly setting mimetype and disposition
+    return send_from_directory(directory, filename, mimetype='application/pdf', as_attachment=False)
+
+
+@app.route("/api/purge", methods=["POST"])
+def api_purge():
+    """
+    Purge specific databases or generated files
+    ---
+    tags:
+      - System
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            target:
+              type: string
+              enum: [all, personas, documents, summaries_only, reports_only, patient]
+            patient_id:
+              type: string
+    responses:
+      200:
+        description: Purge successful
+    """
+    import purge_manager
+    body = request.get_json(force=True) or {}
+    target = body.get("target")
+
+    try:
+        if target == "all":
+            purge_manager.purge_all(force=True)
+        elif target == "personas":
+            purge_manager.purge_personas(force=True)
+        elif target == "documents":
+            purge_manager.purge_documents(force=True)
+        elif target == "summaries_only":
+            purge_manager.purge_summaries_only(force=True)
+        elif target == "reports_only":
+            purge_manager.purge_reports_only(force=True)
+        elif target == "patient":
+            p_id = body.get("patient_id")
+            if not p_id:
+                return jsonify({"error": "patient_id required"}), 400
+            purge_manager.purge_patient(p_id, force=True)
+        else:
+            return jsonify({"error": "Invalid target"}), 400
+            
+        return jsonify({"ok": True, "message": f"Purged {target} successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/template/save", methods=["POST"])
+def api_save_template():
+    """
+    Save a generated document as a global template
+    ---
+    tags:
+      - Templates
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            patient_id:
+              type: string
+            file_type:
+              type: string
+            filename:
+              type: string
+    responses:
+      200:
+        description: Document saved as template
+    """
+    import shutil, time
+    body = request.get_json(force=True) or {}
+    patient_id = body.get("patient_id")
+    file_type = body.get("file_type")
+    filename = body.get("filename")
+
+    if not all([patient_id, file_type, filename]):
+        return jsonify({"error": "Missing parameters"}), 400
+
+    base_dir = ""
+    if file_type == "persona": base_dir = PERSONA_DIR
+    elif file_type == "report": base_dir = os.path.join(REPORTS_DIR, patient_id)
+    elif file_type == "summary": base_dir = SUMMARY_DIR
+    
+    source_path = os.path.join(base_dir, filename)
+    if not os.path.exists(source_path):
+        return jsonify({"error": "Source file not found"}), 404
+
+    try:
+        templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+        archive_dir = os.path.join(templates_dir, "archive")
+        os.makedirs(archive_dir, exist_ok=True)
+
+        # File will be saved as template_persona.pdf, template_report.pdf, template_summary.pdf
+        target_name = f"template_{file_type}.pdf"
+        target_path = os.path.join(templates_dir, target_name)
+
+        if os.path.exists(target_path):
+            timestamp = int(time.time())
+            archived_name = f"template_{file_type}_archived_{timestamp}.pdf"
+            shutil.move(target_path, os.path.join(archive_dir, archived_name))
+
+        shutil.copy2(source_path, target_path)
+        return jsonify({"ok": True, "message": f"Saved {target_name}"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
