@@ -238,6 +238,8 @@ pdgenerator/
 ├── ai_engine.py                # LLM interaction + Pydantic models
 ├── pdf_generator.py            # PDF rendering (ReportLab)
 ├── prompts.py                  # AI prompt configuration
+├── state_manager.py            # V3 Core: Patient State deterministic source of truth
+├── document_planner.py         # V3 Core: Dynamic template planning and schema rendering
 ├── search_engine.py            # Web search for medical codes (Tavily)
 ├── doc_validator.py            # Document structure validation
 ├── data_loader.py              # Excel case data loading

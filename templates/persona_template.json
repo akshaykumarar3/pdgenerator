@@ -1,0 +1,42 @@
+{
+    "title": "Patient Persona Record",
+    "sections": [
+        "identity",
+        "demographics",
+        "insurance",
+        "providers",
+        "medical_history",
+        "medications",
+        "allergies",
+        "lifestyle"
+    ],
+    "identity": {
+        "patient_id": "patient_state.patient_id",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "demographics": {
+        "name": "patient_state.demographics.name",
+        "dob": "patient_state.demographics.dob",
+        "gender": "patient_state.demographics.gender",
+        "race": "patient_state.demographics.race",
+        "height": "patient_state.demographics.height",
+        "weight": "patient_state.demographics.weight"
+    },
+    "insurance": {
+        "payer": "patient_state.insurance.payer",
+        "plan": "patient_state.insurance.plan",
+        "member_id": "patient_state.identifiers.insurance_member_id"
+    },
+    "providers": "patient_state.providers",
+    "medical_history": {
+        "diagnoses": "patient_state.diagnoses"
+    },
+    "medications": "patient_state.medications",
+    "allergies": "patient_state.allergies",
+    "lifestyle": {
+        "tobacco_use": "",
+        "alcohol_use": "",
+        "exercise": "",
+        "diet": ""
+    }
+}

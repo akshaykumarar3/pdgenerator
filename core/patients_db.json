@@ -4,8 +4,8 @@
     "last_name": "Dorian",
     "gender": "male",
     "dob": "1980-09-13",
-    "address": "1234 Sacred Heart Drive, Houston, TX 60614",
-    "telecom": "555-555-1212",
+    "address": "123 Main St, Houston, TX 77001",
+    "telecom": "555-123-4567",
     "race": "Caucasian",
     "height": "6 ft 1 in",
     "weight": "190 lbs",
@@ -18,38 +18,38 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
-      "name": "Carla Espinosa",
-      "telecom": "555-555-1313",
-      "address": "987 Shell Avenue, Houston, TX 77001",
-      "gender": "female",
+      "relationship": "Emergency Contact",
+      "name": "Christopher Turk",
+      "telecom": "555-765-4321",
+      "address": "456 Elm St, Houston, TX 77002",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2020-09-01",
+      "period_start": "2000-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Christopher Turk, MD",
+      "generalPractitioner": "Dr. Eli Scrubs, MD",
       "formatted_npi": "1234567890",
-      "managingOrganization": "Sacred Heart Hospital"
+      "managingOrganization": "Houston Methodist Hospital"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-999999",
       "policy_number": "POL-2025-541056",
-      "effective_date": "2024-01-01",
+      "effective_date": "2025-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
+      "copay_amount": "$30",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "John Dorian is a 45-year-old Caucasian male residing in Houston, Texas. He presents with a history of atherosclerotic heart disease and persistent angina symptoms. Despite adherence to a current medical regimen and lifestyle modifications, including medication management with Lipitor, Norvasc, Aspirin, and intermittent use of Nitroglycerin for chest pain, he continues to experience symptoms. His care is coordinated by Dr. Christopher Turk at Sacred Heart Hospital. John's social history includes moderate alcohol use with meals and consistent physical activity focused on cardiac health management. His allergies and vaccination records are up-to-date, including a known allergy to Penicillin causing a moderate rash. John is evaluated periodically to adjust treatment strategies and explore diagnostic avenues, such as the scheduled myocardial perfusion imaging to better assess his cardiac perfusion status.",
-    "expected_procedure_date": "2026-03-16",
+    "bio_narrative": "",
+    "expected_procedure_date": "2026-03-20",
     "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -57,74 +57,63 @@
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
-      "department": "Radiology Department"
+      "department": "Radiology"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Lisa Cuddy, MD",
+      "requesting_provider": "Dr. Michael Chen, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "John Dorian presents with persistent angina, necessitating myocardial perfusion imaging to assess perfusion defects due to atherosclerotic heart disease.",
+      "clinical_justification": "Patient shows symptoms that could signify coronary artery dysfunction, needing further diagnostic clarification through imaging.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
-        "R07.89 - Other chest pain"
+        "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Current pharmacological regimen including Nitroglycerin, Lipitor, and Norvasc shows limited benefit.",
-      "expected_outcome": "Identify presence of perfusion defects and guide further therapeutic intervention."
+      "previous_treatments": "None",
+      "expected_outcome": "Confirmation or exclusion of coronary artery disease."
     },
     "medications": [
-      {
-        "brand": "Lipitor",
-        "generic_name": "Atorvastatin 20mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Christopher Turk, MD",
-        "status": "current",
-        "start_date": "2022-01-01",
-        "end_date": "ongoing",
-        "reason": "Atherosclerotic heart disease"
-      },
-      {
-        "brand": "Norvasc",
-        "generic_name": "Amlodipine 5mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Christopher Turk, MD",
-        "status": "current",
-        "start_date": "2022-01-01",
-        "end_date": "ongoing",
-        "reason": "Hypertension"
-      },
-      {
-        "brand": "Metoprolol",
-        "generic_name": "Metoprolol Tartrate 50mg",
-        "dosage": "1 tablet twice daily",
-        "qty": "60 tablets",
-        "prescribed_by": "Dr. Christopher Turk, MD",
-        "status": "past",
-        "start_date": "2021-01-01",
-        "end_date": "2021-12-31",
-        "reason": "Hypertension control"
-      },
       {
         "brand": "Aspirin",
         "generic_name": "Aspirin 81mg",
         "dosage": "1 tablet daily",
         "qty": "30 tablets",
-        "prescribed_by": "Dr. Christopher Turk, MD",
-        "status": "ongoing",
-        "start_date": "2022-01-01",
-        "end_date": "ongoing",
-        "reason": "Cardiac prevention"
-      },
-      {
-        "brand": "Nitroglycerin",
-        "generic_name": "Nitroglycerin 0.4mg",
-        "dosage": "As needed for chest pain",
-        "qty": "20 tablets PRN",
-        "prescribed_by": "Dr. Christopher Turk, MD",
+        "prescribed_by": "Dr. Eli Scrubs, MD",
         "status": "current",
         "start_date": "2025-01-01",
         "end_date": "ongoing",
-        "reason": "Angina management"
+        "reason": "Coronary artery disease prevention"
+      },
+      {
+        "brand": "Lopressor",
+        "generic_name": "Metoprolol 50mg",
+        "dosage": "1 tablet twice daily",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Eli Scrubs, MD",
+        "status": "current",
+        "start_date": "2025-06-15",
+        "end_date": "ongoing",
+        "reason": "Management of hypertension"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet at night",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Eli Scrubs, MD",
+        "status": "ongoing",
+        "start_date": "2024-09-15",
+        "end_date": "ongoing",
+        "reason": "Management of hyperlipidemia"
+      },
+      {
+        "brand": "Zofran",
+        "generic_name": "Ondansetron 4mg",
+        "dosage": "1 tablet as needed",
+        "qty": "10 tablets",
+        "prescribed_by": "Dr. Eli Scrubs, MD",
+        "status": "past",
+        "start_date": "2025-12-01",
+        "end_date": "2026-01-01",
+        "reason": "Control of nausea"
       }
     ],
     "allergies": [
@@ -132,6 +121,13 @@
         "allergen": "Penicillin",
         "allergy_type": "Drug",
         "reaction": "Rash",
+        "severity": "Severe",
+        "onset_date": "2000-05-12"
+      },
+      {
+        "allergen": "Peanuts",
+        "allergy_type": "Food",
+        "reaction": "Hives",
         "severity": "Moderate",
         "onset_date": "Unknown"
       }
@@ -140,102 +136,160 @@
       {
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
-        "date_administered": "2025-10-01",
-        "administered_by": "Dr. Christopher Turk, MD",
+        "date_administered": "2025-09-10",
+        "administered_by": "CVS Pharmacy",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
-        "vaccine_name": "COVID-19 BNT162b2",
+        "vaccine_name": "COVID-19 mRNA BNT162b2",
         "vaccine_type": "mRNA",
-        "date_administered": "2026-01-10",
-        "administered_by": "Dr. Christopher Turk, MD",
+        "date_administered": "2025-10-15",
+        "administered_by": "Houston Health Dept",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
       {
-        "vaccine_name": "Tetanus",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2024-06-15",
-        "administered_by": "Dr. Christopher Turk, MD",
+        "vaccine_name": "Pneumococcal",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2024-11-20",
+        "administered_by": "Walgreens",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2020-02-01",
-        "administered_by": "Dr. Christopher Turk, MD",
-        "dose_number": "1",
-        "reason": "Occupational"
+        "vaccine_type": "Subunit",
+        "date_administered": "2023-06-12",
+        "administered_by": "Houston Methodist Hospital",
+        "dose_number": "3",
+        "reason": "Catch-up"
       }
     ],
     "therapies": [
       {
-        "therapy_type": "Cardiac Rehab",
-        "cpt_code": "G0422",
-        "cpt_description": "Intensive cardiac rehabilitation with or without exercise",
+        "therapy_type": "Mental Health / Psychotherapy",
+        "cpt_code": "90834",
+        "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
-          "I25.10"
+          "F41.1 - Generalized anxiety disorder"
         ],
-        "provider": "Dr. Amy Reed, PT",
-        "provider_npi": "",
-        "facility": "Heart Health Center",
-        "start_date": "2022-02-01",
-        "end_date": "2022-07-01",
-        "frequency": "3x/week",
+        "provider": "Dr. Alyssa Reed, PsyD",
+        "provider_npi": "9876543210",
+        "facility": "Houston Psychological Associates",
+        "start_date": "2024-01-20",
+        "end_date": "2025-02-01",
+        "frequency": "Weekly",
         "status": "Completed",
-        "reason": "Post myocardial infarction rehabilitation",
-        "notes": ""
-      },
-      {
-        "therapy_type": "Physical Therapy",
-        "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercise procedure",
-        "icd10_codes": [
-          "M54.5"
-        ],
-        "provider": "Dr. Amy Reed, PT",
-        "provider_npi": "",
-        "facility": "Active Recovery Clinic",
-        "start_date": "2021-07-01",
-        "end_date": "2022-01-01",
-        "frequency": "2x/week",
-        "status": "Completed",
-        "reason": "Back pain rehabilitation",
-        "notes": ""
+        "reason": "Management of anxiety",
+        "notes": "CBT techniques were used; patient showed improvement."
       }
     ],
-    "behavioral_notes": "John adheres well to medication but is advised to increase cardiovascular exercise. He occasionally consumes alcohol with meals. Past psychiatric assessments show a history of mild anxiety, managed without medication. Consistent follow-ups focus on lifestyle adjustments for his cardiac health.",
-    "encounters": [],
+    "behavioral_notes": "John maintains a balanced lifestyle with regular moderate exercise and adherence to medication. He has a history of anxiety that was managed with therapy. Alcohol is used moderately in social situations.",
+    "encounters": [
+      {
+        "encounter_date": "2025-11-10",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Routine follow-up for hypertension management.",
+        "provider": "Dr. Eli Scrubs, MD",
+        "provider_npi": "",
+        "facility": "Memorial Hermann Hospital",
+        "vital_signs": {
+          "recorded_date": "2025-11-10",
+          "blood_pressure": "130/85 mmHg",
+          "heart_rate": "74 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": null,
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Regular check-up for blood pressure.",
+        "doctor_note": "HPI: Patient is here for a regular follow-up to monitor his blood pressure levels. Reports feeling generally well with occasional headaches.\\nROS: Positive for headaches, otherwise non-contributory.\\nPE: BP 130/85, HR 74 bpm, Height 6'1'', Weight 190 lbs. Heart: Regular without murmurs.\\nAssessment: Stable hypertension controlled with current regimen.\\nPlan: Continue current meds, follow-up in 6 months.",
+        "observations": [
+          "Stable hypertension"
+        ],
+        "procedures_performed": [
+          "99213 - E&M Office Visit Level 3"
+        ],
+        "diagnoses": [
+          "I10 - Essential (primary) hypertension"
+        ],
+        "medications_prescribed": [
+          "Metoprolol 50mg"
+        ],
+        "care_team": [
+          "Dr. Eli Scrubs, MD"
+        ],
+        "progress_notes": "Patient remains stable under current treatment. No adjustments necessary.",
+        "follow_up_instructions": "Follow-up in 6 months."
+      },
+      {
+        "encounter_date": "2026-02-01",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Consultation for new onset chest pain.",
+        "provider": "Dr. Sarah Thompson, MD",
+        "provider_npi": "",
+        "facility": "Memorial Hermann Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-02-01",
+          "blood_pressure": "128/82 mmHg",
+          "heart_rate": "70 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": null,
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Experiencing intermittent chest pain.",
+        "doctor_note": "HPI: Patient presents with intermittent chest discomfort over the past week. Pain described as dull and diffuse, not associated with exertion.\\nROS: Positive for chest pain, no shortness of breath, no palpitations.\\nPE: Normal breath sounds, no peripheral edema.\\nAssessment: Differential includes atypical chest pain. Consider CAD but need further evaluation.\\nPlan: Requesting myocardial perfusion imaging to assess for coronary ischemia due to presentation. Lack of prior ECG or stress tests limits initial differential.",
+        "observations": [
+          "Intermittent dull chest pain noted"
+        ],
+        "procedures_performed": [
+          "99243 - Office consultation for a new or established patient"
+        ],
+        "diagnoses": [
+          "R07.9 - Chest Pain, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Sarah Thompson, MD"
+        ],
+        "progress_notes": "Pending myocardial perfusion imaging for further evaluation. Continues to report occasional chest pain without aggravating factors.",
+        "follow_up_instructions": "Schedule imaging within the next 4 weeks."
+      }
+    ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "With meals",
+      "alcohol_frequency": "Occasional wine with dinner",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-02-01",
-      "last_visit_reason": "Routine cardiac follow-up",
-      "missed_appointment": null,
+      "last_visit_reason": "Consultation for new onset chest pain",
+      "missed_appointment": false,
       "missed_appointment_reason": null,
-      "early_visit_reason": "Increased chest pain",
-      "mental_health_history": "Mild Anxiety (2020-2022)",
-      "mental_health_current": "No active symptoms",
-      "exercise_habits": "Regular walks and occasional gym visits",
-      "diet_notes": "Balanced diet with low sodium",
-      "family_history_relevant": "Father with history of coronary artery disease"
+      "early_visit_reason": null,
+      "mental_health_history": "Anxiety managed with psychotherapy",
+      "mental_health_current": null,
+      "exercise_habits": "Exercises 3 times a week",
+      "diet_notes": "Balanced diet, low in saturated fats",
+      "family_history_relevant": "Father with coronary artery disease"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-28",
-      "blood_pressure": "135/85 mmHg",
-      "heart_rate": "78 bpm",
+      "recorded_date": "2026-02-01",
+      "blood_pressure": "128/82 mmHg",
+      "heart_rate": "70 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": "25.1 kg/m\u00b2",
-      "oxygen_saturation": "97%",
-      "temperature": "98.4\u00b0F",
-      "respiratory_rate": "16 breaths/min"
+      "oxygen_saturation": null,
+      "temperature": null,
+      "respiratory_rate": null
     },
     "gender_specific_history": null
   },

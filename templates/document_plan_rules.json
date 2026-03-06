@@ -1,0 +1,80 @@
+{
+    "imaging": {
+        "description": "Imaging / Radiology Services",
+        "cpt_range": [
+            "70000",
+            "79999"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "radiology_report_template.json",
+            "imaging_report_template.json"
+        ]
+    },
+    "surgery": {
+        "description": "Surgery / Procedures",
+        "cpt_range": [
+            "10000",
+            "69999"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "operative_report_template.json"
+        ]
+    },
+    "therapy": {
+        "description": "Physical Medicine and Rehabilitation",
+        "cpt_range": [
+            "97000",
+            "97999"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "physical_therapy_note_template.json",
+            "therapy_note_template.json"
+        ]
+    },
+    "medication": {
+        "description": "Medication Management / Prescription",
+        "cpt_range": [
+            "J",
+            "Q"
+        ],
+        "keywords": [
+            "infusion",
+            "injection",
+            "prescription",
+            "medication",
+            "drug"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "medication_history_template.json"
+        ]
+    },
+    "mental_health": {
+        "description": "Mental Health / Behavioral",
+        "cpt_range": [
+            "90785",
+            "90899"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "mental_health_note_template.json",
+            "therapy_note_template.json"
+        ]
+    },
+    "diagnostic": {
+        "description": "General Evaluation and Management / Diagnostic (Default)",
+        "cpt_range": [
+            "99201",
+            "99499",
+            "80000",
+            "89398"
+        ],
+        "templates": [
+            "prior_auth_request_template.json",
+            "summary_template.json"
+        ]
+    }
+}

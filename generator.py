@@ -14,7 +14,9 @@ import history_manager
 import core.patient_db as patient_db
 import purge_manager
 import patient_record_writer
-from doc_validator import validate_structure
+import state_manager
+import document_planner
+from doc_validator import validate_structure, format_clinical_document
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
 
@@ -284,7 +286,10 @@ def process_patient_workflow(
     if existing_patient:
         print(f"   🔄 Existing record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
 
-    # ── 4. SCAN EXISTING REPORT TITLES (duplicate prevention) ─────────────────
+    # ── 4. BUILD PATIENT STATE & DOCUMENT PLAN ─────────────────────────────────
+    patient_state = state_manager.build_patient_state(patient_id, case_data)
+    document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
+    
     patient_report_folder = get_patient_report_folder(patient_id)
     existing_titles: list[str] = []
     if os.path.isdir(patient_report_folder):
@@ -303,10 +308,10 @@ def process_patient_workflow(
     try:
         result, usage = ai_engine.generate_clinical_data(
             case_details=case_data,
+            patient_state=patient_state,
+            document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_persona=existing_patient,
-            excluded_names=excluded_names,
             existing_filenames=existing_titles,
         )
     except Exception as e:
@@ -374,10 +379,31 @@ def process_patient_workflow(
                 else:
                     print(f"      ✅ AI fixed the document.")
 
+            # V3 Architecture formatting
+            formatted_content = doc.content
+            try:
+                import json
+                structured_data = json.loads(doc.content)
+                metadata = {
+                    "patient_id": patient_id,
+                    "mrn": current_mrn,
+                    "patient_name": p_full_name or "Unknown",
+                    "dob": result.patient_persona.dob if result.patient_persona else "",
+                    "gender": result.patient_persona.gender if result.patient_persona else "",
+                    "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                    "provider": result.patient_persona.provider if result.patient_persona else "Unknown",
+                    "facility": "Diagnostic Center",
+                    "accession_id": f"ACC-{patient_id}-{seq_str}",
+                    "doc_type": doc.title_hint
+                }
+                formatted_content = format_clinical_document(metadata, structured_data)
+            except Exception as e:
+                print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
+
             pdf_path = pdf_generator.create_patient_pdf(
                 patient_id=patient_id,
                 doc_type=final_filename_base,
-                content=doc.content,
+                content=formatted_content,
                 patient_persona=result.patient_persona,
                 doc_metadata=doc,
                 base_output_folder=patient_report_folder,

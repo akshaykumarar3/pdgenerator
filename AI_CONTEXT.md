@@ -16,9 +16,11 @@ The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic
 generator.py          → Main orchestrator, REPL loop
 ai_engine.py          → LLM interaction (OpenAI/Vertex AI)
 prompts.py            → Centralized AI prompts & instructions
+state_manager.py      → V3 Core: Patient State deterministic source of truth
+document_planner.py   → V3 Core: Dynamic template planning and schema rendering
 pdf_generator.py      → PDF rendering (ReportLab)
 search_engine.py      → 🔍 Web search for medical codes (Tavily API)
-doc_validator.py      → Document structure validation
+doc_validator.py      → Document structure validation and JSON formatting
 data_loader.py        → Excel case data loading
 history_manager.py    → Conversation history
 core/patient_db.py    → Patient record persistence
@@ -166,6 +168,12 @@ Realistic healthcare facilities matching patient locality:
 - **Purge Management (`/api/purge`)**: Non-blocking modal in the UI to selectively or entirely wipe Generated Documents, Summaries, Personas, or the entire Patient Database.
 - **Save as Template (`/api/template/save`)**: Allows users to save a generated document into the `templates/` folder as a global template, archiving older templates automatically to `templates/archive/`.
 - **API Swagger Documentation**: Added `flasgger` to auto-generate OpenAPI spec pages at `/apidocs`.
+
+### V3 Architecture Core Updates (March 2026)
+
+- **Patient State Determinism**: Introduction of `state_manager.py` to freeze Identity/Demographics generation, reusing previously stored inputs cleanly to avoid AI hallucinations.
+- **Document Planner Logic**: Introduction of `document_planner.py` to dynamically assign rendering schemas per CPT code/case type before execution via `templates/document_plan_rules.json`.
+- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects instead of raw string narrative texts. These are later decoded in `doc_validator.py`.
 
 ### Centralized Prompts
 

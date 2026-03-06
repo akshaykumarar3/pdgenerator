@@ -1,0 +1,23 @@
+{
+    "title": "Prior Authorization Request",
+    "sections": [
+        "patient_information",
+        "requested_procedure",
+        "clinical_justification",
+        "supporting_diagnoses",
+        "previous_treatments",
+        "expected_outcome"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "requested_procedure": {
+        "procedure": "patient_state.requested_procedure.procedure_name",
+        "cpt_code": "patient_state.requested_procedure.cpt_code"
+    },
+    "clinical_justification": "",
+    "supporting_diagnoses": "patient_state.diagnoses",
+    "previous_treatments": "",
+    "expected_outcome": ""
+}

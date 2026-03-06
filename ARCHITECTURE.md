@@ -1,284 +1,67 @@
-# System Architecture: Clinical Data Generator (v2.0)
+Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data Generator is an AI-driven pipeline that produces realistic synthetic healthcare data for testing Prior Authorization (PA) workflows.The system generates:Patient Personas: FHIR-style patient records.Clinical Reports: Consult notes, imaging reports, and lab reports.Clinical Summaries: Aggregated case overviews.Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.2. Core Architectural Principle: Single Source of TruthAll generated documents must derive from a single structured patient record called patient_state. This object represents the canonical patient data model and prevents inconsistent patient information across documents.Patient State Hierarchypatient_stateidentifiersdemographicsprovidersdiagnosesmedicationsencountersprocedure_requestfacilityConstraint: Every module reads from this object. Documents must never "hallucinate" or invent patient attributes independently.3. System Architecturegraph TD
+    UserInput["User Input / UI"] --> Generator["Workflow Orchestrator (generator.py)"]
+    Generator --> DataLoader["Case Loader (data_loader.py)"]
+    Generator --> PatientState["Patient State Builder"]
 
-## 1. Overview
-
-The Clinical Data Generator is a modular, AI-driven pipeline designed to synthesize high-fidelity synthetic healthcare datasets. It transforms minimal inputs (e.g., "Patient with Knee Pain") into comprehensive Electronic Health Record (EHR) artifacts, including clinical PDF documents and AI-generated medical imaging.
-
-The system utilizes **Generative AI (LLMs)** to ensure clinical logic, data density, and narrative consistency, employing **OpenAI or Google Cloud Vertex AI** for reasoning and **DALL-E 3 / Imagen 3** for medical image synthesis.
-
-## 2. Core Component Interaction
-
-```mermaid
-graph TD
-    UserInput["User Input (Interactive Loop)"] --> Generator["Workflow Orchestrator (generator.py)"]
+    PatientState --> AIEngine["AI Engine (ai_engine.py)"]
+    AIEngine --> Documents["Clinical Document Generator"]
     
-    subgraph "Core Modules"
-        Generator --> Prompts["Prompts Config (prompts.py)"]
-        Generator --> Loader["Data Loader (data_loader.py)"]
-        Generator --> AI["AI Engine (ai_engine.py)"]
-        Generator --> PDF["PDF Factory (pdf_generator.py)"]
-        Generator --> Search["Search Engine (search_engine.py)"]
-        Generator --> History["History Manager (history_manager.py)"]
-        Generator --> DB["Patient DB (core/patient_db.py)"]
-        Generator --> Val["Doc Validator (doc_validator.py)"]
-    end
+    Documents --> Validator["Document Validator (doc_validator.py)"]
+    Validator --> PDFFactory["PDF Renderer (pdf_generator.py)"]
+    PDFFactory --> Output["generated_output/"]
     
-    subgraph "External AI Services"
-        AI --> LLMText["LLM (Text/Logic)"]
-        AI --> LLMImage["LLM (Image Generation)"]
-    end
-    
-    subgraph "External Data Services"
-        Search --> Tavily["Tavily API (Medical Search)"]
-        Search --> Cache["Search Cache (.search_cache/)"]
-    end
-    
-    subgraph "Outputs (Configurable)"
-        PDF --> Docs["patient-reports/<ID>/*.pdf"]
-        PDF --> Persona["persona/*-persona.pdf"]
-        LLMImage --> Images["patient-reports/<ID>/images/*.png"]
-        History --> Logs["logs/*.txt"]
-    end
-```
-
-## 3. Module Design & Logic
-
-### A. Workflow Orchestrator (`generator.py`)
-
-This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to process user commands.
-
-* **Initialization**: Loads configuration (`cred/.env`) and database schema.
-* **Command Parsing**: Handles patient IDs, batch mode (`*`), purge commands (`--`), and feedback (`ID-feedback`).
-* **Generation Modes**: Supports 5 modes (Persona+Reports+Summary, Reports+Summary, Summary only, Reports only, Persona only).
-* **Temporal Consistency**: Implements date calculation helpers for future procedure dates and timeline alignment.
-* **Document Coherence**: Loads existing context to ensure consistency across generation modes.
-
-#### Temporal Logic
-
-**Date Calculation Functions**:
-
-```python
-calculate_procedure_date() -> str
-    # Generates future date 7-90 days from today
-    # Example: "2026-03-15"
-
-calculate_encounter_date(procedure_date_str: str, days_before: int) -> str
-    # Calculates date relative to procedure
-    # Example: procedure="2026-03-15", days_before=14 → "2026-03-01"
-
-get_today_date() -> str
-    # Returns current date in ISO format
-    # Example: "2026-02-17"
-```
-
-**Timeline Requirements**:
-* Medical history events: 6 months to 5 years BEFORE procedure
-* Recent encounters/consultations: 1-12 weeks BEFORE procedure
-* Lab results/diagnostic tests: 1-4 weeks BEFORE procedure
-* Procedure date: 7-90 days in FUTURE from today
-
-#### Document Coherence
-
-**Context Loading Function**:
-
-```python
-load_existing_context(patient_id: str, generation_mode: dict) -> dict
-    # Returns: {
-    #     "persona": existing_patient_data,
-    #     "reports": list_of_report_files,
-    #     "summary": summary_file_path,
-    #     "procedure_date": "2026-03-15",
-    #     "facility": "Massachusetts General Hospital, Boston, MA"
-    # }
-```
-
-When generating reports/summary without persona, this function extracts facility and temporal data from existing persona to maintain consistency.
-
-* **Document Selection**: After Patient ID input, presents menu (default: **Persona + Reports + Summary**).
-* **Smart Duplicate Detection**:
-  * Scans existing documents in patient folder before generation
-  * Extracts document titles from PDF filenames (e.g., "DOC-221-001-CT_Scan.pdf" → "CT_Scan")
-  * Creates `existing_docs_map` to track existing documents by title
-  * Passes list of existing titles to AI Engine to prevent unnecessary duplicates
-  * Only generates multiple reports (e.g., Doc-221-001, Doc-221-002) when test case specifically requires different reports
-* **Persona Diversity Logic**:
-  * Before processing, fetches **All Existing Patient Names** from `core/patient_db.py`.
-  * Passes this list as an `exclusion_list` to the AI Engine to prevent duplicate characters.
-* **Artifact Generation**:
-  * **Images**: Calls `ai_engine.generate_clinical_image` for relevant document types.
-  * **PDFs**: Calls `pdf_generator` to render physical files.
-  * **Retry Logic**: If a document fails `doc_validator` checks, it calls `ai_engine` to fix it.
-
-### B. Prompts Configuration (`prompts.py`) ⚡ NEW
-
-Centralized repository for all AI instructions and prompts.
-
-* **Purpose**: Separate AI behavior from code logic for easy customization
-* **Key Components**:
-  * `SYSTEM_PROMPT` - Core AI role and rules
-  * `get_clinical_data_prompt()` - Main document generation instructions
-  * `get_image_generation_prompt()` - Medical image synthesis specifications
-  * `get_document_repair_prompt()` - Validation fix instructions
-  * Helper functions for identity constraints
-* **User-Friendly**: Extensive comments and editing guidelines
-* **Benefits**: Non-developers can safely customize AI behavior
-
-### C. AI Engine (`ai_engine.py`)
-
-Abstracts all LLM interactions. It uses a **Hybrid SDK Approach**:
-
-* **Configuration**: Loads secrets from `cred/.env`.
-* **Prompt Integration**: Imports all prompts from `prompts.py`
-* **Persona Logic**:
-  * **Universe Selection**: Randomly picks a fictional universe (from `prompts.CHARACTER_UNIVERSES`)
-  * **Uniqueness Constraint**: Avoids names in the provided `exclusion_list`.
-  * **Feedback Override**: User-requested names override all integrity checks.
-* **Logic/Text**: Uses `instructor` wrapped clients for Pydantic-structured outputs.
-* **Vision**: Uses DALL-E 3 or Imagen 3 for AI-generated medical images.
-
-### D. PDF Factory (`pdf_generator.py`)
-
-Converts structured data into professional clinical documents using `reportlab`.
-
-* **Features**: HTML Sanitization, Dynamic Templates (Consult vs Lab), AI-generated image embedding
-* **Image Strategy**: 100% AI-generated images (no static fallbacks)
-* **Annotator Summary**: Simplified layout with expected outcome and verification notes only
-
-### E. Search Engine (`search_engine.py`) 🔍 NEW
-
-Retrieves precise medical information from authoritative sources when Excel data is incomplete.
-
-* **Purpose**: Enhance data quality by fetching official CPT/ICD descriptions and policy criteria
-* **API Integration**: Uses Tavily API optimized for LLM applications
-* **Key Features**:
-  * CPT code lookup from AAPC, CMS, AMA
-  * ICD-10 code lookup from official databases
-  * Insurance policy criteria search
-  * File-based caching (24-hour TTL) to reduce API costs
-  * Quality thresholds to reject poor results
-* **Data Models**:
-  * `CPTCodeInfo`: Code, description, indications, source URL
-  * `ICD10CodeInfo`: Code, description, category, source URL
-  * `PolicyCriteria`: Coverage requirements, prior auth status
-* **Search Strategy**:
-  1. **Excel Data First**: Always prioritize data from Excel file
-  2. **Search Only When Needed**: Only search if Excel data is missing/incomplete
-  3. **Quality Validation**: Reject results with description < 20 characters
-  4. **Verification Notes**: Add notes when data quality is uncertain
-* **Configuration**: `ENABLE_WEB_SEARCH`, `TAVILY_API_KEY`, `SEARCH_CACHE_TTL` in `.env`
-
-### F. Purge Manager (`purge_manager.py`)
-
-Handles data lifecycle and cleanup.
-
-* **Configurable Targets**: Reads `OUTPUT_DIR` from `.env`.
-* **Granular Cleaning**: Can purge just documents, just personas, or everything.
-* **Safety**: Explicitly verifies paths before destructive operations.
-
-## 4. Developer Guide: How to Make Changes
-
-### How to Customize AI Prompts (Most Common)
-
-1. **Open `prompts.py`** (centralized location for all AI instructions)
-2. **Find the relevant function/constant** (e.g., `get_clinical_data_prompt()`)
-3. **Read the comments** for guidance on what's safe to change
-4. **Make your edits** following the guidelines
-5. **Test with TEST_MODE**: Set `TEST_MODE=true` in `.env` for cheaper testing
-
-### How to Add a New Field (e.g., "Blood Type")
-
-1. **Update Data Model**: Open `ai_engine.py` → `PatientPersona`, add `blood_type: str`.
-2. **Update Prompt**: Open `prompts.py` → add specific instruction to persona requirements.
-3. **Update PDF**: Open `pdf_generator.py` → `create_persona_pdf` to render the new field.
-
-### How to Change the AI Model
-
-1. Open `cred/.env` (provider config).
-2. Open `ai_engine.py` and modify `MODEL_NAME`.
-
-### How to Improve Image Quality
-
-1. Open `prompts.py`
-2. Find `get_image_generation_prompt()`
-3. Read comments for customization tips
-4. Add specific requirements (resolution, anatomical details, etc.)
-
-## 5. Directory Structure
-
-```
-pdgenerator/
-├── cred/                   # Credentials (Ignored by Git)
-│   ├── .env                # Config: keys, OUTPUT_DIR
-│   ├── gcp_auth_key.json   # Service Account Key
-│   └── examples/           # Example configurations (tracked by git)
-│       └── .env.example    # Template for setup
-├── core/                   # Static reference data & DB Logic
-│   ├── UAT Plan.xlsx       # Patient test cases
-│   ├── mockdata_schema.sql # Database schema
-│   ├── seed_template.sql   # SQL template (legacy/reference)
-│   ├── Sample persona.pdf  # Example output
-│   ├── patient_db.py       # Patient database module
-│   └── patients_db.json    # Central Patient Registry
-├── templates/              # Configuration Templates
-│   └── summary_template.json
-├── generated_output/       # (Default) Dynamic Output Dir
-│   ├── persona/            # Generated Personas (.pdf)
-│   ├── logs/               # Interaction Logs (.txt)
-│   └── patient-reports/    # Clinical Artifacts
-│       └── 237/
-│           ├── images/     # AI-generated medical images
-│           └── *.pdf
-├── prompts.py              # ⚡ Centralized AI Prompts & Instructions
-├── ai_engine.py            # AI Logic & Pydantic Framework
-├── generator.py            # Main Loop & Orchestrator
-├── pdf_generator.py        # ReportLab Rendering Logic
-├── doc_validator.py        # Document Structure Validator
-├── data_loader.py          # Excel case loader
-├── history_manager.py      # Conversation tracking
-├── purge_manager.py        # Data cleanup utilities
-├── AI_CONTEXT.md           # AI Reference Documentation
-├── ARCHITECTURE.md         # This file
-├── run.bat                 # Windows execution wrapper
-└── run.sh                  # Mac/Linux execution wrapper
-```
-
-## 6. Recent Architectural Changes
-
-### Removed Standalone Image Generation (Feb 2026)
-
-* Removed AI image generation from document workflow
-* Documents no longer include standalone generated images  
-* Simplified generation process focuses on text-based clinical documents
-* Removed image folder creation and image path handling
-
-### Smart Duplicate Detection (Feb 2026)
-
-* **Document Scanning**: Scans existing PDFs before generation to extract titles
-* **Intelligent Prevention**: Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
-* **AI Integration**: Passes existing document list to AI for smart decision-making
-* **Multiple Reports**: Only generates multiple reports when test case specifically requires different reports
-* **Tracking Map**: Added `existing_docs_map` to track documents by title for potential replacement
-
-### Updated Default Generation Mode (Feb 2026)
-
-* Changed default from "Summary + Reports" to "Persona + Reports + Summary"
-* Reordered menu options for better user experience
-* Comprehensive output by default for complete patient records
-
-### Code Cleanup (Feb 2026)
-
-* Removed `patch_prompts.py` and `patch_prompts_v2.py` (obsolete patching code)
-* Cleaner, more maintainable codebase
-
-### Centralized Prompts (v2.0)
-
-* Created `prompts.py` to separate AI logic from code
-* All prompt strings moved out of `ai_engine.py`
-* User-friendly comments and editing guidelines
-* Easier maintenance and customization
-
-### Cross-Platform Support
-
-* Added Windows batch script (`run.bat`)
-* Platform-specific documentation
-* Example configuration files for easy onboarding
+    Generator --> Search["Search Engine (search_engine.py)"]
+    Generator --> History["History Manager (history_manager.py)"]
+    Generator --> DB["Patient Database (core/patient_db.py)"]
+4. Patient State LayerPurposeThe Patient State Layer ensures that all documents reference the same patient data, preventing:Conflicting demographics.Mismatched MRNs.Inconsistent providers.Timeline drift.Schema Example{
+  "patient_id": "212",
+  "identifiers": {
+    "mrn": "MRN-212-2026",
+    "insurance_member_id": "MBR-999999",
+    "policy_number": "POL-2025-000001"
+  },
+  "demographics": {
+    "name": "Sandor Clegane",
+    "dob": "1965-03-23",
+    "gender": "Male",
+    "height": "6 ft 5 in",
+    "weight": "250 lbs"
+  },
+  "providers": [
+    {
+      "name": "Dr Jane Smith",
+      "specialty": "Cardiology",
+      "npi": "1234567890"
+    }
+  ],
+  "diagnoses": [
+    {
+      "code": "I25.10",
+      "condition": "Atherosclerotic heart disease"
+    }
+  ],
+  "requested_procedure": {
+    "procedure_name": "Cardiac CT Angiography",
+    "cpt_code": "75574",
+    "expected_date": "2026-03-15"
+  }
+}
+5. Generation WorkflowStepPhaseResponsibility1User InputReceives Patient ID, feedback, and generation mode.2Case Data LoadingLoads context from core/UAT Plan.xlsx (diagnoses, procedure requests).3Patient State ConstructionBuilds the deterministic patient_state object from Excel, DB, and AI persona fields.4Clinical Data GenerationAI generates narratives/justifications based on the patient_state context.5Document Validationdoc_validator.py checks for missing sections and structural integrity.6PDF Renderingpdf_generator.py handles layout, clinical tables, and metadata.7Output StorageSaves artifacts to generated_output/ with IDs and timestamps.6. Temporal ConsistencyMedical events follow a realistic clinical timeline relative to the requested procedure date.EventTimelineMedical History6 months – 5 years before procedureEncounters1 – 12 weeks before procedureLab Tests1 – 4 weeks before procedureProcedure7 – 90 days in the futureUtility functions in generator.py: calculate_procedure_date(), calculate_encounter_date().7. Duplicate PreventionThe system performs a pre-generation scan of existing outputs:Reads files in the patient-specific folder.Extracts existing document titles.Passes titles to the AI engine as "exclusion list."Prevents duplicate titles like Doc-221-001_CT_Scan.pdf unless explicitly required.8. Modular ComponentsAI Prompt Architecture (prompts.py)All prompts are centralized to allow for easier customization and consistent instructions (e.g., SYSTEM_PROMPT, get_clinical_data_prompt).Search Engine (search_engine.py)Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC or CMS.Caching: .search_cache/TTL: 24 hoursPatient Database (core/patient_db.py)Persistent storage of generated personas in core/patients_db.json to preserve consistency across different execution runs.9. Directory Structurepdgenerator/
+├── cred/                       # .env and credentials
+├── core/                       # Patient DB, Excel UAT plans
+├── templates/                  # PDF and Document templates
+├── generated_output/           # Final artifacts
+│   ├── persona/
+│   ├── patient-reports/
+│   ├── summary/
+│   └── logs/
+├── generator.py                # Main Orchestrator
+├── ai_engine.py                # LLM Interaction Layer
+├── prompts.py                  # Centralized Prompt Library
+├── pdf_generator.py            # Rendering Engine
+├── search_engine.py            # Web retrieval & Caching
+├── doc_validator.py            # Structural Validation
+├── data_loader.py              # File I/O for Case Data
+├── history_manager.py          # Session tracking
+└── purge_manager.py            # Cleanup utilities
+10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. SummaryThe Clinical Data Generator (v3) ensures Clinical Coherence by enforcing a deterministic patient_state layer. By combining structured data models with controlled LLM generation, the pipeline produces high-quality synthetic datasets suitable for rigorous healthcare software testing.

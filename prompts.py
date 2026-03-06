@@ -124,18 +124,17 @@ F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
 # - Document Formatting: Critical for validation - do not change markers
 # - Persona Requirements: Add/remove required patient fields
 
-def get_clinical_data_prompt(case_details: dict, user_feedback: str = "", 
-                             history_context: str = "", identity_constraint: str = "",
-                             feedback_instruction: str = "", existing_filenames: list = None) -> str:
+def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", 
+                             history_context: str = "", existing_filenames: list = None) -> str:
     """
     Generates the main prompt for clinical data generation.
     
     Args:
         case_details: Dict with 'procedure', 'outcome', 'details'
+        patient_state: Dict from state_manager.py containing deterministic identifiers & blanks
+        document_plan: Dict containing the document templates to fill
         user_feedback: Optional user corrections/instructions
         history_context: Previous interaction history
-        identity_constraint: Instructions for patient identity (new vs existing)
-        feedback_instruction: Formatted feedback block
         existing_filenames: List of existing document titles to avoid duplicates
     
     Returns:
@@ -151,12 +150,29 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
     - You MUST generate documents with DIFFERENT titles than these existing ones.
     - Focus on new types of clinical evidence not yet documented.
 """
+
+    import json
+    state_str = json.dumps(patient_state, indent=2)
+    plan_str = json.dumps(document_plan, indent=2)
+    feedback_instruction = get_feedback_instruction(user_feedback)
     
     return f"""
     **CLINICAL SCENARIO Requirements (IMMUTABLE Source of Truth):**
     - Procedure: {case_details['procedure']}
     - Target Outcome: {case_details['outcome']}
     - Clinical Context: {case_details['details']}
+    
+    **PATIENT STATE LAYER (DETERMINISTIC IDENTIFIERS):**
+    You MUST adhere strictly to the generated state identifiers:
+    ```json
+    {state_str}
+    ```
+    
+    **DOCUMENT PLAN (TEMPLATES TO FILL):**
+    The following templates must be populated. The keys denote the expected JSON structures:
+    ```json
+    {plan_str}
+    ```
     
     **PAST HISTORY (CONTEXT):**
     {history_context if history_context else "No prior history available."}
@@ -202,25 +218,13 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
           - Reference the CPT and ICD-10 codes from the persona where clinically appropriate.
           - Include detailed clinical narratives including doctor notes and progress notes.
           - Reference relevant encounters from the patient's encounter history.
+         - **DOCUMENT OUTPUT FORMAT**:
+          For each document template specified in the DOCUMENT PLAN, create a entry in the `documents` list.
+          The `content` field MUST contain the fully populated JSON representation of the template as a STRING.
+          Do NOT attempt to use markdown or raw text in `content`—it MUST be the stringified JSON matching the template structure.
+          The `title_hint` field should match the template's title or logically reflect it.
         - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
         - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
-        - **DOCUMENT STRUCTURE**:
-          - Header: Facility name, address, patient name, MRN, DOB, service date, provider, NPI
-          - Body: Clinical content appropriate to document type
-          - Footer: Provider signature, credentials, date
-        - **METADATA BLOCK (still required within document body)**:
-          ```text
-          [REPORT_METADATA]
-          PATIENT_ID: (Use Case ID)
-          MRN: (Current MRN)
-          PATIENT_NAME: (Full Name)
-          DOB: (YYYY-MM-DD)
-          REPORT_DATE: (YYYY-MM-DD from Timeline)
-          PROVIDER_NPI: (NPI from Persona)
-          CPT_CODES: (List relevant CPT codes from persona)
-          ICD10_CODES: (List relevant ICD-10 codes from persona)
-          ...
-          ```
         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
         - **NO TRIPLE QUOTES**: Do not use `'''`.
        - **METADATA**:
@@ -277,7 +281,7 @@ def get_clinical_data_prompt(case_details: dict, user_feedback: str = "",
          * Expected Outcome: "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
     11. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
        - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
-       {identity_constraint}
+       - **CRITICAL IMPERATIVE**: You MUST rely ONLY on `patient_state` for identifiers, MRN, naming, and demographics. DO NOT CREATE NEW IDENTIFIERS.
        - **Required Fields (ALL MUST BE FILLED)**:
          - `first_name`, `last_name`, `gender`, `dob`, `address`, `telecom`
          - **Biometrics**: `race`, `height`, `weight`

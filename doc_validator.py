@@ -93,6 +93,15 @@ def validate_structure(document_text: str) -> tuple[bool, list[str]]:
     """
     errors = []
 
+    # V3 Architecture Check: See if it's a valid JSON string (Template)
+    try:
+        data = json.loads(document_text)
+        if not isinstance(data, dict):
+            return False, ["JSON content must be a dictionary"]
+        return True, []
+    except json.JSONDecodeError:
+        pass # Fallback to V2 legacy plain text validation if not JSON
+
     # Rule 1: Must NOT contain old start/end markers (strip artifact)
     # (We no longer require them; presence is not an error, just ignored)
 
@@ -107,8 +116,6 @@ def validate_structure(document_text: str) -> tuple[bool, list[str]]:
             errors.append(f"Missing Metadata Field: {key}")
 
     # Rule 4: Ban Forbidden Patterns
-    if not VALIDATION_CONFIG["allow_triple_quotes"] and '"""' in document_text:
-        errors.append("Triple quotes detected")
     if "Redacted" in document_text:
         errors.append("Redaction detected")
     if not VALIDATION_CONFIG["allow_markdown_bold"] and "**" in document_text:

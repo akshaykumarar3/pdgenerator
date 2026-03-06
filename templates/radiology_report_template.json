@@ -1,0 +1,23 @@
+{
+    "title": "Radiology Report",
+    "sections": [
+        "patient_information",
+        "exam_type",
+        "clinical_history",
+        "findings",
+        "impression",
+        "radiologist_signature"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "exam_type": "",
+    "clinical_history": "",
+    "findings": "",
+    "impression": "",
+    "radiologist_signature": {
+        "name": "",
+        "npi": ""
+    }
+}
