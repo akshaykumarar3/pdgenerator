@@ -1,0 +1,45 @@
+{
+    "patient_id": "",
+    "identifiers": {
+        "mrn": "",
+        "insurance_member_id": "",
+        "policy_number": ""
+    },
+    "demographics": {
+        "name": "",
+        "dob": "",
+        "gender": "",
+        "race": "",
+        "height": "",
+        "weight": ""
+    },
+    "contact": {
+        "phone": "",
+        "address": "",
+        "city": "",
+        "state": "",
+        "zip": ""
+    },
+    "insurance": {
+        "payer": "",
+        "plan": ""
+    },
+    "providers": [
+        {
+            "name": "",
+            "specialty": "",
+            "npi": "",
+            "facility": ""
+        }
+    ],
+    "diagnoses": [],
+    "medications": [],
+    "allergies": [],
+    "timeline": [],
+    "requested_procedure": {
+        "procedure_name": "",
+        "cpt_code": "",
+        "expected_date": "",
+        "facility": ""
+    }
+}

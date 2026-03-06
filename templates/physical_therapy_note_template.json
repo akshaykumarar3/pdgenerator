@@ -1,0 +1,18 @@
+{
+    "title": "Physical Therapy Progress Note",
+    "sections": [
+        "patient_information",
+        "functional_assessment",
+        "therapy_interventions",
+        "patient_progress",
+        "future_plan"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "functional_assessment": "",
+    "therapy_interventions": "",
+    "patient_progress": "",
+    "future_plan": ""
+}

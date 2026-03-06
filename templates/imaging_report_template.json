@@ -1,0 +1,26 @@
+{
+    "title": "Diagnostic Imaging Report",
+    "sections": [
+        "patient_information",
+        "study_information",
+        "clinical_indication",
+        "technique",
+        "findings",
+        "impression"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "dob": "patient_state.demographics.dob",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "study_information": {
+        "study_type": "",
+        "study_date": "",
+        "facility": "",
+        "ordering_provider": ""
+    },
+    "clinical_indication": "",
+    "technique": "",
+    "findings": "",
+    "impression": ""
+}

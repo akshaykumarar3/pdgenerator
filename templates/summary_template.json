@@ -1,88 +1,35 @@
 {
-  "title": "Patient Clinical Summary",
-  "sections": [
-    "patient_details",
-    "diagnoses",
-    "encounters_documentation",
-    "contact_provider",
-    "treatment_plan",
-    "clinical_rationale"
-  ],
-  "patient_details": {
-    "name": "Gregory House",
-    "dob": "1959-05-15",
-    "gender": "Male",
-    "mrn": "MRN-211-2026",
-    "insurance_payer": "UnitedHealthcare",
-    "insurance_plan": "Choice Plus PPO"
-  },
-  "diagnoses": {
-    "columns": [
-      "code",
-      "condition",
-      "status",
-      "date_recorded"
+    "title": "Patient Clinical Summary",
+    "sections": [
+        "patient_details",
+        "diagnoses",
+        "encounters_documentation",
+        "treatment_plan",
+        "clinical_rationale",
+        "provider_contact"
     ],
-    "data": [
-      {
-        "code": "I25.10",
-        "condition": "Atherosclerotic heart disease of native coronary artery without angina pectoris",
-        "status": "Active",
-        "date_recorded": "2025-04-15"
-      },
-      {
-        "code": "R07.9",
-        "condition": "Chest pain, unspecified",
-        "status": "Active",
-        "date_recorded": "2025-05-05"
-      },
-      {
-        "code": "I51.7",
-        "condition": "Cardiomegaly",
-        "status": "Active",
-        "date_recorded": "2025-04-15"
-      }
-    ]
-  },
-  "encounters_documentation": {
-    "narrative_summary": "Patient presented to Dr. Lisa Cuddy at Princeton-Plainsboro Teaching Hospital with intermittent chest discomfort rated 6/10 and significant fatigue. Initial workup included a 12-lead ECG and a Standard Bruce Protocol Stress Test.",
-    "key_findings": [
-      {
-        "test": "ECG",
-        "date": "2025-05-05",
-        "result": "Demonstrated a Left Ventricular Hypertrophy (LVH) pattern."
-      },
-      {
-        "test": "Stress Test",
-        "date": "2025-05-10",
-        "result": "Patient achieved 85% of predicted maximal heart rate without acute ST changes; however, baseline LVH can mask ischemic changes."
-      }
-    ]
-  },
-  "contact_provider": {
-    "provider": "Dr. Lisa Cuddy, MD",
-    "facility": "Princeton-Plainsboro Teaching Hospital",
-    "address": "123 Hospital Road, Princeton, NJ, 08540",
-    "phone": "555-123-4567"
-  },
-  "treatment_plan": {
-    "procedure": "CPT 78452 - Myocardial perfusion imaging, tomographic (SPECT); multiple studies, at rest and/or stress",
-    "outcome": "Pending Authorization"
-  },
-  "clinical_rationale": {
-    "justification_text": "CPT code 78452 is medically necessary for this patient to accurately assess for inducible myocardial ischemia. Although the exercise stress test did not show overt arrhythmias, the patient's baseline LVH significantly limits the diagnostic sensitivity of a non-imaging stress test.",
-    "clinical_necessity_points": [
-      "ICD-10 I25.10: Atherosclerotic heart disease supports need for advanced cardiac imaging",
-      "ICD-10 R07.9: Persistent chest pain requires definitive diagnostic evaluation",
-      "ICD-10 I51.7: Cardiomegaly necessitates assessment of myocardial viability",
-      "Standard stress testing limited by baseline EKG abnormalities"
-    ]
-  },
-  "styling": {
-    "primary_color": "#27ae60",
-    "secondary_color": "#2980b9",
-    "accent_color": "#34495e",
-    "font_family": "Arial, sans-serif",
-    "layout": "medical_standard"
-  }
+    "patient_details": {
+        "source": "patient_state.demographics"
+    },
+    "diagnoses": {
+        "source": "patient_state.diagnoses"
+    },
+    "encounters_documentation": {
+        "source": "patient_state.timeline",
+        "narrative_summary": "",
+        "key_findings": []
+    },
+    "treatment_plan": {
+        "procedure": "patient_state.requested_procedure.procedure_name",
+        "cpt_code": "patient_state.requested_procedure.cpt_code",
+        "expected_date": "patient_state.requested_procedure.expected_date"
+    },
+    "clinical_rationale": {
+        "justification_text": "",
+        "clinical_necessity_points": []
+    },
+    "provider_contact": {
+        "provider": "patient_state.providers[0].name",
+        "facility": "patient_state.providers[0].facility"
+    }
 }

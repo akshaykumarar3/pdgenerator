@@ -479,35 +479,38 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
-def generate_clinical_data(case_details: dict, user_feedback: str = "", history_context: str = "", existing_persona: dict = None, excluded_names: List[str] = None, existing_filenames: List[str] = None) -> 'FinalResult':
+def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "", existing_filenames: List[str] = None) -> 'ClinicalDataPayload':
 
     """
-    Calls AI to generate clinical data (Persona + Documents) based on the case + feedback + history.
-    Values referencing 'existing_persona' are STRICT constraints.
+    Calls AI to generate clinical data (Persona + Documents) based on the patient state and plan.
     """
     
-    # Construct User Feedback Block
-    feedback_instruction = prompts.get_feedback_instruction(user_feedback)
+    # 1. Load actual JSON templates from disk
+    loaded_templates = {}
+    templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+    for tmpl_file in document_plan.get("document_templates", []):
+        tmpl_path = os.path.join(templates_dir, tmpl_file)
+        if os.path.exists(tmpl_path):
+            try:
+                with open(tmpl_path, "r") as f:
+                    loaded_templates[tmpl_file] = json.load(f)
+            except Exception as e:
+                print(f"⚠️ Failed to load template {tmpl_file}: {e}")
+                
+    # 2. Update document_plan with actual templates
+    full_document_plan = {
+        "case_type": document_plan.get("case_type"),
+        "procedure": document_plan.get("procedure"),
+        "templates": loaded_templates
+    }
 
-    # Identity Constraints
-    if existing_persona:
-        identity_constraint = prompts.get_existing_patient_constraint(existing_persona, case_details)
-
-    else:
-        # DYNAMIC DIVERSITY LOGIC
-        # 1. Select Random Universe
-        selected_universe = random.choice(CHARACTER_UNIVERSES)
-        
-        # 2. Generate identity constraint from prompts module
-        identity_constraint = prompts.get_new_patient_constraint(selected_universe, excluded_names)
-
-    # Generate main prompt from centralized prompts module
+    # 3. Generate main prompt from centralized prompts module
     prompt = prompts.get_clinical_data_prompt(
         case_details=case_details,
+        patient_state=patient_state,
+        document_plan=full_document_plan,
         user_feedback=user_feedback,
         history_context=history_context,
-        identity_constraint=identity_constraint,
-        feedback_instruction=feedback_instruction,
         existing_filenames=existing_filenames or []
     )
 
@@ -556,7 +559,6 @@ def generate_clinical_data(case_details: dict, user_feedback: str = "", history_
                  print(f"   [DEBUG] Raw Response Length: {len(resp.text)}")
                  
                  # Handle potential List response (e.g. [Object]) vs Object
-                 import json
                  try:
                      raw_text = resp.text.strip()
                      # Basic cleanup if md block

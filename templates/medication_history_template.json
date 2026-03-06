@@ -1,0 +1,22 @@
+{
+    "title": "Medication History",
+    "sections": [
+        "patient_info",
+        "medication_list"
+    ],
+    "patient_info": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "medication_list": [
+        {
+            "medication_name": "",
+            "dosage": "",
+            "frequency": "",
+            "prescribing_provider": "",
+            "start_date": "",
+            "end_date": "",
+            "indication": ""
+        }
+    ]
+}

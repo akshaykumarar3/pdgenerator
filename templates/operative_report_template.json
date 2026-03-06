@@ -1,0 +1,23 @@
+{
+    "title": "Operative Report",
+    "sections": [
+        "patient_information",
+        "procedure_details",
+        "operative_findings",
+        "procedure_description",
+        "postoperative_plan"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn"
+    },
+    "procedure_details": {
+        "procedure_name": "",
+        "cpt_code": "",
+        "date": "",
+        "surgeon": ""
+    },
+    "operative_findings": "",
+    "procedure_description": "",
+    "postoperative_plan": ""
+}
