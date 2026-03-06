@@ -1,11 +1,11 @@
 {
-  "210": {
-    "first_name": "John",
-    "last_name": "Dorian",
+  "212": {
+    "first_name": "Chandler",
+    "last_name": "Bing",
     "gender": "male",
-    "dob": "1980-09-13",
-    "address": "123 Main St, Houston, TX 77001",
-    "telecom": "555-123-4567",
+    "dob": "1970-04-08",
+    "address": "123 Central Perk Lane, Houston, TX 77002",
+    "telecom": "832-555-0199",
     "race": "Caucasian",
     "height": "6 ft 1 in",
     "weight": "190 lbs",
@@ -19,17 +19,17 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Christopher Turk",
-      "telecom": "555-765-4321",
-      "address": "456 Elm St, Houston, TX 77002",
-      "gender": "male",
+      "name": "Monica Geller",
+      "telecom": "832-555-0101",
+      "address": "456 West Side Ave, Houston, TX 77002",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2000-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Eli Scrubs, MD",
-      "formatted_npi": "1234567890",
+      "generalPractitioner": "Dr. Jennifer Preston, MD",
+      "formatted_npi": "9876543210",
       "managingOrganization": "Houston Methodist Hospital"
     },
     "link": {
@@ -37,20 +37,19 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "UHC-003",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-999999",
-      "policy_number": "POL-2025-541056",
-      "effective_date": "2025-01-01",
+      "member_id": "MBR-719234",
+      "policy_number": "POL-2026-1339",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$30",
+      "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "",
-    "expected_procedure_date": "2026-03-20",
-    "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
+    "expected_procedure_date": "2026-04-01",
+    "procedure_requested": "Cardiac CT Angiography (CTA)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
       "street_address": "6565 Fannin Street",
@@ -60,60 +59,50 @@
       "department": "Radiology"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Michael Chen, MD",
+      "requesting_provider": "Dr. Jennifer Preston, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient shows symptoms that could signify coronary artery dysfunction, needing further diagnostic clarification through imaging.",
+      "clinical_justification": "The patient exhibits signs of potential coronary anomalies without a prior stress test conducted. A Cardiac CT Angiography is deemed necessary to verify structural defects.",
       "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
+        "R07.9 - Chest pain, unspecified",
+        "Z13.6 - Encounter for screening for cardiovascular disorders"
       ],
       "previous_treatments": "None",
-      "expected_outcome": "Confirmation or exclusion of coronary artery disease."
+      "expected_outcome": "To confirm or rule out coronary anomalies and assist in clinical management."
     },
+    "bio_narrative": "Chandler Bing, a 55-year-old male from Houston, TX, has reported persistent chest pain over the past few months. His medical visits primarily focus on cardiovascular concerns, with previous procedures including ECG, which suggested possible anomalies necessitating further imaging. Chandler leads a relatively sedentary lifestyle, with a family history of heart disease. He maintains regular check-ups with his primary care provider, Dr. Jennifer Preston at Houston Methodist Hospital. His recent evaluations indicate the need for non-invasive imaging to better assess potential coronary conditions. His social and family histories emphasize the need for vigilant cardiovascular screening.",
     "medications": [
-      {
-        "brand": "Aspirin",
-        "generic_name": "Aspirin 81mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Eli Scrubs, MD",
-        "status": "current",
-        "start_date": "2025-01-01",
-        "end_date": "ongoing",
-        "reason": "Coronary artery disease prevention"
-      },
       {
         "brand": "Lopressor",
         "generic_name": "Metoprolol 50mg",
-        "dosage": "1 tablet twice daily",
-        "qty": "60 tablets",
-        "prescribed_by": "Dr. Eli Scrubs, MD",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jennifer Preston, MD",
         "status": "current",
-        "start_date": "2025-06-15",
+        "start_date": "2025-12-01",
         "end_date": "ongoing",
-        "reason": "Management of hypertension"
+        "reason": "Management of high blood pressure"
       },
       {
         "brand": "Lipitor",
         "generic_name": "Atorvastatin 20mg",
-        "dosage": "1 tablet at night",
+        "dosage": "1 tablet daily",
         "qty": "30 tablets",
-        "prescribed_by": "Dr. Eli Scrubs, MD",
-        "status": "ongoing",
-        "start_date": "2024-09-15",
+        "prescribed_by": "Dr. Jennifer Preston, MD",
+        "status": "current",
+        "start_date": "2025-11-15",
         "end_date": "ongoing",
-        "reason": "Management of hyperlipidemia"
+        "reason": "Management of high cholesterol"
       },
       {
-        "brand": "Zofran",
-        "generic_name": "Ondansetron 4mg",
-        "dosage": "1 tablet as needed",
-        "qty": "10 tablets",
-        "prescribed_by": "Dr. Eli Scrubs, MD",
-        "status": "past",
-        "start_date": "2025-12-01",
-        "end_date": "2026-01-01",
-        "reason": "Control of nausea"
+        "brand": "Aspirin",
+        "generic_name": "Aspirin 81mg",
+        "dosage": "1 tablet daily",
+        "qty": "90 tablets",
+        "prescribed_by": "Dr. Jennifer Preston, MD",
+        "status": "current",
+        "start_date": "2025-01-01",
+        "end_date": "ongoing",
+        "reason": "Cardiovascular prevention"
       }
     ],
     "allergies": [
@@ -121,331 +110,180 @@
         "allergen": "Penicillin",
         "allergy_type": "Drug",
         "reaction": "Rash",
-        "severity": "Severe",
-        "onset_date": "2000-05-12"
-      },
-      {
-        "allergen": "Peanuts",
-        "allergy_type": "Food",
-        "reaction": "Hives",
         "severity": "Moderate",
-        "onset_date": "Unknown"
+        "onset_date": "2025-06-15"
       }
     ],
     "vaccinations": [
       {
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
-        "date_administered": "2025-09-10",
+        "date_administered": "2025-10-10",
         "administered_by": "CVS Pharmacy",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
-        "vaccine_name": "COVID-19 mRNA BNT162b2",
+        "vaccine_name": "COVID-19 BNT162b2",
         "vaccine_type": "mRNA",
-        "date_administered": "2025-10-15",
-        "administered_by": "Houston Health Dept",
+        "date_administered": "2024-12-15",
+        "administered_by": "CVS Pharmacy",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
       {
-        "vaccine_name": "Pneumococcal",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2024-11-20",
-        "administered_by": "Walgreens",
+        "vaccine_name": "Tetanus toxoid, reduced diphtheria toxoid, and acellular pertussis",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2025-05-20",
+        "administered_by": "Dr. Jennifer Preston, MD",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "Hepatitis B",
         "vaccine_type": "Subunit",
-        "date_administered": "2023-06-12",
+        "date_administered": "2024-05-19",
         "administered_by": "Houston Methodist Hospital",
         "dose_number": "3",
-        "reason": "Catch-up"
+        "reason": "Routine Immunization"
       }
     ],
     "therapies": [
       {
-        "therapy_type": "Mental Health / Psychotherapy",
-        "cpt_code": "90834",
-        "cpt_description": "Psychotherapy, 45 minutes with patient",
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "G0422",
+        "cpt_description": "Cardiac rehabilitation with continuous ECG monitoring",
         "icd10_codes": [
-          "F41.1 - Generalized anxiety disorder"
+          "I25.10 - Atherosclerotic heart disease"
         ],
-        "provider": "Dr. Alyssa Reed, PsyD",
-        "provider_npi": "9876543210",
-        "facility": "Houston Psychological Associates",
-        "start_date": "2024-01-20",
-        "end_date": "2025-02-01",
-        "frequency": "Weekly",
+        "provider": "Dr. Amy Reed, PT",
+        "provider_npi": "1234567893",
+        "facility": "Houston Methodist Hospital",
+        "start_date": "2025-06-01",
+        "end_date": "2025-09-01",
+        "frequency": "3x/week",
         "status": "Completed",
-        "reason": "Management of anxiety",
-        "notes": "CBT techniques were used; patient showed improvement."
+        "reason": "Improvement of cardiac function after suspected coronary event",
+        "notes": "Patient exhibited good progress with reduced symptoms."
       }
     ],
-    "behavioral_notes": "John maintains a balanced lifestyle with regular moderate exercise and adherence to medication. He has a history of anxiety that was managed with therapy. Alcohol is used moderately in social situations.",
+    "behavioral_notes": "Chandler adheres well to his medication regimen, although his lifestyle remains mostly sedentary. He occasionally consumes alcohol socially, does not use tobacco, and has no history of illicit drug use. There is an indication of family history related to cardiac issues, which increases his vigilance concerning cardiovascular health assessments.",
     "encounters": [
       {
-        "encounter_date": "2025-11-10",
+        "encounter_date": "2025-12-15",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Routine follow-up for hypertension management.",
-        "provider": "Dr. Eli Scrubs, MD",
-        "provider_npi": "",
-        "facility": "Memorial Hermann Hospital",
+        "purpose_of_visit": "Routine check-up to monitor blood pressure and cholesterol levels.",
+        "provider": "Dr. Jennifer Preston, MD",
+        "provider_npi": "9876543210",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
-          "recorded_date": "2025-11-10",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "74 bpm",
+          "recorded_date": "2025-12-15",
+          "blood_pressure": "135/85 mmHg",
+          "heart_rate": "75 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
+          "bmi": "24.8 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.6\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "Regular check-up for blood pressure.",
-        "doctor_note": "HPI: Patient is here for a regular follow-up to monitor his blood pressure levels. Reports feeling generally well with occasional headaches.\\nROS: Positive for headaches, otherwise non-contributory.\\nPE: BP 130/85, HR 74 bpm, Height 6'1'', Weight 190 lbs. Heart: Regular without murmurs.\\nAssessment: Stable hypertension controlled with current regimen.\\nPlan: Continue current meds, follow-up in 6 months.",
+        "chief_complaint": "Regular examination and prescription renewal.",
+        "doctor_note": "Subjective: Chandler Bing, a 55-year-old male, reports for a routine evaluation of hypertension management. He denies any new concerns since the last visit and reports compliance with medication. Objective: Exam shows stable blood pressure with readings of 135/85 mmHg and heart rate of 75 bpm. Lab results are consistent with management goals. Assessment: Continue hypertension management. Deny any indications of new emergent cardiovascular symptoms. Plan: Maintain current medications; follow-up in three months unless symptoms arise sooner.",
         "observations": [
-          "Stable hypertension"
+          "Stable vital signs",
+          "Lab results within target range"
         ],
         "procedures_performed": [
           "99213 - E&M Office Visit Level 3"
         ],
         "diagnoses": [
-          "I10 - Essential (primary) hypertension"
+          "I25.10 - Atherosclerotic heart disease"
         ],
         "medications_prescribed": [
-          "Metoprolol 50mg"
+          "Lopressor 50mg"
         ],
         "care_team": [
-          "Dr. Eli Scrubs, MD"
+          "Dr. Jennifer Preston, MD"
         ],
-        "progress_notes": "Patient remains stable under current treatment. No adjustments necessary.",
-        "follow_up_instructions": "Follow-up in 6 months."
+        "progress_notes": "Patient's hypertension and cholesterol levels remain managed with current treatment. No emergent issues observed.",
+        "follow_up_instructions": "Continue current medications, return for follow-up in 3 months or if symptoms occur."
       },
       {
-        "encounter_date": "2026-02-01",
+        "encounter_date": "2026-02-20",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Consultation for new onset chest pain.",
-        "provider": "Dr. Sarah Thompson, MD",
-        "provider_npi": "",
-        "facility": "Memorial Hermann Hospital",
+        "purpose_of_visit": "Cardiology consult for persistent chest pain and suspected coronary anomaly.",
+        "provider": "Dr. Michael Mills, MD",
+        "provider_npi": "1928374650",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
-          "recorded_date": "2026-02-01",
-          "blood_pressure": "128/82 mmHg",
-          "heart_rate": "70 bpm",
+          "recorded_date": "2026-02-20",
+          "blood_pressure": "140/90 mmHg",
+          "heart_rate": "82 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
+          "bmi": "24.6 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.7\u00b0F",
+          "respiratory_rate": "18 breaths/min"
         },
-        "chief_complaint": "Experiencing intermittent chest pain.",
-        "doctor_note": "HPI: Patient presents with intermittent chest discomfort over the past week. Pain described as dull and diffuse, not associated with exertion.\\nROS: Positive for chest pain, no shortness of breath, no palpitations.\\nPE: Normal breath sounds, no peripheral edema.\\nAssessment: Differential includes atypical chest pain. Consider CAD but need further evaluation.\\nPlan: Requesting myocardial perfusion imaging to assess for coronary ischemia due to presentation. Lack of prior ECG or stress tests limits initial differential.",
+        "chief_complaint": "Persistent chest pain over several months, increasing in frequency and intensity.",
+        "doctor_note": "Subjective: Chandler Bing, a 55-year-old male, presented with ongoing chest pain that has increased in frequency. Reports include discomfort and temporary relief with rest. Objective: Physical examination reveals no acute distress but some paleness. Blood pressure is noted at 140/90 mmHg. Assessment: There's a suspicion of coronary anomaly potentially contributing to symptoms. A CTA is recommended for further investigation. Plan: Proceed with Cardiac CT Angiography. Schedule the procedure within the next month. Advise lifestyle modifications, including dietary changes and increased physical activity. Follow-up post-CTA results.",
         "observations": [
-          "Intermittent dull chest pain noted"
+          "Patient remains stable but symptomatic"
         ],
-        "procedures_performed": [
-          "99243 - Office consultation for a new or established patient"
-        ],
+        "procedures_performed": [],
         "diagnoses": [
-          "R07.9 - Chest Pain, unspecified"
+          "R07.9 - Chest pain, unspecified",
+          "Z13.6 - Encounter for screening for cardiovascular disorders"
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Sarah Thompson, MD"
+          "Dr. Michael Mills, MD"
         ],
-        "progress_notes": "Pending myocardial perfusion imaging for further evaluation. Continues to report occasional chest pain without aggravating factors.",
-        "follow_up_instructions": "Schedule imaging within the next 4 weeks."
+        "progress_notes": "Further investigation via CTA anticipated. Patient instructed on lifestyle modifications to potentially alleviate symptoms.",
+        "follow_up_instructions": "Proceed with scheduled CTA. Follow up with cardiologist post-procedure for discussion of results and next steps."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "Occasional wine with dinner",
+      "alcohol_frequency": "1-2 drinks per week",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-02-01",
-      "last_visit_reason": "Consultation for new onset chest pain",
+      "last_medical_visit": "2026-02-20",
+      "last_visit_reason": "Cardiology consult for chest pain",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Anxiety managed with psychotherapy",
-      "mental_health_current": null,
-      "exercise_habits": "Exercises 3 times a week",
-      "diet_notes": "Balanced diet, low in saturated fats",
-      "family_history_relevant": "Father with coronary artery disease"
+      "mental_health_history": null,
+      "mental_health_current": "PHQ-9 score indicates mild anxiety.",
+      "exercise_habits": "Walks 2x/week",
+      "diet_notes": "Moderate sodium intake",
+      "family_history_relevant": "Family history of coronary artery disease"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-01",
-      "blood_pressure": "128/82 mmHg",
-      "heart_rate": "70 bpm",
+      "recorded_date": "2026-02-20",
+      "blood_pressure": "140/90 mmHg",
+      "heart_rate": "82 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "25.1 kg/m\u00b2",
-      "oxygen_saturation": null,
-      "temperature": null,
-      "respiratory_rate": null
+      "bmi": "24.6 kg/m\u00b2",
+      "oxygen_saturation": "97%",
+      "temperature": "98.7\u00b0F",
+      "respiratory_rate": "18 breaths/min"
     },
     "gender_specific_history": null
   },
-  "220": {
-    "first_name": "Tony",
-    "last_name": "Soprano",
-    "gender": "male",
-    "dob": "1970-08-02",
-    "address": "1 Livia St, North Caldwell, NJ 07006",
-    "telecom": "555-123-4567",
-    "race": "Caucasian",
-    "height": "5 ft 11 in",
-    "weight": "250 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Carmela Soprano",
-      "telecom": "555-987-6543",
-      "address": "1 Livia St, North Caldwell, NJ 07006",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1995-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jennifer Melfi, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Garden State Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-654321",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$600"
-    },
-    "bio_narrative": "Tony Soprano, a notable figure in North Jersey, has faced numerous challenges in recent years, foremost being his serious health concerns. Diagnosed with End-Stage Renal Disease, Tony has been undergoing regular dialysis sessions to manage his condition. Despite his health issues, he remains deeply connected to his family, with his wife Carmela taking charge of his healthcare decisions. His lifestyle, once marked by high stress, continues to impact his overall well-being. Tony's regular treatments and medical follow-ups are crucial in maintaining his health as new challenges arise.",
-    "expected_procedure_date": "2026-03-20",
-    "procedure_requested": "Dialysis",
-    "procedure_facility": {
-      "facility_name": "Garden State Dialysis Unit",
-      "street_address": "123 County Rd",
-      "city": "North Caldwell",
-      "state": "NJ",
-      "zip_code": "07006",
-      "department": "Renal Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Jennifer Melfi, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Tony Soprano requires ongoing dialysis due to End-Stage Renal Disease (ICD10: N18.6). As an ESRD patient, he is dialysis-dependent (ICD10: Z99.2), necessitating regular scheduled treatments.",
-      "supporting_diagnoses": [
-        "N18.6 - End-Stage Renal Disease",
-        "Z99.2 - Dependence on renal dialysis"
-      ],
-      "previous_treatments": "Scheduled hemodialysis",
-      "expected_outcome": "Continued renal function stabilization."
-    }
-  },
-  "221": {
-    "first_name": "Bernadette",
-    "last_name": "Rostenkowski-Wolowitz",
+  "211": {
+    "first_name": "Rosa",
+    "last_name": "Diaz",
     "gender": "female",
-    "dob": "1989-06-15",
-    "address": "2311 Los Robles Avenue, Pasadena, CA 91107",
-    "telecom": "626-555-0123",
-    "race": "Caucasian",
-    "height": "5 ft 4 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Howard Wolowitz",
-      "telecom": "626-555-5678",
-      "address": "2311 Los Robles Avenue, Pasadena, CA 91107",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Howard Wolowitz, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Caltech Medical Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-543210",
-      "effective_date": "2021-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Bernadette Rostenkowski-Wolowitz is a well-known microbiologist residing in Pasadena, California. Raised in a Catholic household, she shares her home with her husband, Howard Wolowitz, an aerospace engineer. Bernadette enjoys participating in community science events and is an avid supporter of science education. \n\nClinically, Bernadette has been experiencing persistent exertional chest pain, which prompted medical evaluations. Her initial workup revealed non-specific changes in her ECG, leading to the current investigative approach for potential coronary disease. She maintains an active lifestyle with regular routines, and her preventive health measures have included a well-balanced diet. \n\nHer family history indicates a trend of cardiovascular concerns, with her father managing hypertension. Despite maintained medical therapy with Esmolol and Atorvastatin, chest pain episodes persist, now warranting advanced myocardial perfusion imaging for further diagnostic insight.\n\nHer participation in medical and lifestyle adjustments underscores her proactive approach towards maintaining health, though recent symptoms indicate a need for comprehensive cardiac assessment to guide her future treatment strategy.",
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Myocardial perfusion imaging",
-    "procedure_facility": {
-      "facility_name": "Pasadena General Hospital",
-      "street_address": "305 N Lake Ave",
-      "city": "Pasadena",
-      "state": "CA",
-      "zip_code": "91101",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Howard Wolowitz, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "This myocardial perfusion imaging is necessary due to persistent exertional chest pain and recent ECG findings, warranting a comprehensive evaluation to diagnose potential coronary artery disease.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Esmolol and Atorvastatin",
-      "expected_outcome": "Definitive diagnostic clarification and optimized treatment strategy"
-    }
-  },
-  "222": {
-    "first_name": "Max",
-    "last_name": "Black",
-    "gender": "female",
-    "dob": "1987-06-01",
-    "address": "23 Broadway St, Brooklyn, NY 11249, USA",
-    "telecom": "555-345-6789",
-    "race": "African American",
-    "height": "5 ft 6 in",
+    "dob": "1987-09-15",
+    "address": "123 Brooklyn Av, Houston, TX 77002",
+    "telecom": "555-123-7890",
+    "race": "Hispanic",
+    "height": "5 ft 8 in",
     "weight": "160 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
@@ -457,630 +295,57 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Monica Geller",
+      "name": "Jake Peralta",
       "telecom": "555-987-6543",
-      "address": "150 Central Park West, Apt 2, New York, NY 10023",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2025-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567809",
-      "managingOrganization": "Williamsburg Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-987654",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Max Black, a spirited individual residing in Brooklyn, New York, has been navigating chronic illnesses for the past few years. At 38, Max was diagnosed with end-stage renal disease predominantly due to prolonged hypertension. As a single African American female, she has faced numerous health challenges but continues to engage with daily life with optimism. Max has a close-knit circle of friends, including her emergency contact and confidant, Monica Geller. With a background in culinary arts, Max spends her time experimenting with kidney-friendly recipes, which serve as both a creative outlet and a way to improve her health. Her nephrologist, Dr. Jane Smith, has been advocating for Max's healthcare needs, particularly in securing approval for necessary medical procedures like dialysis access. Despite a recent set-back with insurance denial, Max remains hopeful and is exploring alternative options with her healthcare team. This robust healthcare journey reflects her resilience and determination to maintain her quality of life."
-  },
-  "223": {
-    "first_name": "George",
-    "last_name": "Costanza",
-    "gender": "male",
-    "dob": "1965-06-09",
-    "address": "129 West 81st Street, Apartment 5A, New York, NY 10024",
-    "telecom": "555-123-7800",
-    "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "185 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Jerry Seinfeld",
-      "telecom": "555-987-6543",
-      "address": "129 West 81st Street, Apartment 5B, New York, NY 10024",
+      "address": "456 Kingsland St, Houston, TX 77022",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2019-01-10",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Wilhelm Taylor, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "New York Presbyterian Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-2025",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare",
-      "member_id": "MBR-747747747",
-      "policy_number": "POL-2026-300456",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1000"
-    },
-    "bio_narrative": "George Costanza is a 60-year-old single male living in New York City, known for his characteristic humor and quick wit as much as his ongoing health challenges. Since his diagnosis with end-stage renal disease, George has been navigating life with the support of his close friends, including Jerry, Elaine, and Kramer.\n\nHis health journey took a pivotal turn when he began hemodialysis treatment several years ago. He has been diligent in maintaining his treatment regime, which allows him to manage his condition while minimizing its impact on his daily activities. However, complications with his arteriovenous fistula, including clotting and decreased patency, have prompted recent medical evaluations to ensure continued access.\n\nGeorge's characteristic approach to life, balancing humor with pragmatism, helps him cope with the fatigue and lifestyle adjustments necessary for dialysis-dependent living. Despite these challenges, he remains involved in his social circles and enjoys spending time at Jerry's apartment, engaging in their ever-entertaining debates on mundane subjects."
-  },
-  "224": {
-    "first_name": "Ross",
-    "last_name": "Geller",
-    "gender": "male",
-    "dob": "1967-10-18",
-    "address": "90 Bedford St, Apt 20, New York, NY, 10014",
-    "telecom": "212-555-1234",
-    "race": "Caucasian",
-    "height": "6 ft",
-    "weight": "180 lbs",
-    "maritalStatus": "Divorced",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Monica Geller",
-      "telecom": "212-555-6789",
-      "address": "550 Central Park West, Apt 14, New York, NY, 10024",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Leo Markus, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "New York-Presbyterian Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-112233",
-      "policy_number": "POL-2026-000123",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$750"
-    },
-    "bio_narrative": "Ross Geller, a familiar face in the bustling New York academic circles, is now navigating the complexities of chronic kidney disease (CKD) that has progressed to end-stage renal disease. As a dedicated lecturer in paleontology at NYU, Ross has always displayed a keen eye for detail, now turned towards managing his health. Having been on dialysis for an extended period, thrice weekly visits are standard, maintaining his dignity and lifestyle with the same perseverance seen in his professional realm.  \nHis medical regimen includes antihypertensive medications maintaining blood pressure levels, complemented by a strict renal diet. Ross's motivation to undergo a renal transplant is fueled by his desire to regain physical resilience and engage fully in academic pursuits post-surgery.\nSupporting his medical journey is his sister Monica Geller, a beacon of support amidst their vibrant family network. Clinical efforts are coordinated through New York-Presbyterian Hospital under the stewardship of Dr. Leo Markus, MD, ensuring Ross is precisely staged for his prospective transplant. His insurance through UnitedHealthcare remains robust, covering necessary procedures under a comprehensive Medicare Advantage plan.  \nCurrently, all clinical markers align towards a successful transplant outcome, with cardiovascular health and electrolyte management tightly controlled, making Ross a suitable candidate for the proposed renal transplant with recipient nephrectomy per CPT 50360. Health professionals remain vigilant and optimistic in facilitating this crucial medical endeavor."
-  },
-  "225": {
-    "first_name": "Meredith",
-    "last_name": "Grey",
-    "gender": "female",
-    "dob": "1978-11-10",
-    "address": "123 Hospital Drive, Seattle, WA 98101",
-    "telecom": "206-555-0199",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Derek Shepherd",
-      "telecom": "206-555-0198",
-      "address": "123 Hospital Drive, Seattle, WA 98101",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2005-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Miranda Bailey, MD",
-      "formatted_npi": "1234576801",
-      "managingOrganization": "Seattle Grace Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Meredith Grey, a phenomenal figure in her professional network, is a dedicated mother and esteemed surgeon. Despite personal challenges, including balancing a demanding career and chronic health issues, Meredith maintains her resilience with remarkable support from her spouse, Derek. Her history of end-stage renal disease necessitates a kidney transplant to improve her quality of life. Her previous medical treatments included dialysis, which she navigates with determination. Meredith's social supports involve her family, alongside a robust connection with her healthcare provider, Dr. Miranda Bailey. Her adherence to medical regimens is exemplary, reflecting her commitment to managing her condition effectively.",
-    "expected_procedure_date": "2026-03-31",
-    "procedure_requested": "Kidney Transplant Evaluation",
-    "procedure_facility": {
-      "facility_name": "Seattle Grace Hospital",
-      "street_address": "2001 Madison Street",
-      "city": "Seattle",
-      "state": "WA",
-      "zip_code": "98104",
-      "department": "Transplant Unit"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Richard Webber, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Meredith Grey has end-stage renal disease requiring a kidney transplant. Psychosocial and medical evaluations support transplant eligibility.",
-      "supporting_diagnoses": [
-        "N18.5",
-        "Z94.0"
-      ],
-      "previous_treatments": "Dialysis",
-      "expected_outcome": "Kidney functional improvement and enhanced quality of life."
-    },
-    "medications": [
-      {
-        "brand": "Procrit",
-        "generic_name": "Erythropoietin 20,000 units/mL",
-        "dosage": "2,000 units subcutaneously weekly",
-        "qty": "4 vials",
-        "prescribed_by": "Dr. George O'Malley, MD",
-        "status": "current",
-        "start_date": "2025-11-01",
-        "end_date": "ongoing",
-        "reason": "Management of anemia due to chronic kidney disease"
-      },
-      {
-        "brand": "Lasix",
-        "generic_name": "Furosemide 40 mg",
-        "dosage": "40 mg orally daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Alex Karev, MD",
-        "status": "current",
-        "start_date": "2025-08-15",
-        "end_date": "ongoing",
-        "reason": "Management of fluid retention"
-      },
-      {
-        "brand": "Lisinopril",
-        "generic_name": "Lisinopril 10 mg",
-        "dosage": "10 mg orally daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Derek Shepherd, MD",
-        "status": "ongoing",
-        "start_date": "2024-09-01",
-        "end_date": "ongoing",
-        "reason": "Control of hypertension"
-      },
-      {
-        "brand": "Valium",
-        "generic_name": "Diazepam 5 mg",
-        "dosage": "5 mg orally once daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Meredith Grey, MD",
-        "status": "past",
-        "start_date": "2023-01-01",
-        "end_date": "2025-01-01",
-        "reason": "Anxiety management"
-      }
-    ],
-    "allergies": [
-      {
-        "allergen": "Penicillin",
-        "allergy_type": "Drug",
-        "reaction": "Rash",
-        "severity": "Mild",
-        "onset_date": "2000-05-20"
-      }
-    ],
-    "vaccinations": [
-      {
-        "vaccine_name": "Influenza",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2025-09-15",
-        "administered_by": "CVS Pharmacy",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Subunit",
-        "date_administered": "2024-06-10",
-        "administered_by": "Seattle Grace Hospital",
-        "dose_number": "3",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "COVID-19 BNT162b2",
-        "vaccine_type": "mRNA",
-        "date_administered": "2024-11-08",
-        "administered_by": "Seattle Grace Clinic",
-        "dose_number": "Booster",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Tetanus Toxoid",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2023-07-15",
-        "administered_by": "Dr. Miranda Bailey, MD",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      }
-    ],
-    "therapies": [
-      {
-        "therapy_type": "Cognitive-Behavioral (CBT)",
-        "provider": "Dr. Liz Friedman, PhD",
-        "facility": "Mental Health Wellness Center",
-        "start_date": "2025-02-10",
-        "end_date": "ongoing",
-        "frequency": "Weekly",
-        "status": "Active",
-        "reason": "Supportive therapy during chronic illness management",
-        "notes": "Patient shows good engagement and insight during sessions."
-      }
-    ],
-    "behavioral_notes": "Meredith exhibits excellent medication adherence and maintains a balanced diet and exercise routine. She abstains from smoking and alcohol, contributing positively to her overall health. Occasionally experiences stress due to professional responsibilities but manages with therapy."
-  },
-  "227": {
-    "first_name": "Aragorn",
-    "last_name": "Elessar",
-    "gender": "male",
-    "dob": "1981-03-01",
-    "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
-    "telecom": "555-123-4567",
-    "race": "Caucasian",
-    "height": "6 ft 6 in",
-    "weight": "210 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Arwen Und\u00f3miel",
-      "telecom": "555-876-5432",
-      "address": "47 Green Lane, Shire, Middle-Earth, ME 12345",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2005-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Gandalf Grey, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Middle-Earth Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-234567890",
-      "policy_number": "POL-2026-001234",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Aragorn II Elessar, a renowned figure in Middle-Earth, has managed to balance his responsibilities as a leader while attending to his personal health needs. Married to Arwen Und\u00f3miel, Aragorn is known for his resilience and strength, both traits essential in his journey from Ranger to King. However, even those with the strongest constitutions require medical attention from time to time. Aragorn has recently been experiencing pronounced lower back pain, possibly exacerbated by years of travel and battles. He has undergone physical therapy and previous diagnostics, including X-rays, with moderate improvement. The pain, however, persists, necessitating further evaluation through advanced imaging techniques to determine the potential need for surgical intervention. His healthcare provider, Dr. Gandalf Grey, closely monitors his progress, ensuring any treatments align with his active lifestyle."
-  },
-  "226": {
-    "first_name": "Ann",
-    "last_name": "Perkins",
-    "gender": "female",
-    "dob": "1982-09-10",
-    "address": "415 West Main Street, Pawnee, Indiana, 47998",
-    "telecom": "317-555-0199",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Leslie Knope",
-      "telecom": "317-555-0123",
-      "address": "745 Pawnee Street, Pawnee, Indiana, 47998",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Walter Chang, MD",
-      "formatted_npi": "1122334455",
-      "managingOrganization": "Pawnee General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-19820910",
-      "policy_number": "POL-2026-002345",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Ann Perkins is an enthusiastic nurse who enjoys hiking and spending time with her close-knit circle of friends in Pawnee. She has a history of recurrent UTIs and mild hypertension. Presently, there is concern for a ureteral obstruction given recent symptoms, and an injection procedure for nephrostogram and/or ureterogram has been proposed. Ann's personal and professional life is deeply rooted in Pawnee, where she actively participates in community services. Socially, she is single and has appreciation for nature adventures."
-  },
-  "236": {
-    "first_name": "Monica",
-    "last_name": "Geller",
-    "gender": "female",
-    "dob": "1969-04-22",
-    "address": "90 Bedford Street, New York, NY 10014",
-    "telecom": "212-555-0123",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "140 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Ross Geller",
-      "telecom": "212-555-0199",
-      "address": "3315 Hillside Avenue, New York, NY 11419",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2000-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Julia H. Cane, DDS",
-      "formatted_npi": "2985721987",
-      "managingOrganization": "Dental Excellence Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-24051969",
-      "policy_number": "POL-2026-002345",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$50",
-      "deductible_amount": "$750"
-    },
-    "bio_narrative": "Monica Geller is a vibrant and meticulous individual with a keen attention to detail, resembling her professional career as a chef. Always maintaining a healthy lifestyle, she highlights regular exercise and a balanced diet. Her dental concerns arose following a significant tooth extraction, affecting her bite efficiency and facial aesthetics. These concerns are compounded by controlled osteopenia, necessitating careful consideration for oral prosthetic intervention. Monica has remained committed to her oral health, consistently attending regular check-ups and adhering to recommended oral hygiene practices. Her motivation for the planned procedure is to ensure lasting dental functionality and prevent further degradation of her oral structures attributed to the partial tooth loss. She resides in New York, close to her family, including her brother Ross, who serves as her emergency contact.",
-    "expected_procedure_date": "2026-03-29",
-    "procedure_requested": "Impression and custom oral prosthesis for reconstruction",
-    "procedure_facility": {
-      "facility_name": "Dental Excellence Center",
-      "street_address": "200 East 24th Street",
-      "city": "New York",
-      "state": "NY",
-      "zip_code": "10010",
-      "department": "Prosthodontics Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Julia H. Cane, DDS",
-      "urgency_level": "Routine",
-      "clinical_justification": "The patient presents with significant alveolar resorption resulting in functional compromise post-extraction. Request for a custom oral prosthesis is medically justified to restore mastication and aesthetic balance.",
-      "supporting_diagnoses": [
-        "K08.439 - Partial loss of teeth due to trauma"
-      ],
-      "previous_treatments": "None",
-      "expected_outcome": "Restoration of masticatory function and facial contour"
-    }
-  },
-  "239": {
-    "first_name": "Siobhan",
-    "last_name": "Roy",
-    "gender": "female",
-    "dob": "1988-01-01",
-    "address": "123 Park Ave, New York, NY 10171",
-    "telecom": "555-0199",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Kendall Roy",
-      "telecom": "555-0147",
-      "address": "124 Park Ave, New York, NY 10171",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2025-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Mercy General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2026-01-01",
-      "termination_date": "2027-01-01",
-      "copay_amount": "$30",
-      "deductible_amount": "$1000"
-    },
-    "bio_narrative": "Siobhan Roy, a dynamic business executive known for her strategic acumen and leadership, has experienced a recurring health challenge that now requires deeper clinical investigation. Her personal and professional life is intertwined with the high-stakes world of corporate mergers. Despite living in the fast lane, she maintains a commitment to her physical health through regular exercise and a balanced diet, although recent chest pain episodes have impeded her routine.\n\nHer medical history is marked by bouts of unexplained chest pain over the past few years. Initial episodes were minor, resulting in simple lifestyle changes. However, the current persistence and frequency have prompted a more detailed clinical evaluation. An ECG conducted two years ago indicated potential ischemia, which aligns with her heightened symptoms.\n\nFamily medical history reveals a lineage with cardiovascular concerns, including her father's early-onset coronary artery disease. Given this background, the current heart health queries are not only a matter of personal concern but also inherited conditions warrant exploration.\n\nShe hopes the recommended myocardial perfusion imaging will offer clarity about her heart function and enable a tailored therapeutic strategy, reducing risks of acute incidents while supporting her active lifestyle. The collaborative approach between her and her healthcare team seeks to ensure continuity in her professional commitments and personal well-being.",
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Myocardial perfusion imaging, multiple studies",
-    "procedure_facility": {
-      "facility_name": "NewYork-Presbyterian Hospital",
-      "street_address": "525 E 68th St",
-      "city": "New York",
-      "state": "NY",
-      "zip_code": "10065",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Sarah Johnson, MD, FACC",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
-      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
-    }
-  },
-  "211": {
-    "first_name": "Rosa",
-    "last_name": "Diaz",
-    "gender": "female",
-    "dob": "1986-01-13",
-    "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
-    "telecom": "718-555-0101",
-    "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Amy Santiago",
-      "telecom": "718-555-0123",
-      "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2023-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Erin Bush, MD",
-      "formatted_npi": "2893170569",
-      "managingOrganization": "Brooklyn General Hospital"
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Houston Methodist Hospital"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-999999",
-      "policy_number": "POL-2025-123456",
+      "plan_type": "Medicare",
+      "member_id": "MBR-743936",
+      "policy_number": "POL-2026-8619",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Rosa Diaz, a strong, independent detective in Brooklyn, has been actively navigating life while managing her health. Born and raised in New York, Rosa is accustomed to a fast-paced lifestyle. Her journey has recently been marked by health challenges related to her cardiac health. Diagnosed with hypertension and dyslipidemia, Rosa follows a disciplined regimen of Tenormin and Lipitor under Dr. Erin Bush's guidance. Despite a demanding career, she maintains her health through a balance of diet and structured exercise, complemented by her commitment to ongoing cardiac rehabilitation. Her close network of friends provides emotional support, crucial for her mental well-being. With a family history of cardiac conditions, Rosa is taking proactive steps post-diagnosis and rehabilitation to mitigate her coronary risk factors.",
-    "expected_procedure_date": "2026-03-07",
-    "procedure_requested": "Cardiac Catheterization",
+    "expected_procedure_date": "2026-03-15",
+    "procedure_requested": "Myocardial perfusion imaging",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin Street",
+      "street_address": "6565 Fannin St",
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
       "department": "Cardiology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Erin Bush, MD, FACC",
+      "requesting_provider": "Dr. Erin Bush, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with symptomatic chest pain and documented ischemic changes on both ECG and stress testing. Cardiac catheterization is essential to determine the presence and extent of coronary artery disease and guide treatment plans.",
+      "clinical_justification": "Patient exhibits symptoms consistent with coronary artery disease, requiring myocardial perfusion imaging to provide critical insights for risk assessment and treatment planning.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest Pain, unspecified"
+        "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Atenolol 50mg, Atorvastatin 20mg",
-      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
+      "previous_treatments": "Beta-blockers and lifestyle modifications.",
+      "expected_outcome": "Clear visualization of coronary perfusion, facilitating effective treatment choices."
     },
+    "bio_narrative": "Rosa Diaz, a thirty-eight-year-old Hispanic woman, has been diligently managing her health while working as a detective in Brooklyn. She has a history of hypertension and dyslipidemia, treated with Atenolol and Atorvastatin. Despite her busy career, Rosa adheres to medication regimens and maintains a moderately active lifestyle, incorporating regular exercise into her routine. Her social network, comprised of supportive colleagues and friends, aids in maintaining her mental health stability. Rosa's medical history includes a bicycle accident six months ago, leading to knee surgery, and subsequent successful rehabilitation. As she continues to experience chest discomfort and exertional dyspnea, thorough cardiac evaluation is warranted. It's crucial to determine if there's underlying coronary artery disease, given her symptoms and risk factors.",
     "medications": [
       {
         "brand": "Tenormin",
@@ -1162,13 +427,13 @@
     "therapies": [
       {
         "therapy_type": "Cardiac Rehab Therapy",
-        "cpt_code": "93797",
-        "cpt_description": "Physician services for outpatient cardiac rehabilitation; without continuous ECG monitoring (per session)",
+        "cpt_code": "93798",
+        "cpt_description": "Physician-recognized intervention for cardiac rehabilitation, per session",
         "icd10_codes": [
           "I25.10"
         ],
         "provider": "Dr. Lauren Tran, PT",
-        "provider_npi": "1938475610",
+        "provider_npi": "9876543210",
         "facility": "Brooklyn General Hospital Rehab Center",
         "start_date": "2026-02-01",
         "end_date": "ongoing",
@@ -1178,932 +443,86 @@
         "notes": "Supportive in managing symptoms and improving exercise tolerance."
       }
     ],
-    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. Engages in a balanced diet but with occasional lapses into stress eating during high-pressure cases. Does not smoke and consumes alcohol rarely. Mental health remains stable, as supported by her close social support network.",
+    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. She engages in a balanced diet but admits to occasional stress eating during high-pressure cases. Rosa does not smoke and consumes alcohol rarely. Mental health remains stable, as bolstered by her robust social network.",
     "encounters": [
       {
-        "encounter_date": "2025-11-10",
+        "encounter_date": "2025-12-10",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Routine follow-up for hypertension and lipid management.",
+        "purpose_of_visit": "Follow-up consultation for chest pain and hypertension management.",
         "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "2893170569",
-        "facility": "Brooklyn General Hospital",
-        "vital_signs": {
-          "recorded_date": "2025-11-10",
-          "blood_pressure": "130/80 mmHg",
-          "heart_rate": "72 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": "98%",
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "General follow-up; feeling well with medication management.",
-        "doctor_note": "This is a routine follow-up visit for monitoring hypertension and lipid profile management. Patient reports good adherence to medication regimen with no major complaints. Blood pressure and lipid levels remain well-controlled with Tenormin and Lipitor. Continue current medications. Advised on lifestyle modifications including exercise and diet adjustments.",
-        "observations": [
-          "Patient's blood pressure and lipid profile are under control with medication."
-        ],
-        "procedures_performed": [
-          "99214 - Office/Outpatient Visit Level 4"
-        ],
-        "diagnoses": [
-          "I10 - Essential hypertension",
-          "E78.5 - Hyperlipidemia"
-        ],
-        "medications_prescribed": [
-          "Continue Tenormin and Lipitor as prescribed."
-        ],
-        "care_team": [
-          "Dr. Erin Bush, MD"
-        ],
-        "progress_notes": "Patient is stable with good control of hypertension and lipid levels.",
-        "follow_up_instructions": "Return in 3 months for follow-up."
-      },
-      {
-        "encounter_date": "2026-02-05",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Follow-up due to increased frequency of chest discomfort.",
-        "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "2893170569",
-        "facility": "Brooklyn General Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-02-05",
-          "blood_pressure": "135/85 mmHg",
-          "heart_rate": "76 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": "97%",
-          "temperature": "98.7\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "Frequency of chest discomfort has increased recently.",
-        "doctor_note": "Patient exhibits increased frequency of chest pain episodes particularly with exertion. Detailed evaluation reveals family history of coronary artery disease. Medication adherence is confirmed. ECG performed shows ST depression in lateral leads suggestive of ischemia. Recommend further investigations with stress test and myocardial perfusion study. Continue cardiac rehab therapy.",
-        "observations": [
-          "ECG shows ST depression indicative of ischemia."
-        ],
-        "procedures_performed": [
-          "93000 - Electrocardiogram, routine ECG with at least 12 leads; interpretation and report",
-          "99213 - Established patient office visit"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [
-          "Continue Tenormin and Lipitor"
-        ],
-        "care_team": [
-          "Dr. Erin Bush, MD"
-        ],
-        "progress_notes": "Increase in chest pain episodes correlates with ischemic changes on ECG, justifying advanced cardiac workup.",
-        "follow_up_instructions": "Schedule stress test and myocardial perfusion imaging."
-      },
-      {
-        "encounter_date": "2026-02-20",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Initial consult with cardiologist for further evaluation of chest pain.",
-        "provider": "Dr. Sarah Johnson, MD, FACC",
-        "provider_npi": "2438901234",
+        "provider_npi": "1234567890",
         "facility": "Houston Methodist Hospital",
         "vital_signs": {
-          "recorded_date": "2026-02-20",
-          "blood_pressure": "135/85 mmHg",
+          "recorded_date": "2025-12-10",
+          "blood_pressure": "130/85 mmHg",
           "heart_rate": "78 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": null,
           "oxygen_saturation": "98%",
-          "temperature": null,
+          "temperature": "98.6\u00b0F",
           "respiratory_rate": null
         },
-        "chief_complaint": "Referred for further cardiac evaluation due to persistent chest pain.",
-        "doctor_note": "Referred to my cardiology practice for extensive evaluation. Patient Rosa Diaz has significant family history of premature coronary artery disease and presents with typical angina exertional pattern. Clinical findings and recent ECG suggest underlying ischemia. Comprehensive plan includes further diagnostic workup with stress test and myocardial perfusion imaging.",
+        "chief_complaint": "Chest tightness and shortness of breath with exertion.",
+        "doctor_note": "Subjective: The patient reports increased episodes of chest pain and mild hypertension noted on home monitoring over the past several months. Objective: Vital signs recorded show slightly elevated blood pressure. ECG conducted revealed ST changes suggestive of potential ischemic activity. Assessment: Given the patient\u2019s cardiovascular risk profile, ischemic heart disease needs to be ruled out. Plan: Recommend initiating beta-blockers and scheduling follow-up imaging to evaluate cardiac function further.",
         "observations": [
-          "Family history of coronary artery disease.",
-          "Stress-induced chest pain."
+          "ST changes in ECG"
         ],
         "procedures_performed": [
-          "99244 - Office consultation for a new or established patient"
+          "93000 - 12-lead ECG"
         ],
         "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
+          "R07.9 - Chest pain, unspecified",
+          "I25.10 - Atherosclerotic heart disease"
         ],
         "medications_prescribed": [
-          "Atenolol and atorvastatin regimen to be continued"
+          "Atenolol 50mg, daily"
         ],
         "care_team": [
-          "Dr. Erin Bush, MD",
-          "Dr. Sarah Johnson, MD, FACC"
+          "Dr. Erin Bush, MD"
         ],
-        "progress_notes": "Referred for precise cardiac evaluation, results confirm ischemic pattern requiring further invasive diagnostics.",
-        "follow_up_instructions": "Follow through with scheduled diagnostic tests and return with results for future care planning."
+        "progress_notes": "Symptoms are currently managed under existing treatment protocols, but further diagnostic evaluation is essential to guide definitive therapy.",
+        "follow_up_instructions": "Complete cardiac imaging as discussed."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "Rarely",
-      "illicit_drug_use": "None",
+      "alcohol_frequency": null,
+      "illicit_drug_use": null,
       "substance_history": null,
-      "last_medical_visit": "2026-02-20",
-      "last_visit_reason": "Cardiology consult due to persistent chest pain",
-      "missed_appointment": false,
+      "last_medical_visit": "2025-12-10",
+      "last_visit_reason": null,
+      "missed_appointment": null,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": null,
-      "mental_health_current": null,
-      "exercise_habits": "Engages in regular cardiac rehab therapy",
-      "diet_notes": "Generally balanced diet with occasional stress eating",
-      "family_history_relevant": "Family history of coronary artery disease and myocardial infarction"
+      "mental_health_history": "Stable",
+      "mental_health_current": "PHQ-9: 2, indicating minimal depression",
+      "exercise_habits": "Walks 3x/week",
+      "diet_notes": "Balanced diet with occasional stress eating",
+      "family_history_relevant": "Father with CAD"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-20",
-      "blood_pressure": "135/85 mmHg",
-      "heart_rate": "78 bpm",
+      "recorded_date": "2026-02-15",
+      "blood_pressure": "125/78 mmHg",
+      "heart_rate": "75 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": null,
       "oxygen_saturation": "98%",
-      "temperature": null,
-      "respiratory_rate": "16 breaths/min"
-    },
-    "gender_specific_history": "Last Pap smear date: 2025-06-15; Mammogram date: 2025-07-20"
-  },
-  "212": {
-    "first_name": "Sandor",
-    "last_name": "Clegane",
-    "gender": "male",
-    "dob": "1965-03-23",
-    "address": "1 Castle Street, King's Landing, Westeros",
-    "telecom": "555-839-2999",
-    "race": "Caucasian",
-    "height": "6 ft 6 in",
-    "weight": "265 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Gregor Clegane",
-      "telecom": "555-123-4567",
-      "address": "1 Casterly Way, King's Landing, Westeros",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2026-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "King's Landing Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Sandor Clegane, a notably tall and robust male residing in King's Landing, maintains a fairly robust health profile despite years of stressful occupations affecting his lifestyle habits. Historically, his hypertension and hypercholesterolemia have been managed well under the care of Dr. Jane Smith at King's Landing Hospital, a testament to his adherence to prescribed medication regimens. Beyond his medical issues, Sandor's lifestyle reflects a dedication to maintaining family and societal relationships despite known stressors impacting dietary habits. The pending Cardiac CT Angiography is part of a broader initiative to confirm cardiovascular structural health.\nMedications are tailored for blood pressure management and lipid control, complementing his moderate commitment to prescribed therapeutic measures. His health journey has been grounded by a continuity of care emphasizing his resilience and the value of early intervention amid high-stake environments. This approach aims to solidify prevention against emerging cardiac challenges.",
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Cardiac CT Angiography (CTA)",
-    "procedure_facility": {
-      "facility_name": "King's Landing Hospital",
-      "street_address": "1 Castle Street",
-      "city": "King's Landing",
-      "state": "Westeros",
-      "zip_code": "12345",
-      "department": "Radiology"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Jane Smith, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Suspected coronary anomaly requires explicit visualization to rule out structural issues. Existing risk factors necessitate detailed imaging to assess potential cardiovascular threats.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease"
-      ],
-      "previous_treatments": "None",
-      "expected_outcome": "Clear definition of coronary anatomy to guide further management."
-    },
-    "medications": [
-      {
-        "brand": "Lopressor",
-        "generic_name": "Metoprolol 50mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "current",
-        "start_date": "2025-06-01",
-        "end_date": "ongoing",
-        "reason": "Hypertension"
-      },
-      {
-        "brand": "Lipitor",
-        "generic_name": "Atorvastatin 20mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "current",
-        "start_date": "2025-05-01",
-        "end_date": "ongoing",
-        "reason": "High cholesterol"
-      },
-      {
-        "brand": "Zoloft",
-        "generic_name": "Sertraline 50mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "ongoing",
-        "start_date": "2026-01-01",
-        "end_date": "ongoing",
-        "reason": "Anxiety"
-      }
-    ],
-    "allergies": [
-      {
-        "allergen": "Shellfish",
-        "allergy_type": "Food",
-        "reaction": "Hives",
-        "severity": "Moderate",
-        "onset_date": "Unknown"
-      }
-    ],
-    "vaccinations": [
-      {
-        "vaccine_name": "Influenza",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2025-11-01",
-        "administered_by": "King's Landing Pharmacy",
-        "dose_number": "Routine Immunization",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "COVID-19 Bivalent Booster",
-        "vaccine_type": "mRNA",
-        "date_administered": "2025-09-15",
-        "administered_by": "King's Landing Health Department",
-        "dose_number": "Booster",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Subunit",
-        "date_administered": "2024-03-10",
-        "administered_by": "King's Landing Health Service",
-        "dose_number": "1",
-        "reason": "Health Safety"
-      },
-      {
-        "vaccine_name": "Tetanus",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2023-05-20",
-        "administered_by": "King's Landing Health Clinic",
-        "dose_number": "1",
-        "reason": "Catch-up"
-      }
-    ],
-    "therapies": [
-      {
-        "therapy_type": "Cardiac Rehab",
-        "cpt_code": "93797",
-        "cpt_description": "Physician service for cardiac rehabilitation",
-        "icd10_codes": [
-          "I25.10"
-        ],
-        "provider": "Dr. Mike Lee, PT",
-        "provider_npi": "",
-        "facility": "King's Landing Heart Center",
-        "start_date": "2025-09-01",
-        "end_date": "2026-03-01",
-        "frequency": "3x/week",
-        "status": "Completed",
-        "reason": "Cardiac risk reduction and recovery post cardiovascular incident",
-        "notes": "Patient showed marked improvement in endurance and health metrics."
-      }
-    ],
-    "behavioral_notes": "Sandor maintains strong medication adherence despite periods of sedentary lifestyle change. His balanced diet occasionally falters under stress-eating in high-pressure contexts. Non-smoker with rare alcohol use. Stable mental health with supportive social connections offsetting past significations.",
-    "encounters": [],
-    "social_history": {
-      "tobacco_use": "Never",
-      "tobacco_frequency": null,
-      "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "Rarely drinks",
-      "illicit_drug_use": "None",
-      "substance_history": null,
-      "last_medical_visit": "2026-02-01",
-      "last_visit_reason": "Routine follow-up for hypertension",
-      "missed_appointment": false,
-      "missed_appointment_reason": null,
-      "early_visit_reason": null,
-      "mental_health_history": "General anxiety managed with medication",
-      "mental_health_current": null,
-      "exercise_habits": "Attempts exercise occasionally, primarily walking when active",
-      "diet_notes": "Focuses on low sodium and low cholesterol diet, except during stressful times",
-      "family_history_relevant": "Family history of cardiovascular disease, particularly hypertension and hypercholesterolemia"
-    },
-    "vital_signs_current": {
-      "recorded_date": "2026-03-01",
-      "blood_pressure": "142/85 mmHg",
-      "heart_rate": "78 bpm",
-      "blood_sugar_fasting": null,
-      "blood_sugar_postprandial": null,
-      "bmi": null,
-      "oxygen_saturation": "97%",
-      "temperature": "98.4\u00b0F",
+      "temperature": "98.5\u00b0F",
       "respiratory_rate": null
     },
-    "gender_specific_history": null
+    "gender_specific_history": "Gravida 1, Para 1, last Pap smear 2025-06-15, last mammogram 2024-09-20"
   },
-  "213": {
-    "first_name": "Frodo",
-    "last_name": "Baggins",
+  "210": {
+    "first_name": "John",
+    "last_name": "Dorian",
     "gender": "male",
-    "dob": "1980-09-22",
-    "address": "Bag End, Hobbiton, The Shire",
-    "telecom": "555-0199",
-    "race": "Caucasian",
-    "height": "4 ft 11 in",
-    "weight": "96 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Samwise Gamgee",
-      "telecom": "555-0123",
-      "address": "New Row, Hobbiton, The Shire",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Elrond",
-      "formatted_npi": "3748271839",
-      "managingOrganization": "Rivendell Cardiology Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Mr. Frodo Baggins is a 45-year-old male residing in Hobbiton, The Shire. Known for his adventurous spirit and resilience, Frodo has recently been encountering health challenges related to cardiovascular symptoms. He has a history of stable angina, manifesting as exertional chest pain, which has been ongoing despite medication and lifestyle adjustments.\n\nFrodo's cardiovascular issues are noted to have begun approximately three years ago, with gradually increasing episodes of chest discomfort initially attributed to stress and lifestyle. Despite engaging in regular health check-ups and adhering to medical recommendations including beta-blocker therapy, Frodo's exertional chest pain persisted. His active lifestyle in the Shire, filled with regular excursions and outdoor activities, has been somewhat curtailed by his cardiac symptoms.\n\nPast medical interventions include an ECG performed on 2024-01-15, showing nonspecific abnormalities, and a more recent treadmill stress test on 2026-01-08, indicating stress-induced ischemia. Consequently, his primary care provider, Dr. Elrond at Rivendell Cardiology Clinic, has emphasized the necessity for a myocardial perfusion imaging study to provide a clearer picture of his coronary health.\n\nThe expected outcome for Frodo is to achieve a definitive diagnosis that will pave the way for more targeted therapeutic interventions, thus allowing him to maintain his quality of life and return to his beloved activities with reduced risk.",
-    "expected_procedure_date": "2026-03-30",
-    "procedure_requested": "Myocardial perfusion imaging",
-    "procedure_facility": {
-      "facility_name": "Buckland Diagnostic Center",
-      "street_address": "1 West Road",
-      "city": "Buckland",
-      "state": "The Shire",
-      "zip_code": "12345",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Elrond, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Mr. Frodo Baggins presents with exercise-induced chest pain and abnormal ECG findings indicative of potential coronary artery disease. A myocardial perfusion imaging (MPI, CPT 78452) is medically necessary to definitively assess coronary perfusion and guide possible interventions.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain"
-      ],
-      "previous_treatments": "Beta-blocker therapy and lifestyle modification",
-      "expected_outcome": "Improved management of symptoms and prevention of major cardiac events through informed treatment planning."
-    }
-  },
-  "214": {
-    "first_name": "Legolas",
-    "last_name": "Greenleaf",
-    "gender": "male",
-    "dob": "1985-06-15",
-    "address": "123 Elven Way, Mirkwood Forest, Middle-Earth, 00001",
-    "telecom": "555-123-5555",
-    "race": "Elf",
-    "height": "6 ft 2 in",
-    "weight": "175 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "Elvish",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Thranduil Greenleaf",
-      "telecom": "555-321-5555",
-      "address": "456 Woodland Realm, Mirkwood Forest, Middle-Earth, 00002",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2000-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Elrond Smith, MD",
-      "formatted_npi": "1234567891",
-      "managingOrganization": "Rivendell Cardio Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000123",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$50",
-      "deductible_amount": "$1000"
-    },
-    "bio_narrative": "Legolas Greenleaf, an Elf from the Woodland Realm, is renowned for his agility and precision, honed from years spent protecting Mirkwood Forest. Despite his robust health, he began experiencing symptoms indicative of heart complications, a rare condition among Elves. Approximately two years ago, he was diagnosed with ischemic heart disease, a prognosis not typically witnessed in Elven physiology. Since then, Legolas has been under the care of Dr. Elrond Smith at Rivendell Cardio Clinic, where a regimen involving ACE inhibitors, beta-blockers, and diuretics was initiated. With progression to chronic systolic heart failure, characterized by persistent fatigue and arrhythmias, the need for an Implantable Cardioverter Defibrillator (ICD) became evident. As the son of the Elvenking Thranduil, Legolas remains committed to his duties while actively managing his health. He communicates primarily in Elvish, a language that brings comfort and familiarity in his treatment regimen. His proactive approach to health is supported by regular consultations at Rivendell, ensuring that his physical prowess remains aligned with his responsibilities as a guardian of Mirkwood.",
-    "expected_procedure_date": "2026-03-25",
-    "procedure_requested": "Implantation of ICD",
-    "procedure_facility": {
-      "facility_name": "Rivendell Cardio Clinic",
-      "street_address": "789 Arwen Avenue",
-      "city": "Mirkwood",
-      "state": "ME",
-      "zip_code": "00001",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Elrond Smith, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient suffers from progressive heart failure with reduced ejection fraction and a history of myocardial infarction. The implantation of an ICD is critically necessary to prevent lethal ventricular arrhythmias and improve overall survival rates.",
-      "supporting_diagnoses": [
-        "I25.10 - Ischemic heart disease",
-        "I50.22 - Chronic systolic heart failure"
-      ],
-      "previous_treatments": "Patient has been on maximal tolerated medical therapy including ACE inhibitors, beta-blockers, and diuretics.",
-      "expected_outcome": "Prevention of sudden cardiac death and improved heart function."
-    }
-  },
-  "215": {
-    "first_name": "Kendall",
-    "last_name": "Roy",
-    "gender": "male",
-    "dob": "1981-06-10",
-    "address": "1200 5th Ave, New York, NY 10029",
-    "telecom": "212-555-0183",
-    "race": "Caucasian",
-    "height": "6 ft 2 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Roman Roy",
-      "telecom": "212-555-0199",
-      "address": "1200 5th Ave, New York, NY 10029",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Manhattan Health Services"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-864591",
-      "policy_number": "POL-2025-987654",
-      "effective_date": "2025-07-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$50",
-      "deductible_amount": "$1500"
-    },
-    "bio_narrative": "Kendall Roy, a prominent media executive, has been managing significant cardiac concerns over the past few years. Diagnosed with heart failure with reduced ejection fraction, he has a history of dilated cardiomyopathy that has necessitated regular medical follow-ups and lifestyle adjustments. Despite aggressive medical management with ACE inhibitors and beta-blockers, Kendall's cardiac status, characterized by a persistently low ejection fraction, places him at high risk for severe arrhythmias. Socially, Kendall navigates the stressful demands of leading a major corporation, which has sometimes exacerbated his cardiac symptoms. He remains under the care of Dr. Jane Smith at Manhattan Health Services, with strong family support, notably from his brother, Roman Roy, serving as his emergency contact. Kendall's planned ICD implantation represents a critical step in managing his cardiac risk profile, aiming at health stabilization and prolongation of life to continue his professional and personal pursuits.",
-    "expected_procedure_date": "2026-03-29",
-    "procedure_requested": "Implantable Cardioverter Defibrillator (ICD)",
-    "procedure_facility": {
-      "facility_name": "New York-Presbyterian Hospital",
-      "street_address": "525 East 68th Street",
-      "city": "New York",
-      "state": "NY",
-      "zip_code": "10065",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Jane Smith, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Kendall is indicated for an ICD due to heart failure with EF < 35%, increasing risk for sudden cardiac arrest. ICC strongly advised to prevent life-threatening arrhythmias.",
-      "supporting_diagnoses": [
-        "I50.9 - Heart failure, unspecified",
-        "I42.0 - Dilated cardiomyopathy",
-        "I42.9 - Unspecified cardiomyopathy"
-      ],
-      "previous_treatments": "Lifestyle modification and maximum tolerated doses of ACE inhibitors and beta-blockers.",
-      "expected_outcome": "Prevention of sudden cardiac death, improved survival."
-    }
-  },
-  "216": {
-    "first_name": "Charles",
-    "last_name": "Boyle",
-    "gender": "male",
-    "dob": "1968-10-22",
-    "address": "430 Lord Street, Brooklyn, NY, 11221",
-    "telecom": "718-555-1212",
-    "race": "Caucasian",
-    "height": "5 ft 11 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Rosa Diaz",
-      "telecom": "718-555-1213",
-      "address": "430 Lord Street, Brooklyn, NY, 11221",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2000-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Brooklyn Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2025-001234",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "",
-    "expected_procedure_date": "2026-03-20",
-    "procedure_requested": "Percutaneous Coronary Intervention (PCI)",
-    "procedure_facility": {
-      "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin Street",
-      "city": "Houston",
-      "state": "TX",
-      "zip_code": "77030",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Michael Chen, MD, FACC",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Percutaneous Coronary Intervention (PCI) is advised to prevent potential acute coronary syndrome.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
-      "expected_outcome": "Definitive restoration of adequate coronary blood flow to alleviate chest pain and potential ischemic damage."
-    },
-    "medications": [
-      {
-        "brand": "Toprol XL",
-        "generic_name": "Metoprolol Succinate 50mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "ongoing",
-        "start_date": "2025-11-01",
-        "end_date": "ongoing",
-        "reason": "Hypertension"
-      },
-      {
-        "brand": "Lipitor",
-        "generic_name": "Atorvastatin 20mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "ongoing",
-        "start_date": "2025-09-15",
-        "end_date": "ongoing",
-        "reason": "Hyperlipidemia"
-      },
-      {
-        "brand": "Nitrostat",
-        "generic_name": "Nitroglycerin 0.4mg",
-        "dosage": "Sublingual as needed for chest pain",
-        "qty": "0.4mg tablets",
-        "prescribed_by": "Dr. John Doe, MD",
-        "status": "current",
-        "start_date": "2026-01-10",
-        "end_date": "ongoing",
-        "reason": "Angina"
-      },
-      {
-        "brand": "Crestor",
-        "generic_name": "Rosuvastatin 10mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "past",
-        "start_date": "2024-06-01",
-        "end_date": "2025-08-31",
-        "reason": "Hyperlipidemia management"
-      },
-      {
-        "brand": "Aspirin",
-        "generic_name": "Aspirin 81mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Jane Smith, MD",
-        "status": "ongoing",
-        "start_date": "2025-11-01",
-        "end_date": "ongoing",
-        "reason": "Cardiovascular event prevention"
-      }
-    ],
-    "allergies": [
-      {
-        "allergen": "Penicillin",
-        "allergy_type": "Drug",
-        "reaction": "Rash",
-        "severity": "Moderate",
-        "onset_date": "1990-05-01"
-      }
-    ],
-    "vaccinations": [
-      {
-        "vaccine_name": "Influenza",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2025-10-01",
-        "administered_by": "CVS Pharmacy",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "COVID-19 BNT162b2",
-        "vaccine_type": "mRNA",
-        "date_administered": "2026-02-01",
-        "administered_by": "Walgreens Pharmacy",
-        "dose_number": "Booster",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Tetanus-diphtheria",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2025-03-01",
-        "administered_by": "Dr. Jane Smith, MD",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Subunit",
-        "date_administered": "2025-06-15",
-        "administered_by": "Dr. Jane Smith, MD",
-        "dose_number": "1",
-        "reason": "Occupational"
-      },
-      {
-        "vaccine_name": "Pneumococcal",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2024-11-01",
-        "administered_by": "Dr. Jane Smith, MD",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      }
-    ],
-    "therapies": [
-      {
-        "therapy_type": "Cardiac Rehab",
-        "cpt_code": "93797",
-        "cpt_description": "Physician or other qualified health care professional services for outpatient cardiac rehabilitation; with exercise, individualized treatment plan",
-        "icd10_codes": [
-          "I25.10"
-        ],
-        "provider": "Dr. Lauren Howards, PT",
-        "provider_npi": "2345678910",
-        "facility": "Brooklyn Heart Center",
-        "start_date": "2025-12-01",
-        "end_date": "2026-02-01",
-        "frequency": "3x/week",
-        "status": "Completed",
-        "reason": "Improvement of cardiac function",
-        "notes": ""
-      }
-    ],
-    "behavioral_notes": "Adheres to a medication regimen for hypertension and hyperlipidemia. Exercise includes walking 3x per week. Follows a low sodium diet. Has a history of moderate alcohol use, though currently reduced consumption. No tobacco or drug use. Mental health is stable with ongoing support from family.",
-    "encounters": [
-      {
-        "encounter_date": "2026-01-20",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Follow-up on chest pain and review of medication effectivity.",
-        "provider": "Dr. Jane Smith, MD",
-        "provider_npi": "1234567890",
-        "facility": "Brooklyn Medical Center",
-        "vital_signs": {
-          "recorded_date": "2026-01-20",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "82 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "25.1 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "Persistent chest pain episodes.",
-        "doctor_note": "HPI: The patient reports ongoing episodes of chest pain, notably when under stress or exertion. Denies nausea, vomiting, or diaphoresis. ROS: Negative for significant weight changes, no palpitations, no dizziness. Physical Exam: General: Well-appearing male in no acute distress. Cardiovascular: Regular rate and rhythm. Lungs: Clear to auscultation. Assessment: Stable angina. Continue current medication regimen, consider further investigation with stress test. Plan: Order exercise ECG stress test. Follow-up in 2 weeks.",
-        "observations": [],
-        "procedures_performed": [
-          "99213 - E&M Office Visit Level 3"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease"
-        ],
-        "medications_prescribed": [
-          "Nitrostat"
-        ],
-        "care_team": [
-          "Dr. Jane Smith, MD"
-        ],
-        "progress_notes": "No significant weight changes noted. Stable vitals. Angina symptoms persist despite medication",
-        "follow_up_instructions": "Schedule stress test in 2 weeks."
-      },
-      {
-        "encounter_date": "2026-02-10",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Review stress test results and discuss potential interventions.",
-        "provider": "Dr. Jane Smith, MD",
-        "provider_npi": "1234567890",
-        "facility": "Brooklyn Medical Center",
-        "vital_signs": {
-          "recorded_date": "2026-02-10",
-          "blood_pressure": "132/87 mmHg",
-          "heart_rate": "78 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Chest pain on exertion.",
-        "doctor_note": "HPI: Reviewing the results of recent stress test, the patient continues to report chest discomfort during moderate physical activities. ROS: Clear of cardiovascular abnormalities, no stroke symptoms, breathlessness or edema. Physical Exam: Cardiovascular exam: No new murmurs, gallops or rubs. Normal pulse rate. Assessment: Continued stable angina with stress-induced symptoms. Plan: Consider coronary angiography for further evaluation of coronary perfusion status, especially given persistent symptoms. Discuss possibility of PCI if significant lesions identified.",
-        "observations": [],
-        "procedures_performed": [
-          "73090 - Coronary Angiography"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Jane Smith, MD"
-        ],
-        "progress_notes": "Chest pain continues upon exertion. Stress test was inconclusive but symptomatic chest pain persists.",
-        "follow_up_instructions": "Proceed with coronary angiography for further evaluation."
-      }
-    ],
-    "social_history": null,
-    "vital_signs_current": null,
-    "gender_specific_history": "PSA levels within normal range. Regular urologic check-ups, no significant findings."
-  },
-  "217": {
-    "first_name": "Cheyenne",
-    "last_name": "Lee",
-    "gender": "female",
-    "dob": "1995-12-03",
-    "address": "123 Retail Park Way, St. Louis, Missouri 63101",
-    "telecom": "555-555-1010",
-    "race": "Asian",
-    "height": "5 ft 6 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Bo Lee",
-      "telecom": "555-555-2020",
-      "address": "123 Retail Park Way, St. Louis, Missouri 63101",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Gregory House, MD",
-      "formatted_npi": "4567890123",
-      "managingOrganization": "St. Louis Cardiovascular Associates"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$20",
-      "deductible_amount": "$1000"
-    },
-    "bio_narrative": "Cheyenne Lee is a bright and social 31-year-old woman with a history of cardiovascular issues. She has significant stenosis but no acute coronary syndrome. Cheyenne resides in St. Louis with her husband, Bo Lee. She has been under the care of Dr. Gregory House, MD. In the past, she has undergone various heart assessments due to a family history of heart disease. Recently, her physician recommended myocardial perfusion imaging due to persistent symptoms and previous unsuccessful conservative treatment of heart-related risks.",
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Myocardial Perfusion Imaging",
-    "procedure_facility": {
-      "facility_name": "St. Louis Heart Center",
-      "street_address": "1000 Heart Care Dr",
-      "city": "St. Louis",
-      "state": "MO",
-      "zip_code": "63110",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Gregory House, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient exhibits significant coronary stenosis at 80% blockage. Myocardial perfusion imaging is necessary to evaluate the patient's cardiac perfusion and to guide further intervention if required.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Lifestyle modifications and statin therapy",
-      "expected_outcome": "Improved assessment of coronary perfusion to guide potential revascularization."
-    }
-  },
-  "218": {
-    "first_name": "Alex",
-    "last_name": "Karev",
-    "gender": "male",
-    "dob": "1980-02-10",
-    "address": "1436 NW Northrup St, Seattle, WA 98109",
-    "telecom": "206-555-8304",
+    "dob": "1981-08-14",
+    "address": "123 Main St, Houston, TX 77002",
+    "telecom": "555-123-4567",
     "race": "Caucasian",
     "height": "6 ft 0 in",
     "weight": "185 lbs",
@@ -2117,18 +536,18 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Meredith Grey",
-      "telecom": "206-555-5192",
-      "address": "1515 SE Davison St, Seattle, WA 98105",
+      "name": "Lisa Cuddy",
+      "telecom": "555-987-6543",
+      "address": "456 Elm St, Houston, TX 77002",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2010-06-15",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Richard Webber, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Grey Sloan Memorial Hospital"
+      "generalPractitioner": "Dr. Gregory House, MD",
+      "formatted_npi": "1289876543",
+      "managingOrganization": "Houston Medical Group"
     },
     "link": {
       "other_patient": "N/A",
@@ -2138,69 +557,47 @@
       "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000123",
+      "plan_type": "Medicare",
+      "member_id": "MBR-569755",
+      "policy_number": "POL-2026-2678",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "",
-    "expected_procedure_date": "2026-03-25",
-    "procedure_requested": "Echocardiography with Doppler and color flow",
+    "expected_procedure_date": "2026-04-12",
+    "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
     "procedure_facility": {
-      "facility_name": "Grey Sloan Memorial Hospital",
-      "street_address": "325 Ninth Avenue",
-      "city": "Seattle",
-      "state": "WA",
-      "zip_code": "98104",
-      "department": "Cardiology Department"
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Radiology"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Richard Webber, MD",
+      "requesting_provider": "Dr. Sarah Johnson, MD, FACC",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persisting chest pain and elevated blood pressure levels despite initial medical management. An echocardiogram with Doppler is medically indicated to evaluate potential underlying cardiac abnormalities and assess valvular functions.",
+      "clinical_justification": "Patient presents with persistent chest pain and existing history suggesting possible atherosclerosis but lacks severe symptoms to preclude immediate intervention. Myocardial perfusion imaging is requested to rule out significant coronary artery disease.",
       "supporting_diagnoses": [
-        "R07.9 - Chest pain, unspecified",
-        "I10 - Essential (primary) hypertension"
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Initiation of metoprolol and lifestyle modifications",
-      "expected_outcome": "Accurate diagnosis of any underlying cardiac conditions to inform targeted therapy."
+      "previous_treatments": "Initial conservative management with lifestyle modifications.",
+      "expected_outcome": "Clarifying diagnosis of coronary perfusion status to support non-aggressive treatment pathway."
     },
+    "bio_narrative": "John Dorian, a 45-year-old male, has been managing persistent chest pain with non-cardiac characteristics. His medical history notes a mild increase in blood pressure and LDL cholesterol levels. He has been advised lifestyle modifications including dietary changes and increased exercise. His condition does not presently indicate obstruction necessitating invasive interventions. However, a thorough assessment through myocardial perfusion imaging is sought to rule out overlooked coronary issues. The lack of ECG or stress test results prioritizes non-invasive monitoring, despite acknowledging a background risk of coronary artery disease. John has a medical oversight from Dr. Gregory House at Houston Medical Group, ensuring continuity in managing these moderate cardiac symptoms, while maintaining sparse medication adherence to risk reduction strategies.",
     "medications": [
-      {
-        "brand": "Lopressor",
-        "generic_name": "Metoprolol 50mg",
-        "dosage": "50 mg BID",
-        "qty": "60 tablets",
-        "prescribed_by": "Dr. Richard Webber, MD",
-        "status": "current",
-        "start_date": "2025-12-01",
-        "end_date": "ongoing",
-        "reason": "Essential hypertension"
-      },
       {
         "brand": "Lipitor",
         "generic_name": "Atorvastatin 20mg",
         "dosage": "1 tablet daily",
         "qty": "30 tablets",
-        "prescribed_by": "Dr. Miranda Bailey, MD",
-        "status": "ongoing",
-        "start_date": "2025-08-15",
+        "prescribed_by": "Dr. Greg House, MD",
+        "status": "current",
+        "start_date": "2025-11-10",
         "end_date": "ongoing",
-        "reason": "Hyperlipidemia"
-      },
-      {
-        "brand": "Lisinopril",
-        "generic_name": "Lisinopril 10mg",
-        "dosage": "1 tablet daily",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Maggie Pierce, MD",
-        "status": "past",
-        "start_date": "2025-01-15",
-        "end_date": "2025-11-30",
-        "reason": "Hypertension control"
+        "reason": "High LDL cholesterol"
       }
     ],
     "allergies": [
@@ -2209,814 +606,87 @@
         "allergy_type": "Drug",
         "reaction": "Rash",
         "severity": "Moderate",
-        "onset_date": "2000-05-20"
+        "onset_date": "2020-05-14"
       }
     ],
     "vaccinations": [
       {
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
-        "date_administered": "2025-10-15",
-        "administered_by": "Grey Sloan Memorial Hospital",
+        "date_administered": "2025-09-15",
+        "administered_by": "CVS Pharmacy",
         "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "COVID-19 Moderna",
-        "vaccine_type": "mRNA",
-        "date_administered": "2024-03-20",
-        "administered_by": "Grey Sloan Memorial Hospital",
-        "dose_number": "2",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Tdap",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2023-08-10",
-        "administered_by": "Grey Sloan Memorial Hospital",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Subunit",
-        "date_administered": "2023-05-18",
-        "administered_by": "Grey Sloan Memorial Hospital",
-        "dose_number": "3",
         "reason": "Routine Immunization"
       }
     ],
-    "therapies": [
+    "therapies": [],
+    "behavioral_notes": "John maintains good medication adherence for his cholesterol management but shows intermediate compliance with advised lifestyle modifications due to a lack of time for regular exercise regiment. Alcohol consumption remains moderate, mostly social drinking on weekends. No tobacco or illicit drug use is reported. Occasional mental health consultations were advised as stress management.",
+    "encounters": [
       {
-        "therapy_type": "Physical",
-        "provider": "Dr. Callie Torres, PT",
-        "facility": "Grey Sloan Memorial Hospital",
-        "start_date": "2025-09-01",
-        "end_date": "2025-10-01",
-        "frequency": "2x/week",
-        "status": "Completed",
-        "reason": "Post-operative rehabilitation for knee surgery",
-        "notes": "Successful recovery observed, full range of motion achieved."
+        "encounter_date": "2025-12-12",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Evaluation for chest pain and potential CAD",
+        "provider": "Dr. Sarah Ellis, MD, Cardiology",
+        "provider_npi": "",
+        "facility": "Texas Heart Institute, Houston, TX",
+        "vital_signs": {
+          "recorded_date": "2025-12-12",
+          "blood_pressure": "140/90 mmHg",
+          "heart_rate": null,
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "24.7 kg/m\u00b2",
+          "oxygen_saturation": "99%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Persistent chest pain without clear exertional reference",
+        "doctor_note": "John Dorian presents with persistent, non-exertional chest pain for several weeks. Past medical assessments did not indicate significant ECG changes. Objective assessment reflects mild hypertension 140/90 mmHg, LDL of 141 mg/dL. Assessment points towards non-cardiac chest pain. Plan is for lifestyle modifications including dietary changes and regular exercise.",
+        "observations": [
+          "Patient exhibits mild hypertension, no significant past ECG abnormalities"
+        ],
+        "procedures_performed": [],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Sarah Ellis, MD"
+        ],
+        "progress_notes": "Patient demonstrates good control over LDL cholesterol with medication; stresses management of hypertension non-pharmacologically.",
+        "follow_up_instructions": "Increase physical activity to at least 3x/week to tackle hypertension."
       }
     ],
-    "behavioral_notes": "Alex Karev displays good medication adherence, actively follows dietary modifications to manage hypertension. Non-smoker, occasional social drinker, and engages in regular physical activity, which he enjoys as stress relief. Manages work-related stress effectively through mindfulness practices and therapy sessions."
-  },
-  "219": {
-    "first_name": "Christopher",
-    "last_name": "Turk",
-    "gender": "male",
-    "dob": "1975-02-07",
-    "address": "123 Healing Way, Los Angeles, CA 90033",
-    "telecom": "213-555-0199",
-    "race": "African American",
-    "height": "6 ft 1 in",
-    "weight": "200 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Carla Espinosa",
-      "telecom": "213-555-0198",
-      "address": "123 Healing Way, Los Angeles, CA 90033",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2000-06-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Michael Terry, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Sacred Heart Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-005",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-543210",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$1000"
-    },
-    "bio_narrative": "Christopher Turk, a seasoned medical professional at Sacred Heart Hospital, has recently shown signs of potential heart issues. Born in 1975, he has dedicated his life to healthcare in Los Angeles, CA. Despite a bustling career, his health has taken front stage following an abnormal ECG and persistent heart murmur that he and his colleagues have observed. Married to Carla Espinosa, they share a vibrant family life focused on caring for their daughter Jaime. \n\nTurk is noted for a fiercely competitive spirit on the basketball court\u2014a passion that started in his youth. Nonetheless, he maintains a disciplined diet and exercise regimen, mindful of his family history of hypertension. Recently, he experienced exertional discomfort\u2014symptoms that raised concerns aligned with his clinical findings at Sacred Heart Hospital. His provider, Dr. Michael Terry, is investigating these signs with a proposed myocardial perfusion imaging, aligned with prior hemodynamic assessments.\n\nTurk's career narrative intertwines with his health journey, having always prioritized his patients' well-being alongside his own. His clinical pursuits remain inspired by the very health challenges he addresses with vigor and dedication.",
-    "expected_procedure_date": "2026-04-01",
-    "procedure_requested": "Myocardial perfusion imaging, multiple studies",
-    "procedure_facility": {
-      "facility_name": "Cedars-Sinai Medical Center",
-      "street_address": "8700 Beverly Blvd",
-      "city": "Los Angeles",
-      "state": "CA",
-      "zip_code": "90048",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Michael Terry, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Christopher Turk presents with significant hypertensive heart disease coupled with aberrant ECG results suggestive of potential ischemic processes. Myocardial perfusion imaging is essential for assessing myocardial perfusion and detecting coronary artery disease, thus aiding in the management and treatment pathway.",
-      "supporting_diagnoses": [
-        "I51.9 - Heart disease, unspecified",
-        "R94.39 - Abnormal results of cardiovascular function studies"
-      ],
-      "previous_treatments": "ECG monitoring and lifestyle modification advice.",
-      "expected_outcome": "Clarification of myocardial perfusion status, improved diagnosis accuracy, and refining of treatment regime."
-    }
-  },
-  "228": {
-    "first_name": "Arya",
-    "last_name": "Stark",
-    "gender": "female",
-    "dob": "2000-03-23",
-    "address": "Winterfell, The North",
-    "telecom": "555-123-4567",
-    "race": "Caucasian",
-    "height": "5 ft 7 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Jon Snow",
-      "telecom": "555-987-6543",
-      "address": "Castle Black, The Wall",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2005-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Sansa Stark, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Winterfell Health System"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Arya Stark, a 25-year-old single woman hailing from Winterfell, exhibits a tenacious spirit reminiscent of her northern heritage. Recently experiencing joint discomfort without prior trauma and mild anemia, Arya leads an active lifestyle often engaged in physical pursuits that have encouraged her to seek medical consultation. Although her hemoglobin levels are noticeably reduced, further investigation is obstructed by insurance prerequisites necessitating a conservative diagnostic approach. Her primary healthcare provider, Dr. Sansa Stark, ensures a familial touch in her healthcare journey. Arya's narrative unfolds further with the health challenges she faces, continuously weaving through the anticipated procedural interventions as part of her care management plan."
-  },
-  "229": {
-    "first_name": "Glenn",
-    "last_name": "Sturgis",
-    "gender": "male",
-    "dob": "1953-11-30",
-    "address": "48 Cloud 9 Ave, St. Louis, MO 63101",
-    "telecom": "555-0150",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "185 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Dina Sturgis",
-      "telecom": "555-0199",
-      "address": "48 Cloud 9 Ave, St. Louis, MO 63101",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1980-06-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Samuel Carter, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "St. Louis Community Healthcare"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-2026-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$250"
-    },
-    "bio_narrative": "Mr. Glenn Sturgis, a 72-year-old retired retail manager from St. Louis, is known for his genial nature and commitment to community activities. He has a longstanding history of ischemic heart disease (I25.10) and presents with ongoing complaints of exertional chest pain. Mr. Sturgis adheres to a medication regimen that includes antihypertensives and statins to manage his cardiovascular risk. His family history is notable for heart disease, with both parents having suffered myocardial infarctions. Socially, he enjoys spending time with his grandchildren and maintains a relatively active lifestyle by participating in local events."
-  },
-  "230": {
-    "first_name": "Jesse",
-    "last_name": "Pinkman",
-    "gender": "male",
-    "dob": "1984-09-24",
-    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "telecom": "505-123-4567",
-    "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Walter White",
-      "telecom": "505-765-4321",
-      "address": "851 Montano Rd NW, Albuquerque, NM",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2025-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Saul Goodman, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Albuquerque General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2026-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Jesse Pinkman is a 41-year-old man living in Albuquerque, who has recently sought medical evaluation for persistent jaw misalignment issues. He leads an active lifestyle but has been challenged with functional difficulties related to mastication and articulation, which have not been alleviated by previous orthodontic treatment. Despite these struggles, Jesse has remained determined to improve his quality of life. His medical history includes recurring headaches that are exacerbated by his jaw condition. Emergency contacts include his trustworthy colleague, Walter White. Jesse is insistent on finding a viable solution for his jaw issues and is currently engaged in discussions regarding a possible surgical intervention by his longtime general practitioner, Dr. Saul Goodman, from Albuquerque General Hospital."
-  },
-  "231": {
-    "first_name": "Gina",
-    "last_name": "Linetti",
-    "gender": "female",
-    "dob": "1988-04-20",
-    "address": "99 Plymouth St, Brooklyn, NY 11201",
-    "telecom": "555-012-3456",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "135 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Charles Boyle",
-      "telecom": "555-678-9012",
-      "address": "99 Plymouth St, Brooklyn, NY 11201",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2016-04-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Susan Bennett, DDS",
-      "formatted_npi": "8765432109",
-      "managingOrganization": "New York Dental Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-987654321",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2024-001234",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Gina Linetti, a 37-year-old Brooklyn native, exudes confidence and charisma. Known for her vibrant personality and quick wit, Gina is an integral part of her community. She visits the New York Dental Clinic for routine check-ups and recently for an assessment of her jaw alignment issues. Her family history includes skeletal anomalies, which have prompted this cephalometric evaluation.\nCurrently, she embraces a healthy lifestyle, conscious about her diet and physical activities which include regular dance classes, maintaining her overall well-being. Her dental history reflects minor instances of malocclusion which prompted previous orthodontic consultations. The recent analysis aligns with historical explorations to address potential skeletal discrepancies.\nGina's insurance coverage through UnitedHealthcare's Medicare Advantage plan ensures she receives comprehensive care. Her active participation in her health decisions and her proactive approach to her treatment paths reflect her commitment to maintaining her health holistically."
-  },
-  "232": {
-    "first_name": "Leslie",
-    "last_name": "Knope",
-    "gender": "female",
-    "dob": "1975-01-18",
-    "address": "19 Crescent St, Pawnee, Indiana, 47955",
-    "telecom": "555-123-4567",
-    "race": "Caucasian",
-    "height": "5 ft 5 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Ann Perkins",
-      "telecom": "555-999-8888",
-      "address": "22 Washington Way, Pawnee, Indiana, 47955",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2010-05-22",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Ellie Sattler, DDS",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Pawnee General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-198867453",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$30",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Leslie Knope, a passionate public servant from Pawnee, Indiana, has served her community with dedication and enthusiasm for many years. A graduate of Indiana University, Leslie is known for her unwavering commitment to improving local parks and her ability to rally her team with infectious optimism. Recently, she has pursued evaluation for a Bilateral Sagittal Split Osteotomy to address mandibular prognathism. Despite her strong resolve, Leslie faces challenges in obtaining prior authorization due to lack of comprehensive clinical evidence supporting the necessity of her surgery. Her strong network of friends, including her emergency contact, Ann Perkins, provides her with unwavering support as she navigates these challenges. Leslie\u2019s narrative is one of determination and resilience, traits she embodies both in her personal health journey and her professional endeavors.",
-    "expected_procedure_date": "2026-03-25",
-    "procedure_requested": "Bilateral Sagittal Split Osteotomy",
-    "procedure_facility": {
-      "facility_name": "Pawnee Regional Hospital",
-      "street_address": "403 Healthcare Dr",
-      "city": "Pawnee",
-      "state": "IN",
-      "zip_code": "47955",
-      "department": "Oral and Maxillofacial Surgery"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Ellie Sattler, DDS",
-      "urgency_level": "Routine",
-      "clinical_justification": "The patient presents with mandibular prognathism requiring Bilateral Sagittal Split Osteotomy for functional and aesthetic improvement. However, due to the absence of pre-existing orthodontic records and progression documentation, establishing medical necessity is complicated.",
-      "supporting_diagnoses": [
-        "M26.04 - Mandibular prognathism"
-      ],
-      "previous_treatments": "None",
-      "expected_outcome": "Improved mandibular alignment and occlusion."
-    }
-  },
-  "233": {
-    "first_name": "Luke",
-    "last_name": "Skywalker",
-    "gender": "male",
-    "dob": "1977-05-14",
-    "address": "1447 S Hill St, Los Angeles, CA 90015, USA",
-    "telecom": "555-783-6712",
-    "race": "Caucasian",
-    "height": "5 ft 11 in",
-    "weight": "175 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Next of Kin",
-      "name": "Leia Organa",
-      "telecom": "555-336-7788",
-      "address": "123 Rebellion Rd, Los Angeles, CA 90015, USA",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2022-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Owen Lars, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Coruscant Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000123",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Mr. Luke Skywalker, a 48-year-old male from Los Angeles, has experienced chronic snoring and frequent awakenings, affecting his daily life and health. Despite attempts at lifestyle changes, including weight management, his symptoms persist. He has a supportive role as an advocate for health awareness influenced by his family's medical history. The need for a formal diagnosis of obstructive sleep apnea via polysomnography is crucial in determining the most effective treatment to improve his quality of life, considering the history of related conditions in his family.",
-    "expected_procedure_date": "2026-03-20",
-    "procedure_requested": "Polysomnography (Sleep Study)",
-    "procedure_facility": {
-      "facility_name": "Coruscant Medical Center",
-      "street_address": "123 Galaxy Lane",
-      "city": "Los Angeles",
-      "state": "CA",
-      "zip_code": "90015",
-      "department": "Pulmonology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Owen Lars, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with symptoms strongly suggestive of obstructive sleep apnea including daytime sleepiness and impaired cognitive function. Polysomnography is necessary to confirm diagnosis and assess severity for appropriate treatment planning.",
-      "supporting_diagnoses": [
-        "G47.33 - Obstructive sleep apnea",
-        "J45.909 - Asthma, unspecified"
-      ],
-      "previous_treatments": "Lifestyle modification including weight management and sleep hygiene improvements.",
-      "expected_outcome": "Improved sleep quality and reduction in apnea episodes."
-    }
-  },
-  "234": {
-    "first_name": "Carmela",
-    "last_name": "Soprano",
-    "gender": "female",
-    "dob": "1960-03-29",
-    "address": "Crestwood Avenue, North Caldwell, New Jersey",
-    "telecom": "555-0133",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "150 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Tony Soprano",
-      "telecom": "555-0134",
-      "address": "Crestwood Avenue, North Caldwell, New Jersey",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "1978-06-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Anthony Cipolla, DDS",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Meadowlands Dental Group"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-123456",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Carmela Soprano, a resident of North Caldwell, New Jersey, is a devoted wife and mother. Known for her sharp mind and fervor for family, she maintains an active social life within the community. Her dental history includes multiple interventions due to jaw resorption issues, leading to the current pursuit of a bone graft of the maxilla. This procedure, advised by Dr. Anthony Cipolla of Meadowlands Dental Group, is necessitated by imaging that shows advanced resorption. Carmela has a strong health background, engaging in regular dental visits and managing her oral health diligently. Her situation reflects common challenges in dental restoration, and she is determined to restore her dental arch stability, enabling proper oral function and aesthetics. Her family medical history shows some isolated incidents of oral health complications, emphasizing the importance of preemptive care.",
-    "expected_procedure_date": "2026-03-29",
-    "procedure_requested": "Bone graft (maxilla)",
-    "procedure_facility": {
-      "facility_name": "Meadowlands Medical Center",
-      "street_address": "300 Meadowlands Blvd",
-      "city": "Secaucus",
-      "state": "NJ",
-      "zip_code": "07094",
-      "department": "Surgical Center"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Anthony Cipolla, DDS",
-      "urgency_level": "Routine",
-      "clinical_justification": "Imaging and clinical evaluations confirm extensive bone loss in the maxillary region. The bone graft is necessary to restore adequate foundation and support for future dental prosthetics, preventing further resorption and structural compromise.",
-      "supporting_diagnoses": [
-        "M27.2 - Inflammatory conditions of jaws",
-        "M27.19 - Other jaw disorders"
-      ],
-      "previous_treatments": "Conservative measures and previous dental interventions have been insufficient in arresting the deterioration.",
-      "expected_outcome": "Structural stabilization of the maxilla with enhanced capability for prosthetic adaptation."
-    }
-  },
-  "235": {
-    "first_name": "Leonard",
-    "last_name": "Hofstadter",
-    "gender": "male",
-    "dob": "1980-05-17",
-    "address": "2311 North Los Robles Avenue, Pasadena, CA 91101",
-    "telecom": "555-987-6543",
-    "race": "Caucasian",
-    "height": "5 ft 6 in",
-    "weight": "160 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Penny Hofstadter",
-      "telecom": "555-123-4567",
-      "address": "2311 North Los Robles Avenue, Pasadena, CA 91101",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2009-02-10",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Mercy General Hospital"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "UHC-001",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-987654321",
-      "policy_number": "POL-2026-000123",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Leonard Hofstadter, a 45-year-old male residing in Pasadena, CA, is well-known for his humorous personality and affinity for scientific pursuits, courtesy of his Ph.D. in experimental physics. A resident of this region for over a decade, Leonard enjoys spending leisure time with his wife, Penny, and their group of friends. His medical history is notable for episodes of chest pain and concerns of cardiovascular disease, primarily diagnosed as atherosclerotic heart disease (I25.10). Historically, Leonard has undergone ECG testing in early 2024, confirming some ischemic changes. As a result, interventions such as lifestyle changes and beta-blocker therapy were initiated, albeit with intermittent relief. Today, as Leonard navigates regular consultations and faces potential myocardial perfusion imaging, his focus remains on achieving optimal cardiac health to sustain his active and fulfilling lifestyle.",
-    "expected_procedure_date": "2026-03-28",
-    "procedure_requested": "Myocardial Perfusion Imaging",
-    "procedure_facility": {
-      "facility_name": "Cedars-Sinai Medical Center",
-      "street_address": "8700 Beverly Blvd",
-      "city": "Los Angeles",
-      "state": "CA",
-      "zip_code": "90048",
-      "department": "Cardiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Jane Smith, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
-      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
-    }
-  },
-  "237": {
-    "first_name": "Hermione",
-    "last_name": "Granger",
-    "gender": "female",
-    "dob": "1980-09-19",
-    "address": "12 Grimmauld Place, London, UK",
-    "telecom": "0171-555-4271",
-    "race": "Caucasian",
-    "height": "5 ft 5 in",
-    "weight": "130 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Friend",
-      "name": "Ron Weasley",
-      "telecom": "0171-555-5281",
-      "address": "The Burrow, Ottery St Catchpole, England",
-      "gender": "male",
-      "organization": "N/A",
-      "period_start": "2010-05-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Luna Lovegood, MD",
-      "formatted_npi": "4790067382",
-      "managingOrganization": "St. Mungo's Hospital for Magical Maladies and Injuries"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456789",
-      "policy_number": "POL-2026-000001",
-      "effective_date": "2025-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Hermione Granger, a well-known literary heroine, is devoted to learning, courageous acts, and loyalty to her friends. She has a strong family history of cardiac issues, experiencing occasional chest pains that have prompted her to seek medical advice at St. Mungo's Hospital for Magical Maladies and Injuries under the care of Dr. Luna Lovegood. Leveraging her logical thinking and past strategies to handle overwhelming tasks, Hermione is determined to adhere to the recommended lifestyle modifications and medical regimens to prevent potential complications.",
-    "expected_procedure_date": "2026-03-25",
-    "procedure_requested": "Myocardial perfusion imaging, multiple studies",
-    "procedure_facility": {
-      "facility_name": "St. Mungo's Hospital for Magical Maladies and Injuries",
-      "street_address": "12 Grimmauld Place",
-      "city": "London",
-      "state": "UK",
-      "zip_code": "00000",
-      "department": "Radiology Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Luna Lovegood, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "The request for myocardial perfusion imaging is submitted to evaluate Ms. Granger's long-standing cardiac symptoms, including exertional chest pain and abnormal ECG results. Imaging is essential to detect ischemic changes and plan further intervention. Given her risk factors and incomplete response to initial therapies, detailed imaging will confirm or rule out myocardial ischemia.",
-      "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
-      ],
-      "previous_treatments": "Conservative management including lifestyle modification and beta-blockers.",
-      "expected_outcome": "Improved management and intervention strategies tailored to the confirmed presence and extent of ischemic heart disease."
-    }
-  },
-  "238": {
-    "first_name": "Hank",
-    "last_name": "Schrader",
-    "gender": "male",
-    "dob": "1970-03-13",
-    "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-    "telecom": "505-555-0199",
-    "race": "Caucasian",
-    "height": "6 ft 2 in",
-    "weight": "220 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Marie Schrader",
-      "telecom": "505-555-0177",
-      "address": "308 Negra Arroyo Lane, Albuquerque, NM",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1998-06-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Albuquerque Medical Clinic"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-000123456",
-      "policy_number": "POL-2026-001234",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Hank Schrader, a DEA agent from Albuquerque, New Mexico, is renowned for his dedication to his work and his unwavering moral compass. Married to Marie Schrader, he has demonstrated resilience and strength through various personal and professional challenges. Recently, Hank consulted Dr. Jane Smith for facial discomfort after a minor accident caused trauma resulting in asymmetry. His health history is generally robust, with no significant underlying conditions previously affecting his daily functionality. However, this recent maxillofacial issue has prompted further medical evaluation and potential procedural intervention.",
-    "expected_procedure_date": "2026-03-29",
-    "procedure_requested": "Bone harvest for facial reconstruction",
-    "procedure_facility": {
-      "facility_name": "University of New Mexico Hospital",
-      "street_address": "2211 Lomas Blvd NE",
-      "city": "Albuquerque",
-      "state": "NM",
-      "zip_code": "87106",
-      "department": "Surgical Center"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Jane Smith, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient's current facial asymmetry from trauma may require reconstruction. Bone harvest is recommended for correction. However, imaging findings are generally normal, and the need for surgery is not absolute.",
-      "supporting_diagnoses": [
-        "S02.402A - Unspecified fracture of left maxilla, initial encounter",
-        "M26.85 - Headache, associated with masticatory function"
-      ],
-      "previous_treatments": "None",
-      "expected_outcome": "Improved facial structure clarity and alleviation of associated discomfort."
-    }
-  },
-  "nan": {
-    "first_name": "Silvio",
-    "last_name": "Dante",
-    "gender": "male",
-    "dob": "1964-08-06",
-    "address": "North Caldwell, New Jersey",
-    "telecom": "973-555-0100",
-    "race": "Caucasian",
-    "height": "5 ft 9 in",
-    "weight": "180 lbs",
-    "maritalStatus": "Married",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Spouse",
-      "name": "Gabriella Dante",
-      "telecom": "973-555-0111",
-      "address": "North Caldwell, New Jersey",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "1989-10-15",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Jennifer Melfi, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "St. Barnabas Medical Center"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
-      "member_id": "MBR-539021",
-      "policy_number": "POL-2025-539021",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "bio_narrative": "Silvio Dante is a 60-year-old male originally from New Jersey, known for his leadership within local businesses. Despite a history of health complacency, recent chest pains prompted him to seek medical advice. Silvio has maintained a typical New Jersey diet high in fats, contributing to his atherosclerotic heart condition. He leads a moderately active lifestyle but has recently experienced limitations due to his symptoms. Silvio is married to Gabriella, who has been supportive in encouraging healthy habits. Silvio's family history is significant for cardiac issues; his father experienced heart problems in his late 60s. Socially, Silvio enjoys family gatherings and values loyalty, often mentoring younger individuals in his community. He has a strong support network and continuous care managed by his general practitioner. Silvio's recent measures include dietary changes and regular monitoring of his cardiac health."
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": null,
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-01-10",
+      "last_visit_reason": "Routine check-up",
+      "missed_appointment": null,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": null,
+      "mental_health_current": null,
+      "exercise_habits": "Walks 2x/week",
+      "diet_notes": "Low sodium diet",
+      "family_history_relevant": "Father had a heart attack at 55"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-03-01",
+      "blood_pressure": "142/92 mmHg",
+      "heart_rate": "78 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "25.1 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": null,
+      "respiratory_rate": null
+    },
+    "gender_specific_history": null
   }
 }

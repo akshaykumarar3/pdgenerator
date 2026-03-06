@@ -25,6 +25,7 @@ data_loader.py        → Excel case data loading
 history_manager.py    → Conversation history
 core/patient_db.py    → Patient record persistence
 purge_manager.py      → Data cleanup utilities
+remove_persona.py     → CLI tool to compeltely obliterate all persona data
 ```
 
 ## Key Data Models (ai_engine.py)

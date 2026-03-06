@@ -554,34 +554,6 @@ def main():
             print("\n👋 Goodbye!\n")
             break
 
-        # ── PURGE ─────────────────────────────────────────────────────────────
-        if target_input.startswith("--"):
-            patient_part = target_input[2:].strip()
-            if patient_part:
-                purge_manager.purge_patient(patient_part)
-            else:
-                print("\n📋 What to delete?")
-                print("   [1] ALL (persona + reports + summary)")
-                print("   [2] Reports + Summary")
-                print("   [3] Summary only")
-                print("   [4] Reports only")
-                print("   [5] Persona only")
-                print("   [6] Cancel")
-                purge_choice = input("   Choice [6]: ").strip() or "6"
-                actions = {
-                    "1": purge_manager.purge_all,
-                    "2": purge_manager.purge_reports_and_summaries,
-                    "3": purge_manager.purge_summaries_only,
-                    "4": purge_manager.purge_reports_only,
-                    "5": purge_manager.purge_personas,
-                }
-                action = actions.get(purge_choice)
-                if action:
-                    action()
-                else:
-                    print("   ❌ Cancelled.")
-            continue
-
         # ── PARSE FEEDBACK SUFFIX ──────────────────────────────────────────────
         feedback   = ""
         base_input = target_input

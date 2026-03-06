@@ -1,4 +1,4 @@
-# Clinical Data Generator (v2.0)
+# Clinical Data Generator (v3.0)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -50,8 +50,16 @@ python generator.py
 | **`[ID],[ID],[ID]`** | Batch mode for specific IDs. | `221,222,223` |
 | **`*`** | Runs Batch Mode for all missing patients. | `*` |
 | **`q`** / **`exit`** | Quits the application. | `q` |
-| **`--`** | Shows menu to delete specific artifact types. | `--` |
-| **`--[ID]`** | Deletes all data for a specific patient. | `--225` |
+
+#### Persona Removal CLI
+
+To completely wipe out all generated history, data, and database entries for a specific Persona, you can run the standalone remove utility:
+
+```bash
+python remove_persona.py <Patient_ID>
+# Or to skip confirmation:
+python remove_persona.py -f <Patient_ID>
+```
 
 ---
 
@@ -245,6 +253,7 @@ pdgenerator/
 ├── data_loader.py              # Excel case data loading
 ├── history_manager.py          # Per-patient generation history
 ├── purge_manager.py            # Data cleanup utilities
+├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
 ├── run.sh                      # Mac/Linux CLI launcher

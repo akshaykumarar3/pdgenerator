@@ -63,5 +63,6 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
 ├── doc_validator.py            # Structural Validation
 ├── data_loader.py              # File I/O for Case Data
 ├── history_manager.py          # Session tracking
-└── purge_manager.py            # Cleanup utilities
+├── purge_manager.py            # Cleanup utilities
+└── remove_persona.py           # Deep persona removal utility
 10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. SummaryThe Clinical Data Generator (v3) ensures Clinical Coherence by enforcing a deterministic patient_state layer. By combining structured data models with controlled LLM generation, the pipeline produces high-quality synthetic datasets suitable for rigorous healthcare software testing.

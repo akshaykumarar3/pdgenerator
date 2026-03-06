@@ -66,9 +66,18 @@ def purge_all(force: bool = False):
         print(f"      ✅ Deleted {len(files)} SQL files.")
 
     # 6. Patient DB
-    with open(DB_PATH, 'w') as f:
-        json.dump({}, f)
-    print(f"      ✅ Reset: {DB_PATH}")
+    try:
+        with open(DB_PATH, 'w') as f:
+            json.dump({}, f)
+        print(f"      ✅ Reset: {DB_PATH}")
+    except IOError:
+        print(f"      ⚠️  Could not reset DB at {DB_PATH}")
+
+    # 7. Records
+    if os.path.exists(RECORDS_DIR):
+        shutil.rmtree(RECORDS_DIR)
+        os.makedirs(RECORDS_DIR)
+        print(f"      ✅ Deleted: {RECORDS_DIR}/")
 
     print("\n   ✨ Purge Complete.")
 
@@ -85,9 +94,12 @@ def purge_personas(force: bool = False):
     print("\n   🗑️  Purging Personas...")
 
     # 1. DB
-    with open(DB_PATH, 'w') as f:
-        json.dump({}, f)
-    print(f"      ✅ Reset: {DB_PATH}")
+    try:
+        with open(DB_PATH, 'w') as f:
+            json.dump({}, f)
+        print(f"      ✅ Reset: {DB_PATH}")
+    except IOError:
+        print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
     # 2. Personas Folder
     if os.path.exists(PERSONAS_DIR):
@@ -245,16 +257,53 @@ def purge_patient(patient_id: str, force: bool = False):
         os.remove(log_file)
         print(f"      ✅ Deleted: {os.path.basename(log_file)}")
 
-    # 5. DB Entry
-    with open(DB_PATH, 'r') as f:
-        data = json.load(f)
+    # 5. Debug State, Summaries, and Personas
+    debug_state = os.path.join(OUTPUT_DIR, "debug", f"patient_state_{patient_id}.json")
+    if os.path.exists(debug_state):
+        os.remove(debug_state)
+        print(f"      ✅ Deleted: {os.path.basename(debug_state)}")
+
+    if os.path.exists(SUMMARY_DIR):
+        summary_files = glob.glob(os.path.join(SUMMARY_DIR, f"*{patient_id}*"))
+        for f in summary_files:
+            if os.path.isfile(f):
+                os.remove(f)
+                print(f"      ✅ Deleted: summary/{os.path.basename(f)}")
+
+    if os.path.exists(PERSONAS_DIR):
+        persona_files = glob.glob(os.path.join(PERSONAS_DIR, f"*{patient_id}*"))
+        for f in persona_files:
+            if os.path.isfile(f):
+                os.remove(f)
+                print(f"      ✅ Deleted: personas/{os.path.basename(f)}")
+
+    # 6. DB Entry
+    data = {}
+    if os.path.exists(DB_PATH):
+        try:
+            with open(DB_PATH, 'r') as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            pass
     
     if str(patient_id) in data:
         del data[str(patient_id)]
-        with open(DB_PATH, 'w') as f:
-            json.dump(data, f, indent=2)
-        print(f"      ✅ Removed from DB: {patient_id}")
+        try:
+            with open(DB_PATH, 'w') as f:
+                json.dump(data, f, indent=2)
+            print(f"      ✅ Removed from DB: {patient_id}")
+        except IOError:
+            print(f"      ⚠️  Removed from memory but failed to save DB: {patient_id}")
     else:
         print(f"      ℹ️  ID {patient_id} not found in DB.")
 
+    # 7. Records files matching patient id
+    if os.path.exists(RECORDS_DIR):
+        record_files = glob.glob(os.path.join(RECORDS_DIR, f"*{patient_id}*"))
+        for f in record_files:
+            if os.path.isfile(f):
+                os.remove(f)
+                print(f"      ✅ Deleted: records/{os.path.basename(f)}")
+
     print(f"\n   ✨ Patient {patient_id} Purged.")
+
