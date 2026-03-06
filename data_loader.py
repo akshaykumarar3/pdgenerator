@@ -12,12 +12,18 @@ def _get_patient_id_column(df: pd.DataFrame) -> str:
     if 'Patient ID' in df.columns:
         return 'Patient ID'
     
-    # Heuristic Search
+    # Heuristic Search (Look for 'Unnamed' column with numeric IDs > 100)
     for col in df.columns:
         if 'Unnamed' in str(col):
-            first_val = df[col].dropna().iloc[0] if not df[col].dropna().empty else 0
-            if isinstance(first_val, (int, float)) and first_val > 100:
-                return col
+            # Check the first 5 non-null values
+            valid_vals = df[col].dropna().head(5)
+            for val in valid_vals:
+                try:
+                    num = int(float(val))
+                    if num > 100:
+                        return col
+                except (ValueError, TypeError):
+                    continue
     return 'Patient ID' # Default fallback
 
 def _normalize_id(raw_val) -> str:
@@ -46,27 +52,26 @@ def load_patient_case(target_id: str):
         xl = pd.ExcelFile(INPUT_EXCEL)
         for sheet in xl.sheet_names:
             df = pd.read_excel(INPUT_EXCEL, sheet_name=sheet)
-            df.columns = df.columns.str.strip()
+            df.columns = df.columns.astype(str).str.strip()
             
-            if 'Test Case #' not in df.columns:
-                continue
-                
-            if 'Test Case #' not in df.columns:
-                continue
-                
             id_col = _get_patient_id_column(df)
+            if id_col not in df.columns:
+                continue
             
             # Iterate
             for _, row in df.iterrows():
                 p_id = _normalize_id(row.get(id_col, ''))
                 
-                if p_id == target_id:
+                if p_id == str(target_id):
                     # Found Match
+                    procedure = str(row.get('Procedure', '')) or str(row.get('Code', 'Unknown'))
+                    if not procedure.strip(): procedure = "Unknown"
+                        
                     return {
                         "id": p_id,
-                        "procedure": row.get('Procedure', 'Unknown'),
-                        "outcome": row.get('Expected Result', 'Unknown'),
-                        "details": row.get('Test Case Details', 'No details provided')
+                        "procedure": procedure,
+                        "outcome": str(row.get('Expected Result', 'Unknown')),
+                        "details": str(row.get('Test Case Details', 'No details provided'))
                     }
         return None
 
@@ -86,23 +91,23 @@ def get_all_patient_ids() -> list:
         xl = pd.ExcelFile(INPUT_EXCEL)
         for sheet in xl.sheet_names:
             df = pd.read_excel(INPUT_EXCEL, sheet_name=sheet)
-            df.columns = df.columns.str.strip()
+            df.columns = df.columns.astype(str).str.strip()
             
-            if 'Test Case #' not in df.columns:
-                continue
-                
-            if 'Test Case #' not in df.columns:
-                continue
-                
             id_col = _get_patient_id_column(df)
+            if id_col not in df.columns:
+                continue
             
             for _, row in df.iterrows():
                 # Check for valid ID
                 p_id = _normalize_id(row.get(id_col, ''))
-                if p_id and p_id != '':
-                     found_ids.add(p_id)
+                if p_id and str(p_id).lower() not in ['nan', 'none', '']:
+                    found_ids.add(p_id)
                     
-        return sorted(list(found_ids))
+        def sort_key(x):
+            try: return int(x)
+            except: return float('inf')
+            
+        return sorted(list(found_ids), key=sort_key)
     except Exception as e:
         print(f"Error scanning IDs: {e}")
         return []

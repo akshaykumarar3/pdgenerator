@@ -1,455 +1,634 @@
 import os
+import re
+import shutil
+import random
+import datetime
+from datetime import timedelta
 
+from dotenv import load_dotenv
 
 import data_loader
 import ai_engine
 import pdf_generator
 import history_manager
-import requests
-import datetime
 import core.patient_db as patient_db
 import purge_manager
+import patient_record_writer
 from doc_validator import validate_structure
-from dotenv import load_dotenv
 
-# Load Env (Explicitly to be safe, though ai_engine does it)
+# ─── CONFIGURATION ────────────────────────────────────────────────────────────
+
 env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
 load_dotenv(env_path)
 
-# OUTPUT CONFIGURATION
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
-PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
-REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
+from core.config import OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, ensure_output_dirs, get_patient_report_folder
 
-# Validate/Create Directories
-for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
-    if not os.path.exists(d):
-        os.makedirs(d, exist_ok=True)
-        # print(f"📁 Verified Folder: {d}") # Noise reduction
 
-def process_patient_workflow(patient_id: str, feedback: str = "", excluded_names: list[str] = None, generation_mode: dict = None) -> str:
+# ─── VERSION HELPERS ───────────────────────────────────────────────────────────
+
+def get_persona_version(patient_id: str) -> int:
     """
-    Main orchestration logic for a single patient.
-    Returns the Generated Name (str) if successful, else None.
-    
-    generation_mode: dict with keys 'summary', 'reports', 'persona' (bool values)
+    Scan the persona directory for existing files for this patient.
+    Returns the *next* version number (e.g. if v2 exists → returns 3).
+    Returns 1 when no prior versions exist.
+    """
+    max_v = 0
+    prefix = f"{patient_id}-"
+    if os.path.isdir(PERSONA_DIR):
+        for fname in os.listdir(PERSONA_DIR):
+            if fname.startswith(prefix) and fname.endswith(".pdf"):
+                m = re.search(r'-v(\d+)', fname)
+                if m:
+                    max_v = max(max_v, int(m.group(1)))
+    return max_v + 1
+
+
+# ─── ARCHIVE HELPERS ───────────────────────────────────────────────────────────
+
+def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = False):
+    """
+    Move PDFs belonging to *patient_id* from *folder* into folder/archive/.
+    If match_all_pdfs is True every .pdf in the folder is archived (used for
+    the patient-specific reports sub-folder which already only contains that
+    patient's files).
+    """
+    if not os.path.isdir(folder):
+        return
+
+    archive_dir = os.path.join(folder, "archive")
+    os.makedirs(archive_dir, exist_ok=True)
+
+    prefix_patterns = [
+        f"{patient_id}-",
+        f"DOC-{patient_id}-",
+        f"Clinical_Summary_Patient_{patient_id}",
+    ]
+
+    moved = 0
+    for fname in os.listdir(folder):
+        if fname == "archive" or not fname.endswith(".pdf"):
+            continue
+        if match_all_pdfs or any(fname.startswith(p) for p in prefix_patterns):
+            src = os.path.join(folder, fname)
+            dst = os.path.join(archive_dir, fname)
+            try:
+                shutil.move(src, dst)
+                moved += 1
+            except Exception as e:
+                print(f"      ⚠️  Archive move failed for {fname}: {e}")
+
+    if moved:
+        print(f"      📦 Archived {moved} file(s) from {os.path.basename(folder)}/")
+
+
+def archive_patient_files(patient_id: str, generation_mode: dict):
+    """
+    Archive existing patient documents for every doc type that will be
+    re-generated in this run.  Only files about to be overwritten are moved.
+
+    Args:
+        patient_id:       Patient ID string.
+        generation_mode:  Dict with boolean flags 'persona', 'reports', 'summary'.
+    """
+    if generation_mode.get("persona", False):
+        _archive_files_in_dir(PERSONA_DIR, patient_id)
+
+    if generation_mode.get("summary", False):
+        _archive_files_in_dir(SUMMARY_DIR, patient_id)
+
+    if generation_mode.get("reports", False):
+        # Reports live in a patient-specific sub-folder; archive everything there
+        rpt_folder = get_patient_report_folder(patient_id)
+        _archive_files_in_dir(rpt_folder, patient_id, match_all_pdfs=True)
+
+
+# ─── DATE CALCULATION HELPERS ──────────────────────────────────────────────────
+
+def calculate_procedure_date() -> str:
+    """Return a future procedure date 7–90 days from today (ISO format)."""
+    days_ahead = random.randint(7, 90)
+    return (datetime.datetime.now() + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
+
+
+def calculate_encounter_date(procedure_date_str: str, days_before: int) -> str:
+    """
+    Return an encounter date *days_before* days before *procedure_date_str*.
+
+    Args:
+        procedure_date_str: ISO date string (YYYY-MM-DD).
+        days_before:        Positive integer.
+    """
+    procedure_date = datetime.datetime.strptime(procedure_date_str, "%Y-%m-%d")
+    return (procedure_date - timedelta(days=days_before)).strftime("%Y-%m-%d")
+
+
+def get_today_date() -> str:
+    """Return today's date in ISO format (YYYY-MM-DD)."""
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
+# ─── DOCUMENT COHERENCE HELPERS ────────────────────────────────────────────────
+
+def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
+    """
+    Load existing documents so the AI can maintain coherence across runs.
+
+    Returns a dict with keys: 'persona', 'reports', 'summary',
+    'procedure_date', 'facility'.
+    """
+    context = {
+        "persona": None,
+        "reports": [],
+        "summary": None,
+        "procedure_date": None,
+        "facility": None,
+    }
+
+    # Load existing persona only when we are NOT regenerating it
+    if not generation_mode.get("persona", False):
+        existing_patient = patient_db.load_patient(patient_id)
+        if existing_patient:
+            context["persona"] = existing_patient
+            context["procedure_date"] = existing_patient.get("expected_procedure_date")
+            facility_data = existing_patient.get("procedure_facility")
+            if facility_data:
+                context["facility"] = (
+                    f"{facility_data.get('facility_name')}, "
+                    f"{facility_data.get('city')}, "
+                    f"{facility_data.get('state')}"
+                )
+
+    # Load existing reports only when we are NOT regenerating them
+    if not generation_mode.get("reports", False):
+        patient_report_folder = get_patient_report_folder(patient_id)
+        if os.path.exists(patient_report_folder):
+            report_files = [
+                f for f in os.listdir(patient_report_folder) if f.endswith(".pdf")
+            ]
+            context["reports"] = report_files[:5]  # cap for prompt size
+
+    # Load existing summary only when we are NOT regenerating it
+    if not generation_mode.get("summary", False):
+        summary_file = os.path.join(SUMMARY_DIR, f"{patient_id}-summary.pdf")
+        if os.path.exists(summary_file):
+            context["summary"] = summary_file
+
+    return context
+
+
+# ─── SYNC / VERIFICATION ───────────────────────────────────────────────────────
+
+def check_patient_sync_status(patient_id: str, generation_mode: dict) -> bool:
+    """
+    Return True if ALL documents requested in the generation_mode are already present.
+    Returns False if ANY requested document is missing.
+    """
+    req_persona = generation_mode.get("persona", False)
+    req_reports = generation_mode.get("reports", False)
+    req_summary = generation_mode.get("summary", False)
+
+    # Note: If a mode is not requested, we treat it as satisfied (True)
+    has_persona  = not req_persona
+    has_report   = not req_reports
+    has_summary  = not req_summary
+
+    # Check Persona
+    if req_persona and os.path.isdir(PERSONA_DIR):
+        has_persona = any(
+            f.startswith(f"{patient_id}-") and f.endswith(".pdf")
+            for f in os.listdir(PERSONA_DIR)
+            if f != "archive"
+        )
+
+    # Check Reports
+    if req_reports:
+        rpt_folder = get_patient_report_folder(patient_id)
+        if os.path.isdir(rpt_folder):
+            has_report = any(
+                f.endswith(".pdf")
+                for f in os.listdir(rpt_folder)
+                if f != "archive"
+            )
+
+    # Check Summary
+    if req_summary and os.path.isdir(SUMMARY_DIR):
+        has_summary = any(
+            (f.startswith(f"{patient_id}-") or f.startswith(f"Clinical_Summary_Patient_{patient_id}"))
+            and f.endswith(".pdf")
+            for f in os.listdir(SUMMARY_DIR)
+            if f != "archive"
+        )
+
+    exists = has_persona and has_report and has_summary
+    if not exists:
+        missing = []
+        if req_persona and not has_persona: missing.append("persona")
+        if req_reports and not has_report: missing.append("reports")
+        if req_summary and not has_summary: missing.append("summary")
+        print(f"   ⚠️  Missing requested documents for patient {patient_id}: {', '.join(missing)}")
+        
+    return exists
+
+
+# ─── MAIN WORKFLOW ─────────────────────────────────────────────────────────────
+
+def process_patient_workflow(
+    patient_id: str,
+    feedback: str = "",
+    excluded_names: list[str] = None,
+    generation_mode: dict = None,
+) -> str:
+    """
+    Main orchestration for a single patient.
+
+    Args:
+        patient_id:      Patient ID (string).
+        feedback:        Optional free-text AI instructions.
+        excluded_names:  List of names already taken (for uniqueness).
+        generation_mode: Dict with boolean flags 'persona', 'reports', 'summary'.
+                         Defaults to all True.
+
+    Returns:
+        The generated full name if successful, else None.
     """
     if excluded_names is None:
         excluded_names = []
     if generation_mode is None:
-        generation_mode = {"summary": True, "reports": True, "persona": True}
-        
-    print(f"🚀 Starting Workflow for Patient ID: {patient_id}")
-    print(f"\n📂 Loading Case Data for ID: {patient_id}...")
+        generation_mode = {"persona": True, "reports": True, "summary": True}
+
+    # Normalise – ensure all keys present with sane defaults
+    generation_mode = {
+        "persona": generation_mode.get("persona", False),
+        "reports": generation_mode.get("reports", False),
+        "summary": generation_mode.get("summary", False),
+    }
+
+    print(f"\n🚀 Starting Workflow for Patient ID: {patient_id}")
+    print(f"   Mode → Persona:{generation_mode['persona']} | Reports:{generation_mode['reports']} | Summary:{generation_mode['summary']}")
+
+    # ── 1. LOAD CASE DATA ──────────────────────────────────────────────────────
+    print(f"\n📂 Loading Case Data for ID: {patient_id}…")
     case_data = data_loader.load_patient_case(patient_id)
-    
     if not case_data:
-        print(f"❌ Error: Patient ID '{patient_id}' not found in Excel Plan.")
-        return
-    
-    print(f"   ✅ Case Found: {case_data['procedure']} -> {case_data['outcome']}")
-    
-    # 2. LOAD HISTORY
+        print(f"❌ Patient ID '{patient_id}' not found in Excel plan.")
+        return None
+    print(f"   ✅ Case: {case_data.get('procedure', '?')} → {case_data.get('outcome', '?')}")
+
+    # ── 2. LOAD HISTORY ────────────────────────────────────────────────────────
     history_txt = history_manager.get_history(patient_id)
     if history_txt:
-        print(f"   📜 History Found: Loaded past context.")
-    
-    # 3. Check Persistent DB for Consistency
+        print("   📜 Prior history loaded.")
+
+    # ── 3. LOAD EXISTING PATIENT RECORD ───────────────────────────────────────
     existing_patient = patient_db.load_patient(patient_id)
-    persona_context_prompt = ""
     if existing_patient:
-        print(f"      🔄 Found Existing Patient Record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
-    # Scan for existing documents (Smart Duplicate Prevention)
-    patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
-    existing_titles = []
-    existing_docs_map = {}  # Map title -> full filename for potential replacement
-    
-    if os.path.exists(patient_report_folder):
+        print(f"   🔄 Existing record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
+
+    # ── 4. SCAN EXISTING REPORT TITLES (duplicate prevention) ─────────────────
+    patient_report_folder = get_patient_report_folder(patient_id)
+    existing_titles: list[str] = []
+    if os.path.isdir(patient_report_folder):
         for f in os.listdir(patient_report_folder):
             if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
-                # Extract title: DOC-210-001-Title.pdf -> Title
                 parts = os.path.splitext(f)[0].split("-")
                 if len(parts) >= 4:
                     title = "-".join(parts[3:])
-                    # Remove NAF suffix if present
-                    if title.endswith("-NAF"):
-                        title = title[:-4]
+                    title = title[:-4] if title.endswith("-NAF") else title
                     existing_titles.append(title)
-                    existing_docs_map[title] = f
-    
     if existing_titles:
-        print(f"      📥 Existing Documents Found: {len(existing_titles)}")
-        print(f"         Documents: {', '.join(existing_titles[:5])}{'...' if len(existing_titles) > 5 else ''}")
-        print(f"         AI will avoid creating duplicates unless multiple reports are needed.")
-    
-    print(f"🧠 Processing with AI... (Outcome: {case_data['outcome']})")
-    
+        print(f"   📥 {len(existing_titles)} existing report(s) found (AI will avoid duplicates).")
+
+    # ── 5. AI GENERATION ───────────────────────────────────────────────────────
+    print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     try:
-        # Result is ClinicalDataPayload (no SQL)
         result, usage = ai_engine.generate_clinical_data(
-            case_details=case_data, 
-            user_feedback=feedback, 
-            history_context=history_txt, 
-            existing_persona=existing_patient, 
+            case_details=case_data,
+            user_feedback=feedback,
+            history_context=history_txt,
+            existing_persona=existing_patient,
             excluded_names=excluded_names,
-            existing_filenames=existing_titles  # Pass existing titles for duplicate prevention
+            existing_filenames=existing_titles,
         )
-        
-        # SAVE HISTORY
-        history_manager.append_history(patient_id, feedback, result.changes_summary)
-        
-        # GENERATE PDFs (Dynamic + Unique)
-        print(f"   📄 Generating {len(result.documents)} Document(s)...")
-
-        # === DOCUMENT COMPLIANCE ANALYSIS ===
-        # (Performed per-document during generation now)
-
-        seen_titles = {}
-        # 6. Save/Update Patient DB
-        # Structured Persona Object is now available
-        if result.patient_persona:
-            db_entry = result.patient_persona.model_dump()
-            # Flatten or keep nested? Keep nested as per user JSON requirement.
-            # We map Pydantic fields to the "p_" fields user requested roughly, or just store the clean object.
-            # actually user wants "p_telecom", etc. 
-            # Ideally we adapt it, but for now let's save the RAW structured data which has everything.
-            # Then the export logic (not this file) can transform it.
-            # Or we can just store the Pydantic dump which is very clean.
-            
-            patient_db.save_patient(patient_id, db_entry)
-            
-            p_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            print(f"      💾 Patient {patient_id} ({p_name}) saved to Core DB.")
-
-        # 7. Generate Documents (Reports - conditional)
-        patient_report_folder = os.path.join(REPORTS_DIR, patient_id)
-
-        # REPORTS GENERATION (conditional)
-        if generation_mode.get("reports", True) and result.documents:
-            print(f"   📄 Generating {len(result.documents)} Report(s)...")
-            doc_seq_counter = 1
-            for doc in result.documents:
-                # Construct Filename
-                seq_str = f"{doc_seq_counter:03d}"
-                doc_identifier = f"DOC-{patient_id}-{seq_str}"
-                final_filename_base = f"{doc_identifier}-{doc.title_hint}"
-                
-                # Validation & Repair
-                is_valid, errors = validate_structure(doc.content)
-                if not is_valid:
-                    print(f"      ⚠️  Document '{doc.title_hint}' Invalid: {errors}. Attempting AI Fix...")
-                    doc.content = ai_engine.fix_document_content(doc.content, errors)
-                    is_valid, errors = validate_structure(doc.content)
-                    if not is_valid:
-                        print(f"      ❌ Fix Failed. Marking as NAF.")
-                        final_filename_base += "-NAF"
-                    else:
-                        print(f"      ✅ AI Fixed the document.")
-                
-                # Create PDF (without image)
-                pdf_path = pdf_generator.create_patient_pdf(
-                    patient_id=patient_id, 
-                    doc_type=final_filename_base, 
-                    content=doc.content, 
-                    patient_persona=result.patient_persona,
-                    doc_metadata=doc,
-                    base_output_folder=patient_report_folder,
-                    image_path=None  # No standalone images
-                )
-                print(f"      - Created: {os.path.basename(pdf_path)}")
-                doc_seq_counter += 1
-            
-        # GENERATE PERSONA (New Requirement)
-        current_year = datetime.datetime.now().year
-        current_mrn = f"MRN-{patient_id}-{current_year}" # Centralized MRN
-
-        # PERSONA GENERATION (conditional)
-        if generation_mode.get("persona", False) and result.patient_persona:
-            p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
-            persona_path = pdf_generator.create_persona_pdf(
-                patient_id, 
-                p_full_name, 
-                result.patient_persona, 
-                result.documents, 
-                image_map=None,  # No standalone images
-                mrn=current_mrn, 
-                output_folder=PERSONA_DIR
-            )
-            print(f"   👤 Persona Created: {os.path.basename(persona_path)}")
-            
-        
-        # ANNOTATOR SUMMARY GENERATION (conditional) - AFTER all documents
-        # This is the NEW annotator-focused verification guide
-        if generation_mode.get("summary", True):
-            try:
-                print(f"   📋 Generating Annotator Verification Guide...")
-                
-                # WEB SEARCH: Get official CPT code information (ONLY if enabled AND Excel data is missing)
-                search_results = None
-                verification_notes = []
-                
-                # Check if Excel has procedure data
-                procedure_text = case_data.get('procedure', '')
-                has_excel_procedure = procedure_text and str(procedure_text) != 'nan' and str(procedure_text).strip() != ''
-                
-                if not has_excel_procedure:
-                    verification_notes.append("⚠️ Procedure information missing from Excel - verify CPT code manually")
-                
-                try:
-                    from search_engine import MedicalSearchEngine
-                    search_engine = MedicalSearchEngine()
-                    
-                    # Only search if:
-                    # 1. Web search is enabled
-                    # 2. Excel data is missing or incomplete
-                    if search_engine.enabled and not has_excel_procedure:
-                        print(f"      ℹ️  Excel procedure data missing, attempting web search...")
-                        
-                        # Try to extract CPT from other fields or documents
-                        import re
-                        cpt_match = None
-                        
-                        # Try to find CPT in details field
-                        details_text = case_data.get('details', '')
-                        if details_text:
-                            cpt_match = re.search(r'CPT[:\s]*(\d{5})', str(details_text), re.IGNORECASE)
-                        
-                        if cpt_match:
-                            target_cpt = cpt_match.group(1)
-                            print(f"      🔍 Searching for CPT {target_cpt}...")
-                            
-                            cpt_info = search_engine.search_cpt_code(target_cpt)
-                            
-                            if cpt_info and cpt_info.description and len(cpt_info.description) > 20:
-                                print(f"      ✅ Found: {cpt_info.description[:50]}...")
-                                search_results = {
-                                    'cpt_info': {
-                                        'code': cpt_info.code,
-                                        'description': cpt_info.description,
-                                        'source_url': cpt_info.source_url
-                                    }
-                                }
-                                verification_notes.append(f"ℹ️ CPT {target_cpt} description from web search - verify accuracy")
-                            else:
-                                print(f"      ⚠️  CPT {target_cpt} search returned poor quality results")
-                                verification_notes.append(f"⚠️ CPT {target_cpt} found but description quality uncertain - manual verification required")
-                        else:
-                            print(f"      ⚠️  Could not extract CPT code from case data")
-                            verification_notes.append("⚠️ CPT code not found in case data - manual entry required")
-                    elif not search_engine.enabled:
-                        print(f"      ℹ️  Web search disabled")
-                        if not has_excel_procedure:
-                            verification_notes.append("⚠️ Web search disabled and Excel data missing - verify all codes manually")
-                    else:
-                        print(f"      ✅ Using Excel procedure data")
-                        
-                except ImportError:
-                    print(f"      ⚠️  search_engine module not available")
-                    if not has_excel_procedure:
-                        verification_notes.append("⚠️ Search unavailable and Excel data missing - manual verification required")
-                except Exception as search_error:
-                    print(f"      ⚠️  Search failed: {search_error}")
-                    if not has_excel_procedure:
-                        verification_notes.append(f"⚠️ Search failed - manual verification required")
-                
-                # Add verification notes to search results
-                if verification_notes:
-                    if not search_results:
-                        search_results = {}
-                    search_results['verification_notes'] = verification_notes
-                
-                # Generate AI-powered annotator summary
-                # Pass documents if available (for full summary), or None (for partial summary)
-                documents_for_summary = result.documents if generation_mode.get("reports", True) else None
-                
-                annotator_summary = ai_engine.generate_annotator_summary(
-                    case_details=case_data,
-                    patient_persona=result.patient_persona,
-                    generated_documents=documents_for_summary,
-                    search_results=search_results  # Pass search results AND verification notes to AI
-                )
-                
-                # Create PDF from structured summary
-                # Pass persona so PDF can extract CPT/ICD codes
-                sum_path = pdf_generator.create_annotator_summary_pdf(
-                    patient_id=patient_id,
-                    annotator_summary=annotator_summary,
-                    case_details=case_data,
-                    patient_persona=result.patient_persona,  # NEW: Pass persona for code extraction
-                    output_folder=patient_report_folder
-                )
-                
-                if sum_path and os.path.exists(sum_path):
-                    print(f"   📊 Annotator Summary Created: {os.path.basename(sum_path)}")
-                    if verification_notes:
-                        print(f"      ⚠️  {len(verification_notes)} verification note(s) added to summary")
-                else:
-                    print(f"   ⚠️  Annotator Summary creation failed.")
-                    
-            except Exception as e:
-                print(f"   ⚠️  Annotator Summary Generation Failed: {e}")
-                # Continue processing even if summary fails
-        
-        # Processing complete
-
-        # Return the new name for caching
-        return p_full_name if 'p_full_name' in locals() else None
-
     except Exception as e:
-        print(f"❌ Error during processing: {e}")
+        print(f"❌ AI generation failed: {e}")
         return None
 
+    # Persist history entry regardless of subsequent steps
+    history_manager.append_history(patient_id, feedback, result.changes_summary)
 
-# OUTPUT CONFIGURATION
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
-PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
-REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
+    # ── 6. SAVE PATIENT PERSONA TO DB ─────────────────────────────────────────
+    p_full_name = None
+    if result.patient_persona:
+        db_entry = result.patient_persona.model_dump()
+        patient_db.save_patient(patient_id, db_entry)
+        p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
+        print(f"   💾 Patient DB updated: {p_full_name} (ID {patient_id})")
 
-# Validate/Create Directories
-for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR]:
-    if not os.path.exists(d):
-        os.makedirs(d, exist_ok=True)
+    # ── 7. VERSION & ARCHIVE ───────────────────────────────────────────────────
+    doc_version = get_persona_version(patient_id)
+    print(f"   🔖 Document version: v{doc_version}")
 
-# ... (process_patient_workflow is between these, but we are editing top and bottom params. 
-# Better to do separate chunks. I will do top chunk first. 
-# Wait, I cannot do multi-chunk with simple replace unless I use multi_replace.
-# I will use multi_replace logic by just making 2 calls or use multi_replace tool.
-# I'll use simple replace for the function `check_patient_sync_status` first.
+    # Archive ONLY documents that are about to be overwritten
+    archive_patient_files(patient_id, generation_mode)
 
-def check_patient_sync_status(patient_id: str) -> bool:
-    """
-    Verification Logic:
-    Checks if documents exist for the patient.
-    """
-    doc_folder = f"documents/{patient_id}"
+    # ── 8. WRITE DOCUMENTS ─────────────────────────────────────────────────────
+    current_year = datetime.datetime.now().year
+    current_mrn  = f"MRN-{patient_id}-{current_year}"
+    docs_written: list[str] = []
 
-    # Smart Migration: Rename old summary if needed
-    old_summary = os.path.join(doc_folder, f"Patient_{patient_id}_Clinical_Summary.pdf")
-    new_summary = os.path.join(doc_folder, f"Clinical_Summary_Patient_{patient_id}.pdf")
-    
-    if os.path.exists(old_summary) and not os.path.exists(new_summary):
+    # Ensure the patient's report sub-folder exists before writing
+    os.makedirs(patient_report_folder, exist_ok=True)
+
+    # ── 8a. PERSONA ────────────────────────────────────────────────────────────
+    if generation_mode["persona"] and result.patient_persona:
+        persona_path = pdf_generator.create_persona_pdf(
+            patient_id,
+            p_full_name,
+            result.patient_persona,
+            result.documents,
+            image_map=None,
+            mrn=current_mrn,
+            output_folder=PERSONA_DIR,
+            version=doc_version,
+        )
+        pf = os.path.basename(persona_path)
+        docs_written.append(pf)
+        print(f"   👤 Persona → {pf}")
+
+    # ── 8b. REPORTS ────────────────────────────────────────────────────────────
+    if generation_mode["reports"] and result.documents:
+        print(f"   📄 Generating {len(result.documents)} report(s) at v{doc_version}…")
+        for seq, doc in enumerate(result.documents, start=1):
+            seq_str            = f"{seq:03d}"
+            doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+            final_filename_base = f"{doc_identifier}-{doc.title_hint}"
+
+            is_valid, errors = validate_structure(doc.content)
+            if not is_valid:
+                print(f"      ⚠️  '{doc.title_hint}' invalid: {errors}. Attempting AI fix…")
+                doc.content = ai_engine.fix_document_content(doc.content, errors)
+                is_valid, errors = validate_structure(doc.content)
+                if not is_valid:
+                    print(f"      ❌ Fix failed. Marking as NAF.")
+                    final_filename_base += "-NAF"
+                else:
+                    print(f"      ✅ AI fixed the document.")
+
+            pdf_path = pdf_generator.create_patient_pdf(
+                patient_id=patient_id,
+                doc_type=final_filename_base,
+                content=doc.content,
+                patient_persona=result.patient_persona,
+                doc_metadata=doc,
+                base_output_folder=patient_report_folder,
+                image_path=None,
+                version=doc_version,
+            )
+            rf = os.path.basename(pdf_path)
+            docs_written.append(rf)
+            print(f"      ✅ {rf}")
+
+    # ── 8c. SUMMARY ────────────────────────────────────────────────────────────
+    if generation_mode["summary"]:
         try:
-            os.rename(old_summary, new_summary)
-        except Exception:
-            pass
+            print(f"   📋 Generating annotator summary at v{doc_version}…")
 
-    # Check for Documents
-    if not os.path.exists(doc_folder):
-        return False
-        
-    pdf_files = [f for f in os.listdir(doc_folder) if f.lower().endswith('.pdf')]
-    # Exclude summary from count
-    actual_count = len([f for f in pdf_files if "clinical_summary" not in f.lower()])
+            search_results      = None
+            verification_notes  = []
+            procedure_text      = case_data.get("procedure", "")
+            has_excel_procedure = (
+                procedure_text
+                and str(procedure_text) != "nan"
+                and str(procedure_text).strip()
+            )
 
-    if actual_count > 0:
-        return True
-    else:
-        print(f"   ⚠️  No Documents found for {patient_id}")
-        return False
+            if not has_excel_procedure:
+                verification_notes.append(
+                    "⚠️ Procedure information missing from Excel — verify CPT code manually"
+                )
+
+            try:
+                from search_engine import MedicalSearchEngine
+                search_engine = MedicalSearchEngine()
+                if search_engine.enabled and not has_excel_procedure:
+                    details_text = case_data.get("details", "")
+                    if details_text:
+                        cpt_match = re.search(r"CPT[:\s]*(\d{5})", str(details_text), re.IGNORECASE)
+                        if cpt_match:
+                            cpt_info = search_engine.search_cpt_code(cpt_match.group(1))
+                            if cpt_info and cpt_info.description and len(cpt_info.description) > 20:
+                                search_results = {
+                                    "cpt_info": {
+                                        "code": cpt_info.code,
+                                        "description": cpt_info.description,
+                                        "source_url": cpt_info.source_url,
+                                    }
+                                }
+            except Exception:
+                pass
+
+            if verification_notes:
+                search_results = search_results or {}
+                search_results["verification_notes"] = verification_notes
+
+            documents_for_summary = result.documents if generation_mode["reports"] else None
+            annotator_summary = ai_engine.generate_annotator_summary(
+                case_details=case_data,
+                patient_persona=result.patient_persona,
+                generated_documents=documents_for_summary,
+                search_results=search_results,
+            )
+
+            sum_path = pdf_generator.create_annotator_summary_pdf(
+                patient_id=patient_id,
+                annotator_summary=annotator_summary,
+                case_details=case_data,
+                patient_persona=result.patient_persona,
+                output_folder=SUMMARY_DIR,
+                version=doc_version,
+            )
+
+            if sum_path:
+                sf = os.path.basename(sum_path)
+                docs_written.append(sf)
+                print(f"   📊 Summary → {sf}")
+            else:
+                print("   ⚠️  Summary creation returned no path.")
+
+        except Exception as e:
+            print(f"   ⚠️  Summary generation failed: {e}")
+
+    # ── 9. PATIENT TEXT RECORD ─────────────────────────────────────────────────
+    if result.patient_persona:
+        try:
+            rec_path = patient_record_writer.write_patient_record(
+                patient_id=patient_id,
+                persona=result.patient_persona,
+                version=doc_version,
+                docs_generated=docs_written,
+                feedback=feedback,
+            )
+            print(f"   📝 Patient record updated: {os.path.basename(rec_path)}")
+        except Exception as e:
+            print(f"   ⚠️  Patient record write failed: {e}")
+
+    print(f"\n✅ Workflow complete for patient {patient_id}. {len(docs_written)} document(s) written.")
+    return p_full_name
+
+
+# ─── CLI ENTRY POINT ───────────────────────────────────────────────────────────
+
+_MODE_MAP = {
+    "1": {"persona": True,  "reports": True,  "summary": True},
+    "2": {"persona": False, "reports": True,  "summary": True},
+    "3": {"persona": False, "reports": False, "summary": True},
+    "4": {"persona": False, "reports": True,  "summary": False},
+    "5": {"persona": True,  "reports": False, "summary": False},
+    "":  {"persona": True,  "reports": True,  "summary": True},
+}
+
+_MODE_LABELS = {
+    "1": "Persona + Reports + Summary (default)",
+    "2": "Reports + Summary",
+    "3": "Summary only",
+    "4": "Reports only",
+    "5": "Persona only",
+}
+
+
+def _prompt_generation_mode() -> dict:
+    """Ask the user which document types to generate and return a mode dict."""
+    print("\n📋 What to generate?")
+    for k, label in _MODE_LABELS.items():
+        marker = " (default)" if k == "1" else ""
+        print(f"   [{k}] {label}{marker}")
+    choice = input("   Choice [1]: ").strip()
+    return _MODE_MAP.get(choice, _MODE_MAP[""])
+
 
 def main():
-    print("\n🚀 Clinical Data Generator (v2.0) - Modular & Interactive")
-    
-    # Pre-flight Check
+    print("\n🚀 Clinical Data Generator — Modular & Interactive")
+
     if not ai_engine.check_connection():
-        print("\n❌ Critical: AI Connection Failed. Please check your credentials/internet.")
+        print("\n❌ AI connection failed. Check credentials/internet.")
         return
 
     while True:
-        # 1. INPUT: ID or '*'
-        print("\n" + "="*50)
-        target_input = input("🎯 Enter Patient ID (or '*' for Batch, 'q' to Quit): ").strip().strip("'").strip('"')
-        
+        print("\n" + "=" * 60)
+        print("🎯 Enter Patient ID  (or '*' for batch, 'q' to quit)")
+        print("   💡 '225-fix CPT code'  → patient 225 with feedback")
+        print("   💡 '221,222,223'       → comma-separated batch")
+        target_input = input("   ID: ").strip()
+
         if not target_input:
-            print("❌ Error: Input required.")
             continue
-            
-        # EXIT COMMAND
-        if target_input.lower() in ['q', 'exit', 'quit']:
-            print("👋 Exiting Clinical Data Generator. Goodbye!")
+
+        # ── QUIT ──────────────────────────────────────────────────────────────
+        if target_input.lower() in {"q", "quit", "exit"}:
+            print("\n👋 Goodbye!\n")
             break
 
-        # 2. PURGE COMMANDS
-        if target_input.startswith('--'):
-            if target_input == '--':
-                purge_manager.purge_all()
-            elif target_input == '--personas':
-                purge_manager.purge_personas()
-            elif target_input == '--documents':
-                purge_manager.purge_documents()
+        # ── PURGE ─────────────────────────────────────────────────────────────
+        if target_input.startswith("--"):
+            patient_part = target_input[2:].strip()
+            if patient_part:
+                purge_manager.purge_patient(patient_part)
             else:
-                # Specific Patient Purge (e.g. --233)
-                p_id = target_input[2:]
-                purge_manager.purge_patient(p_id)
+                print("\n📋 What to delete?")
+                print("   [1] ALL (persona + reports + summary)")
+                print("   [2] Reports + Summary")
+                print("   [3] Summary only")
+                print("   [4] Reports only")
+                print("   [5] Persona only")
+                print("   [6] Cancel")
+                purge_choice = input("   Choice [6]: ").strip() or "6"
+                actions = {
+                    "1": purge_manager.purge_all,
+                    "2": purge_manager.purge_reports_and_summaries,
+                    "3": purge_manager.purge_summaries_only,
+                    "4": purge_manager.purge_reports_only,
+                    "5": purge_manager.purge_personas,
+                }
+                action = actions.get(purge_choice)
+                if action:
+                    action()
+                else:
+                    print("   ❌ Cancelled.")
             continue
 
-        # 3. LOGIC
-        if target_input == '*':
-            print("\n🔄 Starting Batch Run for MISSING/INCOMPLETE patients...")
-            all_ids = data_loader.get_all_patient_ids()
-            print(f"   🔍 Found {len(all_ids)} potential patients in Excel.")
-            
-            # OPTIMIZATION: Load names ONCE before loop
+        # ── PARSE FEEDBACK SUFFIX ──────────────────────────────────────────────
+        feedback   = ""
+        base_input = target_input
+        if "-" in target_input and not target_input.startswith("--"):
+            parts      = target_input.split("-", 1)
+            base_input = parts[0].strip()
+            feedback   = parts[1].strip()
+
+        # ── BATCH: ALL PATIENTS ────────────────────────────────────────────────
+        if base_input == "*":
+            print("\n🔄 Batch mode: all patients…")
+            all_ids       = data_loader.get_all_patient_ids()
+            generation_mode = _prompt_generation_mode()
             current_names = patient_db.get_all_patient_names()
-            print(f"   🧠 Loaded {len(current_names)} existing personas for uniqueness check.")
-            
-            count = 0
+            processed = 0
+
             for p_id in all_ids:
-                # Smart Skip Logic
-                if check_patient_sync_status(p_id):
-                    print(f"   ⏭️  Skipping {p_id} (Verified Complete)")
-                else:
-                    print(f"\n▶️  Processing {p_id}...")
-                    print(f"\n▶️  Processing {p_id}...")
-                    
-                    # Pass the IN-MEMORY list implies efficiency
-                    new_name = process_patient_workflow(p_id, feedback="", excluded_names=current_names) 
-                    
-                    # Optimize: Update local list immediately to avoid re-reading DB
-                    if new_name:
-                         current_names.append(new_name)
-                         
-                    count += 1
-            
-            print(f"\n✅ Batch Complete. Processed {count} patients.")
+                if check_patient_sync_status(p_id, generation_mode):
+                    print(f"   ⏭️  Skipping {p_id} (already complete)")
+                    continue
+                print(f"\n▶️  Processing {p_id}…")
+                new_name = process_patient_workflow(
+                    p_id,
+                    feedback=feedback,
+                    excluded_names=current_names,
+                    generation_mode=generation_mode,
+                )
+                if new_name:
+                    current_names.append(new_name)
+                processed += 1
 
-        else:
-            # Single Run -> Ask for Generation Mode
-            print("\n📋 What to generate?")
-            print("   [1] Persona + Reports + Summary (default)")
-            print("   [2] Reports + Summary")
-            print("   [3] Summary only")
-            print("   [4] Reports only")
-            print("   [5] Persona only")
-            mode_input = input("   Choice [1]: ").strip()
-            
-            # Parse mode
-            mode_map = {
-                "1": {"summary": True, "reports": True, "persona": True},   # New default: All
-                "2": {"summary": True, "reports": True, "persona": False},  # Reports + Summary
-                "3": {"summary": True, "reports": False, "persona": False}, # Summary only
-                "4": {"summary": False, "reports": True, "persona": False}, # Reports only
-                "5": {"summary": False, "reports": False, "persona": True}, # Persona only
-                "": {"summary": True, "reports": True, "persona": True},    # Default when Enter pressed
-            }
-            generation_mode = mode_map.get(mode_input, mode_map["1"])
-            
-            # Ask for Feedback
-            print("\n💡 Feedback Loop")
-            print("   Enter any specific instructions for the AI.")
-            feedback = input("   Feedback [Press Enter to skip]: ").strip()
-            
-        # Fetch current names for exclusion (Single run can verify against DB fresh)
+            print(f"\n✅ Batch complete. Processed {processed} patient(s).")
+            continue
+
+        # ── BATCH: COMMA-SEPARATED ────────────────────────────────────────────
+        if "," in base_input:
+            patient_ids     = [pid.strip() for pid in base_input.split(",") if pid.strip()]
+            generation_mode = _prompt_generation_mode()
+            current_names   = patient_db.get_all_patient_names()
+
+            for idx, p_id in enumerate(patient_ids, 1):
+                print(f"\n▶️  [{idx}/{len(patient_ids)}] Patient {p_id}…")
+                new_name = process_patient_workflow(
+                    p_id,
+                    feedback,
+                    excluded_names=current_names,
+                    generation_mode=generation_mode,
+                )
+                if new_name:
+                    current_names.append(new_name)
+
+            print(f"\n✅ Batch complete. {len(patient_ids)} patient(s) processed.")
+            continue
+
+        # ── SINGLE PATIENT ────────────────────────────────────────────────────
+        p_id = base_input
+        generation_mode = _prompt_generation_mode()
+
+        if not feedback:
+            print("\n💡 Feedback / Instructions (optional — press Enter to skip)")
+            feedback = input("   > ").strip()
+
         current_names = patient_db.get_all_patient_names()
-        process_patient_workflow(target_input, feedback, excluded_names=current_names, generation_mode=generation_mode)
+        process_patient_workflow(
+            p_id,
+            feedback,
+            excluded_names=current_names,
+            generation_mode=generation_mode,
+        )
 
-        # Final Verification (if single run)
-        if target_input != '*':
-            if check_patient_sync_status(target_input):
-                 print("   ✅ Sync Verified: All referenced documents exist.")
-            else:
-                 # It might print the mismatch warning internally, but we state it here too
-                 pass 
-                 
+        if check_patient_sync_status(p_id, generation_mode):
+            print("   ✅ Verification: documents present in output directories.")
+
+
 if __name__ == "__main__":
     main()

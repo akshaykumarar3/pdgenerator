@@ -48,6 +48,52 @@ graph TD
 This is the entry point. It runs an **Interactive REPL Loop** (`while True`) to process user commands.
 
 * **Initialization**: Loads configuration (`cred/.env`) and database schema.
+* **Command Parsing**: Handles patient IDs, batch mode (`*`), purge commands (`--`), and feedback (`ID-feedback`).
+* **Generation Modes**: Supports 5 modes (Persona+Reports+Summary, Reports+Summary, Summary only, Reports only, Persona only).
+* **Temporal Consistency**: Implements date calculation helpers for future procedure dates and timeline alignment.
+* **Document Coherence**: Loads existing context to ensure consistency across generation modes.
+
+#### Temporal Logic
+
+**Date Calculation Functions**:
+
+```python
+calculate_procedure_date() -> str
+    # Generates future date 7-90 days from today
+    # Example: "2026-03-15"
+
+calculate_encounter_date(procedure_date_str: str, days_before: int) -> str
+    # Calculates date relative to procedure
+    # Example: procedure="2026-03-15", days_before=14 → "2026-03-01"
+
+get_today_date() -> str
+    # Returns current date in ISO format
+    # Example: "2026-02-17"
+```
+
+**Timeline Requirements**:
+* Medical history events: 6 months to 5 years BEFORE procedure
+* Recent encounters/consultations: 1-12 weeks BEFORE procedure
+* Lab results/diagnostic tests: 1-4 weeks BEFORE procedure
+* Procedure date: 7-90 days in FUTURE from today
+
+#### Document Coherence
+
+**Context Loading Function**:
+
+```python
+load_existing_context(patient_id: str, generation_mode: dict) -> dict
+    # Returns: {
+    #     "persona": existing_patient_data,
+    #     "reports": list_of_report_files,
+    #     "summary": summary_file_path,
+    #     "procedure_date": "2026-03-15",
+    #     "facility": "Massachusetts General Hospital, Boston, MA"
+    # }
+```
+
+When generating reports/summary without persona, this function extracts facility and temporal data from existing persona to maintain consistency.
+
 * **Document Selection**: After Patient ID input, presents menu (default: **Persona + Reports + Summary**).
 * **Smart Duplicate Detection**:
   * Scans existing documents in patient folder before generation
