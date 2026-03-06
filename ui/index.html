@@ -185,12 +185,97 @@
         }
 
         .content {
+            overflow-y: hidden;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+        }
+
+        .pane-top {
+            flex: 1 1 50%;
+            min-height: 150px;
             overflow-y: auto;
             padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
         }
+
+        .pane-bottom {
+            flex: 1 1 50%;
+            min-height: 150px;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TABS ── */
+        .tabs-header {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text3);
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all .2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn .3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ── RESIZER ── */
+        .resizer {
+            height: 8px;
+            background: var(--surface2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            cursor: row-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .resizer:hover,
+        .resizer.dragging {
+            background: #2a3455;
+        }
+
+        .resizer::after {
+            content: '';
+            width: 40px;
+            height: 3px;
+            background: var(--border2);
+            border-radius: 2px;
+        }
+
 
         /* ── CARDS ── */
         .card {
@@ -974,182 +1059,187 @@
         </aside>
 
         <!-- ────────────────── CONTENT ────────────────── -->
-        <section class="content">
+        <section class="content" id="main-content">
 
-            <!-- MEDICATIONS -->
-            <div class="card" id="card-meds">
-                <div class="card-header" onclick="toggleCard('meds')">
-                    <div class="card-title">💊 Medications</div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <span id="count-meds" style="font-size:11px;color:var(--text3);"></span>
-                        <span class="chevron open" id="chev-meds">▼</span>
-                    </div>
+            <!-- TOP PANE: CLINICAL CONDITIONS tabs -->
+            <div class="pane-top" id="pane-top">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                    <h2 style="font-size:16px; margin-bottom:12px; color:var(--text);">🩺 Patient Conditions</h2>
                 </div>
-                <div class="card-body" id="body-meds">
-                    <div class="table-overflow">
-                        <table class="dynamic-table">
-                            <thead>
-                                <tr>
-                                    <th>Brand</th>
-                                    <th>Generic / Dosage</th>
-                                    <th>Qty</th>
-                                    <th>Prescribed By</th>
-                                    <th>Status</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Reason</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-meds"></tbody>
-                        </table>
-                    </div>
-                    <div class="section-add-row">
-                        <button class="btn btn-add" onclick="addMed()">+ Add Medication</button>
-                    </div>
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchClinicalTab('meds')">💊 Medications (<span
+                            id="count-meds">0</span>)</button>
+                    <button class="tab-btn" onclick="switchClinicalTab('allergies')">⚠️ Allergies (<span
+                            id="count-allergies">0</span>)</button>
+                    <button class="tab-btn" onclick="switchClinicalTab('vax')">💉 Vaccinations (<span
+                            id="count-vax">0</span>)</button>
+                    <button class="tab-btn" onclick="switchClinicalTab('therapy')">🧠 Therapy (<span
+                            id="count-therapy">0</span>)</button>
                 </div>
-            </div>
 
-            <!-- ALLERGIES -->
-            <div class="card" id="card-allergies">
-                <div class="card-header" onclick="toggleCard('allergies')">
-                    <div class="card-title">⚠️ Allergies</div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <span id="count-allergies" style="font-size:11px;color:var(--text3);"></span>
-                        <span class="chevron open" id="chev-allergies">▼</span>
-                    </div>
-                </div>
-                <div class="card-body" id="body-allergies">
-                    <div class="table-overflow">
-                        <table class="dynamic-table">
-                            <thead>
-                                <tr>
-                                    <th>Allergen</th>
-                                    <th>Type</th>
-                                    <th>Reaction</th>
-                                    <th>Severity</th>
-                                    <th>Onset Date</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-allergies"></tbody>
-                        </table>
-                    </div>
-                    <div class="section-add-row">
-                        <button class="btn btn-add" onclick="addAllergy()">+ Add Allergy</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VACCINATIONS -->
-            <div class="card" id="card-vax">
-                <div class="card-header" onclick="toggleCard('vax')">
-                    <div class="card-title">💉 Vaccinations</div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <span id="count-vax" style="font-size:11px;color:var(--text3);"></span>
-                        <span class="chevron open" id="chev-vax">▼</span>
-                    </div>
-                </div>
-                <div class="card-body" id="body-vax">
-                    <div class="table-overflow">
-                        <table class="dynamic-table">
-                            <thead>
-                                <tr>
-                                    <th>Vaccine Name</th>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                    <th>Administered By</th>
-                                    <th>Dose #</th>
-                                    <th>Reason</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-vax"></tbody>
-                        </table>
-                    </div>
-                    <div class="section-add-row">
-                        <button class="btn btn-add" onclick="addVax()">+ Add Vaccination</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- THERAPY & BEHAVIORAL HEALTH -->
-            <div class="card" id="card-therapy">
-                <div class="card-header" onclick="toggleCard('therapy')">
-                    <div class="card-title">🧠 Therapy &amp; Behavioral Health</div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        <span id="count-therapy" style="font-size:11px;color:var(--text3);"></span>
-                        <span class="chevron open" id="chev-therapy">▼</span>
-                    </div>
-                </div>
-                <div class="card-body" id="body-therapy">
-                    <div class="table-overflow">
-                        <table class="dynamic-table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Provider</th>
-                                    <th>Facility</th>
-                                    <th>Frequency</th>
-                                    <th>Status</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Reason</th>
-                                    <th>Notes</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-therapy"></tbody>
-                        </table>
-                    </div>
-                    <div class="section-add-row">
-                        <button class="btn btn-add" onclick="addTherapy()">+ Add Therapy</button>
-                    </div>
-                    <div class="mt-12">
-                        <label>📝 Behavioral Notes</label>
-                        <textarea id="behavioral-notes" rows="3"
-                            placeholder="Medication adherence, lifestyle habits, substance use, mental health observations…"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GENERATION LOG -->
-            <div class="card">
-                <div class="card-header" style="cursor:default;">
-                    <div class="card-title">🖥 Generation Log</div>
-                    <button class="btn btn-ghost" onclick="clearLog()">Clear</button>
-                </div>
-                <div class="card-body">
-                    <div id="job-progress">
-                        <div class="progress-bar-wrap">
-                            <div class="progress-bar"></div>
+                <div class="card card-body">
+                    <!-- MEDICATIONS TAB -->
+                    <div id="tab-meds" class="tab-content active clinical-tab">
+                        <div class="table-overflow">
+                            <table class="dynamic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Brand</th>
+                                        <th>Generic / Dosage</th>
+                                        <th>Qty</th>
+                                        <th>Prescribed By</th>
+                                        <th>Status</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Reason</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-meds"></tbody>
+                            </table>
                         </div>
-                        <div class="job-status-text">⏳ <span id="job-status-text">Running…</span></div>
+                        <div class="section-add-row">
+                            <button class="btn btn-add" onclick="addMed()">+ Add Medication</button>
+                        </div>
                     </div>
-                    <div id="log-console"><span style="color:var(--text3);">Awaiting generation…</span></div>
+
+                    <!-- ALLERGIES TAB -->
+                    <div id="tab-allergies" class="tab-content clinical-tab">
+                        <div class="table-overflow">
+                            <table class="dynamic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Allergen</th>
+                                        <th>Type</th>
+                                        <th>Reaction</th>
+                                        <th>Severity</th>
+                                        <th>Onset Date</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-allergies"></tbody>
+                            </table>
+                        </div>
+                        <div class="section-add-row">
+                            <button class="btn btn-add" onclick="addAllergy()">+ Add Allergy</button>
+                        </div>
+                    </div>
+
+                    <!-- VACCINATIONS TAB -->
+                    <div id="tab-vax" class="tab-content clinical-tab">
+                        <div class="table-overflow">
+                            <table class="dynamic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Vaccine Name</th>
+                                        <th>Type</th>
+                                        <th>Date</th>
+                                        <th>Administered By</th>
+                                        <th>Dose #</th>
+                                        <th>Reason</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-vax"></tbody>
+                            </table>
+                        </div>
+                        <div class="section-add-row">
+                            <button class="btn btn-add" onclick="addVax()">+ Add Vaccination</button>
+                        </div>
+                    </div>
+
+                    <!-- THERAPY & BEHAVIORAL HEALTH TAB -->
+                    <div id="tab-therapy" class="tab-content clinical-tab">
+                        <div class="table-overflow">
+                            <table class="dynamic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Provider</th>
+                                        <th>Facility</th>
+                                        <th>Frequency</th>
+                                        <th>Status</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Reason</th>
+                                        <th>Notes</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-therapy"></tbody>
+                            </table>
+                        </div>
+                        <div class="section-add-row">
+                            <button class="btn btn-add" onclick="addTherapy()">+ Add Therapy</button>
+                        </div>
+                        <div class="mt-12" style="border-top:1px solid var(--border); padding-top:12px;">
+                            <label>📝 Behavioral Notes</label>
+                            <textarea id="behavioral-notes" rows="3"
+                                placeholder="Medication adherence, lifestyle habits, substance use, mental health observations…"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- CHANGES SUMMARY (shown after generation) -->
-            <div class="card" id="changes-panel" style="display:none;">
-                <div class="card-header" style="cursor:default;">
-                    <div class="card-title">📋 Generation Summary — What Changed</div>
-                    <button class="btn btn-ghost"
-                        onclick="document.getElementById('changes-panel').style.display='none'">✕ Dismiss</button>
-                </div>
-                <div class="card-body" id="changes-panel-body"></div>
-            </div>
+            <!-- RESIZER DIVIDER -->
+            <div class="resizer" id="drag-divider"></div>
 
-            <!-- OUTPUT FILES -->
-            <div class="card">
-                <div class="card-header" style="cursor:default;">
-                    <div class="card-title">📂 Generated Output</div>
-                    <button class="btn btn-ghost" id="refresh-files-btn" onclick="refreshOutputFiles()"
-                        style="display:none;">↻ Refresh</button>
+            <!-- BOTTOM PANE: OUTPUT tabs -->
+            <div class="pane-bottom" id="pane-bottom">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchOutputTab('log')">🖥 Generation Log</button>
+                    <button class="tab-btn" onclick="switchOutputTab('output')">📂 Generation Output</button>
                 </div>
-                <div class="card-body">
-                    <div id="output-files">
-                        <div class="empty-msg">No files yet — run a generation to see output here</div>
+
+                <!-- LOG TAB -->
+                <div id="tab-log" class="tab-content active output-tab"
+                    style="height: 100%; display: flex; flex-direction: column;">
+                    <div class="card" style="flex: 1; display: flex; flex-direction: column;">
+                        <div class="card-header" style="cursor:default;">
+                            <div class="card-title">Live Server Logs</div>
+                            <button class="btn btn-ghost" onclick="clearLog()">Clear</button>
+                        </div>
+                        <div class="card-body" style="flex:1; display:flex; flex-direction:column;">
+                            <div id="job-progress">
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <div class="job-status-text">⏳ <span id="job-status-text">Running…</span></div>
+                            </div>
+                            <div id="log-console" style="flex:1;"><span style="color:var(--text3);">Awaiting
+                                    generation…</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OUTPUT TAB -->
+                <div id="tab-output" class="tab-content output-tab" style="height: 100%;">
+
+                    <!-- CHANGES SUMMARY -->
+                    <div class="card" id="changes-panel" style="display:none; margin-bottom:16px;">
+                        <div class="card-header" style="cursor:default;">
+                            <div class="card-title">📋 Generation Summary — What Changed</div>
+                            <button class="btn btn-ghost"
+                                onclick="document.getElementById('changes-panel').style.display='none'">✕
+                                Dismiss</button>
+                        </div>
+                        <div class="card-body" id="changes-panel-body"></div>
+                    </div>
+
+                    <!-- OUTPUT FILES -->
+                    <div class="card">
+                        <div class="card-header" style="cursor:default;">
+                            <div class="card-title">Generated Documents</div>
+                            <button class="btn btn-ghost" id="refresh-files-btn" onclick="refreshOutputFiles()"
+                                style="display:none;">↻ Refresh</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="output-files"
+                                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:10px;">
+                                <div class="empty-msg" style="grid-column: 1 / -1;">No files yet — run a generation to
+                                    see output here</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1368,13 +1458,77 @@
     <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
         }
 
-        /* ── CARD TOGGLE ────────────────────────────────────────────────────── */
-        function toggleCard(id) {
-            const body = document.getElementById(`body-${id}`);
-            const chev = document.getElementById(`chev-${id}`);
-            const col = body.classList.toggle('collapsed');
-            if (chev) chev.classList.toggle('open', !col);
+
+        /* ── TAB SWITCHING & DRAGGING ───────────────────────────────────────── */
+
+        function switchClinicalTab(tabId) {
+            document.querySelectorAll('.clinical-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.display = 'none';
+            });
+            document.querySelectorAll('#pane-top .tab-btn').forEach(b => b.classList.remove('active'));
+
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) {
+                target.classList.add('active');
+                target.style.display = 'block';
+            }
+            event.currentTarget.classList.add('active');
         }
+
+        function switchOutputTab(tabId) {
+            document.querySelectorAll('.output-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.setProperty('display', 'none', 'important');
+            });
+            document.querySelectorAll('#pane-bottom .tab-btn').forEach(b => b.classList.remove('active'));
+
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) {
+                target.classList.add('active');
+                target.style.setProperty('display', 'flex', 'important');
+            }
+            event.currentTarget.classList.add('active');
+        }
+
+        /* DRAGGABLE DIVIDER LOGIC */
+        const resizer = document.getElementById('drag-divider');
+        const topPane = document.getElementById('pane-top');
+        const bottomPane = document.getElementById('pane-bottom');
+        const mainContent = document.getElementById('main-content');
+
+        let isDragging = false;
+
+        resizer.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            document.body.style.cursor = 'row-resize';
+            resizer.classList.add('dragging');
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            const containerOffsetTop = mainContent.offsetTop;
+            const pointerRelativeYpos = e.clientY - containerOffsetTop;
+
+            const boxMinHeight = 150;
+            const containerHeight = mainContent.clientHeight;
+
+            // Constrain dragging bounds
+            let flexBasis = Math.max(boxMinHeight, Math.min(containerHeight - boxMinHeight - resizer.offsetHeight, pointerRelativeYpos));
+
+            const percentage = (flexBasis / containerHeight) * 100;
+
+            topPane.style.flex = `0 0 ${percentage}%`;
+            bottomPane.style.flex = `1 1 0%`; // allow bottom pane to fill the rest
+        });
+
+        document.addEventListener('mouseup', function (e) {
+            if (isDragging) {
+                isDragging = false;
+                document.body.style.cursor = 'default';
+                resizer.classList.remove('dragging');
+            }
+        });
 
         /* ── CHECK PILLS ────────────────────────────────────────────────────── */
         function togglePill(label, cbId) {

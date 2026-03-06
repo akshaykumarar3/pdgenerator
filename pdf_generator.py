@@ -928,8 +928,10 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             Story.append(Spacer(1, 5))
             med_data = [["Medication / Generic", "Qty", "Prescriber", "Status & Dates", "Reason"]]
             for m in medications_list:
-                m_name = m.brand_name.strip() if m.brand_name and m.brand_name.strip() else m.generic_name
-                if m.brand_name and m.generic_name: m_name = f"{m.brand_name} ({m.generic_name})"
+                brand = getattr(m, 'brand', '')
+                m_name = brand.strip() if brand and brand.strip() else getattr(m, 'generic_name', '')
+                if brand and getattr(m, 'generic_name', ''): 
+                    m_name = f"{brand} ({m.generic_name})"
                 dates = f"{m.start_date} to {m.end_date}"
                 med_data.append([
                     Paragraph(m_name, style_normal),
@@ -950,10 +952,10 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             alg_data = [["Allergen & Type", "Reaction", "Severity", "Onset Date"]]
             for a in allergies_list:
                 alg_data.append([
-                    Paragraph(f"<b>{a.allergen}</b><br/>{a.allergy_type}", style_normal),
-                    Paragraph(a.reaction or "N/A", style_normal),
-                    Paragraph(a.severity_level or "N/A", style_normal),
-                    Paragraph(a.onset_date or "N/A", style_normal)
+                    Paragraph(f"<b>{getattr(a, 'allergen', '')}</b><br/>{getattr(a, 'allergy_type', '')}", style_normal),
+                    Paragraph(getattr(a, 'reaction', '') or "N/A", style_normal),
+                    Paragraph(getattr(a, 'severity', '') or "N/A", style_normal),
+                    Paragraph(getattr(a, 'onset_date', '') or "N/A", style_normal)
                 ])
             t = Table(alg_data, colWidths=[2.0*inch, 2.0*inch, 1.2*inch, 1.2*inch])
             t.setStyle(table_style)

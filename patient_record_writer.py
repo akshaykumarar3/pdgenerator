@@ -25,7 +25,7 @@ Sections:
 import os
 from datetime import datetime
 
-RECORDS_DIR = os.path.join(os.getenv("OUTPUT_DIR", "generated_output"), "records")
+from core.config import RECORDS_DIR
 
 
 def _hr(width: int = 70) -> str:
@@ -286,12 +286,12 @@ def write_patient_record(
     try:
         # Append feedback log to existing file if possible, else overwrite
         existing = ""
+        prev_feedback = ""
         if os.path.exists(out_path):
             with open(out_path, "r", encoding="utf-8") as f:
                 existing = f.read()
             # Extract previous feedback log section
             feedback_marker = "─" * 70 + "\n  16. GENERATION FEEDBACK LOG\n"
-            prev_feedback = ""
             if feedback_marker.upper() in existing.upper():
                 idx = existing.upper().find(feedback_marker.upper())
                 prev_feedback = existing[idx:]

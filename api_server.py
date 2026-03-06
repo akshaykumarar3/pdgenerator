@@ -58,10 +58,7 @@ swagger = Swagger(app, config=swagger_config, template=template)
 _jobs: dict = {}
 _jobs_lock = threading.Lock()
 
-OUTPUT_DIR  = os.getenv("OUTPUT_DIR", "generated_output")
-REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
-PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
-SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary")
+from core.config import OUTPUT_DIR, REPORTS_DIR, PERSONA_DIR, SUMMARY_DIR
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -521,8 +518,8 @@ def api_output(patient_id: str):
 @app.route("/api/record/<patient_id>")
 def api_get_patient_record(patient_id: str):
     """Return the human-readable patient text record."""
-    records_dir = os.path.join(OUTPUT_DIR, "records")
-    record_path = os.path.join(records_dir, f"{patient_id}-record.txt")
+    from core.config import RECORDS_DIR
+    record_path = os.path.join(RECORDS_DIR, f"{patient_id}-record.txt")
     if not os.path.exists(record_path):
         return jsonify({"error": "Record not found", "patient_id": patient_id}), 404
     with open(record_path, "r", encoding="utf-8") as f:

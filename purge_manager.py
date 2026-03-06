@@ -3,21 +3,11 @@ import shutil
 import glob
 import json
 import core.patient_db as patient_db
-from dotenv import load_dotenv
+from core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR, PERSONA_DIR
 
-# Load .env (from cred/ directory) - Explicit path since we are in module
-env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
-load_dotenv(env_path)
-
-# CONSTANTS
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output") # Default
-
-# Derived Paths
-DOCS_DIR = os.path.join(OUTPUT_DIR, "patient-reports") # Reports here
-LOGS_DIR = os.path.join(OUTPUT_DIR, "logs") # Moved to output dir
-SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
-PERSONAS_DIR = os.path.join(OUTPUT_DIR, "persona") # Singular 'persona' as per plan
-SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary") # Summary PDFs
+# Derived Paths (Mapped from config)
+DOCS_DIR = REPORTS_DIR
+PERSONAS_DIR = PERSONA_DIR
 DB_PATH = patient_db.DB_PATH
 
 def confirm_action(message: str, force: bool = False) -> bool:

@@ -683,6 +683,7 @@ def fix_document_content(content: str, errors: List[str]) -> str:
         # For now reusing the main configured client
         kwargs = {
             "model": MODEL_NAME, # Could use lighter model
+            "response_model": str,
             "messages": [
                 {"role": system_role, "content": "You are a document repair bot. Output only the fixed text."},
                 {"role": "user", "content": prompt}
@@ -691,10 +692,10 @@ def fix_document_content(content: str, errors: List[str]) -> str:
         
         if PROVIDER == "openai":
             response = client.chat.completions.create(**kwargs)
-            return response.choices[0].message.content
+            return response
         elif PROVIDER == "vertexai":
             # Simplified for vertex
-            chat = client.get_model(MODEL_NAME).start_chat()
+            chat = client.client.start_chat()
             resp = chat.send_message(prompt)
             return resp.text
             

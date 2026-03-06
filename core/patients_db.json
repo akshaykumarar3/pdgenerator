@@ -4,11 +4,11 @@
     "last_name": "Dorian",
     "gender": "male",
     "dob": "1980-09-13",
-    "address": "1234 Sacred Heart Drive, Chicago, IL 60614",
+    "address": "1234 Sacred Heart Drive, Houston, TX 60614",
     "telecom": "555-555-1212",
     "race": "Caucasian",
     "height": "6 ft 1 in",
-    "weight": "180 lbs",
+    "weight": "190 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -19,12 +19,12 @@
     },
     "contact": {
       "relationship": "Next of Kin",
-      "name": "Elliot Reid",
-      "telecom": "555-555-1122",
-      "address": "1234 Sacred Heart Drive, Chicago, IL 60614",
+      "name": "Carla Espinosa",
+      "telecom": "555-555-1313",
+      "address": "987 Shell Avenue, Houston, TX 77001",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2020-09-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -37,39 +37,207 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000001",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-2025-541056",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$30",
+      "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "John Dorian, a 45-year-old Caucasian male, resides in the vibrant city of Chicago, where he juggles the demands of a bustling personal and professional life. As a former college athlete, John maintains a physically active lifestyle, participating in local marathons and recreational soccer leagues. This commitment to fitness is underscored by his structured morning routines and consistent health-conscious dietary choices managed with a personal nutritionist.\n\nProfessionally, John excels in his role within a dynamic consultancy firm, where he leverages analytical prowess and a flair for strategic problem-solving to deliver impactful solutions to corporate clients. Despite a demanding schedule, John values his extensive social circle, often hosting and attending gatherings that foster community and lasting bonds.\n\nMedically, John has encountered episodic chest discomfort over the past year, leading to consultations aimed at decoding potential underlying cardiac concerns. Initial examinations, including an ECG conducted in January 2024, presented standard results, providing no definitive causative clues. As his chest discomfort episodes persist, John is being considered for a Myocardial Perfusion Imaging (SPECT) procedure, cornerstoned by the need for comprehensive cardiac evaluation. His prior medical history mirrors a pattern of routine assessments, combined with his proactive approach in migrating any emergent health concerns. John Dorian's holistic lifestyle approach, paired with his robust support network, positions him optimally to navigate this phase of medical inquiry and possible intervention decisively, with a keen focus on maintaining his active lifestyle.",
-    "expected_procedure_date": "2026-03-15",
+    "bio_narrative": "John Dorian is a 45-year-old Caucasian male residing in Houston, Texas. He presents with a history of atherosclerotic heart disease and persistent angina symptoms. Despite adherence to a current medical regimen and lifestyle modifications, including medication management with Lipitor, Norvasc, Aspirin, and intermittent use of Nitroglycerin for chest pain, he continues to experience symptoms. His care is coordinated by Dr. Christopher Turk at Sacred Heart Hospital. John's social history includes moderate alcohol use with meals and consistent physical activity focused on cardiac health management. His allergies and vaccination records are up-to-date, including a known allergy to Penicillin causing a moderate rash. John is evaluated periodically to adjust treatment strategies and explore diagnostic avenues, such as the scheduled myocardial perfusion imaging to better assess his cardiac perfusion status.",
+    "expected_procedure_date": "2026-03-16",
     "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
     "procedure_facility": {
-      "facility_name": "Sacred Heart Medical Center",
-      "street_address": "750 N Orleans St",
-      "city": "Chicago",
-      "state": "IL",
-      "zip_code": "60654",
-      "department": "Nuclear Medicine Department"
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Radiology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Christopher Turk, MD",
+      "requesting_provider": "Dr. Lisa Cuddy, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent unexplained chest pain of unknown etiology, previously unresponsive to initial conservative management. Myocardial perfusion imaging is indicated to assess for coronary artery disease as a measure to guide potential interventions.",
+      "clinical_justification": "John Dorian presents with persistent angina, necessitating myocardial perfusion imaging to assess perfusion defects due to atherosclerotic heart disease.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
+        "R07.89 - Other chest pain"
       ],
-      "previous_treatments": "None",
-      "expected_outcome": "Enhanced cardiac perfusion assessment to inform treatment pathway"
-    }
+      "previous_treatments": "Current pharmacological regimen including Nitroglycerin, Lipitor, and Norvasc shows limited benefit.",
+      "expected_outcome": "Identify presence of perfusion defects and guide further therapeutic intervention."
+    },
+    "medications": [
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Christopher Turk, MD",
+        "status": "current",
+        "start_date": "2022-01-01",
+        "end_date": "ongoing",
+        "reason": "Atherosclerotic heart disease"
+      },
+      {
+        "brand": "Norvasc",
+        "generic_name": "Amlodipine 5mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Christopher Turk, MD",
+        "status": "current",
+        "start_date": "2022-01-01",
+        "end_date": "ongoing",
+        "reason": "Hypertension"
+      },
+      {
+        "brand": "Metoprolol",
+        "generic_name": "Metoprolol Tartrate 50mg",
+        "dosage": "1 tablet twice daily",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Christopher Turk, MD",
+        "status": "past",
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "reason": "Hypertension control"
+      },
+      {
+        "brand": "Aspirin",
+        "generic_name": "Aspirin 81mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Christopher Turk, MD",
+        "status": "ongoing",
+        "start_date": "2022-01-01",
+        "end_date": "ongoing",
+        "reason": "Cardiac prevention"
+      },
+      {
+        "brand": "Nitroglycerin",
+        "generic_name": "Nitroglycerin 0.4mg",
+        "dosage": "As needed for chest pain",
+        "qty": "20 tablets PRN",
+        "prescribed_by": "Dr. Christopher Turk, MD",
+        "status": "current",
+        "start_date": "2025-01-01",
+        "end_date": "ongoing",
+        "reason": "Angina management"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "Unknown"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-01",
+        "administered_by": "Dr. Christopher Turk, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 BNT162b2",
+        "vaccine_type": "mRNA",
+        "date_administered": "2026-01-10",
+        "administered_by": "Dr. Christopher Turk, MD",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2024-06-15",
+        "administered_by": "Dr. Christopher Turk, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2020-02-01",
+        "administered_by": "Dr. Christopher Turk, MD",
+        "dose_number": "1",
+        "reason": "Occupational"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "G0422",
+        "cpt_description": "Intensive cardiac rehabilitation with or without exercise",
+        "icd10_codes": [
+          "I25.10"
+        ],
+        "provider": "Dr. Amy Reed, PT",
+        "provider_npi": "",
+        "facility": "Heart Health Center",
+        "start_date": "2022-02-01",
+        "end_date": "2022-07-01",
+        "frequency": "3x/week",
+        "status": "Completed",
+        "reason": "Post myocardial infarction rehabilitation",
+        "notes": ""
+      },
+      {
+        "therapy_type": "Physical Therapy",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercise procedure",
+        "icd10_codes": [
+          "M54.5"
+        ],
+        "provider": "Dr. Amy Reed, PT",
+        "provider_npi": "",
+        "facility": "Active Recovery Clinic",
+        "start_date": "2021-07-01",
+        "end_date": "2022-01-01",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Back pain rehabilitation",
+        "notes": ""
+      }
+    ],
+    "behavioral_notes": "John adheres well to medication but is advised to increase cardiovascular exercise. He occasionally consumes alcohol with meals. Past psychiatric assessments show a history of mild anxiety, managed without medication. Consistent follow-ups focus on lifestyle adjustments for his cardiac health.",
+    "encounters": [],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "With meals",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-01",
+      "last_visit_reason": "Routine cardiac follow-up",
+      "missed_appointment": null,
+      "missed_appointment_reason": null,
+      "early_visit_reason": "Increased chest pain",
+      "mental_health_history": "Mild Anxiety (2020-2022)",
+      "mental_health_current": "No active symptoms",
+      "exercise_habits": "Regular walks and occasional gym visits",
+      "diet_notes": "Balanced diet with low sodium",
+      "family_history_relevant": "Father with history of coronary artery disease"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-02-28",
+      "blood_pressure": "135/85 mmHg",
+      "heart_rate": "78 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "25.1 kg/m\u00b2",
+      "oxygen_saturation": "97%",
+      "temperature": "98.4\u00b0F",
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": null
   },
   "220": {
     "first_name": "Tony",
@@ -795,7 +963,7 @@
     "dob": "1986-01-13",
     "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
     "telecom": "718-555-0101",
-    "race": "Hispanic",
+    "race": "Caucasian",
     "height": "5 ft 8 in",
     "weight": "150 lbs",
     "maritalStatus": "Single",
@@ -807,18 +975,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Friend",
-      "name": "Jake Peralta",
-      "telecom": "718-555-0001",
-      "address": "99th Precinct, 154 10th Ave, Brooklyn, NY 11215",
-      "gender": "male",
+      "relationship": "Next of Kin",
+      "name": "Amy Santiago",
+      "telecom": "718-555-0123",
+      "address": "78th Precinct, 65 6th Ave, Brooklyn, NY 11217",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2010-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Erin Bush, MD",
-      "formatted_npi": "1234567890",
+      "formatted_npi": "2893170569",
       "managingOrganization": "Brooklyn General Hospital"
     },
     "link": {
@@ -830,34 +998,34 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-123456",
-      "policy_number": "POL-2026-000123",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-2025-123456",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Rosa Diaz, a detective from Brooklyn\u2019s 99th precinct, lives a dynamic life balancing high-stress police work with maintaining her personal health. Diagnosed with hypertension and dyslipidemia, Rosa is actively managing her conditions through medication (Tenormin and Lipitor) and lifestyle changes. She attends cardiac rehab regularly and engages in activities that reduce stress levels. Her close friendship circle, including emergency contact Jake Peralta, provides emotional support, contributing positively to her mental health. Rosa\u2019s risk of ischemic heart disease is carefully monitored at Brooklyn General Hospital. Recent evolving symptoms underscore the clinical necessity for further evaluation through non-invasive ischemic tests. Long committed to her responsibilities, Rosa values health to ensure peak performance on and off duty.",
-    "expected_procedure_date": "2026-03-20",
-    "procedure_requested": "Non-invasive ischemic heart disease test",
+    "bio_narrative": "Rosa Diaz, a strong, independent detective in Brooklyn, has been actively navigating life while managing her health. Born and raised in New York, Rosa is accustomed to a fast-paced lifestyle. Her journey has recently been marked by health challenges related to her cardiac health. Diagnosed with hypertension and dyslipidemia, Rosa follows a disciplined regimen of Tenormin and Lipitor under Dr. Erin Bush's guidance. Despite a demanding career, she maintains her health through a balance of diet and structured exercise, complemented by her commitment to ongoing cardiac rehabilitation. Her close network of friends provides emotional support, crucial for her mental well-being. With a family history of cardiac conditions, Rosa is taking proactive steps post-diagnosis and rehabilitation to mitigate her coronary risk factors.",
+    "expected_procedure_date": "2026-03-07",
+    "procedure_requested": "Cardiac Catheterization",
     "procedure_facility": {
-      "facility_name": "Brooklyn General Hospital",
-      "street_address": "123 Brooklyn Ave",
-      "city": "Brooklyn",
-      "state": "NY",
-      "zip_code": "11217",
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
       "department": "Cardiology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Erin Bush, MD",
+      "requesting_provider": "Dr. Erin Bush, MD, FACC",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient has persistent hypertension and dyslipidemia, presenting with chest pain that warrants further investigation to rule out ischemic heart conditions and refine treatment strategies.",
+      "clinical_justification": "Patient presents with symptomatic chest pain and documented ischemic changes on both ECG and stress testing. Cardiac catheterization is essential to determine the presence and extent of coronary artery disease and guide treatment plans.",
       "supporting_diagnoses": [
-        "I10 - Hypertension",
-        "E78.0 - Pure hypercholesterolemia"
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest Pain, unspecified"
       ],
-      "previous_treatments": "Conservative management with Tenormin and lifestyle modification",
-      "expected_outcome": "To obtain conclusive diagnostic information regarding myocardial perfusion, enabling precise management of the suspected cardiac condition."
+      "previous_treatments": "Atenolol 50mg, Atorvastatin 20mg",
+      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
     },
     "medications": [
       {
@@ -939,8 +1107,14 @@
     ],
     "therapies": [
       {
-        "therapy_type": "Cardiac Rehab",
+        "therapy_type": "Cardiac Rehab Therapy",
+        "cpt_code": "93797",
+        "cpt_description": "Physician services for outpatient cardiac rehabilitation; without continuous ECG monitoring (per session)",
+        "icd10_codes": [
+          "I25.10"
+        ],
         "provider": "Dr. Lauren Tran, PT",
+        "provider_npi": "1938475610",
         "facility": "Brooklyn General Hospital Rehab Center",
         "start_date": "2026-02-01",
         "end_date": "ongoing",
@@ -950,7 +1124,159 @@
         "notes": "Supportive in managing symptoms and improving exercise tolerance."
       }
     ],
-    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. Engages in a balanced diet but with occasional lapses into stress eating during high-pressure cases. Does not smoke and consumes alcohol rarely. Mental health remains stable, as supported by her close social network."
+    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. Engages in a balanced diet but with occasional lapses into stress eating during high-pressure cases. Does not smoke and consumes alcohol rarely. Mental health remains stable, as supported by her close social support network.",
+    "encounters": [
+      {
+        "encounter_date": "2025-11-10",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Routine follow-up for hypertension and lipid management.",
+        "provider": "Dr. Erin Bush, MD",
+        "provider_npi": "2893170569",
+        "facility": "Brooklyn General Hospital",
+        "vital_signs": {
+          "recorded_date": "2025-11-10",
+          "blood_pressure": "130/80 mmHg",
+          "heart_rate": "72 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": "98.6\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "General follow-up; feeling well with medication management.",
+        "doctor_note": "This is a routine follow-up visit for monitoring hypertension and lipid profile management. Patient reports good adherence to medication regimen with no major complaints. Blood pressure and lipid levels remain well-controlled with Tenormin and Lipitor. Continue current medications. Advised on lifestyle modifications including exercise and diet adjustments.",
+        "observations": [
+          "Patient's blood pressure and lipid profile are under control with medication."
+        ],
+        "procedures_performed": [
+          "99214 - Office/Outpatient Visit Level 4"
+        ],
+        "diagnoses": [
+          "I10 - Essential hypertension",
+          "E78.5 - Hyperlipidemia"
+        ],
+        "medications_prescribed": [
+          "Continue Tenormin and Lipitor as prescribed."
+        ],
+        "care_team": [
+          "Dr. Erin Bush, MD"
+        ],
+        "progress_notes": "Patient is stable with good control of hypertension and lipid levels.",
+        "follow_up_instructions": "Return in 3 months for follow-up."
+      },
+      {
+        "encounter_date": "2026-02-05",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Follow-up due to increased frequency of chest discomfort.",
+        "provider": "Dr. Erin Bush, MD",
+        "provider_npi": "2893170569",
+        "facility": "Brooklyn General Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-02-05",
+          "blood_pressure": "135/85 mmHg",
+          "heart_rate": "76 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "97%",
+          "temperature": "98.7\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "Frequency of chest discomfort has increased recently.",
+        "doctor_note": "Patient exhibits increased frequency of chest pain episodes particularly with exertion. Detailed evaluation reveals family history of coronary artery disease. Medication adherence is confirmed. ECG performed shows ST depression in lateral leads suggestive of ischemia. Recommend further investigations with stress test and myocardial perfusion study. Continue cardiac rehab therapy.",
+        "observations": [
+          "ECG shows ST depression indicative of ischemia."
+        ],
+        "procedures_performed": [
+          "93000 - Electrocardiogram, routine ECG with at least 12 leads; interpretation and report",
+          "99213 - Established patient office visit"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [
+          "Continue Tenormin and Lipitor"
+        ],
+        "care_team": [
+          "Dr. Erin Bush, MD"
+        ],
+        "progress_notes": "Increase in chest pain episodes correlates with ischemic changes on ECG, justifying advanced cardiac workup.",
+        "follow_up_instructions": "Schedule stress test and myocardial perfusion imaging."
+      },
+      {
+        "encounter_date": "2026-02-20",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Initial consult with cardiologist for further evaluation of chest pain.",
+        "provider": "Dr. Sarah Johnson, MD, FACC",
+        "provider_npi": "2438901234",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-02-20",
+          "blood_pressure": "135/85 mmHg",
+          "heart_rate": "78 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Referred for further cardiac evaluation due to persistent chest pain.",
+        "doctor_note": "Referred to my cardiology practice for extensive evaluation. Patient Rosa Diaz has significant family history of premature coronary artery disease and presents with typical angina exertional pattern. Clinical findings and recent ECG suggest underlying ischemia. Comprehensive plan includes further diagnostic workup with stress test and myocardial perfusion imaging.",
+        "observations": [
+          "Family history of coronary artery disease.",
+          "Stress-induced chest pain."
+        ],
+        "procedures_performed": [
+          "99244 - Office consultation for a new or established patient"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [
+          "Atenolol and atorvastatin regimen to be continued"
+        ],
+        "care_team": [
+          "Dr. Erin Bush, MD",
+          "Dr. Sarah Johnson, MD, FACC"
+        ],
+        "progress_notes": "Referred for precise cardiac evaluation, results confirm ischemic pattern requiring further invasive diagnostics.",
+        "follow_up_instructions": "Follow through with scheduled diagnostic tests and return with results for future care planning."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "Rarely",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-20",
+      "last_visit_reason": "Cardiology consult due to persistent chest pain",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": null,
+      "mental_health_current": null,
+      "exercise_habits": "Engages in regular cardiac rehab therapy",
+      "diet_notes": "Generally balanced diet with occasional stress eating",
+      "family_history_relevant": "Family history of coronary artery disease and myocardial infarction"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-02-20",
+      "blood_pressure": "135/85 mmHg",
+      "heart_rate": "78 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": null,
+      "oxygen_saturation": "98%",
+      "temperature": null,
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": "Last Pap smear date: 2025-06-15; Mammogram date: 2025-07-20"
   },
   "212": {
     "first_name": "Sandor",
@@ -960,8 +1286,8 @@
     "address": "1 Castle Street, King's Landing, Westeros",
     "telecom": "555-839-2999",
     "race": "Caucasian",
-    "height": "6 ft 7 in",
-    "weight": "240 lbs",
+    "height": "6 ft 5 in",
+    "weight": "250 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -973,11 +1299,11 @@
     "contact": {
       "relationship": "Next of Kin",
       "name": "Gregor Clegane",
-      "telecom": "555-123-4561",
-      "address": "1 Castle Street, King's Landing, Westeros",
+      "telecom": "555-222-3333",
+      "address": "2 Fortress Road, King's Landing, Westeros",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2025-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -990,39 +1316,223 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-398475",
-      "policy_number": "POL-2026-000001",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-2025-000001",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$20",
+      "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Sandor Clegane, affectionately known as \u2018The Hound\u2019 by those familiar to him, has battled both the external challenges of Westeros and a personal history marked by trials. Growing up under the weight of familial conflicts and an infamous brother, Sandor developed resilience and a stoic warrior spirit, evident in his towering stature and formidable presence. Recently, his visits to the medical realm have been due to episodes of chest pain and shortness of breath - symptoms that honor his strenuous past but now mark a path to understanding his heart health.\n\nA cabinet of battles on the field has made Sandor wary of vulnerability, yet even the bravest warriors yield to the quiet insistence of bodily demands. With an ECG history showing an abnormal rhythm, and his lineage marked with cardiac concerns, the intervening advice of Dr. Jane Smith from King's Landing Hospital steers him towards a Cardiac CT Angiography to anticipate and ameliorate potential heart issues before they echo into his future. This decision reflects both a respect for his storied past and an embracement of modern medical advancements to redefine his fate through definitive heart examination and care.",
-    "expected_procedure_date": "2026-03-29",
+    "bio_narrative": "Sandor Clegane, despite the imposing demeanor due to his stature and facial scar, exhibits a comprehensive history marked by physical resilience and stoicism. His clinical history indicates persistent atypical chest pain, prompting new investigative pathways due to consistent negative stress responses observed in previous consultations. Non-smoker with a history of moderate alcohol consumption, yet showing remarkable adherence to medications and a balanced, albeit high-protein, diet. Currently experiences some sedentary challenges tied to lifestyle changes post-recovery from past injuries. Engaged deeply with mental health reflection following significant personal losses, buoyed by supportive kinships. The anticipated Cardiac CT Angiography aligns with previous diagnostic approaches forsaking stress tests remaining concerned about structural coronary threats.\n\nSocial History highlights periods of intense physical activity offset by prolonged recovery seasons as deemed fit by Dr. Jane Smith, MD. Exercises thrice weekly focusing on strength training with adapted gear suited to capabilities. Dietary shifts honed under moderate regiment excluding sweets except occasional flax seed-enriched macros compromised by events drawing stress-eating tendencies beyond routine rigidity. Embraces a robust support network mitigating psychological clearances achieving grounded lifestyle balancing high-pressure rotational tasks.\n\nFamily history remains skewed towards predisposition to myocardial events warranting consistent checks but primarily managed through farm-handed endurance inherently immune to systemic lapses through robust constitution. Sandor approaches life pragmatically valuing illustrated challenges over fear without denial acknowledging corollaries adjustments may inspire. Currently, indications forecast investigative CT Angio approach to elucidate coronary wellness underlying symptoms evidencing concern for arterial divergences hitherto unexplored clinically bolstered anticipated intervention.",
+    "expected_procedure_date": "2026-03-15",
     "procedure_requested": "Cardiac CT Angiography",
     "procedure_facility": {
-      "facility_name": "King's Landing Medical Center",
-      "street_address": "33 Dragonstone Road",
-      "city": "King's Landing",
-      "state": "Westeros",
-      "zip_code": "12345",
-      "department": "Radiology"
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Radiology Department"
     },
     "pa_request": {
       "requesting_provider": "Dr. Jane Smith, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient experiences persistent chest pain, suggestive of coronary artery disease, and has a family history of cardiac conditions. Cardiac CT Angiography is medically necessary to rule out structural anomalies and assess for plaque presence.",
+      "clinical_justification": "A Cardiac CT Angiography is medically necessary for Mr. Clegane to evaluate potential coronary anomalies, given his atypical chest discomfort and absence of previous stress tests, aiding in clarifying diagnosis and guiding treatment planning.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Blood pressure control with ACE inhibitors",
-      "expected_outcome": "Identification of coronary obstructions and guidance for further treatment."
-    }
+      "previous_treatments": "Consistent medication adherence and lifestyle modifications with reported intermittent chest pain warrant further diagnostics.",
+      "expected_outcome": "Definitive diagnosis of coronary anomalies, aiding in early intervention and management planning."
+    },
+    "medications": [
+      {
+        "brand": "Lopressor",
+        "generic_name": "Metoprolol 50mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "current",
+        "start_date": "2024-06-01",
+        "end_date": "ongoing",
+        "reason": "Hypertension"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "current",
+        "start_date": "2024-06-01",
+        "end_date": "ongoing",
+        "reason": "High cholesterol"
+      },
+      {
+        "brand": "Zoloft",
+        "generic_name": "Sertraline 50mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jane Smith, MD",
+        "status": "ongoing",
+        "start_date": "2020-01-01",
+        "end_date": "ongoing",
+        "reason": "Anxiety"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Shellfish",
+        "allergy_type": "Food",
+        "reaction": "Hives",
+        "severity": "Moderate",
+        "onset_date": "2020-01-01"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-11-01",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 Bivalent Booster",
+        "vaccine_type": "mRNA",
+        "date_administered": "2025-09-15",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2024-03-10",
+        "administered_by": "Dr. Jane Smith, MD",
+        "dose_number": "Series Completion",
+        "reason": "Health Safety"
+      },
+      {
+        "vaccine_name": "Tetanus",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2023-05-20",
+        "administered_by": "King's Landing Hospital",
+        "dose_number": "1",
+        "reason": "Catch-up"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "93797",
+        "cpt_description": "Physician services for outpatient cardiac rehabilitation",
+        "icd10_codes": [
+          "I25.10"
+        ],
+        "provider": "Dr. Mike Lee, PT",
+        "provider_npi": "0987654321",
+        "facility": "UT Southwestern Medical Center",
+        "start_date": "2025-07-01",
+        "end_date": "2025-12-31",
+        "frequency": "3x/week",
+        "status": "Completed",
+        "reason": "Post-cardiac evaluation enhancement",
+        "notes": "Improved exercise tolerance by 20%."
+      }
+    ],
+    "behavioral_notes": "Sandor maintains strong medication adherence despite periods of sedentary lifestyle change. His balanced diet occasionally falters under stress-eating in high-pressure contexts. Non-smoker with rare alcohol use. Stable mental health with supportive social connections offsetting past significATIONS.",
+    "encounters": [
+      {
+        "encounter_date": "2026-02-26",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Ongoing chest pain evaluation and management with suspected coronary anomalies",
+        "provider": "Dr. Jane Smith, MD",
+        "provider_npi": "1234567890",
+        "facility": "King's Landing Hospital",
+        "vital_signs": null,
+        "chief_complaint": "Persistent chest discomfort when at rest.",
+        "doctor_note": "Subjective: The patient, Sandor Clegane, reports long-standing chest tightness, increasingly noticeable during periods of rest, occasionally disrupting sleep pattern.\n\nObjective: Cardiac exam with regular rhythm at 75 bpm, stable blood pressure at 130/85 mmHg. No pericardial rubs or murmurs noted. Prescription regimen verified up-to-date.\n\nAssessment: Consistent reports of atypical chest pain with negative cardiac stress tests indicate potential underlying coronary anomalies requiring visualization.\n\nPlan: Proceed with Cardiac CT Angiography to delineate coronary structures; recommended dietary adjustments to mitigate stress-eating effects during high-pressure incidents. Follow up post-procedure for comprehensive review.",
+        "observations": [
+          "Chest discomfort persistent at rest",
+          "Negative preliminary cardiac exam"
+        ],
+        "procedures_performed": [
+          "75574 - Cardiac CT Angiography scheduled"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [
+          "Continued Metoprolol"
+        ],
+        "care_team": [
+          "Dr. Jane Smith, MD"
+        ],
+        "progress_notes": "Stable presentation with need for coronary mapping given unresolving symptoms. Imaging ordered to inform long-term management strategy.",
+        "follow_up_instructions": "Adhere to medication regimen; return for post-imaging consultation."
+      },
+      {
+        "encounter_date": "2026-02-01",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Preparation and evaluation for scheduled cardiac imaging procedure.",
+        "provider": "Dr. Arthur Harris, MD",
+        "provider_npi": "1029384756",
+        "facility": "Memorial Hermann Hospital",
+        "vital_signs": null,
+        "chief_complaint": "Persistent chest pain not relieved by initial interventions.",
+        "doctor_note": "Subjective: Patient expresses increasing concern over symptoms persisting despite medication adherence and lifestyle management.\n\nObjective: Vitals remain stable; blood pressure consistent with managed hypertension. No acute distress observed but requires intervention beyond current management.\n\nAssessment: Continued peculiarity in chest pain dynamics suggest underlying issues beyond hypertension; potential anatomical origin presumed.\n\nPlan: Affirm pre-scheduled cardiac imaging, monitor post-angiography outcomes. Reviewed stress-reduction strategies pre-procedure, emphasizing compliance on all fronts for optimal imaging efficacy and comfort.\n\nSignature: Arthur Harris, MD\nDate: 2026-03-02.",
+        "observations": [
+          "Incomplete response to pharmacological management"
+        ],
+        "procedures_performed": [],
+        "diagnoses": [
+          "R07.9 - Chest pain, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Arthur Harris, MD"
+        ],
+        "progress_notes": "Steady clinical course warrants appropriating advanced imaging. Further cardiology input required to tailor management post-results.",
+        "follow_up_instructions": "Undergo Cardiac CT Angiography, reassess based on findings."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Non-smoker",
+      "tobacco_frequency": null,
+      "alcohol_use": "Rare",
+      "alcohol_frequency": "Occasional glass of wine",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-14",
+      "last_visit_reason": "Cardiovascular assessment",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": "Managed Anxiety with counseling 2020-2021",
+      "mental_health_current": null,
+      "exercise_habits": "Strength training 3x/week",
+      "diet_notes": "High-protein, low-sweet regimen with moderate variation",
+      "family_history_relevant": "History of myocardial events requiring monitoring"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-03-02",
+      "blood_pressure": "130/85 mmHg",
+      "heart_rate": "75 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "30.0 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": null,
+      "respiratory_rate": "18 breaths/min"
+    },
+    "gender_specific_history": null
   },
   "213": {
     "first_name": "Frodo",
