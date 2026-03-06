@@ -1286,8 +1286,8 @@
     "address": "1 Castle Street, King's Landing, Westeros",
     "telecom": "555-839-2999",
     "race": "Caucasian",
-    "height": "6 ft 5 in",
-    "weight": "250 lbs",
+    "height": "6 ft 6 in",
+    "weight": "265 lbs",
     "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
@@ -1297,18 +1297,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
+      "relationship": "Emergency Contact",
       "name": "Gregor Clegane",
-      "telecom": "555-222-3333",
-      "address": "2 Fortress Road, King's Landing, Westeros",
+      "telecom": "555-123-4567",
+      "address": "1 Casterly Way, King's Landing, Westeros",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2026-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Jane Smith, MD",
-      "formatted_npi": "1234567890",
+      "formatted_npi": "9876543210",
       "managingOrganization": "King's Landing Hospital"
     },
     "link": {
@@ -1320,34 +1320,33 @@
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
-      "member_id": "MBR-999999",
-      "policy_number": "POL-2025-000001",
+      "member_id": "MBR-123456789",
+      "policy_number": "POL-2026-000001",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "bio_narrative": "Sandor Clegane, despite the imposing demeanor due to his stature and facial scar, exhibits a comprehensive history marked by physical resilience and stoicism. His clinical history indicates persistent atypical chest pain, prompting new investigative pathways due to consistent negative stress responses observed in previous consultations. Non-smoker with a history of moderate alcohol consumption, yet showing remarkable adherence to medications and a balanced, albeit high-protein, diet. Currently experiences some sedentary challenges tied to lifestyle changes post-recovery from past injuries. Engaged deeply with mental health reflection following significant personal losses, buoyed by supportive kinships. The anticipated Cardiac CT Angiography aligns with previous diagnostic approaches forsaking stress tests remaining concerned about structural coronary threats.\n\nSocial History highlights periods of intense physical activity offset by prolonged recovery seasons as deemed fit by Dr. Jane Smith, MD. Exercises thrice weekly focusing on strength training with adapted gear suited to capabilities. Dietary shifts honed under moderate regiment excluding sweets except occasional flax seed-enriched macros compromised by events drawing stress-eating tendencies beyond routine rigidity. Embraces a robust support network mitigating psychological clearances achieving grounded lifestyle balancing high-pressure rotational tasks.\n\nFamily history remains skewed towards predisposition to myocardial events warranting consistent checks but primarily managed through farm-handed endurance inherently immune to systemic lapses through robust constitution. Sandor approaches life pragmatically valuing illustrated challenges over fear without denial acknowledging corollaries adjustments may inspire. Currently, indications forecast investigative CT Angio approach to elucidate coronary wellness underlying symptoms evidencing concern for arterial divergences hitherto unexplored clinically bolstered anticipated intervention.",
+    "bio_narrative": "Sandor Clegane, a notably tall and robust male residing in King's Landing, maintains a fairly robust health profile despite years of stressful occupations affecting his lifestyle habits. Historically, his hypertension and hypercholesterolemia have been managed well under the care of Dr. Jane Smith at King's Landing Hospital, a testament to his adherence to prescribed medication regimens. Beyond his medical issues, Sandor's lifestyle reflects a dedication to maintaining family and societal relationships despite known stressors impacting dietary habits. The pending Cardiac CT Angiography is part of a broader initiative to confirm cardiovascular structural health.\nMedications are tailored for blood pressure management and lipid control, complementing his moderate commitment to prescribed therapeutic measures. His health journey has been grounded by a continuity of care emphasizing his resilience and the value of early intervention amid high-stake environments. This approach aims to solidify prevention against emerging cardiac challenges.",
     "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Cardiac CT Angiography",
+    "procedure_requested": "Cardiac CT Angiography (CTA)",
     "procedure_facility": {
-      "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin Street",
-      "city": "Houston",
-      "state": "TX",
-      "zip_code": "77030",
-      "department": "Radiology Department"
+      "facility_name": "King's Landing Hospital",
+      "street_address": "1 Castle Street",
+      "city": "King's Landing",
+      "state": "Westeros",
+      "zip_code": "12345",
+      "department": "Radiology"
     },
     "pa_request": {
       "requesting_provider": "Dr. Jane Smith, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "A Cardiac CT Angiography is medically necessary for Mr. Clegane to evaluate potential coronary anomalies, given his atypical chest discomfort and absence of previous stress tests, aiding in clarifying diagnosis and guiding treatment planning.",
+      "clinical_justification": "Suspected coronary anomaly requires explicit visualization to rule out structural issues. Existing risk factors necessitate detailed imaging to assess potential cardiovascular threats.",
       "supporting_diagnoses": [
-        "I25.10 - Atherosclerotic heart disease",
-        "R07.9 - Chest pain, unspecified"
+        "I25.10 - Atherosclerotic heart disease"
       ],
-      "previous_treatments": "Consistent medication adherence and lifestyle modifications with reported intermittent chest pain warrant further diagnostics.",
-      "expected_outcome": "Definitive diagnosis of coronary anomalies, aiding in early intervention and management planning."
+      "previous_treatments": "None",
+      "expected_outcome": "Clear definition of coronary anatomy to guide further management."
     },
     "medications": [
       {
@@ -1357,7 +1356,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Jane Smith, MD",
         "status": "current",
-        "start_date": "2024-06-01",
+        "start_date": "2025-06-01",
         "end_date": "ongoing",
         "reason": "Hypertension"
       },
@@ -1368,7 +1367,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Jane Smith, MD",
         "status": "current",
-        "start_date": "2024-06-01",
+        "start_date": "2025-05-01",
         "end_date": "ongoing",
         "reason": "High cholesterol"
       },
@@ -1379,7 +1378,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Jane Smith, MD",
         "status": "ongoing",
-        "start_date": "2020-01-01",
+        "start_date": "2026-01-01",
         "end_date": "ongoing",
         "reason": "Anxiety"
       }
@@ -1390,7 +1389,7 @@
         "allergy_type": "Food",
         "reaction": "Hives",
         "severity": "Moderate",
-        "onset_date": "2020-01-01"
+        "onset_date": "Unknown"
       }
     ],
     "vaccinations": [
@@ -1398,15 +1397,15 @@
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-11-01",
-        "administered_by": "Dr. Jane Smith, MD",
-        "dose_number": "1",
+        "administered_by": "King's Landing Pharmacy",
+        "dose_number": "Routine Immunization",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "COVID-19 Bivalent Booster",
         "vaccine_type": "mRNA",
         "date_administered": "2025-09-15",
-        "administered_by": "Dr. Jane Smith, MD",
+        "administered_by": "King's Landing Health Department",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -1414,15 +1413,15 @@
         "vaccine_name": "Hepatitis B",
         "vaccine_type": "Subunit",
         "date_administered": "2024-03-10",
-        "administered_by": "Dr. Jane Smith, MD",
-        "dose_number": "Series Completion",
+        "administered_by": "King's Landing Health Service",
+        "dose_number": "1",
         "reason": "Health Safety"
       },
       {
         "vaccine_name": "Tetanus",
         "vaccine_type": "Toxoid",
         "date_administered": "2023-05-20",
-        "administered_by": "King's Landing Hospital",
+        "administered_by": "King's Landing Health Clinic",
         "dose_number": "1",
         "reason": "Catch-up"
       }
@@ -1431,106 +1430,51 @@
       {
         "therapy_type": "Cardiac Rehab",
         "cpt_code": "93797",
-        "cpt_description": "Physician services for outpatient cardiac rehabilitation",
+        "cpt_description": "Physician service for cardiac rehabilitation",
         "icd10_codes": [
           "I25.10"
         ],
         "provider": "Dr. Mike Lee, PT",
-        "provider_npi": "0987654321",
-        "facility": "UT Southwestern Medical Center",
-        "start_date": "2025-07-01",
-        "end_date": "2025-12-31",
+        "provider_npi": "",
+        "facility": "King's Landing Heart Center",
+        "start_date": "2025-09-01",
+        "end_date": "2026-03-01",
         "frequency": "3x/week",
         "status": "Completed",
-        "reason": "Post-cardiac evaluation enhancement",
-        "notes": "Improved exercise tolerance by 20%."
+        "reason": "Cardiac risk reduction and recovery post cardiovascular incident",
+        "notes": "Patient showed marked improvement in endurance and health metrics."
       }
     ],
-    "behavioral_notes": "Sandor maintains strong medication adherence despite periods of sedentary lifestyle change. His balanced diet occasionally falters under stress-eating in high-pressure contexts. Non-smoker with rare alcohol use. Stable mental health with supportive social connections offsetting past significATIONS.",
-    "encounters": [
-      {
-        "encounter_date": "2026-02-26",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Ongoing chest pain evaluation and management with suspected coronary anomalies",
-        "provider": "Dr. Jane Smith, MD",
-        "provider_npi": "1234567890",
-        "facility": "King's Landing Hospital",
-        "vital_signs": null,
-        "chief_complaint": "Persistent chest discomfort when at rest.",
-        "doctor_note": "Subjective: The patient, Sandor Clegane, reports long-standing chest tightness, increasingly noticeable during periods of rest, occasionally disrupting sleep pattern.\n\nObjective: Cardiac exam with regular rhythm at 75 bpm, stable blood pressure at 130/85 mmHg. No pericardial rubs or murmurs noted. Prescription regimen verified up-to-date.\n\nAssessment: Consistent reports of atypical chest pain with negative cardiac stress tests indicate potential underlying coronary anomalies requiring visualization.\n\nPlan: Proceed with Cardiac CT Angiography to delineate coronary structures; recommended dietary adjustments to mitigate stress-eating effects during high-pressure incidents. Follow up post-procedure for comprehensive review.",
-        "observations": [
-          "Chest discomfort persistent at rest",
-          "Negative preliminary cardiac exam"
-        ],
-        "procedures_performed": [
-          "75574 - Cardiac CT Angiography scheduled"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [
-          "Continued Metoprolol"
-        ],
-        "care_team": [
-          "Dr. Jane Smith, MD"
-        ],
-        "progress_notes": "Stable presentation with need for coronary mapping given unresolving symptoms. Imaging ordered to inform long-term management strategy.",
-        "follow_up_instructions": "Adhere to medication regimen; return for post-imaging consultation."
-      },
-      {
-        "encounter_date": "2026-02-01",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Preparation and evaluation for scheduled cardiac imaging procedure.",
-        "provider": "Dr. Arthur Harris, MD",
-        "provider_npi": "1029384756",
-        "facility": "Memorial Hermann Hospital",
-        "vital_signs": null,
-        "chief_complaint": "Persistent chest pain not relieved by initial interventions.",
-        "doctor_note": "Subjective: Patient expresses increasing concern over symptoms persisting despite medication adherence and lifestyle management.\n\nObjective: Vitals remain stable; blood pressure consistent with managed hypertension. No acute distress observed but requires intervention beyond current management.\n\nAssessment: Continued peculiarity in chest pain dynamics suggest underlying issues beyond hypertension; potential anatomical origin presumed.\n\nPlan: Affirm pre-scheduled cardiac imaging, monitor post-angiography outcomes. Reviewed stress-reduction strategies pre-procedure, emphasizing compliance on all fronts for optimal imaging efficacy and comfort.\n\nSignature: Arthur Harris, MD\nDate: 2026-03-02.",
-        "observations": [
-          "Incomplete response to pharmacological management"
-        ],
-        "procedures_performed": [],
-        "diagnoses": [
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Arthur Harris, MD"
-        ],
-        "progress_notes": "Steady clinical course warrants appropriating advanced imaging. Further cardiology input required to tailor management post-results.",
-        "follow_up_instructions": "Undergo Cardiac CT Angiography, reassess based on findings."
-      }
-    ],
+    "behavioral_notes": "Sandor maintains strong medication adherence despite periods of sedentary lifestyle change. His balanced diet occasionally falters under stress-eating in high-pressure contexts. Non-smoker with rare alcohol use. Stable mental health with supportive social connections offsetting past significations.",
+    "encounters": [],
     "social_history": {
-      "tobacco_use": "Non-smoker",
+      "tobacco_use": "Never",
       "tobacco_frequency": null,
-      "alcohol_use": "Rare",
-      "alcohol_frequency": "Occasional glass of wine",
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "Rarely drinks",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-02-14",
-      "last_visit_reason": "Cardiovascular assessment",
+      "last_medical_visit": "2026-02-01",
+      "last_visit_reason": "Routine follow-up for hypertension",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Managed Anxiety with counseling 2020-2021",
+      "mental_health_history": "General anxiety managed with medication",
       "mental_health_current": null,
-      "exercise_habits": "Strength training 3x/week",
-      "diet_notes": "High-protein, low-sweet regimen with moderate variation",
-      "family_history_relevant": "History of myocardial events requiring monitoring"
+      "exercise_habits": "Attempts exercise occasionally, primarily walking when active",
+      "diet_notes": "Focuses on low sodium and low cholesterol diet, except during stressful times",
+      "family_history_relevant": "Family history of cardiovascular disease, particularly hypertension and hypercholesterolemia"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-03-02",
-      "blood_pressure": "130/85 mmHg",
-      "heart_rate": "75 bpm",
+      "recorded_date": "2026-03-01",
+      "blood_pressure": "142/85 mmHg",
+      "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "30.0 kg/m\u00b2",
-      "oxygen_saturation": "98%",
-      "temperature": null,
-      "respiratory_rate": "18 breaths/min"
+      "bmi": null,
+      "oxygen_saturation": "97%",
+      "temperature": "98.4\u00b0F",
+      "respiratory_rate": null
     },
     "gender_specific_history": null
   },

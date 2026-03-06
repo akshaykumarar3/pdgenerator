@@ -895,8 +895,8 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ["Urgency Level:", getattr(pa_request, 'urgency_level', 'N/A')],
             ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
             ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
-            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None')],
-            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A')],
+            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None'), style_normal],
+            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A'), style_normal],
         ]
         
         pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
