@@ -479,7 +479,7 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
-def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "", existing_filenames: List[str] = None) -> 'ClinicalDataPayload':
+def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "") -> 'ClinicalDataPayload':
 
     """
     Calls AI to generate clinical data (Persona + Documents) based on the patient state and plan.
@@ -510,8 +510,7 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         patient_state=patient_state,
         document_plan=full_document_plan,
         user_feedback=user_feedback,
-        history_context=history_context,
-        existing_filenames=existing_filenames or []
+        history_context=history_context
     )
 
     # Use create_with_completion to get usage stats

@@ -125,7 +125,7 @@ F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
 # - Persona Requirements: Add/remove required patient fields
 
 def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", 
-                             history_context: str = "", existing_filenames: list = None) -> str:
+                             history_context: str = "") -> str:
     """
     Generates the main prompt for clinical data generation.
     
@@ -135,22 +135,11 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
         document_plan: Dict containing the document templates to fill
         user_feedback: Optional user corrections/instructions
         history_context: Previous interaction history
-        existing_filenames: List of existing document titles to avoid duplicates
     
     Returns:
         Complete prompt string
     """
     
-    # Build duplicate prevention instruction
-    duplicate_prevention = ""
-    if existing_filenames:
-        duplicate_prevention = f"""
-    **DUPLICATE PREVENTION (CRITICAL)**:
-    - The following documents ALREADY EXIST for this patient: {', '.join(existing_filenames)}
-    - You MUST generate documents with DIFFERENT titles than these existing ones.
-    - Focus on new types of clinical evidence not yet documented.
-"""
-
     import json
     state_str = json.dumps(patient_state, indent=2)
     plan_str = json.dumps(document_plan, indent=2)
@@ -178,7 +167,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
     {history_context if history_context else "No prior history available."}
 
     {feedback_instruction}
-{duplicate_prevention}
+
     **INSTRUCTIONS:**
     1. **Identity & Consistency**:
        - Maintain strict patient identity if provided.

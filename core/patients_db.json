@@ -280,8 +280,8 @@
     "last_name": "Diaz",
     "gender": "female",
     "dob": "1987-09-15",
-    "address": "123 Brooklyn Av, Houston, TX 77002",
-    "telecom": "555-123-7890",
+    "address": "123 Brooklyn Ave, Houston, TX, 77001",
+    "telecom": "555-123-4567",
     "race": "Hispanic",
     "height": "5 ft 8 in",
     "weight": "160 lbs",
@@ -294,19 +294,19 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
+      "relationship": "Next of Kin",
       "name": "Jake Peralta",
-      "telecom": "555-987-6543",
-      "address": "456 Kingsland St, Houston, TX 77022",
+      "telecom": "555-654-3210",
+      "address": "124 Brooklyn Ave, Houston, TX, 77001",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2023-01-01",
+      "period_start": "ongoing",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Erin Bush, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Houston Methodist Hospital"
+      "formatted_npi": "9876543210",
+      "managingOrganization": "Brooklyn General Hospital"
     },
     "link": {
       "other_patient": "N/A",
@@ -316,7 +316,7 @@
       "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare",
+      "plan_type": "PPO",
       "member_id": "MBR-743936",
       "policy_number": "POL-2026-8619",
       "effective_date": "2024-01-01",
@@ -324,11 +324,11 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Myocardial perfusion imaging",
+    "expected_procedure_date": "2026-03-14",
+    "procedure_requested": "Stress Test and ECG",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin St",
+      "street_address": "6565 Fannin Street",
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
@@ -337,15 +337,15 @@
     "pa_request": {
       "requesting_provider": "Dr. Erin Bush, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient exhibits symptoms consistent with coronary artery disease, requiring myocardial perfusion imaging to provide critical insights for risk assessment and treatment planning.",
+      "clinical_justification": "Patient presents with persistent chest pain post mild exertion and abnormal ECG findings. The requested stress test and ECG are medically necessary to evaluate myocardial ischemia.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Beta-blockers and lifestyle modifications.",
-      "expected_outcome": "Clear visualization of coronary perfusion, facilitating effective treatment choices."
+      "previous_treatments": "Conservative management with Atenolol and lifestyle changes.",
+      "expected_outcome": "Accurate diagnosis of perfusion deficits to inform treatment strategies and improve cardiac outcomes."
     },
-    "bio_narrative": "Rosa Diaz, a thirty-eight-year-old Hispanic woman, has been diligently managing her health while working as a detective in Brooklyn. She has a history of hypertension and dyslipidemia, treated with Atenolol and Atorvastatin. Despite her busy career, Rosa adheres to medication regimens and maintains a moderately active lifestyle, incorporating regular exercise into her routine. Her social network, comprised of supportive colleagues and friends, aids in maintaining her mental health stability. Rosa's medical history includes a bicycle accident six months ago, leading to knee surgery, and subsequent successful rehabilitation. As she continues to experience chest discomfort and exertional dyspnea, thorough cardiac evaluation is warranted. It's crucial to determine if there's underlying coronary artery disease, given her symptoms and risk factors.",
+    "bio_narrative": "Rosa Diaz is a dedicated detective who has been experiencing episodic chest pain, particularly after physical exertion. Six months ago, she had a knee injury from a biking incident that required surgery and subsequent physical rehabilitation. Despite maintaining medication adherence and a balanced diet, she occasionally lapses into stress eating due to her high-pressure job environment. Her strong social network aids her mental stability, and she refrains from smoking and largely avoids alcohol, only drinking socially.",
     "medications": [
       {
         "brand": "Tenormin",
@@ -356,7 +356,7 @@
         "status": "current",
         "start_date": "2025-09-20",
         "end_date": "ongoing",
-        "reason": "Hypertension management, reduce cardiac workload"
+        "reason": "Hypertension management, reduce cardiac workload."
       },
       {
         "brand": "Lipitor",
@@ -367,7 +367,7 @@
         "status": "ongoing",
         "start_date": "2025-10-01",
         "end_date": "ongoing",
-        "reason": "Dyslipidemia to manage cholesterol levels"
+        "reason": "Dyslipidemia to manage cholesterol levels."
       },
       {
         "brand": "Aspirin",
@@ -378,7 +378,7 @@
         "status": "past",
         "start_date": "2025-12-01",
         "end_date": "2026-01-15",
-        "reason": "Prophylactic antiplatelet therapy"
+        "reason": "Prophylactic antiplatelet therapy."
       }
     ],
     "allergies": [
@@ -387,7 +387,7 @@
         "allergy_type": "Food",
         "reaction": "Hives",
         "severity": "Moderate",
-        "onset_date": "Unknown"
+        "onset_date": "2025-01-15"
       }
     ],
     "vaccinations": [
@@ -427,10 +427,10 @@
     "therapies": [
       {
         "therapy_type": "Cardiac Rehab Therapy",
-        "cpt_code": "93798",
-        "cpt_description": "Physician-recognized intervention for cardiac rehabilitation, per session",
+        "cpt_code": "G0422",
+        "cpt_description": "Cardiac rehabilitation, COMPREH/PHASE II, Cardiac rehab/behav, EACH UNIT",
         "icd10_codes": [
-          "I25.10"
+          "I25.10 - Atherosclerotic heart disease"
         ],
         "provider": "Dr. Lauren Tran, PT",
         "provider_npi": "9876543210",
@@ -443,78 +443,78 @@
         "notes": "Supportive in managing symptoms and improving exercise tolerance."
       }
     ],
-    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. She engages in a balanced diet but admits to occasional stress eating during high-pressure cases. Rosa does not smoke and consumes alcohol rarely. Mental health remains stable, as bolstered by her robust social network.",
+    "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. Engages in a balanced diet but with occasional lapses into stress eating during high-pressure cases. Does not smoke and consumes alcohol rarely. Mental health remains stable, as supported by her close social network.",
     "encounters": [
       {
-        "encounter_date": "2025-12-10",
+        "encounter_date": "2026-02-01",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Follow-up consultation for chest pain and hypertension management.",
+        "purpose_of_visit": "Follow-up for persistent chest pain and hypertensive management.",
         "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
+        "provider_npi": "9876543210",
+        "facility": "Brooklyn General Hospital",
         "vital_signs": {
-          "recorded_date": "2025-12-10",
+          "recorded_date": "2026-02-01",
           "blood_pressure": "130/85 mmHg",
           "heart_rate": "78 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": null,
+          "bmi": "24.3 kg/m\u00b2",
           "oxygen_saturation": "98%",
           "temperature": "98.6\u00b0F",
-          "respiratory_rate": null
+          "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "Chest tightness and shortness of breath with exertion.",
-        "doctor_note": "Subjective: The patient reports increased episodes of chest pain and mild hypertension noted on home monitoring over the past several months. Objective: Vital signs recorded show slightly elevated blood pressure. ECG conducted revealed ST changes suggestive of potential ischemic activity. Assessment: Given the patient\u2019s cardiovascular risk profile, ischemic heart disease needs to be ruled out. Plan: Recommend initiating beta-blockers and scheduling follow-up imaging to evaluate cardiac function further.",
+        "chief_complaint": "I've been having chest pain whenever I exert myself physically.",
+        "doctor_note": "Subjective: Rosa has been experiencing sharp chest pain post exertion that persists for a few minutes at a time. Medication adherence is good, but she's concerned about new symptom patterns.\\nObjective: Vital signs are stable although BP is slightly elevated. Observations show discomfort on exertion tests.\\nAssessment: Differential diagnosis includes possible myocardial ischemia. Stress testing recommended.\\nPlan: Schedule stress test with ECG. Continue current medication regime. Advise lifestyle modifications especially around diet and stress management.",
         "observations": [
-          "ST changes in ECG"
+          "Discomfort on exertion test",
+          "Stable vitals"
         ],
         "procedures_performed": [
+          "99213 - E&M Office Visit Level 3",
           "93000 - 12-lead ECG"
         ],
         "diagnoses": [
-          "R07.9 - Chest pain, unspecified",
-          "I25.10 - Atherosclerotic heart disease"
+          "I25.10 - Atherosclerotic heart disease",
+          "R07.9 - Chest pain, unspecified"
         ],
-        "medications_prescribed": [
-          "Atenolol 50mg, daily"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Erin Bush, MD"
         ],
-        "progress_notes": "Symptoms are currently managed under existing treatment protocols, but further diagnostic evaluation is essential to guide definitive therapy.",
-        "follow_up_instructions": "Complete cardiac imaging as discussed."
+        "progress_notes": "Rosa\u2019s blood pressure management is stable but needs further cardiac assessment.",
+        "follow_up_instructions": "Follow up with Cardiology department for stress test."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": null,
-      "illicit_drug_use": null,
+      "alcohol_frequency": "Rarely, mostly at social events",
+      "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2025-12-10",
-      "last_visit_reason": null,
-      "missed_appointment": null,
-      "missed_appointment_reason": null,
+      "last_medical_visit": "2026-02-01",
+      "last_visit_reason": "Hypertensive follow-up and chest pain evaluation.",
+      "missed_appointment": false,
+      "missed_appointment_reason": "N/A",
       "early_visit_reason": null,
-      "mental_health_history": "Stable",
-      "mental_health_current": "PHQ-9: 2, indicating minimal depression",
-      "exercise_habits": "Walks 3x/week",
-      "diet_notes": "Balanced diet with occasional stress eating",
-      "family_history_relevant": "Father with CAD"
+      "mental_health_history": "Stable mood supported by strong social network.",
+      "mental_health_current": "No current concerns, stable PHQ-9 score",
+      "exercise_habits": "Engages in moderate physical activity when possible, previous regular routine disrupted post-surgery.",
+      "diet_notes": "Balanced diet with some lapses into stress eating.",
+      "family_history_relevant": null
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-15",
-      "blood_pressure": "125/78 mmHg",
-      "heart_rate": "75 bpm",
+      "recorded_date": "2026-02-01",
+      "blood_pressure": "130/85 mmHg",
+      "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": null,
+      "bmi": "24.3 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.5\u00b0F",
-      "respiratory_rate": null
+      "temperature": "98.6\u00b0F",
+      "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "Gravida 1, Para 1, last Pap smear 2025-06-15, last mammogram 2024-09-20"
+    "gender_specific_history": null
   },
   "210": {
     "first_name": "John",

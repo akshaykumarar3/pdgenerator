@@ -291,18 +291,6 @@ def process_patient_workflow(
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
     
     patient_report_folder = get_patient_report_folder(patient_id)
-    existing_titles: list[str] = []
-    if os.path.isdir(patient_report_folder):
-        for f in os.listdir(patient_report_folder):
-            if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
-                parts = os.path.splitext(f)[0].split("-")
-                if len(parts) >= 4:
-                    title = "-".join(parts[3:])
-                    title = title[:-4] if title.endswith("-NAF") else title
-                    existing_titles.append(title)
-    if existing_titles:
-        print(f"   📥 {len(existing_titles)} existing report(s) found (AI will avoid duplicates).")
-
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
     print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     try:
@@ -312,7 +300,6 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_filenames=existing_titles,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
