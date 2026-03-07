@@ -953,6 +953,142 @@
             overflow-y: auto;
         }
 
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content.full-page {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            max-height: none;
+            border-radius: 0;
+            border: none;
+        }
+
+        /* ── CLINICAL CARDS ── */
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .clinical-card {
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        .clinical-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .clinical-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent2);
+        }
+
+        .clinical-card-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .clinical-card-full-width {
+            grid-column: 1 / -1;
+        }
+
+        .clinical-card label {
+            display: block;
+            font-size: 11px;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .clinical-card input,
+        .clinical-card select,
+        .clinical-card textarea {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .clinical-card textarea {
+            resize: none;
+            overflow: hidden;
+            min-height: 40px;
+            font-family: inherit;
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
         /* ── UTILS ── */
         .mt-8 {
             margin-top: 8px;
@@ -1065,6 +1201,9 @@
             <div class="pane-top" id="pane-top">
                 <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                     <h2 style="font-size:16px; margin-bottom:12px; color:var(--text);">🩺 Patient Conditions</h2>
+                    <button class="btn btn-outline" style="margin-bottom:12px; font-size: 13px; padding: 6px 14px;"
+                        onclick="openClinicalHistory()"><span style="font-size: 15px; margin-right: 6px;">🏥</span>
+                        Clinical History</button>
                 </div>
                 <div class="tabs-header">
                     <button class="tab-btn active" onclick="switchClinicalTab('meds')">💊 Medications (<span
@@ -1247,14 +1386,80 @@
         </section>
     </div>
 
+    <!-- ═══ CLINICAL HISTORY MODAL ════════════════════════════════════════════ -->
+    <div id="clinical-modal" class="modal-overlay">
+        <div class="modal-content full-page">
+            <div class="modal-header">
+                <div class="modal-title"><span>🏥</span> Extended Clinical History</div>
+                <button class="btn btn-ghost" onclick="closeClinicalHistory()"
+                    style="padding: 4px 8px; font-size: 16px;">✕</button>
+            </div>
+            <div class="modal-body" style="padding: 0; display: flex; flex-direction: column; height: 100%;">
+
+                <div class="tabs-header"
+                    style="border-bottom: 1px solid var(--border); border-radius: 0; margin-bottom: 0px; padding: 0 16px; background: var(--surface2)">
+                    <button class="tab-btn active" onclick="switchModalTab('encounters')">🏥 Encounters (<span
+                            id="count-encounters">0</span>)</button>
+                    <button class="tab-btn" onclick="switchModalTab('images')">🩻 Imaging (<span
+                            id="count-images">0</span>)</button>
+                    <button class="tab-btn" onclick="switchModalTab('reports')">🔬 Lab &amp; Path (<span
+                            id="count-reports">0</span>)</button>
+                    <button class="tab-btn" onclick="switchModalTab('procedures')">🔪 Procedures (<span
+                            id="count-procedures">0</span>)</button>
+                </div>
+
+                <div style="padding: 24px 32px; flex: 1; overflow-y: auto; background: var(--surface);">
+
+                    <!-- ENCOUNTERS TAB -->
+                    <div id="modal-tab-encounters" class="tab-content active modal-tab" style="display: block;">
+                        <div id="tbody-encounters" class="cards-container"></div>
+                        <div class="section-add-row" style="margin-top:20px;">
+                            <button class="btn btn-add" onclick="addEncounter()">+ Add Encounter</button>
+                        </div>
+                    </div>
+
+                    <!-- IMAGES TAB -->
+                    <div id="modal-tab-images" class="tab-content modal-tab" style="display: none;">
+                        <div id="tbody-images" class="cards-container"></div>
+                        <div class="section-add-row" style="margin-top:20px;">
+                            <button class="btn btn-add" onclick="addImage()">+ Add Imaging Study</button>
+                        </div>
+                    </div>
+
+                    <!-- REPORTS TAB -->
+                    <div id="modal-tab-reports" class="tab-content modal-tab" style="display: none;">
+                        <div id="tbody-reports" class="cards-container"></div>
+                        <div class="section-add-row" style="margin-top:20px;">
+                            <button class="btn btn-add" onclick="addReport()">+ Add Lab/Path Report</button>
+                        </div>
+                    </div>
+
+                    <!-- PROCEDURES TAB -->
+                    <div id="modal-tab-procedures" class="tab-content modal-tab" style="display: none;">
+                        <div id="tbody-procedures" class="cards-container"></div>
+                        <div class="section-add-row" style="margin-top:20px;">
+                            <button class="btn btn-add" onclick="addProcedure()">+ Add Procedure</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeClinicalHistory()">Done</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════════ -->
     <script>
         /* ── CONFIG ─────────────────────────────────────────────────────────── */
-        const API = 'http://localhost:5001';
+        const API = 'http://localhost:410';
         let currentJobId = null;
         let pollTimer = null;
         let logIndex = 0;
         let currentPatient = null;
+        let currentLoadedPatientData = null;
+        let isClinicalHistoryRendered = false;
 
         /* ── SERVER HEALTH ──────────────────────────────────────────────────── */
         async function checkStatus() {
@@ -1311,12 +1516,16 @@
         <div style="margin-top:6px;font-size:11px;color:var(--text3);">🔒 Identity locked — medications, allergies, vaccinations, therapies will be kept consistent</div>`;
                     sumEl.style.display = 'block';
 
-                    /* Pre-fill tables from existing record */
+                    /* Pre-fill top-level fields */
                     prefillSection('meds', p.medications || []);
                     prefillSection('allergies', p.allergies || []);
                     prefillSection('vax', p.vaccinations || []);
                     prefillSection('therapy', p.therapies || []);
                     if (p.behavioral_notes) document.getElementById('behavioral-notes').value = p.behavioral_notes;
+
+                    // Lazy load the clinical history parts
+                    currentLoadedPatientData = p;
+                    isClinicalHistoryRendered = false;
                 } else {
                     sumEl.innerHTML = `
         <div class="ps-name">Patient ${id} <span class="badge badge-yellow">New Patient</span></div>
@@ -1333,36 +1542,60 @@
 
         /* ── PREFILL / CLEAR ────────────────────────────────────────────────── */
         function clearAllSections() {
-            ['meds', 'allergies', 'vax', 'therapy'].forEach(s => {
+            ['meds', 'allergies', 'vax', 'therapy', 'encounters', 'images', 'reports', 'procedures'].forEach(s => {
                 document.getElementById(`tbody-${s}`).innerHTML = '';
                 updateCount(s);
             });
             document.getElementById('behavioral-notes').value = '';
+            currentLoadedPatientData = null;
+            isClinicalHistoryRendered = false;
         }
         function prefillSection(sec, items) {
             document.getElementById(`tbody-${sec}`).innerHTML = '';
-            const fn = { meds: addMed, allergies: addAllergy, vax: addVax, therapy: addTherapy }[sec];
+            const fn = { meds: addMed, allergies: addAllergy, vax: addVax, therapy: addTherapy, encounters: addEncounter, images: addImage, reports: addReport, procedures: addProcedure }[sec];
             items.forEach(item => fn && fn(item));
             updateCount(sec);
         }
         function updateCount(sec) {
-            const n = document.getElementById(`tbody-${sec}`).rows.length;
+            const elBody = document.getElementById(`tbody-${sec}`);
+            const n = elBody.tagName === 'TBODY' ? elBody.rows.length : elBody.children.length;
             const el = document.getElementById(`count-${sec}`);
             if (el) el.textContent = n > 0 ? `${n} entr${n === 1 ? 'y' : 'ies'}` : '';
         }
 
         /* ── ADD ROW HELPERS ────────────────────────────────────────────────── */
         function appendRow(sec, html) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = html;
-            document.getElementById(`tbody-${sec}`).appendChild(tr);
+            const elBody = document.getElementById(`tbody-${sec}`);
+            if (elBody.tagName === 'TBODY') {
+                const tr = document.createElement('tr');
+                tr.innerHTML = html;
+                elBody.appendChild(tr);
+            } else {
+                const div = document.createElement('div');
+                div.className = 'clinical-card';
+                div.innerHTML = html;
+                elBody.appendChild(div);
+            }
             updateCount(sec);
         }
         function removeRow(btn) {
-            const tr = btn.closest('tr');
-            const sec = tr.closest('tbody').id.replace('tbody-', '');
-            tr.style.opacity = '0'; tr.style.transition = 'opacity .2s';
-            setTimeout(() => { tr.remove(); updateCount(sec); }, 200);
+            const item = btn.closest('.clinical-card') || btn.closest('tr');
+            const elBody = item.closest('tbody') || item.closest('.cards-container');
+            const sec = elBody.id.replace('tbody-', '');
+            item.style.opacity = '0'; item.style.transition = 'opacity .2s';
+            setTimeout(() => { item.remove(); updateCount(sec); }, 200);
+        }
+
+        /* ── AUTO-EXPAND TEXTAREAS ─────────────────────────────────────────── */
+        function autoExpand(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight) + 'px';
+        }
+        function triggerAutoExpand(containerId) {
+            setTimeout(() => {
+                const els = document.querySelectorAll(`#${containerId} textarea`);
+                els.forEach(el => autoExpand(el));
+            }, 10);
         }
         const sel = (v, opt) => v === opt ? 'selected' : '';
         const esc = s => String(s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
@@ -1456,6 +1689,114 @@
     <td><input type="text" placeholder="Referral reason…" value="${esc(d.reason)}"/></td>
     <td><input type="text" placeholder="Notes…" value="${esc(d.notes)}"/></td>
     <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
+        }
+
+        /* ── MODAL UI & ROWS ── */
+        function openClinicalHistory() {
+            if (!isClinicalHistoryRendered && currentLoadedPatientData) {
+                const p = currentLoadedPatientData;
+                prefillSection('encounters', p.encounters || []);
+                prefillSection('images', p.images || []);
+                prefillSection('reports', p.reports || []);
+                prefillSection('procedures', p.procedures || []);
+                isClinicalHistoryRendered = true;
+            }
+            document.getElementById('clinical-modal').style.display = 'flex';
+        }
+        function closeClinicalHistory() {
+            document.getElementById('clinical-modal').style.display = 'none';
+        }
+        function switchModalTab(tabId) {
+            document.querySelectorAll('.modal-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.display = 'none';
+            });
+            document.querySelectorAll('#clinical-modal .tabs-header .tab-btn').forEach(b => b.classList.remove('active'));
+
+            const target = document.getElementById(`modal-tab-${tabId}`);
+            if (target) {
+                target.classList.add('active');
+                target.style.display = 'block';
+            }
+            event.currentTarget.classList.add('active');
+        }
+
+        function addEncounter(d = {}) {
+            appendRow('encounters', `
+        <div class="clinical-card-header">
+            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
+                <select style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;">
+                  <option value="Office Visit" ${sel(d.type, 'Office Visit')}>Office Visit</option>
+                  <option value="Specialist Visit" ${sel(d.type, 'Specialist Visit')}>Specialist</option>
+                  <option value="Telehealth" ${sel(d.type, 'Telehealth')}>Telehealth</option>
+                  <option value="Urgent Care" ${sel(d.type, 'Urgent Care')}>Urgent Care</option>
+                  <option value="Emergency Room" ${sel(d.type, 'Emergency Room')}>Emergency Room</option>
+                  <option value="Inpatient Admission" ${sel(d.type, 'Inpatient Admission')}>Inpatient</option>
+                  <option value="Observation" ${sel(d.type, 'Observation')}>Observation</option>
+                </select>
+            </div>
+            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
+        </div>
+        <div class="clinical-card-body">
+            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
+            <div><label>Provider</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
+            <div><label>Facility</label><input type="text" placeholder="General Hospital" value="${esc(d.facility)}"/></div>
+            <div class="clinical-card-full-width"><label>Reason (CC)</label><textarea oninput="autoExpand(this)">${esc(d.reason)}</textarea></div>
+            <div class="clinical-card-full-width"><label>Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
+        </div>`);
+            triggerAutoExpand('tbody-encounters');
+        }
+
+        function addImage(d = {}) {
+            appendRow('images', `
+        <div class="clinical-card-header">
+            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
+                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="CT Abdomen W/O Contrast" value="${esc(d.type)}"/>
+            </div>
+            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
+        </div>
+        <div class="clinical-card-body">
+            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
+            <div><label>Ordered By</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
+            <div><label>Facility</label><input type="text" placeholder="Imaging Center" value="${esc(d.facility)}"/></div>
+            <div class="clinical-card-full-width"><label>Findings / Impression</label><textarea oninput="autoExpand(this)">${esc(d.findings)}</textarea></div>
+        </div>`);
+            triggerAutoExpand('tbody-images');
+        }
+
+        function addReport(d = {}) {
+            appendRow('reports', `
+        <div class="clinical-card-header">
+            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
+                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="CBC, CMP, Biopsy…" value="${esc(d.type)}"/>
+            </div>
+            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
+        </div>
+        <div class="clinical-card-body">
+            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
+            <div><label>Ordered By</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
+            <div class="clinical-card-full-width"><label>Results</label><textarea oninput="autoExpand(this)">${esc(d.results)}</textarea></div>
+            <div class="clinical-card-full-width"><label>Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
+        </div>`);
+            triggerAutoExpand('tbody-reports');
+        }
+
+        function addProcedure(d = {}) {
+            appendRow('procedures', `
+        <div class="clinical-card-header">
+            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
+                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="Appendectomy" value="${esc(d.name)}"/>
+            </div>
+            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
+        </div>
+        <div class="clinical-card-body">
+            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
+            <div><label>Performed By</label><input type="text" placeholder="Dr. Surgeon" value="${esc(d.provider)}"/></div>
+            <div><label>Facility</label><input type="text" placeholder="Surgery Center" value="${esc(d.facility)}"/></div>
+            <div class="clinical-card-full-width"><label>Indication / Reason</label><textarea oninput="autoExpand(this)">${esc(d.reason)}</textarea></div>
+            <div class="clinical-card-full-width"><label>Complications / Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
+        </div>`);
+            triggerAutoExpand('tbody-procedures');
         }
 
 
@@ -1582,6 +1923,38 @@
                 };
             });
         }
+        function collectEncounters() {
+            const container = document.getElementById('tbody-encounters');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
+            });
+        }
+        function collectImages() {
+            const container = document.getElementById('tbody-images');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, findings: i[4]?.value };
+            });
+        }
+        function collectReports() {
+            const container = document.getElementById('tbody-reports');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, results: i[3]?.value, notes: i[4]?.value };
+            });
+        }
+        function collectProcedures() {
+            const container = document.getElementById('tbody-procedures');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { name: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
+            });
+        }
 
         /* ── GENERATE ───────────────────────────────────────────────────────── */
         async function startGeneration() {
@@ -1606,6 +1979,10 @@
                 allergies: collectAllergies().filter(a => a.allergen),
                 vaccinations: collectVax().filter(v => v.vaccine_name),
                 therapies: collectTherapies().filter(t => t.therapy_type),
+                encounters: collectEncounters().filter(e => e.type || e.reason),
+                images: collectImages().filter(i => i.type || i.findings),
+                reports: collectReports().filter(r => r.type || r.results),
+                procedures: collectProcedures().filter(p => p.name || p.reason),
                 behavioral_notes: document.getElementById('behavioral-notes').value.trim(),
             };
 
@@ -1647,6 +2024,16 @@
 
                     if (data.status === 'done') {
                         appendLog('✅ Generation complete!', 'success');
+
+                        const logs = data.all_logs || [];
+                        const docsCreated = logs.filter(l => /Created:.*DOC-/i.test(l));
+                        if (docsCreated.length > 0) {
+                            appendLog('📄 Generated Documents:', 'info');
+                            docsCreated.forEach(docLog => {
+                                appendLog(`  - ${docLog.split('Created: ')[1]}`, 'success');
+                            });
+                        }
+
                         document.getElementById('refresh-files-btn').style.display = 'inline-flex';
                         await refreshOutputFiles();
                     } else {
@@ -1690,6 +2077,10 @@
                 { k: `⚠️ ${ctx.allergy_count || 0} Allergies`, v: ctx.allergy_count },
                 { k: `💉 ${ctx.vaccination_count || 0} Vaccines`, v: ctx.vaccination_count },
                 { k: `🧠 ${ctx.therapy_count || 0} Therapies`, v: ctx.therapy_count },
+                { k: `🏥 ${ctx.encounter_count || 0} Encs`, v: ctx.encounter_count },
+                { k: `🩻 ${ctx.image_count || 0} Imgs`, v: ctx.image_count },
+                { k: `🔬 ${ctx.report_count || 0} Labs`, v: ctx.report_count },
+                { k: `🔪 ${ctx.procedure_count || 0} Procs`, v: ctx.procedure_count },
             ].map(d => `<span class="sum-tag ${d.v ? 'tag-on' : 'tag-off'}">${d.k}</span>`).join('');
 
             const fbPreview = (ctx.feedback || '').slice(0, 220) || '<em style="color:var(--text3)">No feedback provided</em>';
@@ -1791,7 +2182,14 @@
             line.className = `log-line ${cls}`;
             line.textContent = text;
             con.appendChild(line);
-            con.scrollTop = con.scrollHeight;
+
+            // Auto scroll to bottom smoothly utilizing JS event queue
+            setTimeout(() => {
+                con.scrollTo({
+                    top: con.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 10);
         }
         function clearLog() {
             document.getElementById('log-console').innerHTML = '<span style="color:var(--text3);">Log cleared.</span>';

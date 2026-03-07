@@ -1,6 +1,7 @@
 import re
 import html
 import os
+import json
 from datetime import datetime
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -9,43 +10,76 @@ from reportlab.lib.units import inch
 from reportlab.lib import colors
 
 def _ensure_folder(path: str):
-    """Helper: Ensures directory exists."""
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
 
 def format_clinical_text(text: str) -> str:
-    """
-    Converts raw AI text (Markdown-style) into ReportLab-friendly XML.
-    - **text** -> <b>text</b>
-    - ## Header -> <b><font size=12>Header</font></b>
-    - Handles newlines for Paragraph flow.
-    """
     if not text: return ""
     
-    # Remove horizontal rules
     text = re.sub(r'^-{3,}', '', text, flags=re.MULTILINE)
-    
-    # 1. Bold: **text** -> <b>text</b>
     text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
-    
-    # 2. Bold: __text__ -> <b>text</b>
     text = re.sub(r'__(.*?)__', r'<b>\1</b>', text)
-    
-    # 3. Headers: ## Text -> Bold Larger
-    # Clean up leading ##
     text = re.sub(r'^(#+)\s*(.*)', r'<b><font size=12>\2</font></b><br/>', text, flags=re.MULTILINE)
     
     return text.strip()
 
-# ... (get_clinical_image, create_patient_summary_pdf remain same) ...
+def format_report_content(content):
+    try:
+        if isinstance(content, str):
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError:
+                return html.escape(content).replace('\n', '<br/>')
+        else:
+            data = content
+
+        if not isinstance(data, dict):
+            return html.escape(str(data))
+
+        sections = data.get("sections", [])
+        output = []
+
+        def _format_value(val, depth=0):
+            indent = "&nbsp;" * (depth * 4)
+            if isinstance(val, dict):
+                parts = []
+                for k, v in val.items():
+                    key_title = str(k).replace("_", " ").title()
+                    if isinstance(v, (dict, list)):
+                        parts.append(f"{indent}<b>{key_title}:</b><br/>{_format_value(v, depth + 1)}")
+                    else:
+                        parts.append(f"{indent}<b>{key_title}:</b> {html.escape(str(v))}")
+                return "<br/>".join(parts)
+            elif isinstance(val, list):
+                parts = []
+                for item in val:
+                    if isinstance(item, (dict, list)):
+                        parts.append(f"{indent}•<br/>{_format_value(item, depth + 1)}")
+                    else:
+                        parts.append(f"{indent}• {html.escape(str(item))}")
+                return "<br/>".join(parts)
+            else:
+                return f"{indent}{html.escape(str(val))}"
+
+        for sec in sections:
+            value = data.get(sec)
+            if not value:
+                continue
+
+            section_title = sec.replace("_", " ").title()
+            output.append(f"<b>{section_title}</b>")
+            
+            formatted_val = _format_value(value, depth=0)
+            output.append(formatted_val)
+            output.append("")
+
+        return "<br/>".join(output)
+
+    except Exception as e:
+        print(f"Error formatting report: {e}")
+        return html.escape(str(content)).replace('\n', '<br/>')
 
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
-    """
-    Generates a PDF report for a given patient and document type.
-    Embeds clinical images if relevant.
-    Rendering: Professional Lab/Consult Report Header.
-    """
-    # Use the passed folder directly - assuming it is the FULL path to the patient's report folder
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
 
@@ -62,18 +96,15 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     col_dark_blue = colors.HexColor("#34495e")
     col_gray = colors.gray
     
-    # Styles
-    style_tit = ParagraphStyle('MainTitle', parent=styles['Heading1'], textColor=col_dark_blue, 
+    style_tit = ParagraphStyle('cpdf_MainTitle', parent=styles['Heading1'], textColor=col_dark_blue, 
                                borderPadding=0, borderWidth=0, alignment=1)
-    style_sub = ParagraphStyle('SubTitle', parent=styles['Normal'], fontSize=9, textColor=col_gray, alignment=0)
-    style_sub_right = ParagraphStyle('SubTitleRight', parent=styles['Normal'], fontSize=9, textColor=col_dark_blue, alignment=2)
-    style_normal = ParagraphStyle('Justify', parent=styles['Normal'], alignment=4, leading=14) 
+    style_sub = ParagraphStyle('cpdf_SubTitle', parent=styles['Normal'], fontSize=9, textColor=col_gray, alignment=0)
+    style_sub_right = ParagraphStyle('cpdf_SubTitleRight', parent=styles['Normal'], fontSize=9, textColor=col_dark_blue, alignment=2)
+    style_normal = ParagraphStyle('cpdf_Justify', parent=styles['Normal'], alignment=4, leading=14) 
 
     Story = []
     
-    # --- PROFESSIONAL HEADER (Face Sheet) ---
     if patient_persona and doc_metadata:
-        # Data Extraction
         fac_name = getattr(doc_metadata, 'facility_name', 'General Hospital')
         prov_name = getattr(doc_metadata, 'provider_name', 'Unknown Provider')
         svc_date = getattr(doc_metadata, 'service_date', datetime.now().strftime("%Y-%m-%d"))
@@ -82,14 +113,8 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         p_name = f"{patient_persona.first_name} {patient_persona.last_name}"
         p_dob = patient_persona.dob
         
-        # Calculate Current MRN dynamic if not passed (though generator should pass it, we can re-derive or use generic)
-        # Assuming mrn is usually passed but we didn't add it to signature explicitly to avoid breaking changes, 
-        # let's try to grab it from persona if stored, or generate.
-        # Actually, let's look for 'mrn' in persona dict/object if it was saved.
-        # For this context, let's construct it same as generator.
-        p_mrn = f"MRN-{patient_id}-{svc_date[:4]}" # Fallback logic
+        p_mrn = f"MRN-{patient_id}-{svc_date[:4]}"
         
-        # Left Column: Facility & Provider
         header_left = [
             Paragraph(f"<b>{fac_name}</b>", styles['Heading3']),
             Paragraph(f"123 Medical Center Dr, Suite 100", style_sub),
@@ -99,7 +124,6 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
             Paragraph(f"<b>NPI:</b> {getattr(patient_persona.provider, 'formatted_npi', 'N/A')}", style_sub)
         ]
         
-        # Right Column: Patient Demographics & Accession
         header_right = [
             Paragraph(f"<b>PATIENT: {p_name.upper()}</b>", style_sub_right),
             Paragraph(f"MRN: {p_mrn} | DOB: {p_dob}", style_sub_right),
@@ -109,7 +133,6 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
             Paragraph(f"ACCESSION #: {acc_num}", style_sub_right)
         ]
         
-        # Table Layout
         header_table = Table([[header_left, header_right]], colWidths=[3.5*inch, 3.5*inch])
         header_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
@@ -119,7 +142,6 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(header_table)
         Story.append(Spacer(1, 20))
         
-        # Document Title
         clean_title = doc_type.replace('_', ' ').upper()
         if hasattr(doc_metadata, 'title_hint'):
             clean_title = doc_metadata.title_hint.replace('_', ' ').upper()
@@ -128,37 +150,28 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(Spacer(1, 20))
         
     else:
-        # Fallback for simple calls
         title_str = doc_type.replace('_', ' ').upper()
         Story.append(Paragraph(f"CLINICAL DOCUMENT: {title_str}", styles['Heading1']))
         Story.append(Spacer(1, 20))
     
-    # Check for image
     if image_path and os.path.exists(image_path):
         Story.append(Paragraph("<b>Attached Clinical Imaging:</b>", styles["Heading3"]))
         Story.append(Spacer(1, 5))
-        # Keep aspect ratio?
         img = Image(image_path, width=4*inch, height=3*inch, kind='proportional')
         Story.append(img)
         Story.append(Spacer(1, 15))
 
-    # Content
-    if not patient_persona: # Only show this generic header if professional header wasn't used
+    if not patient_persona:
         Story.append(Paragraph(f"<b>REPORT CONTENT:</b>", styles["Heading3"]))
         Story.append(Spacer(1, 10))
     
-    # Pre-process content: Markdown to ReportLab XML
-    # Step 1: Convert markdown (**bold**, ## headers) to XML tags
     formatted_content = format_clinical_text(content)
     
-    # Step 2: Handle newlines for paragraph flow
     formatted_content = formatted_content.replace('\n', '<br/>')
     
-    # Step 3: Render with fallback for malformed XML
     try:
         Story.append(Paragraph(formatted_content, style_normal))
     except ValueError as e:
-        # Fallback: escape everything if parsing fails
         import html
         safe_content = html.escape(content).replace('\n', '<br/>')
         Story.append(Paragraph(safe_content, style_normal))
@@ -170,39 +183,17 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     return file_path
 
 def get_clinical_image(doc_title: str):
-    """
-    Returns None - all clinical images are now AI-generated.
-    Static fallback images have been removed to ensure high-quality AI generation.
-    """
     return None
 
-
 def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: int = 1):
-    """
-    Creates a PDF annotator verification guide.
-
-    Args:
-        patient_id: Patient ID
-        annotator_summary: AnnotatorSummary object from AI
-        case_details: Dict with case information
-        patient_persona: Optional patient persona object
-        output_folder: Output folder (defaults to generated_output/summary)
-        version: Version number for filename
-
-    Returns:
-        Path to created PDF file
-    """
     if output_folder is None:
         output_folder = os.path.join("generated_output", "summary")
 
-    # Ensure output folder exists
     os.makedirs(output_folder, exist_ok=True)
 
-    # Output file path — versioned
     output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}-v{version}.pdf")
     file_path = output_path
     
-    # Remove existing summary if present (user requirement: replace existing)
     if os.path.exists(file_path):
         try:
             os.remove(file_path)
@@ -214,47 +205,42 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
                             rightMargin=50, leftMargin=50,
                             topMargin=50, bottomMargin=50)
 
-    # Styles
     styles = getSampleStyleSheet()
     
-    # Custom Colors
-    col_primary = colors.HexColor('#2c3e50')  # Dark blue
-    col_secondary = colors.HexColor('#e74c3c')  # Red for verification
-    col_success = colors.HexColor('#27ae60')  # Green for approval
-    col_warning = colors.HexColor('#f39c12')  # Orange for denial
-    col_light_bg = colors.HexColor('#ecf0f1')  # Light gray background
+    col_primary = colors.HexColor('#2c3e50')
+    col_secondary = colors.HexColor('#e74c3c')
+    col_success = colors.HexColor('#27ae60')
+    col_warning = colors.HexColor('#f39c12')
+    col_light_bg = colors.HexColor('#ecf0f1')
     
-    # Custom Styles
-    style_title = ParagraphStyle('MainTitle', parent=styles['Heading1'], 
+    style_title = ParagraphStyle('ann_MainTitle', parent=styles['Heading1'], 
                                 textColor=col_primary, fontSize=20, alignment=1,
                                 spaceAfter=10, spaceBefore=0)
     
-    style_subtitle = ParagraphStyle('SubTitle', parent=styles['Normal'],
+    style_subtitle = ParagraphStyle('ann_SubTitle', parent=styles['Normal'],
                                    textColor=col_secondary, fontSize=12, alignment=1,
                                    fontName='Helvetica-Bold', spaceAfter=20)
     
-    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], 
+    style_h2 = ParagraphStyle('ann_SecTitle', parent=styles['Heading2'], 
                              textColor=col_primary, backColor=col_light_bg,
                              borderPadding=8, borderLeftWidth=4, borderColor=col_secondary,
                              spaceBefore=15, spaceAfter=10)
     
-    style_h3 = ParagraphStyle('SubSecTitle', parent=styles['Heading3'],
+    style_h3 = ParagraphStyle('ann_SubSecTitle', parent=styles['Heading3'],
                              textColor=col_secondary, spaceBefore=10, spaceAfter=5)
     
-    style_normal = ParagraphStyle('Body', parent=styles['Normal'], 
+    style_normal = ParagraphStyle('ann_Body', parent=styles['Normal'], 
                                  leading=14, fontSize=10, spaceAfter=6)
     
-    style_bullet = ParagraphStyle('Bullet', parent=style_normal, 
+    style_bullet = ParagraphStyle('ann_Bullet', parent=style_normal, 
                                  leftIndent=20, bulletIndent=10)
     
     Story = []
 
-    # --- HEADER ---
     Story.append(Paragraph("ANNOTATOR VERIFICATION GUIDE", style_title))
     Story.append(Paragraph(f"Patient ID: {patient_id} | For Internal QA Use Only", style_subtitle))
     Story.append(Spacer(1, 10))
     
-    # --- EXTRACT MEDICAL CODES FROM AI RESPONSE ---
     import re
     
     target_cpt = "N/A"
@@ -262,69 +248,56 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     all_cpt_codes = []
     all_icd_codes = []
     
-    # Extract from case explanation text (AI should include codes here per prompt)
     case_text = annotator_summary.case_explanation
     
-    # Extract target procedure (should be at the start: "Target Procedure: CPT XXXXX - Description")
     target_match = re.search(r'Target Procedure:\s*CPT\s*(\d+)\s*[-–]\s*([^\n]+)', case_text, re.IGNORECASE)
     if target_match:
         target_cpt = target_match.group(1).strip()
         target_cpt_desc = target_match.group(2).strip()
     
-    # Extract all CPT codes (format: "CPT XXXXX - Description" or "CPT XXXXX: Description")
     cpt_matches = re.findall(r'CPT\s*(\d+)\s*[-–:]\s*([^\n,;]+)', case_text, re.IGNORECASE)
     for code, desc in cpt_matches:
         code_entry = f"{code.strip()} - {desc.strip()}"
         if code_entry not in all_cpt_codes:
             all_cpt_codes.append(code_entry)
     
-    # Extract all ICD-10 codes (format: "ICD-10: XXX.XX - Description" or "ICD XXX.XX - Description")
     icd_matches = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', case_text, re.IGNORECASE)
     for code, desc in icd_matches:
         code_entry = f"{code.strip()} - {desc.strip()}"
         if code_entry not in all_icd_codes:
             all_icd_codes.append(code_entry)
     
-    # Also check medical details section for additional codes
     medical_text = annotator_summary.medical_details
     
-    # Extract additional ICD codes from medical details
     icd_matches_2 = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', medical_text, re.IGNORECASE)
     for code, desc in icd_matches_2:
         code_entry = f"{code.strip()} - {desc.strip()}"
         if code_entry not in all_icd_codes:
             all_icd_codes.append(code_entry)
     
-    # Fallback: try to extract from persona if available
     if patient_persona and (not all_cpt_codes or not all_icd_codes):
-        # Extract from bio_narrative if available
         if hasattr(patient_persona, 'bio_narrative') and patient_persona.bio_narrative:
             bio_text = patient_persona.bio_narrative
             
-            # Extract CPT from bio
             bio_cpt_matches = re.findall(r'CPT\s*(\d+)\s*[-–:]\s*([^\n,;]+)', bio_text, re.IGNORECASE)
             for code, desc in bio_cpt_matches:
                 code_entry = f"{code.strip()} - {desc.strip()}"
                 if code_entry not in all_cpt_codes:
                     all_cpt_codes.append(code_entry)
             
-            # Extract ICD from bio
             bio_icd_matches = re.findall(r'ICD[-\s]*10?\s*:?\s*([A-Z]\d{2}(?:\.\d{1,2})?)\s*[-–:]\s*([^\n,;]+)', bio_text, re.IGNORECASE)
             for code, desc in bio_icd_matches:
                 code_entry = f"{code.strip()} - {desc.strip()}"
                 if code_entry not in all_icd_codes:
                     all_icd_codes.append(code_entry)
     
-    # --- CASE OVERVIEW BOX (SIMPLIFIED) ---
-    # Only show Expected Outcome and Notes - no target procedure or CPT
     case_overview_data = [
         [Paragraph("<b>Expected Outcome:</b>", style_normal), 
          Paragraph(f"<b>{annotator_summary.verification_pointers.expected_outcome}</b>", 
-                  ParagraphStyle('outcome', parent=style_normal, 
+                  ParagraphStyle('ann_outcome', parent=style_normal, 
                                 textColor=col_success if 'approval' in annotator_summary.verification_pointers.expected_outcome.lower() else col_warning))]
     ]
     
-    # Add notes if available
     if hasattr(annotator_summary.verification_pointers, 'notes') and annotator_summary.verification_pointers.notes:
         notes_text = "<br/>".join([f"• {note}" for note in annotator_summary.verification_pointers.notes])
         case_overview_data.append([
@@ -343,8 +316,6 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(case_table)
     Story.append(Spacer(1, 15))
     
-    # --- PRIOR AUTHORIZATION REQUEST FORM ---
-    # Check if new PA fields exist
     pa_request = getattr(patient_persona, 'pa_request', None)
     procedure_facility = getattr(patient_persona, 'procedure_facility', None)
     expected_procedure_date = getattr(patient_persona, 'expected_procedure_date', None)
@@ -354,7 +325,6 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
         Story.append(Paragraph("II. PRIOR AUTHORIZATION REQUEST", style_h2))
         Story.append(Spacer(1, 10))
         
-        # Procedure Information Box
         proc_info_text = f"""
         <b>Requested Procedure:</b> {procedure_requested or 'N/A'}<br/>
         <b>Expected Procedure Date:</b> {expected_procedure_date}<br/>
@@ -379,15 +349,26 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
         Story.append(proc_table)
         Story.append(Spacer(1, 15))
         
-        # PA Request Details
+        prev_treats = getattr(pa_request, 'previous_treatments', 'None')
+        if isinstance(prev_treats, list):
+            prev_treats = "<br/>".join(prev_treats)
+        if len(prev_treats) > 1000:
+            prev_treats = prev_treats[:997] + "..."
+
+        exp_outs = getattr(pa_request, 'expected_outcome', 'N/A')
+        if isinstance(exp_outs, list):
+            exp_outs = "<br/>".join(exp_outs)
+        if len(exp_outs) > 1000:
+             exp_outs = exp_outs[:997] + "..."
+
         pa_data = [
             [Paragraph("<b>PRIOR AUTHORIZATION DETAILS</b>", style_h3), ""], # Changed style_label to style_h3
             ["Requesting Provider:", Paragraph(getattr(pa_request, 'requesting_provider', 'N/A'), style_normal)],
             ["Urgency Level:", Paragraph(getattr(pa_request, 'urgency_level', 'N/A'), style_normal)],
-            ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
+            ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A')[:1000], style_normal)],
             ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
-            ["Previous Treatments:", Paragraph(getattr(pa_request, 'previous_treatments', 'None'), style_normal)],
-            ["Expected Outcome:", Paragraph(getattr(pa_request, 'expected_outcome', 'N/A'), style_normal)],
+            ["Previous Treatments:", Paragraph(prev_treats, style_normal)],
+            ["Expected Outcome:", Paragraph(exp_outs, style_normal)],
         ]
         
         pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
@@ -396,23 +377,18 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
             ('GRID', (0,0), (-1,-1), 1, colors.grey),
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('WORDWRAP', (0,0), (-1,-1), True),
         ]))
         Story.append(pa_table)
         Story.append(Spacer(1, 20))
-    
-    # --- REMOVED: Medical Coding Summary section (as per user request) ---
-    # All CPT and ICD codes are now in the case explanation text
-    
-    # --- SECTION 1: CASE EXPLANATION ---
+        
     Story.append(Paragraph("1. Case Explanation", style_h2))
     Story.append(Spacer(1, 5))
     
-    # Format the case explanation text
     case_exp_text = annotator_summary.case_explanation.replace('\n', '<br/>')
     Story.append(Paragraph(case_exp_text, style_normal))
     Story.append(Spacer(1, 10))
     
-    # --- SECTION 2: MEDICAL DETAILS ---
     Story.append(Paragraph("2. Medical Details (Persona-Specific)", style_h2))
     Story.append(Spacer(1, 5))
     
@@ -420,7 +396,6 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(Paragraph(medical_details_text, style_normal))
     Story.append(Spacer(1, 10))
     
-    # --- SECTION 3: PATIENT PROFILE SUMMARY ---
     Story.append(Paragraph("3. Patient Profile Summary", style_h2))
     Story.append(Spacer(1, 5))
     
@@ -428,35 +403,30 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     Story.append(Paragraph(profile_text, style_normal))
     Story.append(Spacer(1, 10))
     
-    # --- SECTION 4: VERIFICATION POINTERS ---
     Story.append(Paragraph("4. Verification Checklist", style_h2))
     Story.append(Spacer(1, 5))
     
     vp = annotator_summary.verification_pointers
     
-    # Key Verification Items
     if vp.key_verification_items:
         Story.append(Paragraph("<b>Key Verification Items:</b>", style_h3))
         for item in vp.key_verification_items:
             Story.append(Paragraph(f"☐ {item}", style_bullet))
         Story.append(Spacer(1, 8))
     
-    # Supporting Evidence Checklist
     if vp.supporting_evidence_checklist:
         Story.append(Paragraph("<b>Supporting Evidence Checklist:</b>", style_h3))
         for evidence in vp.supporting_evidence_checklist:
             Story.append(Paragraph(f"✓ {evidence}", style_bullet))
         Story.append(Spacer(1, 8))
     
-    # Red Flags
     if vp.red_flags and len(vp.red_flags) > 0:
         Story.append(Paragraph("<b>Red Flags to Watch For:</b>", style_h3))
         for flag in vp.red_flags:
             Story.append(Paragraph(f"⚠ {flag}", 
-                                 ParagraphStyle('redflag', parent=style_bullet, textColor=col_warning)))
+                                 ParagraphStyle('ann_redflag', parent=style_bullet, textColor=col_warning)))
         Story.append(Spacer(1, 8))
     
-    # Document References
     if vp.document_references and len(vp.document_references) > 0:
         Story.append(Paragraph("<b>Document References:</b>", style_h3))
         Story.append(Spacer(1, 5))
@@ -480,15 +450,15 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('TOPPADDING', (0,0), (-1,-1), 6),
                 ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+                ('WORDWRAP', (0,0), (-1,-1), True),
             ]))
             Story.append(doc_ref_table)
     
     Story.append(Spacer(1, 15))
     
-    # --- FOOTER ---
     footer_text = f"<i>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | This document is for internal QA purposes only</i>"
     Story.append(Paragraph(footer_text, 
-                          ParagraphStyle('footer', parent=style_normal, 
+                          ParagraphStyle('ann_footer', parent=style_normal, 
                                         fontSize=8, textColor=colors.grey, alignment=1)))
 
     doc.build(Story)
@@ -535,13 +505,13 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     col_light_blue = colors.HexColor("#f0f7fb")
     
     # Custom Styles
-    style_title = ParagraphStyle('MainTitle', parent=styles['Heading1'], textColor=col_primary, 
+    style_title = ParagraphStyle('summ_MainTitle', parent=styles['Heading1'], textColor=col_primary, 
                                borderPadding=10, borderWidth=0, borderBottomWidth=2, borderColor=col_primary)
     
-    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], textColor=col_secondary, backColor=col_light_blue,
+    style_h2 = ParagraphStyle('summ_SecTitle', parent=styles['Heading2'], textColor=col_secondary, backColor=col_light_blue,
                               borderPadding=8, borderWidth=0, borderLeftWidth=4, borderColor=col_secondary, spaceBefore=20)
     
-    style_normal = ParagraphStyle('Normal', parent=styles['Normal'])
+    style_normal = ParagraphStyle('summ_Normal', parent=styles['Normal'])
 
     Story = []
     
@@ -699,7 +669,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
             if necessity_points:
                 Story.append(Paragraph("<b>Clinical Necessity:</b>", style_normal))
                 for point in necessity_points:
-                    Story.append(Paragraph(f"• {point}", ParagraphStyle('bullet', leftIndent=20, parent=style_normal)))
+                    Story.append(Paragraph(f"• {point}", ParagraphStyle('ann_bullet', leftIndent=20, parent=style_normal)))
                 Story.append(Spacer(1, 10))
 
     doc.build(Story)
@@ -727,22 +697,22 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
     col_accent = colors.HexColor("#e67e22") # Orange
     col_bg = colors.HexColor("#ecf0f1")
     
-    style_tit = ParagraphStyle('MainTitle', parent=styles['Heading1'], textColor=col_header, 
+    style_tit = ParagraphStyle('persona_MainTitle', parent=styles['Heading1'], textColor=col_header, 
                                alignment=1, fontSize=24, spaceAfter=20)
     
-    style_h2 = ParagraphStyle('SecTitle', parent=styles['Heading2'], textColor=col_header, backColor=col_bg,
+    style_h2 = ParagraphStyle('persona_SecTitle', parent=styles['Heading2'], textColor=col_header, backColor=col_bg,
                               borderPadding=6, spaceBefore=15, spaceAfter=10)
     
-    style_h3 = ParagraphStyle('SubTitle', parent=styles['Heading3'], textColor=col_accent, spaceBefore=10)
+    style_h3 = ParagraphStyle('persona_SubTitle', parent=styles['Heading3'], textColor=col_accent, spaceBefore=10)
     
-    style_normal = ParagraphStyle('Body', parent=styles['Normal'], leading=14, fontSize=10)
-    style_label = ParagraphStyle('Lbl', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=10)
+    style_normal = ParagraphStyle('persona_Body', parent=styles['Normal'], leading=14, fontSize=10)
+    style_label = ParagraphStyle('persona_Lbl', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=10)
     
     Story = []
 
     # --- HEADER ---
     Story.append(Paragraph(f"CONFIDENTIAL PATIENT MASTER RECORD", style_tit))
-    Story.append(Paragraph(f"<b>PATIENT ID: {patient_id}  |  MRN: {mrn}</b>", ParagraphStyle('pid', parent=style_normal, alignment=1, fontSize=12)))
+    Story.append(Paragraph(f"<b>PATIENT ID: {patient_id}  |  MRN: {mrn}</b>", ParagraphStyle('persona_pid', parent=style_normal, alignment=1, fontSize=12)))
     Story.append(Spacer(1, 15))
     
     # --- FACE SHEET (Structured Data) ---
@@ -895,8 +865,8 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ["Urgency Level:", getattr(pa_request, 'urgency_level', 'N/A')],
             ["Clinical Justification:", Paragraph(getattr(pa_request, 'clinical_justification', 'N/A'), style_normal)],
             ["Supporting Diagnoses:", Paragraph("<br/>".join(getattr(pa_request, 'supporting_diagnoses', ['N/A'])), style_normal)],
-            ["Previous Treatments:", getattr(pa_request, 'previous_treatments', 'None'), style_normal],
-            ["Expected Outcome:", getattr(pa_request, 'expected_outcome', 'N/A'), style_normal],
+            ["Previous Treatments:", Paragraph(getattr(pa_request, 'previous_treatments', 'None'), style_normal)],
+            ["Expected Outcome:", Paragraph(getattr(pa_request, 'expected_outcome', 'N/A'), style_normal)],
         ]
         
         pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
@@ -1100,7 +1070,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             if line.startswith('<b><font size=12>'): # It was a header
                  Story.append(Paragraph(line, style_h3))
             elif line.startswith('• '):
-                 Story.append(Paragraph(line, ParagraphStyle('bull', parent=style_normal, leftIndent=15)))
+                 Story.append(Paragraph(line, ParagraphStyle('persona_bull', parent=style_normal, leftIndent=15)))
             else:
                  Story.append(Paragraph(line, style_normal))
             Story.append(Spacer(1, 4))
@@ -1131,22 +1101,23 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                  Story.append(Spacer(1, 5))
             
             # Content
-            Story.append(Paragraph("Report Text:", ParagraphStyle('lbl', parent=style_normal, fontName='Helvetica-Bold')))
             
             # Format markdown to styled text with graceful fallback
-            formatted_rep = format_clinical_text(rep.content)
-            rep_text = formatted_rep[:2000] + "..." if len(formatted_rep) > 2000 else formatted_rep
-            rep_text = rep_text.replace('\n', '<br/>')
+            rep_text = format_report_content(rep.content)
             
             try:
                 Story.append(Paragraph(rep_text, style_normal))
             except ValueError:
                 import html
-                safe_text = html.escape(rep.content[:2000]).replace('\n', '<br/>')
+                safe_text = html.escape(rep.content).replace('\n', '<br/>')
                 Story.append(Paragraph(safe_text, style_normal))
             
             Story.append(Spacer(1, 15))
-            Story.append(Paragraph("_" * 60, style_normal)) # Separator
+            Story.append(Spacer(1,6))
+            Story.append(Table([[""]], colWidths=[6.4*inch], style=[
+                ('LINEABOVE',(0,0),(-1,-1),0.5,colors.grey)
+            ]))
+            Story.append(Spacer(1,6))
 
     doc.build(Story)
     return file_path

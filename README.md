@@ -1,4 +1,4 @@
-# Clinical Data Generator (v2.0)
+# Clinical Data Generator (v3.0)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -15,13 +15,13 @@ The fastest way to use the generator is through the interactive browser interfac
 
 ```bash
 # Mac / Linux
-API_PORT=5001 venv/bin/python api_server.py
+API_PORT=410 venv/bin/python api_server.py
 
 # Windows
-set API_PORT=5001 && venv\Scripts\python api_server.py
+set API_PORT=410 && venv\Scripts\python api_server.py
 ```
 
-> **Note (macOS):** Port 5000 is reserved by AirPlay Receiver by default. Use `API_PORT=5001` or disable AirPlay Receiver in System Settings → General → AirDrop & Handoff.
+> **Note (macOS):** Port 5000 is reserved by AirPlay Receiver by default. The default port is now `410`.
 
 **Step 2:** Open `ui/index.html` in your browser (no web server needed — just double-click the file).
 
@@ -50,8 +50,16 @@ python generator.py
 | **`[ID],[ID],[ID]`** | Batch mode for specific IDs. | `221,222,223` |
 | **`*`** | Runs Batch Mode for all missing patients. | `*` |
 | **`q`** / **`exit`** | Quits the application. | `q` |
-| **`--`** | Shows menu to delete specific artifact types. | `--` |
-| **`--[ID]`** | Deletes all data for a specific patient. | `--225` |
+
+#### Persona Removal CLI
+
+To completely wipe out all generated history, data, and database entries for a specific Persona, you can run the standalone remove utility:
+
+```bash
+python remove_persona.py <Patient_ID>
+# Or to skip confirmation:
+python remove_persona.py -f <Patient_ID>
+```
 
 ---
 
@@ -196,8 +204,8 @@ GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
 # Output directory (absolute path recommended)
 OUTPUT_DIR=/path/to/generated_output
 
-# API server port (default: 5000; use 5001 on macOS)
-API_PORT=5001
+# API server port (default: 410)
+API_PORT=410
 
 # Optional: Web Search
 ENABLE_WEB_SEARCH=false
@@ -245,6 +253,7 @@ pdgenerator/
 ├── data_loader.py              # Excel case data loading
 ├── history_manager.py          # Per-patient generation history
 ├── purge_manager.py            # Data cleanup utilities
+├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
 ├── run.sh                      # Mac/Linux CLI launcher
@@ -278,7 +287,7 @@ venv\Scripts\activate
 python api_server.py
 ```
 
-*The server runs on port 5000 by default. Access the UI by opening `ui/index.html` in your browser.*
+*The server runs on port 410 by default. Access the UI by opening `ui/index.html` in your browser.*
 
 **Stop the Server:**
 
@@ -287,7 +296,7 @@ python api_server.py
 
   ```bash
   # Find process ID (PID)
-  lsof -i :5000
+  lsof -i :410
   # Kill process
   kill -9 <PID>
   ```
@@ -304,7 +313,7 @@ The `api_server.py` Flask server exposes multiple endpoints to power the UI and 
 ### 📚 Interactive Swagger API Docs
 
 We have integrated full **Swagger OpenAPI documentation**. To explore the interactive API details, test endpoints, and view payloads, visit:
-👉 **[http://localhost:5001/apidocs](http://localhost:5001/apidocs)** *(assuming port 5001)*
+👉 **[http://localhost:410/apidocs](http://localhost:410/apidocs)** *(assuming port 410)*
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |

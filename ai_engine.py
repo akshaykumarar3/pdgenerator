@@ -188,6 +188,8 @@ class PatientProvider(BaseModel):
     generalPractitioner: str = Field(..., description="Full name of primary care provider e.g. 'Dr. Jane Smith, MD'")
     formatted_npi: str = Field(..., description="National Provider Identifier (10 digits) e.g. '1234567890'")
     managingOrganization: str = Field(..., description="Name of managing clinic/hospital e.g. 'Mercy General Hospital'")
+    address: str = Field(default="123 Medical Center Blvd, Suite 100, City, TX 12345", description="Full address of the provider's clinic/office")
+    phone: str = Field(default="555-019-8273", description="Provider's office phone number")
 
 class PatientLink(BaseModel):
     """Link to other patient records."""
@@ -247,6 +249,31 @@ class TherapyEntry(BaseModel):
     status: str = Field(..., description="'Active', 'Completed', 'Discontinued'")
     reason: str = Field(..., description="Clinical reason/referral justification")
     notes: str = Field(default="", description="Additional clinical notes or observations")
+
+class ImagingEntry(BaseModel):
+    """A single imaging study record."""
+    type: str = Field(..., description="Type of imaging e.g., 'CT Abdomen W/O Contrast', 'MRI Brain'")
+    date: str = Field(..., description="Date of study (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Ordering provider")
+    facility: str = Field(default="", description="Facility where imaging was performed")
+    findings: str = Field(..., description="Impression and clinical findings")
+
+class ReportEntry(BaseModel):
+    """A single lab or pathology report record."""
+    type: str = Field(..., description="Type of report e.g., 'CBC', 'CMP', 'Biopsy'")
+    date: str = Field(..., description="Date of report (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Ordering provider")
+    results: str = Field(..., description="Key results or values")
+    notes: str = Field(default="", description="Additional clinical notes")
+
+class ProcedureEntry(BaseModel):
+    """A single clinical procedure record."""
+    name: str = Field(..., description="Procedure name e.g., 'Appendectomy', 'Colonoscopy'")
+    date: str = Field(..., description="Date performed (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Performing provider or surgeon")
+    facility: str = Field(default="", description="Facility where procedure was performed")
+    reason: str = Field(default="", description="Indication or reason for procedure")
+    notes: str = Field(default="", description="Complications or additional notes")
 
 
 class VitalSigns(BaseModel):
@@ -380,10 +407,22 @@ class PatientPersona(BaseModel):
         description="Observational behavioral notes: medication adherence, lifestyle habits, mental health flags, substance use history"
     )
 
-    # ── Encounters & Social History ─────────────────────────────────────────
+    # ── Encounters & Clinical History ───────────────────────────────────────
     encounters: List[EncounterRecord] = Field(
         default_factory=list,
         description="2-5 chronological clinical encounters, each with full SOAP note, vitals, care team, and procedures"
+    )
+    images: List[ImagingEntry] = Field(
+        default_factory=list,
+        description="Prior imaging studies related to the chief complaint or history"
+    )
+    reports: List[ReportEntry] = Field(
+        default_factory=list,
+        description="Prior laboratory and pathology reports"
+    )
+    procedures: List[ProcedureEntry] = Field(
+        default_factory=list,
+        description="Prior surgical and clinical procedures performed"
     )
     social_history: Optional[SocialHistory] = Field(
         None,
@@ -479,7 +518,7 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
-def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "", existing_filenames: List[str] = None) -> 'ClinicalDataPayload':
+def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "") -> 'ClinicalDataPayload':
 
     """
     Calls AI to generate clinical data (Persona + Documents) based on the patient state and plan.
@@ -510,8 +549,7 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         patient_state=patient_state,
         document_plan=full_document_plan,
         user_feedback=user_feedback,
-        history_context=history_context,
-        existing_filenames=existing_filenames or []
+        history_context=history_context
     )
 
     # Use create_with_completion to get usage stats
@@ -668,7 +706,15 @@ def generate_clinical_image(context: str, image_type: str, output_path: str = No
                 quality="standard",
                 n=1,
             )
-            return response.data[0].url
+            image_url = response.data[0].url
+            
+            if output_path:
+                import requests
+                img_data = requests.get(image_url).content
+                with open(output_path, 'wb') as handler:
+                    handler.write(img_data)
+                return output_path
+            return image_url
 
     except Exception as e:
         print(f"   ⚠️ Image Generation Failed: {e}")

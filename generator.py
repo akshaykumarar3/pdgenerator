@@ -291,18 +291,6 @@ def process_patient_workflow(
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
     
     patient_report_folder = get_patient_report_folder(patient_id)
-    existing_titles: list[str] = []
-    if os.path.isdir(patient_report_folder):
-        for f in os.listdir(patient_report_folder):
-            if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-"):
-                parts = os.path.splitext(f)[0].split("-")
-                if len(parts) >= 4:
-                    title = "-".join(parts[3:])
-                    title = title[:-4] if title.endswith("-NAF") else title
-                    existing_titles.append(title)
-    if existing_titles:
-        print(f"   📥 {len(existing_titles)} existing report(s) found (AI will avoid duplicates).")
-
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
     print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     try:
@@ -312,7 +300,6 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_filenames=existing_titles,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
@@ -384,21 +371,56 @@ def process_patient_workflow(
             try:
                 import json
                 structured_data = json.loads(doc.content)
+                
+                provider_obj = result.patient_persona.provider if result.patient_persona else None
+                if provider_obj:
+                    provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
+                    provider_address = getattr(provider_obj, "address", "N/A")
+                    provider_phone = getattr(provider_obj, "phone", "N/A")
+                else:
+                    provider_str = "Unknown"
+                    provider_address = "N/A"
+                    provider_phone = "N/A"
+                
+                patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
+                payer_obj = result.patient_persona.payer if result.patient_persona else None
+                plan_type = getattr(payer_obj, "plan_type", "N/A") if payer_obj else "N/A"
+
                 metadata = {
                     "patient_id": patient_id,
                     "mrn": current_mrn,
                     "patient_name": p_full_name or "Unknown",
                     "dob": result.patient_persona.dob if result.patient_persona else "",
                     "gender": result.patient_persona.gender if result.patient_persona else "",
+                    "patient_phone": patient_phone,
                     "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
-                    "provider": result.patient_persona.provider if result.patient_persona else "Unknown",
+                    "provider": provider_str,
+                    "provider_address": provider_address,
+                    "provider_phone": provider_phone,
                     "facility": "Diagnostic Center",
                     "accession_id": f"ACC-{patient_id}-{seq_str}",
-                    "doc_type": doc.title_hint
+                    "doc_type": doc.title_hint,
+                    "plan_type": plan_type
                 }
                 formatted_content = format_clinical_document(metadata, structured_data)
             except Exception as e:
                 print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
+
+            image_path = None
+            imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
+            if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
+                print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
+                img_filename = f"{final_filename_base}_img.png"
+                temp_image_path = os.path.join(patient_report_folder, img_filename)
+                
+                from ai_engine import generate_clinical_image
+                # Pass a slice of the document description to guide DALL-E
+                image_context = f"Visual supporting document {doc.title_hint}: {doc.content[:500]}"
+                generated_path = generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                
+                if generated_path:
+                    image_path = generated_path
+                    print(f"      🖼️  Saved image to {image_path}")
 
             pdf_path = pdf_generator.create_patient_pdf(
                 patient_id=patient_id,
@@ -407,7 +429,7 @@ def process_patient_workflow(
                 patient_persona=result.patient_persona,
                 doc_metadata=doc,
                 base_output_folder=patient_report_folder,
-                image_path=None,
+                image_path=image_path,
                 version=doc_version,
             )
             rf = os.path.basename(pdf_path)
@@ -553,34 +575,6 @@ def main():
         if target_input.lower() in {"q", "quit", "exit"}:
             print("\n👋 Goodbye!\n")
             break
-
-        # ── PURGE ─────────────────────────────────────────────────────────────
-        if target_input.startswith("--"):
-            patient_part = target_input[2:].strip()
-            if patient_part:
-                purge_manager.purge_patient(patient_part)
-            else:
-                print("\n📋 What to delete?")
-                print("   [1] ALL (persona + reports + summary)")
-                print("   [2] Reports + Summary")
-                print("   [3] Summary only")
-                print("   [4] Reports only")
-                print("   [5] Persona only")
-                print("   [6] Cancel")
-                purge_choice = input("   Choice [6]: ").strip() or "6"
-                actions = {
-                    "1": purge_manager.purge_all,
-                    "2": purge_manager.purge_reports_and_summaries,
-                    "3": purge_manager.purge_summaries_only,
-                    "4": purge_manager.purge_reports_only,
-                    "5": purge_manager.purge_personas,
-                }
-                action = actions.get(purge_choice)
-                if action:
-                    action()
-                else:
-                    print("   ❌ Cancelled.")
-            continue
 
         # ── PARSE FEEDBACK SUFFIX ──────────────────────────────────────────────
         feedback   = ""
