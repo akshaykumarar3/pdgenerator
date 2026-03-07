@@ -7,39 +7,30 @@
 
 ## 🚀 Quick Start
 
-### Option A — Web UI (Recommended)
+### 🏁 Platform-Independent Launch
 
-The fastest way to use the generator is through the interactive browser interface.
+To simplify setup, we provide launch scripts for both Windows and macOS/Linux.
 
-**Step 1:** Start the API server
+#### 1. Start the API Server (Web UI)
+The Web UI is the recommended way to use the generator.
 
-```bash
-# Mac / Linux
-API_PORT=410 venv/bin/python api_server.py
+- **Windows**: Run `run_api.bat`
+- **macOS / Linux**: Run `chmod +x run_api.sh && ./run_api.sh`
 
-# Windows
-set API_PORT=410 && venv\Scripts\python api_server.py
-```
+> **Note**: The default port is `410` (to avoid macOS port 5000 conflicts). Double-click `ui/index.html` to open the studio.
 
-> **Note (macOS):** Port 5000 is reserved by AirPlay Receiver by default. The default port is now `410`.
-
-**Step 2:** Open `ui/index.html` in your browser (no web server needed — just double-click the file).
+#### 2. Start the CLI (Terminal Mode)
+- **Windows**: Run `run.bat`
+- **macOS / Linux**: Run `chmod +x run.sh && ./run.sh`
 
 ---
 
-### Option B — Command Line
+### 📦 Manual Setup (If scripts fail)
 
-```bash
-# Mac / Linux
-./run.sh
-# OR
-python3 generator.py
-
-# Windows
-run.bat
-# OR
-python generator.py
-```
+1. **Environment**: Python 3.10+
+2. **Virtual Env**: `python -m venv venv`
+3. **Dependencies**: `pip install -r requirements.txt`
+4. **Credentials**: Copy `core/.env.example` to `cred/.env` and add your API keys.
 
 #### Interactive Commands
 
@@ -256,7 +247,9 @@ pdgenerator/
 ├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
+├── run_api.bat                 # Windows API launcher
 ├── run.sh                      # Mac/Linux CLI launcher
+├── run_api.sh                  # Mac/Linux API launcher
 └── requirements.txt
 ```
 

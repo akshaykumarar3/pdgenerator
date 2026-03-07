@@ -67,7 +67,7 @@ def purge_all(force: bool = False):
 
     # 6. Patient DB
     try:
-        with open(DB_PATH, 'w') as f:
+        with open(DB_PATH, 'w', encoding='utf-8') as f:
             json.dump({}, f)
         print(f"      ✅ Reset: {DB_PATH}")
     except IOError:
@@ -95,7 +95,7 @@ def purge_personas(force: bool = False):
 
     # 1. DB
     try:
-        with open(DB_PATH, 'w') as f:
+        with open(DB_PATH, 'w', encoding='utf-8') as f:
             json.dump({}, f)
         print(f"      ✅ Reset: {DB_PATH}")
     except IOError:
@@ -281,7 +281,7 @@ def purge_patient(patient_id: str, force: bool = False):
     data = {}
     if os.path.exists(DB_PATH):
         try:
-            with open(DB_PATH, 'r') as f:
+            with open(DB_PATH, 'r', encoding='utf-8') as f:
                 data = json.load(f)
         except (json.JSONDecodeError, IOError):
             pass
@@ -289,7 +289,7 @@ def purge_patient(patient_id: str, force: bool = False):
     if str(patient_id) in data:
         del data[str(patient_id)]
         try:
-            with open(DB_PATH, 'w') as f:
+            with open(DB_PATH, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2)
             print(f"      ✅ Removed from DB: {patient_id}")
         except IOError:

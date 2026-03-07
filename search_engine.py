@@ -68,7 +68,7 @@ class SearchCache:
             return None
         
         try:
-            with open(cache_path, 'r') as f:
+            with open(cache_path, 'r', encoding='utf-8') as f:
                 cached = json.load(f)
             
             # Check if expired
@@ -87,7 +87,7 @@ class SearchCache:
         cache_path = self._get_cache_path(key)
         
         try:
-            with open(cache_path, 'w') as f:
+            with open(cache_path, 'w', encoding='utf-8') as f:
                 json.dump({
                     'timestamp': datetime.now().isoformat(),
                     'data': data

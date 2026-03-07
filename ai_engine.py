@@ -18,9 +18,9 @@ import httpx # For disabling HTTP/2 to prevent hangs
 import prompts
 
 
-# Load .env
-# Load .env (from cred/ directory)
-load_dotenv("cred/.env")
+# Load .env (from cred/ directory relative to file location)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 
 # PROVIDER CONFIG
 PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -531,7 +531,7 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         tmpl_path = os.path.join(templates_dir, tmpl_file)
         if os.path.exists(tmpl_path):
             try:
-                with open(tmpl_path, "r") as f:
+                with open(tmpl_path, "r", encoding='utf-8') as f:
                     loaded_templates[tmpl_file] = json.load(f)
             except Exception as e:
                 print(f"⚠️ Failed to load template {tmpl_file}: {e}")

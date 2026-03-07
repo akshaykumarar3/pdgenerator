@@ -33,7 +33,7 @@ def load_patient_state(patient_id: str) -> Dict[str, Any]:
     """Loads a previously saved patient state from the debug folder."""
     path = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
     if os.path.exists(path):
-        with open(path, "r") as f:
+        with open(path, "r", encoding='utf-8') as f:
             return json.load(f)
     return {}
 
@@ -41,7 +41,7 @@ def save_patient_state(patient_id: str, state: Dict[str, Any]):
     """Saves the state to the debug folder."""
     ensure_debug_dir()
     path = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
-    with open(path, "w") as f:
+    with open(path, "w", encoding='utf-8') as f:
         json.dump(state, f, indent=2)
 
 def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str, Any]:

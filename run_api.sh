@@ -1,5 +1,5 @@
 #!/bin/bash
-# PD Generator - Linux/macOS CLI Launcher
+# PD Generator - Linux/macOS API Server Launcher
 
 if [ ! -d "venv" ]; then
     echo "[ERROR] Virtual environment 'venv' not found."
@@ -7,8 +7,7 @@ if [ ! -d "venv" ]; then
     exit 1
 fi
 
+echo "[LAUNCH] Starting PD Generator API Server..."
+export API_PORT=410
 source venv/bin/activate
-python3 generator.py "$@"
-if [ $? -ne 0 ]; then
-    echo "[CRASH] Generator exited with error. Check the logs."
-fi
+python3 api_server.py

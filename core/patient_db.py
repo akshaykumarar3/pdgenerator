@@ -6,7 +6,7 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "patients_db.json")
 
 def _init_db():
     if not os.path.exists(DB_PATH):
-        with open(DB_PATH, 'w') as f:
+        with open(DB_PATH, 'w', encoding='utf-8') as f:
             json.dump({}, f)
 
 def load_patient(patient_id: str) -> Optional[Dict]:
@@ -16,12 +16,12 @@ def load_patient(patient_id: str) -> Optional[Dict]:
     """
     _init_db()
     try:
-        with open(DB_PATH, 'r') as f:
+        with open(DB_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
     except (json.JSONDecodeError, ValueError):
         # Handle corrupted or empty JSON file
         print(f"   ⚠️  Warning: patients_db.json was corrupted. Reinitializing...")
-        with open(DB_PATH, 'w') as f:
+        with open(DB_PATH, 'w', encoding='utf-8') as f:
             json.dump({}, f)
         data = {}
     
@@ -38,7 +38,7 @@ def save_patient(patient_id: str, patient_data: Dict):
     
     # Read strict
     try:
-        with open(DB_PATH, 'r') as f:
+        with open(DB_PATH, 'r', encoding='utf-8') as f:
             current_db = json.load(f)
     except (json.JSONDecodeError, ValueError):
         # Handle corrupted or empty JSON file
@@ -52,7 +52,7 @@ def save_patient(patient_id: str, patient_data: Dict):
     current_db[key].update(patient_data)
     
     # Write back
-    with open(DB_PATH, 'w') as f:
+    with open(DB_PATH, 'w', encoding='utf-8') as f:
         json.dump(current_db, f, indent=2)
     
     print(f"      💾 Patient {patient_id} ({patient_data.get('name', 'Unknown')}) saved to Core DB.")
@@ -64,7 +64,7 @@ def get_all_patient_names() -> list[str]:
     """
     _init_db()
     try:
-        with open(DB_PATH, 'r') as f:
+        with open(DB_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
         
         names = []
