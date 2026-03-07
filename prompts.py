@@ -212,6 +212,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           The `content` field MUST contain the fully populated JSON representation of the template as a STRING.
           Do NOT attempt to use markdown or raw text in `content`—it MUST be the stringified JSON matching the template structure.
           The `title_hint` field should match the template's title or logically reflect it.
+        - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
+          If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents and add them to the `documents` list.
         - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
         - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
@@ -428,15 +430,17 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
 
     return f"""
     **STRICT IDENTITY LOCK (EXISTING PATIENT) — CONSISTENCY ENFORCEMENT:**
-    This patient already exists in the database. ALL fields below are IMMUTABLE. DO NOT change any of them.
-    You MUST reproduce these values verbatim in the output persona.
+    This patient already exists in the database. 
+    You MUST reproduce the following core demographic and baseline clinical values verbatim:
     - Name: {existing_persona.get('first_name')} {existing_persona.get('last_name')}
     - DOB: {existing_persona.get('dob')}
     - Gender: {existing_persona.get('gender')}
     - Address: {existing_persona.get('address')}
     - Telecom: {existing_persona.get('telecom')}
     - Provider: {(existing_persona.get('provider') or {{}}).get('generalPractitioner')} ({(existing_persona.get('provider') or {{}}).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{behavioral_lock}
-    - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}).
+    
+    *Exception*: You MUST generate NEW encounters, vital signs, and adjust the bio narrative to logically support any new requested reports or user feedback.
+    - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}) and any newly generated reports.
     """
 
 def get_new_patient_constraint(selected_universe: str, excluded_names: list = None) -> str:
@@ -483,8 +487,13 @@ def get_feedback_instruction(user_feedback: str) -> str:
     
     return f"""
     **USER FEEDBACK / QA CORRECTIONS:**
-    The user has provided specific instructions for this run. You MUST incorporate them while strictly adhering to the clinical outcome:
+    The user has provided specific findings from a QA review or automated rejection reasons. You MUST incorporate them to fix the clinical scenario:
     > "{user_feedback}"
+
+    **FEEDBACK IMPLEMENTATION MANDATE:**
+    - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test), you MUST generate those specific documents and add them to the `documents` list.
+    - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters` list and `bio_narrative` to show a clear longitudinal history matching the findings.
+    - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
     """
 
 # ============================================================================

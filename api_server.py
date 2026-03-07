@@ -93,7 +93,9 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                      generation_mode: dict, pa_optimize: bool,
                      medications: list, allergies: list,
                      vaccinations: list, therapies: list,
-                     behavioral_notes: str):
+                     behavioral_notes: str,
+                     encounters: list, images: list,
+                     reports: list, procedures: list):
     """Background worker: calls the generator and updates job state."""
     with _jobs_lock:
         _jobs[job_id]["status"] = "running"
@@ -152,6 +154,45 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
             if behavioral_notes:
                 extra_blocks.append(f"BEHAVIORAL NOTES:\n  {behavioral_notes}")
+
+            if encounters:
+                enc_lines = []
+                for e in encounters:
+                    enc_lines.append(
+                        f"  - [{e.get('type','')}] Date: {e.get('date','')} | "
+                        f"Provider: {e.get('provider','')} @ {e.get('facility','')} | "
+                        f"Reason: {e.get('reason','')} | Notes: {e.get('notes','')}"
+                    )
+                extra_blocks.append("CLINICAL ENCOUNTERS (use exactly as provided):\n" + "\n".join(enc_lines))
+
+            if images:
+                img_lines = []
+                for img in images:
+                    img_lines.append(
+                        f"  - [{img.get('type','')}] Date: {img.get('date','')} | "
+                        f"Facility: {img.get('facility','')} | Ordered by: {img.get('provider','')} | "
+                        f"Findings: {img.get('findings','')}"
+                    )
+                extra_blocks.append("IMAGING STUDIES (use exactly as provided):\n" + "\n".join(img_lines))
+
+            if reports:
+                rep_lines = []
+                for r in reports:
+                    rep_lines.append(
+                        f"  - [{r.get('type','')}] Date: {r.get('date','')} | "
+                        f"Ordered by: {r.get('provider','')} | Results: {r.get('results','')} | Notes: {r.get('notes','')}"
+                    )
+                extra_blocks.append("LAB & PATHOLOGY REPORTS (use exactly as provided):\n" + "\n".join(rep_lines))
+
+            if procedures:
+                proc_lines = []
+                for p in procedures:
+                    proc_lines.append(
+                        f"  - {p.get('name','')} | Date: {p.get('date','')} | "
+                        f"Performed by: {p.get('provider','')} @ {p.get('facility','')} | "
+                        f"Indication: {p.get('reason','')} | Notes: {p.get('notes','')}"
+                    )
+                extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(proc_lines))
 
             if pa_optimize:
                 extra_blocks.append(
@@ -348,6 +389,10 @@ def api_generate():
     allergies      = body.get("allergies", [])
     vaccinations   = body.get("vaccinations", [])
     therapies      = body.get("therapies", [])
+    encounters     = body.get("encounters", [])
+    images         = body.get("images", [])
+    reports        = body.get("reports", [])
+    procedures     = body.get("procedures", [])
     behavioral_notes = body.get("behavioral_notes", "")
 
     if not patient_id:
@@ -372,6 +417,10 @@ def api_generate():
                 "allergy_count": len(allergies),
                 "vaccination_count": len(vaccinations),
                 "therapy_count": len(therapies),
+                "encounter_count": len(encounters),
+                "image_count": len(images),
+                "report_count": len(reports),
+                "procedure_count": len(procedures),
                 "has_behavioral_notes": bool(behavioral_notes),
             }
         }
@@ -379,7 +428,8 @@ def api_generate():
     t = threading.Thread(
         target=_run_generation,
         args=(job_id, patient_id, feedback, generation_mode, pa_optimize,
-              medications, allergies, vaccinations, therapies, behavioral_notes),
+              medications, allergies, vaccinations, therapies, behavioral_notes,
+              encounters, images, reports, procedures),
         daemon=True
     )
     t.start()
@@ -661,7 +711,7 @@ def api_save_template():
 # ═══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    port = int(os.getenv("API_PORT", 5000))
+    port = int(os.getenv("API_PORT", 410))
     print(f"\n🌐 PD Generator API Server starting on http://localhost:{port}")
     print(f"   Open ui/index.html in your browser to use the interface.\n")
     app.run(host="0.0.0.0", port=port, debug=False, threaded=True)

@@ -280,8 +280,8 @@
     "last_name": "Diaz",
     "gender": "female",
     "dob": "1987-09-15",
-    "address": "123 Brooklyn Ave, Houston, TX, 77001",
-    "telecom": "555-123-4567",
+    "address": "123 Crime Alley, Houston, TX, 77002",
+    "telecom": "555-0101",
     "race": "Hispanic",
     "height": "5 ft 8 in",
     "weight": "160 lbs",
@@ -294,38 +294,38 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
+      "relationship": "Emergency Contact",
       "name": "Jake Peralta",
-      "telecom": "555-654-3210",
-      "address": "124 Brooklyn Ave, Houston, TX, 77001",
+      "telecom": "555-0213",
+      "address": "456 Detective Blvd, Houston, TX, 77002",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "ongoing",
+      "period_start": "2010-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Erin Bush, MD",
-      "formatted_npi": "9876543210",
-      "managingOrganization": "Brooklyn General Hospital"
+      "formatted_npi": "0123456789",
+      "managingOrganization": "Houston Methodist Hospital"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "PPO",
       "member_id": "MBR-743936",
       "policy_number": "POL-2026-8619",
-      "effective_date": "2024-01-01",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
     "expected_procedure_date": "2026-03-14",
-    "procedure_requested": "Stress Test and ECG",
+    "procedure_requested": "Myocardial perfusion imaging",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
       "street_address": "6565 Fannin Street",
@@ -337,15 +337,15 @@
     "pa_request": {
       "requesting_provider": "Dr. Erin Bush, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent chest pain post mild exertion and abnormal ECG findings. The requested stress test and ECG are medically necessary to evaluate myocardial ischemia.",
+      "clinical_justification": "Patient Rosa Diaz presents with persistent atypical chest pain and abnormal ECG findings. Myocardial perfusion imaging (CPT 78452) is necessary to assess coronary artery perfusion and potential blockage.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Conservative management with Atenolol and lifestyle changes.",
-      "expected_outcome": "Accurate diagnosis of perfusion deficits to inform treatment strategies and improve cardiac outcomes."
+      "previous_treatments": "Atenolol and lifestyle modifications",
+      "expected_outcome": "Improved cardiac function diagnosis confirmation"
     },
-    "bio_narrative": "Rosa Diaz is a dedicated detective who has been experiencing episodic chest pain, particularly after physical exertion. Six months ago, she had a knee injury from a biking incident that required surgery and subsequent physical rehabilitation. Despite maintaining medication adherence and a balanced diet, she occasionally lapses into stress eating due to her high-pressure job environment. Her strong social network aids her mental stability, and she refrains from smoking and largely avoids alcohol, only drinking socially.",
+    "bio_narrative": "Rosa Diaz, a detective from Houston, TX, has presented with ongoing chest pain episodes over the past year. While on patrol, particularly stressful shifts have exacerbated these episodes, leading to concern for underlying ischemic heart disease. Medical history includes hypertension managed with Atenolol and previous dyslipidemia managed with Atorvastatin. Despite a balanced diet and exercise regime, symptoms persist. A bike accident six months ago required knee surgery, after which she completed two months of physical therapy, successfully regaining mobility. Family history reveals premature coronary artery disease on her father's side. She maintains strong medication adherence and her social network remains a stabilizing factor. Rosa seeks thorough diagnosis to alleviate concern and prevent potential cardiac events.\n\nECG and stress testing are needed for an accurate assessment of cardiac function and to establish a more conclusive diagnosis for ongoing management.",
     "medications": [
       {
         "brand": "Tenormin",
@@ -356,7 +356,7 @@
         "status": "current",
         "start_date": "2025-09-20",
         "end_date": "ongoing",
-        "reason": "Hypertension management, reduce cardiac workload."
+        "reason": "Hypertension management, reduce cardiac workload"
       },
       {
         "brand": "Lipitor",
@@ -367,7 +367,7 @@
         "status": "ongoing",
         "start_date": "2025-10-01",
         "end_date": "ongoing",
-        "reason": "Dyslipidemia to manage cholesterol levels."
+        "reason": "Dyslipidemia to manage cholesterol levels"
       },
       {
         "brand": "Aspirin",
@@ -378,7 +378,7 @@
         "status": "past",
         "start_date": "2025-12-01",
         "end_date": "2026-01-15",
-        "reason": "Prophylactic antiplatelet therapy."
+        "reason": "Prophylactic antiplatelet therapy"
       }
     ],
     "allergies": [
@@ -426,11 +426,11 @@
     ],
     "therapies": [
       {
-        "therapy_type": "Cardiac Rehab Therapy",
-        "cpt_code": "G0422",
-        "cpt_description": "Cardiac rehabilitation, COMPREH/PHASE II, Cardiac rehab/behav, EACH UNIT",
+        "therapy_type": "Physical Therapy",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
         "icd10_codes": [
-          "I25.10 - Atherosclerotic heart disease"
+          "I25.10"
         ],
         "provider": "Dr. Lauren Tran, PT",
         "provider_npi": "9876543210",
@@ -444,77 +444,37 @@
       }
     ],
     "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. Engages in a balanced diet but with occasional lapses into stress eating during high-pressure cases. Does not smoke and consumes alcohol rarely. Mental health remains stable, as supported by her close social network.",
-    "encounters": [
-      {
-        "encounter_date": "2026-02-01",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Follow-up for persistent chest pain and hypertensive management.",
-        "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "9876543210",
-        "facility": "Brooklyn General Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-02-01",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "78 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "24.3 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I've been having chest pain whenever I exert myself physically.",
-        "doctor_note": "Subjective: Rosa has been experiencing sharp chest pain post exertion that persists for a few minutes at a time. Medication adherence is good, but she's concerned about new symptom patterns.\\nObjective: Vital signs are stable although BP is slightly elevated. Observations show discomfort on exertion tests.\\nAssessment: Differential diagnosis includes possible myocardial ischemia. Stress testing recommended.\\nPlan: Schedule stress test with ECG. Continue current medication regime. Advise lifestyle modifications especially around diet and stress management.",
-        "observations": [
-          "Discomfort on exertion test",
-          "Stable vitals"
-        ],
-        "procedures_performed": [
-          "99213 - E&M Office Visit Level 3",
-          "93000 - 12-lead ECG"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Erin Bush, MD"
-        ],
-        "progress_notes": "Rosa\u2019s blood pressure management is stable but needs further cardiac assessment.",
-        "follow_up_instructions": "Follow up with Cardiology department for stress test."
-      }
-    ],
+    "encounters": [],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
-      "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "Rarely, mostly at social events",
+      "alcohol_use": "Rarely",
+      "alcohol_frequency": null,
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-02-01",
-      "last_visit_reason": "Hypertensive follow-up and chest pain evaluation.",
+      "last_visit_reason": "Physical therapy evaluation and progress check",
       "missed_appointment": false,
-      "missed_appointment_reason": "N/A",
+      "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Stable mood supported by strong social network.",
-      "mental_health_current": "No current concerns, stable PHQ-9 score",
-      "exercise_habits": "Engages in moderate physical activity when possible, previous regular routine disrupted post-surgery.",
-      "diet_notes": "Balanced diet with some lapses into stress eating.",
-      "family_history_relevant": null
+      "mental_health_history": "None",
+      "mental_health_current": null,
+      "exercise_habits": "Regular exercise",
+      "diet_notes": "Balanced diet with occasional stress eating",
+      "family_history_relevant": "Father with premature coronary artery disease"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-01",
-      "blood_pressure": "130/85 mmHg",
-      "heart_rate": "78 bpm",
+      "recorded_date": "2026-03-01",
+      "blood_pressure": "128/78 mmHg",
+      "heart_rate": "72 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": "24.3 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.6\u00b0F",
+      "temperature": "98.4\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": null
+    "gender_specific_history": "Gravida 0, Para 0, last Pap smear 2025-08-12, last mammogram 2025-09-10"
   },
   "210": {
     "first_name": "John",
@@ -688,5 +648,341 @@
       "respiratory_rate": null
     },
     "gender_specific_history": null
+  },
+  "225": {
+    "first_name": "Meredith",
+    "last_name": "Grey",
+    "gender": "female",
+    "dob": "1980-08-13",
+    "address": "123 Grey Ave, Houston, TX, 77030",
+    "telecom": "555-123-4567",
+    "race": "Caucasian",
+    "height": "5 ft 9 in",
+    "weight": "160 lbs",
+    "maritalStatus": "Widowed",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Spouse",
+      "name": "Derek Shepherd",
+      "telecom": "555-654-3210",
+      "address": "123 Grey Ave, Houston, TX, 77030",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Miranda Bailey, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Grey Sloan Memorial Hospital"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare",
+      "member_id": "MBR-224621",
+      "policy_number": "POL-2026-6532",
+      "effective_date": "2023-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$30",
+      "deductible_amount": "$500"
+    },
+    "expected_procedure_date": "2026-03-28",
+    "procedure_requested": "Heart Transplant",
+    "procedure_facility": {
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6565 Fannin Street",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Transplant Unit"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Alex Karev, MD",
+      "urgency_level": "Urgent",
+      "clinical_justification": "Patient suffers from severe heart failure secondary to atherosclerotic heart disease, requiring heart transplant to improve survival prospects.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease"
+      ],
+      "previous_treatments": "Lifestyle modifications, ACE inhibitors, beta-blockers",
+      "expected_outcome": "Improved cardiac function and extended survival"
+    },
+    "bio_narrative": "Meredith Grey, a renowned surgeon, has dedicated her life to saving others. Unfortunately, her health has declined due to severe atherosclerotic heart disease, requiring a heart transplant. Her medical journey is marked by a struggle against hypertension and hyperlipidemia. Meredith leads an active lifestyle, though she is impacted by persistent stable angina, indicative of her coronary artery disease exacerbation. Despite these challenges, her commitment to her health and family remains unwavering, providing her with the resilience to navigate her current medical challenges.",
+    "medications": [
+      {
+        "brand": "Lopressor",
+        "generic_name": "Metoprolol 100mg",
+        "dosage": "1 tablet BID",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Miranda Bailey, MD",
+        "status": "current",
+        "start_date": "2025-05-01",
+        "end_date": "ongoing",
+        "reason": "Atherosclerotic heart disease"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 40mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Alex Karev, MD",
+        "status": "current",
+        "start_date": "2025-06-15",
+        "end_date": "ongoing",
+        "reason": "Hyperlipidemia"
+      },
+      {
+        "brand": "Cozaar",
+        "generic_name": "Losartan 50mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Richard Webber, MD",
+        "status": "current",
+        "start_date": "2024-08-01",
+        "end_date": "ongoing",
+        "reason": "Hypertension"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Hives",
+        "severity": "Moderate",
+        "onset_date": "2020-07-05"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-20",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19",
+        "vaccine_type": "mRNA",
+        "date_administered": "2026-02-01",
+        "administered_by": "Dr. Miranda Bailey, MD",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2024-07-15",
+        "administered_by": "Urgent Care Clinic",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Pneumococcal",
+        "vaccine_type": "Polysaccharide",
+        "date_administered": "2025-11-05",
+        "administered_by": "Houston Methodist Hospital",
+        "dose_number": "1",
+        "reason": "Chronic disease support"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Psychotherapy",
+        "cpt_code": "90834",
+        "cpt_description": "Psychotherapy, 45 minutes with patient",
+        "icd10_codes": [
+          "F32.9 - Major depressive disorder, single episode, unspecified"
+        ],
+        "provider": "Dr. Amelia Shepherd, MD",
+        "provider_npi": "2345678901",
+        "facility": "Grey Sloan Memorial Hospital",
+        "start_date": "2025-01-12",
+        "end_date": "ongoing",
+        "frequency": "Weekly",
+        "status": "Active",
+        "reason": "Emotional support during medical treatment",
+        "notes": "Patient shows positive engagement in therapy sessions."
+      },
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "93797",
+        "cpt_description": "Cardiac rehabilitation; without continuous ECG monitoring",
+        "icd10_codes": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "provider": "Dr. Izzie Stevens, MD",
+        "provider_npi": "3456789012",
+        "facility": "Houston Methodist Hospital",
+        "start_date": "2025-07-20",
+        "end_date": "2026-02-29",
+        "frequency": "3x/week",
+        "status": "Completed",
+        "reason": "Post-diagnosis of severe CAD",
+        "notes": "Patient exhibited improvement in physical endurance."
+      }
+    ],
+    "behavioral_notes": "Meredith Grey adheres to her medication regimen and maintains an overall active lifestyle. She exercises regularly, avoids tobacco, and consumes alcohol socially. Despite health issues, her resilience and support network allow her to remain positively committed to her treatment plan.",
+    "encounters": [
+      {
+        "encounter_date": "2025-02-18",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Routine follow-up for hypertension and CAD management",
+        "provider": "Dr. Richard Webber, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2025-02-18",
+          "blood_pressure": "130/85 mmHg",
+          "heart_rate": "78 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Routine check-up and medication adjustment",
+        "doctor_note": "Meredith Grey arrived for her scheduled follow-up to monitor her blood pressure and lipid levels. She reports stable angina managed with current medication. Objective findings note stable vitals with no acute distress. Labs show controlled lipid panel. Assessment emphasizes continued control of hypertension and hyperlipidemia, with the plan for medication continuation and lifestyle advice.",
+        "observations": [
+          "Stable vitals",
+          "No acute distress",
+          "Controlled lipid levels"
+        ],
+        "procedures_performed": [
+          "99213 - E&M Office Visit Level 3"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "medications_prescribed": [
+          "Continue current regimen"
+        ],
+        "care_team": [
+          "Dr. Richard Webber, MD"
+        ],
+        "progress_notes": "Patient continues to show good compliance with medication and lifestyle recommendations. Lipid levels and blood pressure are within target.",
+        "follow_up_instructions": "Return in 6 months or sooner if symptoms change."
+      },
+      {
+        "encounter_date": "2026-01-20",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Evaluation for possible heart transplant candidacy",
+        "provider": "Dr. Alex Karev, MD",
+        "provider_npi": "",
+        "facility": "UT Southwestern Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-01-20",
+          "blood_pressure": "135/88 mmHg",
+          "heart_rate": "82 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "96%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Evaluate for transplant due to worsening heart disease",
+        "doctor_note": "Meredith presents with increased episodes of angina despite medical therapy. Evaluation focused on her candidacy for a heart transplant. History reveals worsening symptomatology with exertional limitations. Physical exam found normal lung auscultation but mild ankle edema. Plan includes referral to transplant committee, review of cardiac imaging, and enhanced medical regimen adherence.",
+        "observations": [
+          "Mild ankle edema",
+          "Exertional limitations observed"
+        ],
+        "procedures_performed": [
+          "99214 - Established patient office or other outpatient visit, Level 4"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "medications_prescribed": [
+          "Increase beta-blocker dosage"
+        ],
+        "care_team": [
+          "Dr. Alex Karev, MD"
+        ],
+        "progress_notes": "Patient shows progression in coronary artery disease with increased symptomatology. Referral to transplant team necessary.",
+        "follow_up_instructions": "Await transplant committee decision; manage with adjusted beta-blockers."
+      },
+      {
+        "encounter_date": "2026-01-30",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-operative evaluation for heart transplant",
+        "provider": "Dr. Miranda Bailey, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-01-30",
+          "blood_pressure": "128/82 mmHg",
+          "heart_rate": "76 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "97%",
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Pre-operative evaluation for impending transplant",
+        "doctor_note": "Meredith attended her pre-operative assessment to prepare for heart transplantation. Review of systems marked stability in general health, with no signs of infection or new medical complications. Objective assessment affirmed stable vitals; imaging reviewed suggests good surgical candidacy. Clearances obtained for surgery from all relevant specialties.",
+        "observations": [
+          "No acute infection",
+          "Stable vitals"
+        ],
+        "procedures_performed": [
+          "99244 - Office consultation for a new or established patient"
+        ],
+        "diagnoses": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "medications_prescribed": [
+          "Prepare medication for post-op state"
+        ],
+        "care_team": [
+          "Dr. Miranda Bailey, MD"
+        ],
+        "progress_notes": "Patient has been medically optimized for transplant, with all clearances achieved from specialist consultations.",
+        "follow_up_instructions": "Ensure follow-up within 48 hours post-transplant surgery."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Former smoker - quit 2021",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 glasses of wine on weekends",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-01-30",
+      "last_visit_reason": "Pre-op evaluation",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": "Adjustment disorder after spouse's death in 2019",
+      "mental_health_current": "PHQ-9 score: 4/27 (minimal symptoms)",
+      "exercise_habits": "Regular exercise, walks 5 times a week",
+      "diet_notes": "Low sodium, balanced diet",
+      "family_history_relevant": "Father had coronary artery disease"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-02-15",
+      "blood_pressure": "129/84 mmHg",
+      "heart_rate": "80 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": null,
+      "oxygen_saturation": "97%",
+      "temperature": "98.4\u00b0F",
+      "respiratory_rate": null
+    },
+    "gender_specific_history": "Gravida 2 Para 2, last Pap smear 2025-08-01, last mammogram 2025-11-12"
   }
 }
