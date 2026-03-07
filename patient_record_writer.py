@@ -205,8 +205,50 @@ def write_patient_record(
     else:
         lines.append("  (No encounters recorded)\n")
 
+    # ── IMAGES ────────────────────────────────────────────────────────────────
+    lines.append(_section("9. Imaging Studies"))
+    images = p.get("images") or []
+    if images:
+        for i, img in enumerate(images, 1):
+            lines.append(f"  {img.get('date', '?')} — {img.get('type', '?')}\n")
+            lines.append(_val("Provider", img.get("provider"), indent=4))
+            lines.append(_val("Facility", img.get("facility"), indent=4))
+            lines.append(_val("Findings", img.get("findings"), indent=4))
+            lines.append("\n")
+    else:
+        lines.append("  (No imaging studies recorded)\n")
+
+    # ── REPORTS ───────────────────────────────────────────────────────────────
+    lines.append(_section("10. Laboratory & Pathology Reports"))
+    reports = p.get("reports") or []
+    if reports:
+        for i, rep in enumerate(reports, 1):
+            lines.append(f"  {rep.get('date', '?')} — {rep.get('type', '?')}\n")
+            lines.append(_val("Provider", rep.get("provider"), indent=4))
+            lines.append(_val("Results", rep.get("results"), indent=4))
+            if rep.get("notes"):
+                lines.append(_val("Notes", rep.get("notes"), indent=4))
+            lines.append("\n")
+    else:
+        lines.append("  (No reports recorded)\n")
+
+    # ── PROCEDURES ────────────────────────────────────────────────────────────
+    lines.append(_section("11. Prior Clinical Procedures"))
+    procedures = p.get("procedures") or []
+    if procedures:
+        for i, proc in enumerate(procedures, 1):
+            lines.append(f"  {proc.get('date', '?')} — {proc.get('name', '?')}\n")
+            lines.append(_val("Provider", proc.get("provider"), indent=4))
+            lines.append(_val("Facility", proc.get("facility"), indent=4))
+            lines.append(_val("Reason", proc.get("reason"), indent=4))
+            if proc.get("notes"):
+                lines.append(_val("Notes", proc.get("notes"), indent=4))
+            lines.append("\n")
+    else:
+        lines.append("  (No prior procedures recorded)\n")
+
     # ── MEDICATIONS ───────────────────────────────────────────────────────────
-    lines.append(_section("9. Medications"))
+    lines.append(_section("12. Medications"))
     meds = p.get("medications") or []
     if meds:
         for m in meds:
@@ -217,7 +259,7 @@ def write_patient_record(
         lines.append("  (No medications recorded)\n")
 
     # ── ALLERGIES ─────────────────────────────────────────────────────────────
-    lines.append(_section("10. Allergies"))
+    lines.append(_section("13. Allergies"))
     allergies = p.get("allergies") or []
     if allergies:
         for a in allergies:
@@ -227,7 +269,7 @@ def write_patient_record(
         lines.append("  NKDA (No Known Drug Allergies)\n")
 
     # ── VACCINATIONS ──────────────────────────────────────────────────────────
-    lines.append(_section("11. Immunization Record"))
+    lines.append(_section("14. Immunization Record"))
     vax = p.get("vaccinations") or []
     if vax:
         for v in vax:
@@ -237,7 +279,7 @@ def write_patient_record(
         lines.append("  (No vaccination records)\n")
 
     # ── THERAPIES ─────────────────────────────────────────────────────────────
-    lines.append(_section("12. Therapies & Rehabilitation"))
+    lines.append(_section("15. Therapies & Rehabilitation"))
     therapies = p.get("therapies") or []
     if therapies:
         for t in therapies:
@@ -255,18 +297,18 @@ def write_patient_record(
     # ── BEHAVIORAL NOTES ──────────────────────────────────────────────────────
     bn = g("behavioral_notes", None)
     if bn:
-        lines.append(_section("13. Behavioral Notes"))
+        lines.append(_section("16. Behavioral Notes"))
         lines.append(f"  {bn}\n")
 
     # ── BIO NARRATIVE ─────────────────────────────────────────────────────────
     bio = g("bio_narrative", None)
     if bio:
-        lines.append(_section("14. Bio Narrative"))
+        lines.append(_section("17. Bio Narrative"))
         for bio_line in bio.splitlines():
             lines.append(f"  {bio_line}\n")
 
     # ── DOCUMENT INDEX ────────────────────────────────────────────────────────
-    lines.append(_section("15. Document Index (This Version)"))
+    lines.append(_section("18. Document Index (This Version)"))
     if docs_generated:
         for doc_name in docs_generated:
             lines.append(f"  • {doc_name}\n")
@@ -275,7 +317,7 @@ def write_patient_record(
 
     # ── FEEDBACK LOG ──────────────────────────────────────────────────────────
     if feedback and feedback.strip():
-        lines.append(_section("16. Generation Feedback Log"))
+        lines.append(_section("19. Generation Feedback Log"))
         lines.append(f"  [{now}] v{version}\n")
         lines.append(f"  {feedback.strip()}\n")
 
@@ -291,7 +333,7 @@ def write_patient_record(
             with open(out_path, "r", encoding="utf-8") as f:
                 existing = f.read()
             # Extract previous feedback log section
-            feedback_marker = "─" * 70 + "\n  16. GENERATION FEEDBACK LOG\n"
+            feedback_marker = "─" * 70 + "\n  19. GENERATION FEEDBACK LOG\n"
             if feedback_marker.upper() in existing.upper():
                 idx = existing.upper().find(feedback_marker.upper())
                 prev_feedback = existing[idx:]

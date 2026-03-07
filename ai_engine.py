@@ -248,6 +248,31 @@ class TherapyEntry(BaseModel):
     reason: str = Field(..., description="Clinical reason/referral justification")
     notes: str = Field(default="", description="Additional clinical notes or observations")
 
+class ImagingEntry(BaseModel):
+    """A single imaging study record."""
+    type: str = Field(..., description="Type of imaging e.g., 'CT Abdomen W/O Contrast', 'MRI Brain'")
+    date: str = Field(..., description="Date of study (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Ordering provider")
+    facility: str = Field(default="", description="Facility where imaging was performed")
+    findings: str = Field(..., description="Impression and clinical findings")
+
+class ReportEntry(BaseModel):
+    """A single lab or pathology report record."""
+    type: str = Field(..., description="Type of report e.g., 'CBC', 'CMP', 'Biopsy'")
+    date: str = Field(..., description="Date of report (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Ordering provider")
+    results: str = Field(..., description="Key results or values")
+    notes: str = Field(default="", description="Additional clinical notes")
+
+class ProcedureEntry(BaseModel):
+    """A single clinical procedure record."""
+    name: str = Field(..., description="Procedure name e.g., 'Appendectomy', 'Colonoscopy'")
+    date: str = Field(..., description="Date performed (YYYY-MM-DD)")
+    provider: str = Field(default="", description="Performing provider or surgeon")
+    facility: str = Field(default="", description="Facility where procedure was performed")
+    reason: str = Field(default="", description="Indication or reason for procedure")
+    notes: str = Field(default="", description="Complications or additional notes")
+
 
 class VitalSigns(BaseModel):
     """Patient vital signs at a point in time. Fields may be null if not recorded."""
@@ -380,10 +405,22 @@ class PatientPersona(BaseModel):
         description="Observational behavioral notes: medication adherence, lifestyle habits, mental health flags, substance use history"
     )
 
-    # ── Encounters & Social History ─────────────────────────────────────────
+    # ── Encounters & Clinical History ───────────────────────────────────────
     encounters: List[EncounterRecord] = Field(
         default_factory=list,
         description="2-5 chronological clinical encounters, each with full SOAP note, vitals, care team, and procedures"
+    )
+    images: List[ImagingEntry] = Field(
+        default_factory=list,
+        description="Prior imaging studies related to the chief complaint or history"
+    )
+    reports: List[ReportEntry] = Field(
+        default_factory=list,
+        description="Prior laboratory and pathology reports"
+    )
+    procedures: List[ProcedureEntry] = Field(
+        default_factory=list,
+        description="Prior surgical and clinical procedures performed"
     )
     social_history: Optional[SocialHistory] = Field(
         None,

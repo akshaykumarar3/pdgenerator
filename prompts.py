@@ -358,20 +358,31 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           * progress_notes: clinical progress relative to prior visits
           * follow_up_instructions: instructions given to patient
         - LAST encounter should be the most recent pre-procedure evaluation.
-     20. **GENDER-SPECIFIC HISTORY (gender_specific_history)**:
+        - If patient is EXISTING → reproduce prior encounters exactly, and APPEND new ones as needed.
+     20. **IMAGES (0-4 chronological imaging studies)**:
+        - Generate images list. Each MUST have: type, date, provider, facility, findings.
+        - Relate to the chief complaint or history if present.
+        - If patient is EXISTING → reproduce prior images exactly, and APPEND new ones as needed.
+     21. **REPORTS (0-4 chronological lab/pathology reports)**:
+        - Generate reports list. Each MUST have: type, date, provider, results, notes.
+        - If patient is EXISTING → reproduce prior reports exactly, and APPEND new ones as needed.
+     22. **PROCEDURES (0-4 chronological prior clinical procedures)**:
+        - Generate procedures list. Each MUST have: name, date, provider, facility, reason, notes.
+        - If patient is EXISTING → reproduce prior procedures exactly, and APPEND new ones as needed.
+     23. **GENDER-SPECIFIC HISTORY (gender_specific_history)**:
         - Female patients: Include OB/GYN history (gravida/para), last Pap smear date, mammogram date.
         - Male patients: Include PSA level (if age-appropriate), prostate screening history, urologic history.
         - If not clinically applicable: set to null.
-     21. **DOCUMENTS — NO START/END MARKERS**:
+     24. **DOCUMENTS — NO START/END MARKERS**:
         - Clinical documents MUST NOT contain '--- REPORT START ---' or '--- REPORT END ---' markers.
         - Begin documents directly with the document header (facility name, patient info, document title).
         - Each document should include: Header, Patient Demographics, Clinical Content, Provider Signature.
         - Documents must reference encounter records and be consistent with persona data.
-     22. **PA APPROVAL STRATEGY**:
+     25. **PA APPROVAL STRATEGY**:
         - If the user feedback contains "PA APPROVAL OPTIMIZATION" instruction:
           → Generate all clinical documents with the STRONGEST possible medical justification.
           → Include comprehensive clinical evidence, detailed findings, thorough rationale.
-     23. **Output**: Return the `ClinicalDataPayload` JSON.
+     26. **Output**: Return the `ClinicalDataPayload` JSON.
      """
 
 # ============================================================================
@@ -423,6 +434,42 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
                 t_lines.append(f"      - [{t.get('status','').upper()}] {t.get('therapy_type','')} | {t.get('provider','')} | {t.get('frequency','')}")
         therapy_lock = "\n    - Therapies (LOCK EXACTLY):\n" + "\n".join(t_lines)
 
+    encounter_lock = ""
+    encounters = existing_persona.get('encounters', [])
+    if encounters:
+        e_lines = []
+        for e in encounters:
+            if isinstance(e, dict):
+                e_lines.append(f"      - {e.get('encounter_date','')} | {e.get('encounter_type','')} | {e.get('chief_complaint','')}")
+        encounter_lock = "\n    - Encounters (REPRODUCE EXACTLY, APPEND NEW):\n" + "\n".join(e_lines)
+
+    image_lock = ""
+    images = existing_persona.get('images', [])
+    if images:
+        i_lines = []
+        for i in images:
+            if isinstance(i, dict):
+                i_lines.append(f"      - {i.get('type','')} | {i.get('date','')}")
+        image_lock = "\n    - Images (REPRODUCE EXACTLY, APPEND NEW):\n" + "\n".join(i_lines)
+        
+    report_lock = ""
+    reports = existing_persona.get('reports', [])
+    if reports:
+        r_lines = []
+        for r in reports:
+            if isinstance(r, dict):
+                r_lines.append(f"      - {r.get('type','')} | {r.get('date','')}")
+        report_lock = "\n    - Reports (REPRODUCE EXACTLY, APPEND NEW):\n" + "\n".join(r_lines)
+
+    procedure_lock = ""
+    procedures = existing_persona.get('procedures', [])
+    if procedures:
+        p_lines = []
+        for p in procedures:
+            if isinstance(p, dict):
+                p_lines.append(f"      - {p.get('name','')} | {p.get('date','')}")
+        procedure_lock = "\n    - Procedures (REPRODUCE EXACTLY, APPEND NEW):\n" + "\n".join(p_lines)
+
     behavioral_lock = ""
     b_notes = existing_persona.get('behavioral_notes', '')
     if b_notes:
@@ -437,10 +484,13 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
     - Gender: {existing_persona.get('gender')}
     - Address: {existing_persona.get('address')}
     - Telecom: {existing_persona.get('telecom')}
-    - Provider: {(existing_persona.get('provider') or {{}}).get('generalPractitioner')} ({(existing_persona.get('provider') or {{}}).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{behavioral_lock}
+    - Provider: {(existing_persona.get('provider') or {{}}).get('generalPractitioner')} ({(existing_persona.get('provider') or {{}}).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{encounter_lock}{image_lock}{report_lock}{procedure_lock}{behavioral_lock}
     
     *Exception*: You MUST generate NEW encounters, vital signs, and adjust the bio narrative to logically support any new requested reports or user feedback.
     - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}) and any newly generated reports.
+    
+    **🚨 CRITICAL FEEDBACK OVERRIDE RULE 🚨**: 
+    IF the User Feedback explicitly requests a change to ANY of these locked fields (e.g., changing the gender, removing an allergy, altering a medication, changing demographics), **USER FEEDBACK TAKES ABSOLUTE PRIOROTY OVER THE STRICT IDENTITY LOCK**. You MUST fulfill the feedback request and update the identity constraints accordingly across ALL generated documents and persona fields.
     """
 
 def get_new_patient_constraint(selected_universe: str, excluded_names: list = None) -> str:
@@ -486,13 +536,15 @@ def get_feedback_instruction(user_feedback: str) -> str:
         return ""
     
     return f"""
-    **USER FEEDBACK / QA CORRECTIONS:**
-    The user has provided specific findings from a QA review or automated rejection reasons. You MUST incorporate them to fix the clinical scenario:
+    **USER FEEDBACK / QA CORRECTIONS 🚨 (ABSOLUTE TOPMOST PRIORITY) 🚨:**
+    The user has provided specific findings, QA reviews, or explicit change requests. 
+    YOU MUST IMPLEMENT THESE CHANGES NO MATTER WHAT. THIS DIRECTIVE OVERRIDES ALL OTHER IDENTITY LOCKS, GENERATION RULES, OR CLINICAL CONSTRAINTS.
     > "{user_feedback}"
 
     **FEEDBACK IMPLEMENTATION MANDATE:**
+    - If feedback requests a DEMOGRAPHIC change (e.g. gender, name, age) or baseline clinical change (e.g. remove an allergy, change a medication), you MUST immediately break the "Strict Identity Lock" and apply the requested change across ALL sections (persona, bio narrative, documents, pronouns).
     - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test), you MUST generate those specific documents and add them to the `documents` list.
-    - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters` list and `bio_narrative` to show a clear longitudinal history matching the findings.
+    - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters`, `images`, `reports`, and `procedures` lists AND `bio_narrative` to show a clear longitudinal history matching the findings.
     - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
     """
 
