@@ -26,12 +26,40 @@ def format_clinical_text(text: str) -> str:
 def format_report_content(content):
     try:
         if isinstance(content, str):
-            data = json.loads(content)
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError:
+                return html.escape(content).replace('\n', '<br/>')
         else:
             data = content
 
+        if not isinstance(data, dict):
+            return html.escape(str(data))
+
         sections = data.get("sections", [])
         output = []
+
+        def _format_value(val, depth=0):
+            indent = "&nbsp;" * (depth * 4)
+            if isinstance(val, dict):
+                parts = []
+                for k, v in val.items():
+                    key_title = str(k).replace("_", " ").title()
+                    if isinstance(v, (dict, list)):
+                        parts.append(f"{indent}<b>{key_title}:</b><br/>{_format_value(v, depth + 1)}")
+                    else:
+                        parts.append(f"{indent}<b>{key_title}:</b> {html.escape(str(v))}")
+                return "<br/>".join(parts)
+            elif isinstance(val, list):
+                parts = []
+                for item in val:
+                    if isinstance(item, (dict, list)):
+                        parts.append(f"{indent}•<br/>{_format_value(item, depth + 1)}")
+                    else:
+                        parts.append(f"{indent}• {html.escape(str(item))}")
+                return "<br/>".join(parts)
+            else:
+                return f"{indent}{html.escape(str(val))}"
 
         for sec in sections:
             value = data.get(sec)
@@ -39,45 +67,17 @@ def format_report_content(content):
                 continue
 
             section_title = sec.replace("_", " ").title()
-
             output.append(f"<b>{section_title}</b>")
-
-            if isinstance(value, dict):
-                for k, v in value.items():
-                    key = k.replace("_", " ").title()
-
-                    if isinstance(v, list):
-
-                        if v and isinstance(v[0], dict):
-                            output.append(f"{key}:")
-                            for item in v:
-                                parts = []
-                                for ik, iv in item.items():
-                                    parts.append(f"{ik.replace('_',' ').title()}: {iv}")
-                                output.append(f"• {', '.join(parts)}")
-
-                        else:
-                            output.append(f"{key}:")
-                            for item in v:
-                                output.append(f"• {item}")
-
-                    else:
-                        output.append(f"{key}: {v}")
-
-            elif isinstance(value, list):
-
-                for item in value:
-                    output.append(f"• {item}")
-
-            else:
-                output.append(str(value))
-
+            
+            formatted_val = _format_value(value, depth=0)
+            output.append(formatted_val)
             output.append("")
 
         return "<br/>".join(output)
 
-    except Exception:
-        return html.escape(str(content))
+    except Exception as e:
+        print(f"Error formatting report: {e}")
+        return html.escape(str(content)).replace('\n', '<br/>')
 
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
@@ -1104,13 +1104,12 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             
             # Format markdown to styled text with graceful fallback
             rep_text = format_report_content(rep.content)
-            rep_text = rep_text[:2000] + "..." if len(rep_text) > 2000 else rep_text
             
             try:
                 Story.append(Paragraph(rep_text, style_normal))
             except ValueError:
                 import html
-                safe_text = html.escape(rep.content[:2000]).replace('\n', '<br/>')
+                safe_text = html.escape(rep.content).replace('\n', '<br/>')
                 Story.append(Paragraph(safe_text, style_normal))
             
             Story.append(Spacer(1, 15))

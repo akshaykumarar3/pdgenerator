@@ -706,7 +706,15 @@ def generate_clinical_image(context: str, image_type: str, output_path: str = No
                 quality="standard",
                 n=1,
             )
-            return response.data[0].url
+            image_url = response.data[0].url
+            
+            if output_path:
+                import requests
+                img_data = requests.get(image_url).content
+                with open(output_path, 'wb') as handler:
+                    handler.write(img_data)
+                return output_path
+            return image_url
 
     except Exception as e:
         print(f"   ⚠️ Image Generation Failed: {e}")

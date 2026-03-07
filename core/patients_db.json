@@ -280,8 +280,8 @@
     "last_name": "Diaz",
     "gender": "female",
     "dob": "1987-09-15",
-    "address": "123 Main St, Houston, TX 77002",
-    "telecom": "555-555-5555",
+    "address": "1234 Elm Street, Houston, TX 77002",
+    "telecom": "713-555-0199",
     "race": "Hispanic",
     "height": "5 ft 8 in",
     "weight": "160 lbs",
@@ -296,27 +296,29 @@
     "contact": {
       "relationship": "Next of Kin",
       "name": "Jake Peralta",
-      "telecom": "555-555-0123",
-      "address": "321 Pine Ave, Houston, TX 77002",
+      "telecom": "713-555-0123",
+      "address": "5678 Pine Avenue, Houston, TX 77003",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2025-01-01",
+      "period_start": "2010-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Erin Bush, MD",
       "formatted_npi": "1234567890",
-      "managingOrganization": "Houston Methodist Hospital"
+      "managingOrganization": "Houston Methodist Hospital",
+      "address": "6565 Fannin Street, Houston, TX 77030",
+      "phone": "713-790-3311"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare",
+      "plan_type": "Medicare Advantage",
       "member_id": "MBR-743936",
       "policy_number": "POL-2026-8619",
       "effective_date": "2024-01-01",
@@ -324,8 +326,8 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-03-15",
-    "procedure_requested": "Stress Test with Myocardial Perfusion Imaging",
+    "expected_procedure_date": "2026-03-14",
+    "procedure_requested": "Myocardial perfusion imaging",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
       "street_address": "6565 Fannin Street",
@@ -337,15 +339,15 @@
     "pa_request": {
       "requesting_provider": "Dr. Erin Bush, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with recurrent chest pain and abnormal ECG suggestive of ischemia. Stress testing is necessary to assess myocardial perfusion and guide further treatment.",
+      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Management with beta-blockers and physical therapy",
-      "expected_outcome": "Improved cardiac function and symptom management"
+      "previous_treatments": "Lifestyle modifications and beta-blockers.",
+      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision."
     },
-    "bio_narrative": "Rosa Diaz, a highly-focused detective from Houston, has been experiencing intermittent chest pain and has a family history of cardiovascular disease. Over the past few months, her chest pain episodes have increased in frequency and duration, which led her to seek medical evaluation. Dr. Erin Bush has been managing her care and prescribed medications to control her hypertension and cholesterol levels. Despite medication and lifestyle modifications, her symptoms persisted, necessitating further cardiac evaluation. Rosa maintains a physically active lifestyle with regular workouts but faces occupational stress due to the demanding nature of her job.",
+    "bio_narrative": "Rosa Diaz, a 38-year-old Hispanic woman from Houston, TX, is currently facing cardiac challenges primarily involving persistent chest pain that is suspected to be linked to coronary artery disease. Her cardiovascular history is significant for dyslipidemia and hypertension, having been under pharmacological management since 2025. Dr. Erin Bush, MD, her primary care physician, has been managing her condition with Atenolol and Atorvastatin to control her blood pressure and lipid levels, respectively. Despite these measures, Rosa continues to experience distressing chest pain episodes.\n\nOver the past year, Rosa has undergone multiple assessments. Initially, an ECG showed non-specific ST changes, which led to a cardiology consultation with Dr. Alex Madden. The consultation recommended a treadmill stress test, which was inconclusive but suggested decreased exercise tolerance. This necessitated further imaging studies to evaluate the cardiac perfusion status accurately. \n\nRosa maintains a disciplined approach to her health \u2013 she adheres to her medication regimen despite her demanding job as a detective in Houston. She engages in a balanced dietary plan, albeit with occasional stress-induced deviations. Socially, she benefits from strong support, notably from her close colleague, Jake Peralta. She remains non-smoker and consumes alcohol sparingly.\n\nNavigating the intricacies of her health, Rosa aspires to achieve clarity regarding her chest pain and to rule out significant coronary conditions. Her treatment strategy is poised to harness advanced diagnostic imaging to guide potential revascularization strategies, ultimately aimed at improving her quality of life and occupational functionality.\n\nFamily history reveals episodes of heart disease, accentuated by her father\u2019s early cardiovascular issues, underscoring the importance of proactive monitoring and intervention in Rosa\u2019s case.",
     "medications": [
       {
         "brand": "Tenormin",
@@ -372,7 +374,7 @@
       {
         "brand": "Aspirin",
         "generic_name": "Aspirin 81mg",
-        "dosage": "daily for prophylaxis",
+        "dosage": "1 tablet daily",
         "qty": "90-day supply",
         "prescribed_by": "Dr. Erin Bush, MD",
         "status": "past",
@@ -427,13 +429,13 @@
     "therapies": [
       {
         "therapy_type": "Physical Therapy",
-        "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
+        "cpt_code": "G0463",
+        "cpt_description": "Hospital outpatient clinic visit for assessment and management of a patient",
         "icd10_codes": [
           "I25.10 - Atherosclerotic heart disease"
         ],
         "provider": "Dr. Lauren Tran, PT",
-        "provider_npi": "9876543210",
+        "provider_npi": "2234567890",
         "facility": "Houston Methodist Hospital Rehab Center",
         "start_date": "2026-02-01",
         "end_date": "ongoing",
@@ -446,142 +448,134 @@
     "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. She engages in a healthy diet, with occasional lapses into stress eating during high-pressure cases. She does not smoke and rarely consumes alcohol. Her mental health remains stable, supported by her close social network.",
     "encounters": [
       {
-        "encounter_date": "2025-09-15",
+        "encounter_date": "2025-09-20",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Initial consultation for chest pain and hypertension management.",
+        "purpose_of_visit": "Evaluation of recent chest pain episodes. Initial ECG ordered.",
         "provider": "Dr. Erin Bush, MD",
         "provider_npi": "1234567890",
         "facility": "Houston Methodist Hospital",
         "vital_signs": {
-          "recorded_date": "2025-09-15",
-          "blood_pressure": "140/90 mmHg",
-          "heart_rate": "85 bpm",
+          "recorded_date": "2025-09-20",
+          "blood_pressure": "140/88 mmHg",
+          "heart_rate": "76 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "24.3 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
+          "bmi": "24.5 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.7\u00b0F",
+          "respiratory_rate": "18 breaths/min"
         },
-        "chief_complaint": "Experiencing chest pain and increased blood pressure spikes.",
-        "doctor_note": "Subjective: Rosa Diaz reported experiencing intermittent chest pain over the last two weeks, primarily during high-stress scenarios at work. She describes the pain as a dull pressure across the chest, occasionally radiating to her left arm. Objective: Blood pressure reading was slightly elevated at 140/90 mmHg, with heart rate at 85 bpm. ECG showed sinus tachycardia. Assessment: Possible exertion-induced ischemia with hypertension. Plan: Initiate Beta-blocker therapy and schedule a follow-up cardiac consult.",
+        "chief_complaint": "Chest pain, mainly with exertion.",
+        "doctor_note": "Subjective: The patient reports acute onset chest pain approximately two weeks ago, which occurs mainly with exertion. Describes pain as pressure-like, radiating to the arm. Objective: Physical examination reveals regular rhythm, with no acute distress. ECG reveals mild ST-segment changes. Assessment: Elevated concern for coronary artery disease. Plan: Initiate Atenolol, refer to cardiology for stress test.",
         "observations": [
-          "Sinus tachycardia on ECG",
-          "Elevated blood pressure"
+          "ST-segment changes observed",
+          "Referred to cardiology"
         ],
         "procedures_performed": [
-          "93000 - Electrocardiogram"
+          "93000 - 12-lead ECG"
         ],
         "diagnoses": [
-          "I10 - Essential hypertension"
+          "R07.9 - Chest pain, unspecified"
         ],
         "medications_prescribed": [
-          "Tenormin - Atenolol 50mg"
+          "Atenolol 50mg"
         ],
         "care_team": [
           "Dr. Erin Bush, MD"
         ],
-        "progress_notes": "Patient started on atenolol to manage hypertension. Advised to monitor blood pressure at home and report any significant changes.",
-        "follow_up_instructions": "Schedule follow-up with cardiologist; monitor chest pain and blood pressure at home."
+        "progress_notes": "Patient advised to begin beta-blocker and lifestyle modification regime. Referred to cardiology for further evaluation.",
+        "follow_up_instructions": "Follow-up in cardiology department."
       },
       {
-        "encounter_date": "2026-02-15",
+        "encounter_date": "2025-10-15",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Cardiology evaluation for ongoing chest pain and ischemic risk assessment.",
+        "purpose_of_visit": "Cardiology consultation for stress testing.",
         "provider": "Dr. Alex Madden, MD, FACC",
-        "provider_npi": "9876543210",
+        "provider_npi": "2233332221",
         "facility": "Houston Methodist Hospital, Cardiology Department",
-        "vital_signs": {
-          "recorded_date": "2026-02-15",
-          "blood_pressure": "138/85 mmHg",
-          "heart_rate": "78 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "24.0 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Persistent chest pain with exertion.",
-        "doctor_note": "Subjective: Rosa continues to experience episodes of chest pain, particularly post-exercise. She reports these incidents have become more frequent despite current antihypertensive therapy. Objective: Blood pressure is under better control. ECG performed showing non-specific ST segment changes. Assessment: Likely coronary artery disease considering family history and symptom pattern. Plan: Recommend stress test for further evaluation of myocardial perfusion and potential ischemic changes.",
+        "vital_signs": null,
+        "chief_complaint": "Ongoing chest discomfort, refractory to initial medical management.",
+        "doctor_note": "Subjective: Continued symptoms include intermittent chest discomfort despite Atenolol. No significant relief. Objective: Normal cardiac examination. Stress test required for further assessment. Assessment: Continued cardiac suspicion warranting stress test. Plan: Execute stress test and assess response for potential further evaluation.",
         "observations": [
-          "Non-specific ST changes",
-          "Well-controlled blood pressure"
+          "Normal examination, stress test ordered"
         ],
         "procedures_performed": [
-          "93000 - Electrocardiogram",
-          "99213 - Level 3 E&M Office Visit"
+          "93015 - Cardiovascular stress test"
         ],
         "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease",
-          "R07.9 - Chest pain, unspecified"
+          "I25.10 - Atherosclerotic heart disease"
         ],
-        "medications_prescribed": [
-          "Lipitor - Atorvastatin 20mg"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Alex Madden, MD, FACC"
         ],
-        "progress_notes": "Discussed the need for further cardiac assessment through stress testing to evaluate perfusion accurately.",
-        "follow_up_instructions": "Schedule the recommended stress test; continue current therapy and lifestyle modifications."
+        "progress_notes": "Patient was unable to significantly alter symptoms through medication alone. Further testing is justified based on risk profile and symptoms.",
+        "follow_up_instructions": "Proceed with stress test. Review results promptly."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "2-3 drinks per month, usually socially",
+      "alcohol_frequency": "Rarely, during social events",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-02-15",
-      "last_visit_reason": "Cardiology assessment for chest pain.",
+      "last_visit_reason": "Consultation for ongoing chest pain",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Stress-related issues during high-intensity work periods",
-      "mental_health_current": "GAD-7 score of 5 indicating mild anxiety features but generally stable",
-      "exercise_habits": "Regular exercises 3x/week with moderate-intensity workouts",
-      "diet_notes": "Balanced diet focused on cardiovascular health; occasional stress-eating reported.",
-      "family_history_relevant": "Family history of coronary artery disease; mother diagnosed at 50 years."
+      "mental_health_history": null,
+      "mental_health_current": null,
+      "exercise_habits": "Engages in regular walking and physical therapy exercises",
+      "diet_notes": "Balanced diet with occasional stress-eating during high-pressure cases",
+      "family_history_relevant": "Family history of heart disease, father's early cardiovascular issues"
     },
     "vital_signs_current": {
       "recorded_date": "2026-02-15",
       "blood_pressure": "138/85 mmHg",
-      "heart_rate": "78 bpm",
+      "heart_rate": "72 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "24.0 kg/m\u00b2",
-      "oxygen_saturation": "97%",
+      "bmi": "24.3 kg/m\u00b2",
+      "oxygen_saturation": "98%",
       "temperature": "98.6\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "Gravida 0 Para 0. Last Pap smear conducted on 2025-11-01, normal findings.",
+    "gender_specific_history": "Gravida 0, Para 0. Last Pap smear: 2024-04-15. Last mammogram: 2025-12-10.",
     "images": [
       {
-        "type": "CT Coronary Angiogram",
-        "date": "2025-12-15",
+        "type": "12-Lead ECG",
+        "date": "2026-02-17",
+        "provider": "Dr. Erin Bush, MD",
+        "facility": "Houston Methodist Hospital",
+        "findings": "ECG showed non-specific ST-segment changes and borderline T wave inversion, warranting further cardiac evaluation."
+      },
+      {
+        "type": "Stress Test",
+        "date": "2026-02-25",
         "provider": "Dr. Alex Madden, MD, FACC",
-        "facility": "Houston Methodist Hospital, Radiology Department",
-        "findings": "The coronary CT angiography shows mild coronary artery disease with no significant stenosis. The myocardial perfusion is unremarkable during the test, suggesting no acute ischemic events."
+        "facility": "Houston Methodist Hospital",
+        "findings": "Stress test resulted in decreased exercise tolerance, with mild inducible ischemia, a borderline positive result indicating necessity for further perfusion assessment."
       }
     ],
     "reports": [
       {
-        "type": "Lipid Panel",
-        "date": "2025-10-15",
+        "type": "CBC",
+        "date": "2026-02-10",
         "provider": "Dr. Erin Bush, MD",
-        "results": "Total cholesterol: 230 mg/dL, LDL: 140 mg/dL, HDL: 45 mg/dL, Triglycerides: 180 mg/dL.",
-        "notes": "Patient counselled on diet and started on atorvastatin for dyslipidemia management."
+        "results": "Complete blood count with normal limits except marginally elevated hematocrit.",
+        "notes": "Patient's routine labs to assess baseline function before further tests."
       }
     ],
     "procedures": [
       {
-        "name": "Electrocardiogram (ECG)",
-        "date": "2025-09-15",
+        "name": "12-lead ECG",
+        "date": "2025-09-20",
         "provider": "Dr. Erin Bush, MD",
         "facility": "Houston Methodist Hospital",
-        "reason": "Initial diagnostic workup for chest pain and hypertension symptoms.",
-        "notes": "ECG showed sinus tachycardia without critical findings at the time of the test."
+        "reason": "Initial assessment of chest pain presents with exercise-related episodes.",
+        "notes": "ECG indicated further testing needs for definitive cardiac evaluation."
       }
     ]
   },

@@ -406,6 +406,22 @@ def process_patient_workflow(
             except Exception as e:
                 print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
 
+            image_path = None
+            imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
+            if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
+                print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
+                img_filename = f"{final_filename_base}_img.png"
+                temp_image_path = os.path.join(patient_report_folder, img_filename)
+                
+                from ai_engine import generate_clinical_image
+                # Pass a slice of the document description to guide DALL-E
+                image_context = f"Visual supporting document {doc.title_hint}: {doc.content[:500]}"
+                generated_path = generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                
+                if generated_path:
+                    image_path = generated_path
+                    print(f"      🖼️  Saved image to {image_path}")
+
             pdf_path = pdf_generator.create_patient_pdf(
                 patient_id=patient_id,
                 doc_type=final_filename_base,
@@ -413,7 +429,7 @@ def process_patient_workflow(
                 patient_persona=result.patient_persona,
                 doc_metadata=doc,
                 base_output_folder=patient_report_folder,
-                image_path=None,
+                image_path=image_path,
                 version=doc_version,
             )
             rf = os.path.basename(pdf_path)
