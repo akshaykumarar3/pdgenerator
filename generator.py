@@ -371,17 +371,36 @@ def process_patient_workflow(
             try:
                 import json
                 structured_data = json.loads(doc.content)
+                
+                provider_obj = result.patient_persona.provider if result.patient_persona else None
+                if provider_obj:
+                    provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
+                    provider_address = getattr(provider_obj, "address", "N/A")
+                    provider_phone = getattr(provider_obj, "phone", "N/A")
+                else:
+                    provider_str = "Unknown"
+                    provider_address = "N/A"
+                    provider_phone = "N/A"
+                
+                patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
+                payer_obj = result.patient_persona.payer if result.patient_persona else None
+                plan_type = getattr(payer_obj, "plan_type", "N/A") if payer_obj else "N/A"
+
                 metadata = {
                     "patient_id": patient_id,
                     "mrn": current_mrn,
                     "patient_name": p_full_name or "Unknown",
                     "dob": result.patient_persona.dob if result.patient_persona else "",
                     "gender": result.patient_persona.gender if result.patient_persona else "",
+                    "patient_phone": patient_phone,
                     "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
-                    "provider": result.patient_persona.provider if result.patient_persona else "Unknown",
+                    "provider": provider_str,
+                    "provider_address": provider_address,
+                    "provider_phone": provider_phone,
                     "facility": "Diagnostic Center",
                     "accession_id": f"ACC-{patient_id}-{seq_str}",
-                    "doc_type": doc.title_hint
+                    "doc_type": doc.title_hint,
+                    "plan_type": plan_type
                 }
                 formatted_content = format_clinical_document(metadata, structured_data)
             except Exception as e:

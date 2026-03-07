@@ -212,8 +212,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           The `content` field MUST contain the fully populated JSON representation of the template as a STRING.
           Do NOT attempt to use markdown or raw text in `content`—it MUST be the stringified JSON matching the template structure.
           The `title_hint` field should match the template's title or logically reflect it.
-        - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
-          If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents and add them to the `documents` list.
+         - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
+           If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment", "Payer Policy Document"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{"doc_type": "ECG", "findings": "...", "interpretation": "..."}}`) and add them to the `documents` list.
         - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
         - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
@@ -543,9 +543,10 @@ def get_feedback_instruction(user_feedback: str) -> str:
 
     **FEEDBACK IMPLEMENTATION MANDATE:**
     - If feedback requests a DEMOGRAPHIC change (e.g. gender, name, age) or baseline clinical change (e.g. remove an allergy, change a medication), you MUST immediately break the "Strict Identity Lock" and apply the requested change across ALL sections (persona, bio narrative, documents, pronouns).
-    - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test), you MUST generate those specific documents and add them to the `documents` list.
+    - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test, Payer Policy Document), you MUST invent and generate those specific documents and add them to the `documents` list. DO NOT wait for a template. Invent a logical JSON structure for the newly requested document.
     - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters`, `images`, `reports`, and `procedures` lists AND `bio_narrative` to show a clear longitudinal history matching the findings.
     - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
+    - If feedback points out **missing or empty administrative fields** (e.g. patient phone number, provider address, plan type), you MUST explicitly fill them in the persona and documents with realistic data instead of N/A or defaults.
     """
 
 # ============================================================================

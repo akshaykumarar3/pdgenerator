@@ -1924,27 +1924,35 @@
             });
         }
         function collectEncounters() {
-            return [...document.getElementById('tbody-encounters').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return { type: i[0].value, date: i[1].value, provider: i[2].value, facility: i[3].value, reason: i[4].value, notes: i[5].value };
+            const container = document.getElementById('tbody-encounters');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
             });
         }
         function collectImages() {
-            return [...document.getElementById('tbody-images').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return { type: i[0].value, date: i[1].value, provider: i[2].value, facility: i[3].value, findings: i[4].value };
+            const container = document.getElementById('tbody-images');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, findings: i[4]?.value };
             });
         }
         function collectReports() {
-            return [...document.getElementById('tbody-reports').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return { type: i[0].value, date: i[1].value, provider: i[2].value, results: i[3].value, notes: i[4].value };
+            const container = document.getElementById('tbody-reports');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, results: i[3]?.value, notes: i[4]?.value };
             });
         }
         function collectProcedures() {
-            return [...document.getElementById('tbody-procedures').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return { name: i[0].value, date: i[1].value, provider: i[2].value, facility: i[3].value, reason: i[4].value, notes: i[5].value };
+            const container = document.getElementById('tbody-procedures');
+            if (!container) return [];
+            return [...container.children].map(card => {
+                const i = card.querySelectorAll('input,select,textarea');
+                return { name: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
             });
         }
 

@@ -188,6 +188,8 @@ class PatientProvider(BaseModel):
     generalPractitioner: str = Field(..., description="Full name of primary care provider e.g. 'Dr. Jane Smith, MD'")
     formatted_npi: str = Field(..., description="National Provider Identifier (10 digits) e.g. '1234567890'")
     managingOrganization: str = Field(..., description="Name of managing clinic/hospital e.g. 'Mercy General Hospital'")
+    address: str = Field(default="123 Medical Center Blvd, Suite 100, City, TX 12345", description="Full address of the provider's clinic/office")
+    phone: str = Field(default="555-019-8273", description="Provider's office phone number")
 
 class PatientLink(BaseModel):
     """Link to other patient records."""
