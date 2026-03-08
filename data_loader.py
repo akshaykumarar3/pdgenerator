@@ -2,10 +2,12 @@ import os
 import pandas as pd
 import glob
 
-INPUT_EXCEL = "core/UAT Plan.xlsx"
-SQL_FOLDER = "sqls"
-SCHEMA_PATH = "core/mockdata_schema.sql"
-CORE_FOLDER = "core"
+# Use absolute paths relative to project root for resource files
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INPUT_EXCEL = os.path.join(BASE_DIR, "core", "UAT Plan.xlsx")
+SQL_FOLDER = os.path.join(BASE_DIR, "sqls")
+SCHEMA_PATH = os.path.join(BASE_DIR, "core", "mockdata_schema.sql")
+CORE_FOLDER = os.path.join(BASE_DIR, "core")
 
 def _get_patient_id_column(df: pd.DataFrame) -> str:
     """Helper: Identifies the Patient ID column."""
@@ -36,7 +38,7 @@ def _normalize_id(raw_val) -> str:
 def get_db_schema():
     """Reads the schema file."""
     if os.path.exists(SCHEMA_PATH):
-        with open(SCHEMA_PATH, 'r') as f:
+        with open(SCHEMA_PATH, 'r', encoding='utf-8') as f:
             return f.read()
     return ""
 
@@ -170,6 +172,6 @@ def save_sql(patient_id: str, content: str, output_folder: str = SQL_FOLDER):
         
     filename = f"{patient_id}_final.sql"
     path = os.path.join(output_folder, filename)
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding='utf-8') as f:
         f.write(content)
     return path

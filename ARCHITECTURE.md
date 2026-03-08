@@ -65,4 +65,12 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
 ├── history_manager.py          # Session tracking
 ├── purge_manager.py            # Cleanup utilities
 └── remove_persona.py           # Deep persona removal utility
-10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. SummaryThe Clinical Data Generator (v3) ensures Clinical Coherence by enforcing a deterministic patient_state layer. By combining structured data models with controlled LLM generation, the pipeline produces high-quality synthetic datasets suitable for rigorous healthcare software testing.
+10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. Cross-Platform Compatibility
+The system is designed to be OS-agnostic, supporting Windows, macOS, and Linux.
+Key implementations:
+- **Universal Encoding**: All file I/O operations explicitly use `utf-8` to prevent character mapping errors across different default OS encodings.
+- **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access.
+- **Environment Isolation**: `python-dotenv` loads from `cred/.env` based on absolute script locations.
+- **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server.
+
+12. Summary...

@@ -473,7 +473,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     # Load template
     template_path = os.path.join(os.path.dirname(__file__), "templates", "summary_template.json")
     try:
-        with open(template_path, 'r') as f:
+        with open(template_path, 'r', encoding='utf-8') as f:
             template = json.load(f)
     except Exception as e:
         print(f"   ⚠️  Warning: Could not load summary template: {e}. Using defaults.")

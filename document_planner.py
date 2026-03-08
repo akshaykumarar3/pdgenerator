@@ -90,7 +90,7 @@ def create_and_save_document_plan(patient_id: str, case_data: Dict) -> Dict:
     
     ensure_debug_dir()
     path = os.path.join(DEBUG_DIR, "document_plan.json")
-    with open(path, "w") as f:
+    with open(path, "w", encoding='utf-8') as f:
         json.dump(plan, f, indent=2)
         
     return plan
