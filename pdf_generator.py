@@ -37,6 +37,9 @@ def format_report_content(content):
             return html.escape(str(data))
 
         sections = data.get("sections", [])
+        # When AI returns JSON without "sections", render all top-level keys so persona PDF is not blank
+        if not sections:
+            sections = [k for k in data.keys() if k != "sections"]
         output = []
 
         def _format_value(val, depth=0):
@@ -63,7 +66,7 @@ def format_report_content(content):
 
         for sec in sections:
             value = data.get(sec)
-            if not value:
+            if value is None or value == "":
                 continue
 
             section_title = sec.replace("_", " ").title()
@@ -73,7 +76,7 @@ def format_report_content(content):
             output.append(formatted_val)
             output.append("")
 
-        return "<br/>".join(output)
+        return "<br/>".join(output) if output else html.escape(str(content)).replace('\n', '<br/>')
 
     except Exception as e:
         print(f"Error formatting report: {e}")

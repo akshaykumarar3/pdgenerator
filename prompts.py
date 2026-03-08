@@ -237,6 +237,11 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - Patient demographics, history, and clinical details MUST match the persona exactly.
        - Any clinical findings MUST support the diagnoses listed in the persona.
        - DO NOT introduce any new conditions, procedures, or codes not in the persona.
+    7b. **SUPPORTING TESTS MUST REFERENCE TARGET PROCEDURE (CRITICAL)**:
+       - When the case involves a target procedure (e.g. Myocardial perfusion imaging, CPT 78452), any **supporting** documents (ECG, stress test, echo, lab panels, etc.) exist to justify that procedure.
+       - In each supporting report, **explicitly state** in `clinical_indication`, `findings`, and/or `impression` that the test supports or is in preparation for the target procedure. Example: "Obtained in workup prior to myocardial perfusion imaging;" "Findings support need for myocardial perfusion imaging to assess for ischemia;" "Abnormal stress ECG supports proceeding with perfusion imaging."
+       - Do NOT leave supporting reports as standalone items with no link to the target procedure. The persona PDF and standalone report PDFs must make the clinical link clear so auditors see why each document exists.
+       - Every report's `content` JSON must be **fully populated** (no empty sections); the persona's "Clinical Reports & Imaging" section displays this content and must not be blank.
     8. **TEMPORAL CONSISTENCY (CRITICAL - NEW REQUIREMENT)**:
        - **Today's Date**: {datetime.datetime.now().strftime("%Y-%m-%d")}
        - **Expected Procedure Date**: MUST be 7-90 days in the FUTURE from today
