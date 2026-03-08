@@ -8,7 +8,7 @@ from google import genai
 from google.oauth2 import service_account
 from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from typing import Optional, List, Dict
 from datetime import datetime
 import instructor
@@ -518,10 +518,17 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
-def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "") -> 'ClinicalDataPayload':
-
+def generate_clinical_data(
+    case_details: dict,
+    patient_state: dict,
+    document_plan: dict,
+    user_feedback: str = "",
+    history_context: str = "",
+    existing_persona: Optional[Dict] = None,
+) -> 'ClinicalDataPayload':
     """
     Calls AI to generate clinical data (Persona + Documents) based on the patient state and plan.
+    When existing_persona is provided and the AI omits patient_persona, it is used as fallback.
     """
     
     # 1. Load actual JSON templates from disk
@@ -611,6 +618,24 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
                          data = data[0]
                      
                      response_obj = ClinicalDataPayload.model_validate(data)
+                 except ValidationError as ve:
+                     # Recover when patient_persona is missing but we have existing_persona + documents
+                     if "patient_persona" in str(ve) and existing_persona and isinstance(data, dict):
+                         docs = data.get("documents", [])
+                         changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
+                         try:
+                             persona_obj = PatientPersona.model_validate(existing_persona)
+                             response_obj = ClinicalDataPayload(
+                                 patient_persona=persona_obj,
+                                 documents=docs,
+                                 changes_summary=changes,
+                             )
+                             print("   ⚠️  Recovered: used existing persona (AI omitted patient_persona)")
+                         except Exception as recover_err:
+                             print(f"   ⚠️  Recovery failed: {recover_err}. Re-raising original error.")
+                             raise ve
+                     else:
+                         raise ve
                  except Exception as e:
                      print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
                      response_obj = ClinicalDataPayload.model_validate_json(resp.text)
@@ -659,8 +684,41 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         return response_obj, usage_stats
         
     except Exception as e:
+        # Recover when patient_persona omitted (e.g. feedback asked for more docs)
+        def _try_recover(exc, completion_obj=None):
+            if not existing_persona or "patient_persona" not in str(exc):
+                return None
+            raw_text = ""
+            if completion_obj and hasattr(completion_obj, "choices") and completion_obj.choices:
+                raw_text = getattr(completion_obj.choices[0].message, "content", None) or ""
+            if not raw_text:
+                return None
+            raw_text = raw_text.strip()
+            for prefix in ("```json\n", "```json", "```"):
+                if raw_text.startswith(prefix):
+                    raw_text = raw_text[len(prefix):].replace("```", "").strip()
+                    break
+            try:
+                data = json.loads(raw_text)
+                if isinstance(data, list) and data:
+                    data = data[0]
+                docs = data.get("documents", [])
+                changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
+                persona_obj = PatientPersona.model_validate(existing_persona)
+                return ClinicalDataPayload(patient_persona=persona_obj, documents=docs, changes_summary=changes)
+            except (json.JSONDecodeError, ValidationError):
+                return None
+
+        try:
+            from instructor.core import InstructorRetryException
+            if isinstance(e, InstructorRetryException):
+                recovered = _try_recover(e, getattr(e, "last_completion", None))
+                if recovered:
+                    print("   ⚠️  Recovered from OpenAI retry failure: used existing persona")
+                    return recovered, {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+        except ImportError:
+            pass
         print(f"   ⚠️ AI Generation Failed: {e}")
-        # Return dummy to prevent crash if possible, or re-raise
         raise e
 
 

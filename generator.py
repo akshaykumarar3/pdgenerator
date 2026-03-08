@@ -301,6 +301,7 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
+            existing_persona=existing_patient,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
