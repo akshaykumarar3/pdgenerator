@@ -82,14 +82,27 @@ def format_report_content(content):
         print(f"Error formatting report: {e}")
         return html.escape(str(content)).replace('\n', '<br/>')
 
+def _sanitize_filename(name: str) -> str:
+    """Make a safe filename segment across OSes."""
+    if not name:
+        return "document"
+    # Replace path separators and illegal filename chars
+    name = name.replace(os.sep, "-").replace("/", "-").replace("\\", "-")
+    name = re.sub(r'[<>:"|?*]+', "-", name)
+    name = re.sub(r"\s+", " ", name).strip()
+    return name
+
+
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
 
     if doc_type.startswith("DOC-"):
-        filename = f"{doc_type}.pdf" if not doc_type.endswith(".pdf") else doc_type
+        safe_doc_type = _sanitize_filename(doc_type)
+        filename = f"{safe_doc_type}.pdf" if not safe_doc_type.endswith(".pdf") else safe_doc_type
     else:
-        filename = f"Patient_{patient_id}_v{version}_{doc_type}.pdf"
+        safe_doc_type = _sanitize_filename(doc_type)
+        filename = f"Patient_{patient_id}_v{version}_{safe_doc_type}.pdf"
 
     file_path = os.path.join(patient_folder, filename)
     

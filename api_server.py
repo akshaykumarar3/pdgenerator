@@ -22,6 +22,12 @@ load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 import data_loader
 import core.patient_db as patient_db
 
+# Refresh CPT code mapping from UAT Plan on server startup
+try:
+    data_loader.refresh_cpt_code_map()
+except Exception:
+    pass
+
 app = Flask(__name__)
 CORS(app)  # Allow all origins so the file:// UI can call us
 

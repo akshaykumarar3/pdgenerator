@@ -136,6 +136,9 @@ def validate_structure(document_text: Any) -> tuple[bool, list[str]]:
     # V3 Architecture Check: See if it's already a dict or a valid JSON string (Template)
     if isinstance(document_text, dict):
         return True, []
+
+    if not isinstance(document_text, str):
+        return False, [f"Unsupported document content type: {type(document_text).__name__}"]
         
     try:
         data = json.loads(document_text)

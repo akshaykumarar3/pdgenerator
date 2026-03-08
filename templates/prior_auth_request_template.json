@@ -2,22 +2,51 @@
     "title": "Prior Authorization Request",
     "sections": [
         "patient_information",
+        "provider_information",
+        "payer_information",
+        "prior_auth_type",
         "requested_procedure",
         "clinical_justification",
+        "risk_benefit_analysis",
+        "diagnostic_workup",
         "supporting_diagnoses",
+        "clinical_timeline",
         "previous_treatments",
-        "expected_outcome"
+        "expected_outcome",
+        "policy_criteria_summary"
     ],
     "patient_information": {
         "name": "patient_state.demographics.name",
+        "dob": "patient_state.demographics.dob",
+        "gender": "patient_state.demographics.gender",
+        "address": "patient_state.demographics.address",
+        "phone": "patient_state.demographics.phone",
         "mrn": "patient_state.identifiers.mrn"
     },
+    "provider_information": {
+        "requesting_provider": "",
+        "provider_npi": "",
+        "provider_address": "",
+        "provider_phone": ""
+    },
+    "payer_information": {
+        "payer_name": "patient_state.insurance.payer_name",
+        "plan_type": "patient_state.insurance.plan_type",
+        "member_id": "patient_state.insurance.member_id",
+        "policy_number": "patient_state.insurance.policy_number"
+    },
+    "prior_auth_type": "",
     "requested_procedure": {
         "procedure": "patient_state.requested_procedure.procedure_name",
-        "cpt_code": "patient_state.requested_procedure.cpt_code"
+        "cpt_code": "patient_state.requested_procedure.cpt_code",
+        "expected_date": "patient_state.requested_procedure.expected_date"
     },
     "clinical_justification": "",
+    "risk_benefit_analysis": "",
+    "diagnostic_workup": "",
     "supporting_diagnoses": "patient_state.diagnoses",
+    "clinical_timeline": "",
     "previous_treatments": "",
-    "expected_outcome": ""
+    "expected_outcome": "",
+    "policy_criteria_summary": ""
 }

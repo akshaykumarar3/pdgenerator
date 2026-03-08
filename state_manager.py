@@ -79,7 +79,9 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
             "gender": existing_record.get("gender", "Unknown"),
             "race": existing_record.get("race", "Unknown"),
             "height": existing_record.get("height", "Unknown"),
-            "weight": existing_record.get("weight", "Unknown")
+            "weight": existing_record.get("weight", "Unknown"),
+            "address": existing_record.get("address", ""),
+            "phone": existing_record.get("telecom", "")
         }
     else:
         # Generate entirely new core identifiers. 
@@ -92,7 +94,9 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
             "gender": "",
             "race": "",
             "height": "",
-            "weight": ""
+            "weight": "",
+            "address": "",
+            "phone": ""
         }
 
     # 3. Assemble Full State Object 
@@ -104,6 +108,13 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
     diagnoses = []
     
     procedure_name = case_data.get("procedure", "Unknown Procedure")
+    # CPT code from case_data or procedure text
+    cpt_code = str(case_data.get("cpt_code", "") or "").strip()
+    if not cpt_code and procedure_name:
+        import re
+        m = re.search(r"(\\d{5})", str(procedure_name))
+        if m:
+            cpt_code = m.group(1)
     
     # Pick random insurance for new patients
     selected_payer = random.choice(INSURANCE_PAYERS)
@@ -119,6 +130,7 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
         "timeline": {}, # Will be filled by AI / Generator temporal helpers
         "requested_procedure": {
              "procedure_name": procedure_name,
+             "cpt_code": cpt_code,
              "expected_date": "" # Handled by generate temporal logic later
         },
         "insurance": {

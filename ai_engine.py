@@ -8,7 +8,7 @@ from google import genai
 from google.oauth2 import service_account
 from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, Field, ValidationError, ConfigDict
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import instructor
@@ -501,6 +501,7 @@ class ModifiedSQLRaw(BaseModel):
 
 class ClinicalDataPayload(BaseModel):
     """Public model for consumption (Pure Clinical Data)."""
+    model_config = ConfigDict(populate_by_name=True)
     # No SQL fields
     changes_summary: str = Field(..., description="A short summary of the clinical scenario generated.")
     documents: List[GeneratedDocument] = Field(..., alias="structured_documents", description="A MANDATORY list of generated clinical documents (consults, lab reports, imaging, etc.) matching the requested templates.")
@@ -802,7 +803,10 @@ def fix_document_content(content: str, errors: List[str]) -> str:
         
         if PROVIDER == "openai":
             response = client.chat.completions.create(**kwargs)
-            return response
+            # Return the raw text content, not the response object
+            if response and response.choices:
+                return response.choices[0].message.content
+            return content
         elif PROVIDER == "vertexai":
             # Simplified for vertex
             chat = client.client.start_chat()

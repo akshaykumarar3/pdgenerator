@@ -1009,10 +1009,10 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
+      "relationship": "Emergency Contact",
       "name": "Monica Geller",
       "telecom": "555-987-6543",
-      "address": "78 Chandler Ave, Houston, TX 77005",
+      "address": "345 Friends Street, Houston, TX 77005",
       "gender": "female",
       "organization": "N/A",
       "period_start": "2020-01-01",
@@ -1041,7 +1041,7 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-03-22",
+    "expected_procedure_date": "2026-03-25",
     "procedure_requested": "Colonoscopy, Diagnostic",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1054,28 +1054,224 @@
     "pa_request": {
       "requesting_provider": "Dr. Jennifer Yang, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient's persistent abdominal pain and bowel changes, coupled with significant familial risk, warrant further investigation with a diagnostic colonoscopy to preclude colorectal neoplasm.",
+      "clinical_justification": "Rachel Green requires a diagnostic colonoscopy due to gastrointestinal symptoms with significant family history. This procedure is necessary to exclude early malignancy.",
       "supporting_diagnoses": [
-        "K52.9 - Noninfective gastroenteritis and colitis, unspecified",
+        "K52.9 - Noninfective gastroenteritis and colitis",
         "R19.7 - Diarrhea, unspecified",
-        "Z80.0 - Family history of malignant neoplasm of digestive organs"
+        "Z80.0 - Family history of digestive organ cancer"
       ],
-      "previous_treatments": "Lifestyle changes, empirical antispasmodic treatment",
-      "expected_outcome": "Rule out malignancy, guide further treatment"
+      "previous_treatments": "Conservative management and dietary adjustments.",
+      "expected_outcome": "Early detection and management of any potential gastrointestinal disease."
     },
-    "bio_narrative": "Rachel Green is a 44-year-old Caucasian female residing in Houston, Texas. Her pursuit of health is underscored by regular health check-ups, a commitment driven by her family's medical history marked by instances of colorectal cancer. Her current symptoms of abdominal pain and changes in bowel habits have persisted, worsening over the past six months leading her to seek increased medical inquiry. Rachel's active lifestyle and adherence to prescribed medications, including Aspirin for cardiovascular protection and Lipitor for cholesterol management, reflect her effort to remain vigilant about her health. She maintains a balanced diet and engages in regular exercise, which complements her proactive management of hyperlipidemia and prior hypertension. Given her familial predisposition, Dr. Jennifer Yang recommended a diagnostic colonoscopy to elucidate the cause of her symptoms and rule out potential malignancies. Rachel is socially active, typically participating in social events, balancing this with occasional alcohol consumption, and demonstrates no history of substance use or smoking. Her mental health evaluations suggest no significant distress, harmonizing with her structured lifestyle routines and her supportive network anchored by friends and consistent medical oversight. Her previous cardiac rehab further illustrates her dedication to recovery and health optimization. The prescribed colonoscopy is expected to provide a definitive diagnosis, aligning with her proactive health management.",
-    "medications": [],
-    "allergies": [],
-    "vaccinations": [],
-    "therapies": [],
-    "behavioral_notes": "",
-    "encounters": [],
+    "bio_narrative": "Rachel Green, a 45-year-old Caucasian female, resides in Houston, Texas, and maintains a proactive approach to her health, regularly participating in physical activities despite her demanding career. She is known for her dedication to a healthy lifestyle, including consistent medication adherence, which is reflected in her management of cardiovascular risks with drugs like Aspirin and Lipitor. Rachel has encountered gastrointestinal issues recently, which have persisted beyond usual first-line treatments.\nHer medical background is significant for a family history of digestive organ cancers, leading to her current diagnostic pursuit. In her past, she has shown improvement with physical therapy post-cardiac rehabilitation, addressing her elevated cardiovascular risk factors through regular exercise and cholesterol management.\nCurrently under the care of Dr. Jennifer Yang at Houston Methodist Hospital, Rachel's case for a diagnostic colonoscopy is supported by symptomatic evidence and her elevated familial cancer risk. The procedure aims to ensure early detection and intervention if necessary, consistent with her overall health vigilance strategy.",
+    "medications": [
+      {
+        "brand": "Aspirin",
+        "generic_name": "Aspirin 81mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "current",
+        "start_date": "2025-12-01",
+        "end_date": "ongoing",
+        "reason": "Prevention of cardiovascular events."
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "ongoing",
+        "start_date": "2025-11-01",
+        "end_date": "ongoing",
+        "reason": "Management of high cholesterol levels due to high cardiovascular risk."
+      },
+      {
+        "brand": "Metoprolol",
+        "generic_name": "Metoprolol 100mg",
+        "dosage": "1 tablet daily",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "past",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-01",
+        "reason": "Chest pain management."
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "2010-05-01"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2026-01-15",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 Bivalent Booster",
+        "vaccine_type": "mRNA",
+        "date_administered": "2025-12-15",
+        "administered_by": "Walgreens",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2023-08-10",
+        "administered_by": "Houston Health Clinic",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus-diphtheria",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2022-06-20",
+        "administered_by": "Primary Care Office",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Physical Therapy",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
+        "icd10_codes": [
+          "Z71.89 - Other specified counseling"
+        ],
+        "provider": "Dr. Eric Summers, PT",
+        "provider_npi": "0001234567",
+        "facility": "Memorial Hermann Outpatient Rehabilitation Center",
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-28",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Rehabilitation post-detection of elevated cardiac risk.",
+        "notes": "Patient actively participated and showed improvement in exercise tolerance."
+      }
+    ],
+    "behavioral_notes": "Rachel adheres to her medication regimen consistently and remains proactive about her health, engaging in regular physical activity despite her busy career. She has no history of smoking, yet engages in occasional social drinking. Mental health evaluations indicate no current distress, aligning with her family and work responsibilities, despite the added stress of managing her medical concerns.",
+    "encounters": [
+      {
+        "encounter_date": "2026-01-15",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Routine check-up and vaccinations.",
+        "provider": "Dr. Jennifer Yang, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-01-15",
+          "blood_pressure": "120/80 mmHg",
+          "heart_rate": "70 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "22.3 kg/m\u00b2",
+          "oxygen_saturation": null,
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "General wellness follow-up.",
+        "doctor_note": "Routine wellness examination conducted. Recent vaccinations updated including Influenza. No acute distress noted. Patient adherent to current medication regimen including Aspirin and Lipitor, managing cardiovascular risk factors well.",
+        "observations": [
+          "Adherent to medications",
+          "Maintains regular exercise schedule"
+        ],
+        "procedures_performed": [
+          "99213 - E&M Office Visit Level 3"
+        ],
+        "diagnoses": [
+          "Z00.00 - Encounter for general adult medical examination without abnormal findings"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Jennifer Yang, MD"
+        ],
+        "progress_notes": "Patient continues to manage cholesterol and heart health effectively. No new concerns reported.",
+        "follow_up_instructions": "Continue medication regimen and maintain current lifestyle."
+      },
+      {
+        "encounter_date": "2026-02-15",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Assessment of gastrointestinal symptoms and procedural planning.",
+        "provider": "Dr. Jennifer Yang, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-02-15",
+          "blood_pressure": "124/78 mmHg",
+          "heart_rate": "72 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "22.3 kg/m\u00b2",
+          "oxygen_saturation": null,
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Persistent abdominal discomfort and diarrhea.",
+        "doctor_note": "Patient presents with ongoing abdominal pain lasting several months, alongside frequent diarrhea. Significant family history of colon cancer discussed. Physical exam reveals soft abdomen with mild tenderness in lower quadrants. Recommend colonoscopy for further investigation.",
+        "observations": [
+          "Abdominal tenderness",
+          "Family history of cancer"
+        ],
+        "procedures_performed": [
+          "99213 - E&M Office Visit Level 3"
+        ],
+        "diagnoses": [
+          "K52.9 - Noninfective gastroenteritis and colitis",
+          "R19.7 - Diarrhea, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Jennifer Yang, MD"
+        ],
+        "progress_notes": "Considerable family medical history necessitates thorough evaluation. Colonoscopy planned for detailed investigation.",
+        "follow_up_instructions": "Prepare for scheduling of colonoscopy, anticipate further diagnostics if indicated. Follow pre-procedure instructions."
+      }
+    ],
     "images": [],
     "reports": [],
     "procedures": [],
-    "social_history": null,
-    "vital_signs_current": null,
-    "gender_specific_history": null
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "Occasional glass of wine at social events.",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-01-15",
+      "last_visit_reason": "Routine check-up and vaccinations.",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": "Due to persistent gastrointestinal symptoms.",
+      "mental_health_history": "No significant history reported.",
+      "mental_health_current": null,
+      "exercise_habits": "Engages in regular aerobic and strength training exercises.",
+      "diet_notes": "Maintains a balanced diet with focus on low cholesterol.",
+      "family_history_relevant": "Family history includes digestive organ cancers."
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-02-15",
+      "blood_pressure": "124/78 mmHg",
+      "heart_rate": "72 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "22.3 kg/m\u00b2",
+      "oxygen_saturation": null,
+      "temperature": null,
+      "respiratory_rate": null
+    },
+    "gender_specific_history": "Patient last underwent a Pap smear screening test in 2025 with normal results. No mammograms have been recorded."
   },
   "261": {
     "first_name": "Chandler",

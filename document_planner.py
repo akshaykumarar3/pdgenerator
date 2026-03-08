@@ -30,7 +30,7 @@ def load_rules() -> Dict:
             print(f"Error reading {RULES_PATH}: {e}")
     return {}
 
-def detect_case_type(procedure_string: str) -> str:
+def detect_case_type(procedure_string: str, cpt_code: str = "") -> str:
     """
     Detects the case type string based on the provided CPT code or procedure string.
     Rules:
@@ -45,11 +45,14 @@ def detect_case_type(procedure_string: str) -> str:
         
     rules = load_rules()
     
-    # Extract CPT from procedure string if supplied (often structured like 'CPT: 75574' or just '75574')
-    cpt_match = re.search(r"(\d{5})", str(procedure_string))
-    cpt_code = None
-    if cpt_match:
-        cpt_code = cpt_match.group(1)
+    # Extract CPT from explicit param or procedure string
+    cpt_code = str(cpt_code or "").strip()
+    if not cpt_code:
+        cpt_match = re.search(r"(\d{5})", str(procedure_string))
+        if cpt_match:
+            cpt_code = cpt_match.group(1)
+
+    if cpt_code:
         # Attempt integer parsing for ranges
         try:
             cpt_int = int(cpt_code)
@@ -90,7 +93,7 @@ def create_and_save_document_plan(patient_id: str, case_data: Dict) -> Dict:
     and writes out the debug plan representation.
     """
     procedure = case_data.get("procedure", "")
-    case_type = detect_case_type(procedure)
+    case_type = detect_case_type(procedure, cpt_code=case_data.get("cpt_code", ""))
     templates = select_document_plan(case_type)
     
     plan = {
