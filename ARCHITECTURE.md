@@ -69,8 +69,30 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
 The system is designed to be OS-agnostic, supporting Windows, macOS, and Linux.
 Key implementations:
 - **Universal Encoding**: All file I/O operations explicitly use `utf-8` to prevent character mapping errors across different default OS encodings.
-- **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access.
+- **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access. DEBUG_DIR, RULES_PATH, cache_dir, and OUTPUT_DIR default are project-root-relative, so the system works regardless of current working directory.
 - **Environment Isolation**: `python-dotenv` loads from `cred/.env` based on absolute script locations.
-- **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server.
+- **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server. Launch scripts change to the script directory (`cd /d "%~dp0"` or `cd "$(dirname "$0")"`) before running, so invocation from any directory works.
+- **Path Resolution Flow**: All path-dependent modules resolve relative to project root (or script location), independent of cwd:
+
+```mermaid
+flowchart TB
+  subgraph runner [User Invocation]
+    RunFrom["User runs script"]
+  end
+  subgraph projectRoot [Project-Root-Relative Modules]
+    Config["core/config.py"]
+    DataLoader["data_loader.py"]
+    AIEngine["ai_engine.py"]
+    DocPlanner["document_planner.py"]
+    StateMgr["state_manager.py"]
+    SearchEng["search_engine.py"]
+  end
+  RunFrom --> Config
+  RunFrom --> DataLoader
+  RunFrom --> AIEngine
+  RunFrom --> DocPlanner
+  RunFrom --> StateMgr
+  RunFrom --> SearchEng
+```
 
 12. Summary...

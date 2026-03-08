@@ -199,7 +199,7 @@ Realistic healthcare facilities matching patient locality:
 
 - Added `run.bat` for Windows users
 - Cross-platform documentation in README
-- Example configuration files in `cred/examples/`
+- Example configuration in `core/.env.example`
 
 ### Bug Fixes
 
