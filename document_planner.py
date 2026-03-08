@@ -8,7 +8,17 @@ DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
 RULES_PATH = os.path.join(_BASE_DIR, "templates", "document_plan_rules.json")
 
 def ensure_debug_dir():
-    os.makedirs(DEBUG_DIR, exist_ok=True)
+    try:
+        if not os.path.exists(DEBUG_DIR):
+            try:
+                os.makedirs(DEBUG_DIR, exist_ok=True)
+            except Exception as e:
+                # Ignore errors here to prevent blocking main flow
+                pass
+        elif not os.path.isdir(DEBUG_DIR):
+            print(f"⚠️ Warning: {DEBUG_DIR} is not a directory.")
+    except Exception as e:
+        print(f"⚠️ Could not ensure debug dir: {e}")
 
 def load_rules() -> Dict:
     """Loads document plan rules from the templates directory."""

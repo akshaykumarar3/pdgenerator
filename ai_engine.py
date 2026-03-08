@@ -9,7 +9,7 @@ from google.oauth2 import service_account
 from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, ValidationError
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from datetime import datetime
 import instructor
 import httpx # For disabling HTTP/2 to prevent hangs
@@ -18,8 +18,9 @@ import httpx # For disabling HTTP/2 to prevent hangs
 import prompts
 
 
-# Load .env (Check cred/ first, then fallback to root)
+# ─── Load Environment ────────────────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Check cred/ first, then fallback to root
 env_path_cred = os.path.join(BASE_DIR, "cred", ".env")
 env_path_root = os.path.join(BASE_DIR, ".env")
 env_path = env_path_cred if os.path.exists(env_path_cred) else env_path_root
@@ -502,7 +503,7 @@ class ClinicalDataPayload(BaseModel):
     """Public model for consumption (Pure Clinical Data)."""
     # No SQL fields
     changes_summary: str = Field(..., description="A short summary of the clinical scenario generated.")
-    documents: List[GeneratedDocument]
+    documents: List[GeneratedDocument] = Field(..., alias="structured_documents", description="A MANDATORY list of generated clinical documents (consults, lab reports, imaging, etc.) matching the requested templates.")
     patient_persona: PatientPersona
 
 class VerificationPointers(BaseModel):
@@ -550,7 +551,7 @@ def generate_clinical_data(
     full_document_plan = {
         "case_type": document_plan.get("case_type"),
         "procedure": document_plan.get("procedure"),
-        "templates": loaded_templates
+        "document_templates": loaded_templates
     }
 
     # 3. Generate main prompt from centralized prompts module
@@ -559,7 +560,8 @@ def generate_clinical_data(
         patient_state=patient_state,
         document_plan=full_document_plan,
         user_feedback=user_feedback,
-        history_context=history_context
+        history_context=history_context,
+        existing_persona=existing_persona
     )
 
     # Use create_with_completion to get usage stats
@@ -567,7 +569,6 @@ def generate_clinical_data(
         # Convert system prompt to user prompt for Vertex AI compatibility
         system_role = "user" if PROVIDER == "vertexai" else "system"
 
-        # Standardize arguments
         # Standardize arguments
         kwargs = {
             "model": MODEL_NAME,

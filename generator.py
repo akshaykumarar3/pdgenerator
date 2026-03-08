@@ -5,8 +5,12 @@ import shutil
 import random
 import datetime
 from datetime import timedelta
-
 from dotenv import load_dotenv
+
+# ─── BOOTSTRAP ENVIRONMENT ───────────────────────────────────────────────────
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_env_path = os.path.join(_BASE_DIR, "cred", ".env")
+load_dotenv(_env_path)
 
 import data_loader
 import ai_engine
@@ -20,9 +24,6 @@ import document_planner
 from doc_validator import validate_structure, format_clinical_document
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
-
-env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
-load_dotenv(env_path)
 
 from core.config import OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, ensure_output_dirs, get_patient_report_folder
 

@@ -56,6 +56,12 @@ def load_patient_case(target_id: str):
             df = pd.read_excel(INPUT_EXCEL, sheet_name=sheet)
             df.columns = df.columns.astype(str).str.strip()
             
+            # Forward-fill specifically for merged columns (Test Case #, Procedure, Code, Details)
+            cols_to_ffill = ['Test Case #', 'Department', 'CPT Code', 'Procedure', 'Code', 'Test Case Details']
+            existing_cols = [c for c in cols_to_ffill if c in df.columns]
+            if existing_cols:
+                df[existing_cols] = df[existing_cols].ffill()
+            
             id_col = _get_patient_id_column(df)
             if id_col not in df.columns:
                 continue
@@ -94,6 +100,12 @@ def get_all_patient_ids() -> list:
         for sheet in xl.sheet_names:
             df = pd.read_excel(INPUT_EXCEL, sheet_name=sheet)
             df.columns = df.columns.astype(str).str.strip()
+            
+            # Forward-fill specifically for merged columns
+            cols_to_ffill = ['Test Case #', 'Department', 'CPT Code', 'Procedure', 'Code', 'Test Case Details']
+            existing_cols = [c for c in cols_to_ffill if c in df.columns]
+            if existing_cols:
+                df[existing_cols] = df[existing_cols].ffill()
             
             id_col = _get_patient_id_column(df)
             if id_col not in df.columns:

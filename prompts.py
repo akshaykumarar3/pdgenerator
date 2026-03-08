@@ -87,6 +87,17 @@ H. **Gender-Specific History** (gender_specific_history — text or null):
 I. **Behavioral Notes** (free text):
    - Concise paragraph: medication adherence, lifestyle, mental health flags, substance use history
 
+J. **Medical Biography & History (bio_narrative - MANDATORY)**:
+   - Generate a comprehensive, multi-paragraph longitudinal medical history (300-500 words).
+   - This section is the narrative foundation of the patient persona.
+   - Include:
+     * Detailed HPI (History of Present Illness) leading to the requested procedure.
+     * Comprehensive Social History (lifestyle, occupation, support system).
+     * Detailed Family History relevant to the current condition.
+     * Longitudinal timeline of symptoms and previous treatments.
+     * Clinical rationale for the current referral/request.
+   - USE PLAIN TEXT. NO MARKDOWN. NO BOLDING.
+
 === PERSONA DOCUMENT AS SOURCE OF TRUTH ===
 **CRITICAL**: The patient_persona document is the SINGLE SOURCE OF TRUTH. All generated reports MUST:
 - Reference ONLY the CPT codes, ICD-10 codes, and procedures defined in the persona.
@@ -125,7 +136,7 @@ F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
 # - Persona Requirements: Add/remove required patient fields
 
 def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", 
-                             history_context: str = "") -> str:
+                             history_context: str = "", existing_persona: dict = None) -> str:
     """
     Generates the main prompt for clinical data generation.
     
@@ -135,27 +146,48 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
         document_plan: Dict containing the document templates to fill
         user_feedback: Optional user corrections/instructions
         history_context: Previous interaction history
+        existing_persona: Optional existing patient persona dictionary
     
     Returns:
         Complete prompt string
     """
     
     import json
+    import random
     state_str = json.dumps(patient_state, indent=2)
     plan_str = json.dumps(document_plan, indent=2)
     feedback_instruction = get_feedback_instruction(user_feedback)
     
+    # 1. Handle Random Character Universe (Only for new patients)
+    diversity_instruction = ""
+    if not existing_persona:
+        universe = random.choice(CHARACTER_UNIVERSES)
+        diversity_instruction = f"""
+    **PERSONA DIVERSITY INSTRUCTION**:
+    To ensure demographic and naming diversity, loosely base the patient's name, personality traits (in behavioral notes), and general background on a character from the fictional universe: "{universe}". 
+    DO NOT mention the universe or character name directly. Just use it as inspiration for realism and variety.
+    """
+
+    # 2. Handle Existing Persona Constraint
+    existing_constraint_str = ""
+    if existing_persona:
+        existing_constraint_str = get_existing_patient_constraint(existing_persona, case_details)
+
     return f"""
     **CLINICAL SCENARIO Requirements (IMMUTABLE Source of Truth):**
     - Procedure: {case_details['procedure']}
     - Target Outcome: {case_details['outcome']}
     - Clinical Context: {case_details['details']}
     
+    {diversity_instruction}
+    
     **PATIENT STATE LAYER (DETERMINISTIC IDENTIFIERS):**
     You MUST adhere strictly to the generated state identifiers:
     ```json
     {state_str}
     ```
+    {existing_constraint_str}
+
     
     **DOCUMENT PLAN (TEMPLATES TO FILL):**
     The following templates must be populated. The keys denote the expected JSON structures:
@@ -179,7 +211,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
        - All *historical* procedures must be implied as 'completed'.
     4. **Medical Coding Requirements (CRITICAL - PERSONA IS SOURCE OF TRUTH)**:
-       - **CPT Code (MANDATORY IN PERSONA)**: The target procedure MUST be specified with its CPT code (e.g., "CPT 78452 - Myocardial perfusion imaging").
+       - **CPT Code (MANDATORY IN PERSONA)**: The target procedure MUST be specified with its CPT code (e.g., "CPT [CODE] - [DESCRIPTION]").
        - **ICD-10 Codes (MANDATORY IN PERSONA)**: Generate REAL ICD-10-CM diagnosis codes that clinically support the medical necessity of the requested procedure.
        - **Persona Must Include**:
          - `target_cpt_code`: The exact CPT code for the requested procedure.
@@ -238,8 +270,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - Any clinical findings MUST support the diagnoses listed in the persona.
        - DO NOT introduce any new conditions, procedures, or codes not in the persona.
     7b. **SUPPORTING TESTS MUST REFERENCE TARGET PROCEDURE (CRITICAL)**:
-       - When the case involves a target procedure (e.g. Myocardial perfusion imaging, CPT 78452), any **supporting** documents (ECG, stress test, echo, lab panels, etc.) exist to justify that procedure.
-       - In each supporting report, **explicitly state** in `clinical_indication`, `findings`, and/or `impression` that the test supports or is in preparation for the target procedure. Example: "Obtained in workup prior to myocardial perfusion imaging;" "Findings support need for myocardial perfusion imaging to assess for ischemia;" "Abnormal stress ECG supports proceeding with perfusion imaging."
+       - When the case involves a target procedure, any **supporting** documents (ECG, stress test, echo, lab panels, etc.) exist to justify that procedure.
+       - In each supporting report, **explicitly state** in `clinical_indication`, `findings`, and/or `impression` that the test supports or is in preparation for the target procedure. Example: "Obtained in workup prior to requested procedure;" "Findings support need for procedure to assess clinical status;" "Results support proceeding with scheduled imaging/surgery."
        - Do NOT leave supporting reports as standalone items with no link to the target procedure. The persona PDF and standalone report PDFs must make the clinical link clear so auditors see why each document exists.
        - Every report's `content` JSON must be **fully populated** (no empty sections); the persona's "Clinical Reports & Imaging" section displays this content and must not be blank.
     8. **TEMPORAL CONSISTENCY (CRITICAL - NEW REQUIREMENT)**:
@@ -280,7 +312,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - **Example PA Request**:
          * Requesting Provider: "Dr. Michael Chen, MD, FACC"
          * Urgency: "Routine"
-         * Justification: "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning."
+         * Justification: "Patient presents with persistent symptoms and relevant diagnostic findings. The requested procedure is medically necessary to manage the patient's condition and guide treatment planning."
          * Supporting Diagnoses: ["I25.10 - Atherosclerotic heart disease", "R07.9 - Chest pain, unspecified"]
          * Previous Treatments: "Conservative management with beta-blockers and lifestyle modifications"
          * Expected Outcome: "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
@@ -295,11 +327,11 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
          - `provider` (GP), `link` (N/A)
          - **Provider NPI (MANDATORY)**: `provider.formatted_npi`: Format "XXXXXXXXXX" (10 digits)
          - **Clinical Coding (MANDATORY - Must be filled for report alignment)**:
-           - `target_cpt_code`: CPT code for the requested procedure (e.g., "78452")
-           - `target_cpt_description`: Full procedure description (e.g., "Myocardial perfusion imaging, multiple studies")
-           - `primary_diagnosis_codes`: List of primary ICD-10 codes [{{"code": "I25.10", "description": "Atherosclerotic heart disease"}}]
-           - `secondary_diagnosis_codes`: List of secondary ICD-10 codes [{{"code": "R07.9", "description": "Chest pain, unspecified"}}]
-           - `procedure_history`: List of past relevant procedures [{{"cpt": "93000", "description": "ECG", "date": "2024-01-15"}}]
+           - `target_cpt_code`: CPT code for the requested procedure
+           - `target_cpt_description`: Full procedure description
+           - `primary_diagnosis_codes`: List of primary ICD-10 codes
+           - `secondary_diagnosis_codes`: List of secondary ICD-10 codes
+           - `procedure_history`: List of past relevant procedures
          - **NEW MANDATORY FIELDS (Temporal & Facility)**:
            - `expected_procedure_date`: Future date (YYYY-MM-DD, 7-90 days from today)
            - `procedure_requested`: Full procedure name
@@ -392,7 +424,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
         - Do not include raw text headers or demographics in the `content` JSON; these are handled by the system.
         - Focus solely on populating the clinical sections defined in the DOCUMENT PLAN.
      25. **PA APPROVAL STRATEGY**:
-        - If the user feedback contains "PA APPROVAL OPTIMIZATION" instruction:
+        - If the expected outcome ({case_details['outcome']}) indicates "Approval" or "Likelihood", OR if user feedback contains "PA APPROVAL OPTIMIZATION":
           → Generate all clinical documents with the STRONGEST possible medical justification.
           → Include comprehensive clinical evidence, detailed findings, thorough rationale.
      26. **OUTPUT STRUCTURE (MANDATORY - NO EXCEPTIONS)**:
@@ -501,7 +533,7 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
     - Gender: {existing_persona.get('gender')}
     - Address: {existing_persona.get('address')}
     - Telecom: {existing_persona.get('telecom')}
-    - Provider: {(existing_persona.get('provider') or {{}}).get('generalPractitioner')} ({(existing_persona.get('provider') or {{}}).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{encounter_lock}{image_lock}{report_lock}{procedure_lock}{behavioral_lock}
+    - Provider: {(existing_persona.get('provider') or dict()).get('generalPractitioner')} ({(existing_persona.get('provider') or dict()).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{encounter_lock}{image_lock}{report_lock}{procedure_lock}{behavioral_lock}
     
     *Exception*: You MUST generate NEW encounters, vital signs, and adjust the bio narrative to logically support any new requested reports or user feedback.
     - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}) and any newly generated reports.
