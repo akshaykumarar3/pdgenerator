@@ -280,8 +280,8 @@
     "last_name": "Diaz",
     "gender": "female",
     "dob": "1987-09-15",
-    "address": "123 Main Street, Houston, TX 77002",
-    "telecom": "555-555-5555",
+    "address": "123 Main St, Houston, TX, 77001",
+    "telecom": "512-555-0198",
     "race": "Hispanic",
     "height": "5 ft 8 in",
     "weight": "160 lbs",
@@ -295,12 +295,12 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Amy Santiago",
-      "telecom": "555-987-6543",
-      "address": "789 Elm Street, Houston, TX 77002",
-      "gender": "female",
+      "name": "Jake Peralta",
+      "telecom": "512-555-0199",
+      "address": "456 Elm St, Houston, TX, 77002",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2024-01-01",
+      "period_start": "2025-01-01",
       "period_end": "ongoing"
     },
     "provider": {
@@ -308,14 +308,14 @@
       "formatted_npi": "1234567890",
       "managingOrganization": "Houston Methodist Hospital",
       "address": "6565 Fannin Street, Houston, TX 77030",
-      "phone": "555-019-8273"
+      "phone": "713-790-3311"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
@@ -326,7 +326,7 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-03-24",
+    "expected_procedure_date": "2026-03-18",
     "procedure_requested": "Myocardial perfusion imaging",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -337,17 +337,17 @@
       "department": "Cardiology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Alex Madden, MD, FACC",
+      "requesting_provider": "Dr. Erin Bush, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with persistent chest pain and recent ECG abnormalities suggestive of ischemia. Myocardial perfusion imaging is necessary for accurate diagnosis and treatment planning.",
+      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is necessary to rule out coronary artery disease.",
       "supporting_diagnoses": [
         "I25.10 - Atherosclerotic heart disease",
         "R07.9 - Chest pain, unspecified"
       ],
-      "previous_treatments": "Beta-blockers and lifestyle modifications",
-      "expected_outcome": "Proper diagnostic insights into ischemia guiding future treatment strategies."
+      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications.",
+      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision."
     },
-    "bio_narrative": "Rosa Diaz, a 38-year-old Hispanic female, has been experiencing increasing episodes of chest pain associated with exertion. She has a background of hypertension managed with Atenolol and dyslipidemia controlled by Atorvastatin. Despite lifestyle modifications and pharmacotherapy, her symptoms persist. Her cardiovascular risk factors necessitate further evaluation. She underwent a recent change from Aspirin prophylaxis due to side effects, emphasizing the need for non-invasive imaging to properly understand her coronary risks.",
+    "bio_narrative": "Rosa Diaz is a 38-year-old Hispanic female residing in Houston, Texas. She works in law enforcement, which contributes to a high-stress environment. Her medical history includes hypertension and dyslipidemia, both managed by Dr. Erin Bush at Houston Methodist Hospital. She maintains a disciplined medication regimen, adhering to Tenormin and Lipitor. Her lifestyle reflects her high-activity profession, with balanced nutrition and routine physical therapy sessions under the guidance of Dr. Lauren Tran, aimed at improving cardiovascular endurance post a knee surgery. Her supportive social network, including close confidence with her emergency contact Jake, helps maintain her mental well-being. Despite her occupational stresses, Rosa does not engage in smoking and alcohol consumption is rare, typically only during social events. Her preventive health measures include regular vaccinations, with timely updates on influenza and COVID-19 boosters.",
     "medications": [
       {
         "brand": "Tenormin",
@@ -428,14 +428,14 @@
     ],
     "therapies": [
       {
-        "therapy_type": "Physical",
+        "therapy_type": "Physical Therapy",
         "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercise",
+        "cpt_description": "Therapeutic exercises to develop strength, endurance, range of motion and flexibility, each 15 minutes",
         "icd10_codes": [
-          "I25.10 - Atherosclerotic heart disease"
+          "Z95.1 - Presence of coronary angioplasty implant and graft"
         ],
         "provider": "Dr. Lauren Tran, PT",
-        "provider_npi": "2345678901",
+        "provider_npi": "0987654321",
         "facility": "Houston Methodist Hospital Rehab Center",
         "start_date": "2026-02-01",
         "end_date": "ongoing",
@@ -446,133 +446,40 @@
       }
     ],
     "behavioral_notes": "Rosa maintains strong medication adherence despite a rigorous work schedule. She engages in a healthy diet, with occasional lapses into stress eating during high-pressure cases. She does not smoke and rarely consumes alcohol. Her mental health remains stable, supported by her close social network.",
-    "encounters": [
-      {
-        "encounter_date": "2025-11-10",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Routine follow-up for hypertension and lipid management.",
-        "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2025-11-10",
-          "blood_pressure": "132/86 mmHg",
-          "heart_rate": "76 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Regular check-up, patient feelswell overall but reports occasional fatigue.",
-        "doctor_note": "Patient presents in stable condition with tolerable hypertension control and lipid levels. Reports feelingmore fatigued recently; advisedcontinuation of current medication with potential adjustment after next results.",
-        "observations": [
-          "No acute distress observed.",
-          "Fatigue noted without new cardiovascular symptoms."
-        ],
-        "procedures_performed": [
-          "99213 - E&M Office Visit Level 3"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease"
-        ],
-        "medications_prescribed": [
-          "Continue current medications."
-        ],
-        "care_team": [
-          "Dr. Erin Bush, MD"
-        ],
-        "progress_notes": "Fatigue is a new symptom to monitor. Current medications have been effective.",
-        "follow_up_instructions": "Schedule lipid panel; return in 3 months."
-      },
-      {
-        "encounter_date": "2025-12-01",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Routine follow-up for hypertension management and assessment of chest pain symptoms.",
-        "provider": "Dr. Erin Bush, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2025-12-01",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "78 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Experiencing chest pains that worsen with exertion.",
-        "doctor_note": "Patient reports chest pains that have been occurring over the last two weeks, often triggered by physical exertion. Hypertension management is ongoing, with good adherence to medication. Review of systems shows no significant gastrointestinal or other systemic symptoms.",
-        "observations": [
-          "Chest pain on exertion, relieved by rest."
-        ],
-        "procedures_performed": [
-          "99213 - E&M Office Visit Level 3"
-        ],
-        "diagnoses": [
-          "R07.9 - Chest pain, unspecified"
-        ],
-        "medications_prescribed": [
-          "Atenolol 50mg"
-        ],
-        "care_team": [
-          "Dr. Erin Bush, MD"
-        ],
-        "progress_notes": "Patient is stable with medication, but persistent chest pain noted.",
-        "follow_up_instructions": "Continue current medications, schedule stress ECG."
-      }
-    ],
-    "social_history": null,
+    "encounters": [],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "Occasional wine with dinner",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-20",
+      "last_visit_reason": "Cardiology consultation for cardiovascular risk assessment",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": "Increased frequency of chest pain",
+      "mental_health_history": null,
+      "mental_health_current": "PHQ-9 score 3/27 indicating minimal depression",
+      "exercise_habits": "Regular exercise with personalized training 3x/week",
+      "diet_notes": "Balanced diet with emphasis on lean proteins and vegetables",
+      "family_history_relevant": "Father with coronary artery disease"
+    },
     "vital_signs_current": {
-      "recorded_date": "2026-02-02",
-      "blood_pressure": "130/85 mmHg",
+      "recorded_date": "2026-02-28",
+      "blood_pressure": "136/88 mmHg",
       "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "24.3 kg/m\u00b2",
-      "oxygen_saturation": "98%",
-      "temperature": "98.7\u00b0F",
+      "bmi": "25 kg/m\u00b2",
+      "oxygen_saturation": "99%",
+      "temperature": "98.4 \u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "G2P2, last Pap smear: 2024-07-10, last mammogram: 2025-04-22",
-    "images": [
-      {
-        "type": "ECG",
-        "date": "2026-02-02",
-        "provider": "Dr. Alex Madden, MD, FACC",
-        "facility": "Houston Methodist Hospital",
-        "findings": "Sinus rhythm with occasional premature ventricular contractions. Signs of ST depression suggesting myocardial ischemia."
-      }
-    ],
-    "reports": [
-      {
-        "type": "Lipid Panel",
-        "date": "2025-11-20",
-        "provider": "Dr. Erin Bush, MD",
-        "results": "Total Cholesterol: 198 mg/dL, LDL: 120 mg/dL, HDL: 56 mg/dL, Triglycerides: 170 mg/dL.",
-        "notes": "Lipid levels maintained within target range. Continue current therapy."
-      },
-      {
-        "type": "CBC",
-        "date": "2025-12-01",
-        "provider": "Dr. Erin Bush, MD",
-        "results": "Normal - WBC 6.8 x10^9/L, RBC 4.5 x10^12/L, Hemoglobin 13.7 g/dL, Hematocrit 41%.",
-        "notes": "No signs of infection or anemia. Regular follow-up needed."
-      }
-    ],
-    "procedures": [
-      {
-        "name": "Knee surgery",
-        "date": "2025-08-15",
-        "provider": "Dr. John Carter, MD",
-        "facility": "Houston Methodist Hospital",
-        "reason": "Acute knee injury from bicycle accident",
-        "notes": "Successful surgery without complications. Physical therapy recommended."
-      }
-    ]
+    "gender_specific_history": "Has undergone regular Pap smears with last screening normal on 2025-10-10.",
+    "images": [],
+    "reports": [],
+    "procedures": []
   },
   "210": {
     "first_name": "John",
