@@ -68,9 +68,10 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
 10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. Cross-Platform Compatibility
 The system is designed to be OS-agnostic, supporting Windows, macOS, and Linux.
 Key implementations:
+
 - **Universal Encoding**: All file I/O operations explicitly use `utf-8` to prevent character mapping errors across different default OS encodings.
 - **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access. DEBUG_DIR, RULES_PATH, cache_dir, and OUTPUT_DIR default are project-root-relative, so the system works regardless of current working directory.
-- **Environment Isolation**: `python-dotenv` loads from `cred/.env` based on absolute script locations.
+- **Environment Isolation**: `python-dotenv` loads from `.env`. `ai_engine.py` dynamically resolves the configuration path, checking `cred/.env` first and falling back to the project root.
 - **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server. Launch scripts change to the script directory (`cd /d "%~dp0"` or `cd "$(dirname "$0")"`) before running, so invocation from any directory works.
 - **Path Resolution Flow**: All path-dependent modules resolve relative to project root (or script location), independent of cwd:
 
@@ -95,4 +96,4 @@ flowchart TB
   RunFrom --> SearchEng
 ```
 
-12. Summary...
+1. Summary...

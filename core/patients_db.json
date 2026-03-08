@@ -989,5 +989,211 @@
       "respiratory_rate": null
     },
     "gender_specific_history": "Gravida 2 Para 2, last Pap smear 2025-08-01, last mammogram 2025-11-12"
+  },
+  "263": {
+    "first_name": "Rachel",
+    "last_name": "Green",
+    "gender": "female",
+    "dob": "1981-05-05",
+    "address": "123 Elm St, Houston, TX 77002",
+    "telecom": "555-123-4567",
+    "race": "Caucasian",
+    "height": "5 ft 7 in",
+    "weight": "140 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Monica Geller",
+      "telecom": "555-987-6543",
+      "address": "456 Maple Ave, Houston, TX 77002",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2015-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Jennifer Yang, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Memorial Hermann Medical Group",
+      "address": "6400 Fannin St, Houston, TX 77030",
+      "phone": "713-531-6500"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-999999",
+      "policy_number": "POL-99999",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "expected_procedure_date": "2026-04-08",
+    "procedure_requested": "Myocardial perfusion imaging, multiple studies",
+    "procedure_facility": {
+      "facility_name": "Memorial Hermann Hospital",
+      "street_address": "Memorial Hermann Hospital, 6411 Fannin St",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Cardiology Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Michael Chen, MD, FACC",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient presents with persistent chest pain and abnormal ECG findings. Myocardial perfusion imaging is medically necessary to rule out coronary artery disease and guide treatment planning.",
+      "supporting_diagnoses": [
+        "I25.10 - Atherosclerotic heart disease",
+        "R07.9 - Chest pain, unspecified"
+      ],
+      "previous_treatments": "Conservative management with beta-blockers and lifestyle modifications",
+      "expected_outcome": "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
+    },
+    "bio_narrative": "Rachel Green, a 44-year-old female located in Houston, Texas, leads an active lifestyle and is employed in a demanding corporate environment. Despite a busy schedule, she maintains a healthy diet and participates in regular exercise. Her family medical history is significant for premature coronary artery disease, which has raised concerns about her current symptoms of chest pain during physical exertion. A detailed evaluation by her primary care provider, Dr. Jennifer Yang, has led to the recommendation of further cardiac assessment through myocardial perfusion imaging to examine potential ischemic conditions. Rachel is currently facing exertional chest pain that remains unrelieved by conventional treatments, underscoring a need for diagnostic clarity and potential intervention. Her insurance, UnitedHealthcare under a Medicare Advantage plan, supports efficient healthcare management as she navigates this critical evaluation phase.",
+    "medications": [
+      {
+        "brand": "Aspirin",
+        "generic_name": "Aspirin 81mg",
+        "dosage": "Once daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "current",
+        "start_date": "2025-12-01",
+        "end_date": "ongoing",
+        "reason": "Prevention of cardiovascular events."
+      },
+      {
+        "brand": "Metoprolol",
+        "generic_name": "Metoprolol 100mg",
+        "dosage": "BID",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "past",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-01",
+        "reason": "Chest pain management."
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20mg",
+        "dosage": "Once daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Jennifer Yang, MD",
+        "status": "ongoing",
+        "start_date": "2025-11-01",
+        "end_date": "ongoing",
+        "reason": "Management of high cholesterol levels due to high cardiovascular risk."
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "2010-05-01"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2026-01-15",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 Bivalent Booster",
+        "vaccine_type": "mRNA",
+        "date_administered": "2025-12-15",
+        "administered_by": "Walgreens",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2023-08-10",
+        "administered_by": "Houston Health Clinic",
+        "dose_number": "1/3",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus-diphtheria",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2022-06-20",
+        "administered_by": "Primary Care Office",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "93797",
+        "cpt_description": "Physician services for outpatient cardiac rehabilitation; without continuous ECG monitoring",
+        "icd10_codes": [
+          "I25.10 - Atherosclerotic heart disease"
+        ],
+        "provider": "Dr. Eric Summers, PT",
+        "provider_npi": "2345678901",
+        "facility": "Memorial Hermann Outpatient Rehabilitation Center",
+        "start_date": "2026-02-01",
+        "end_date": "2026-02-28",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Rehabilitation post-detection of elevated cardiac risk.",
+        "notes": "Patient actively participated and showed improvement in exercise tolerance."
+      }
+    ],
+    "behavioral_notes": "Rachel adheres to her medication regimen consistently and remains proactive about her health, engaging in regular physical activity despite her busy career. She has no history of smoking, yet experiences occasional social drinking. Mental health evaluations indicate no current distress, aligning with her family and work responsibilities, despite the added stress of managing her medical concerns.",
+    "encounters": [],
+    "images": [],
+    "reports": [],
+    "procedures": [],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 glasses of wine on weekends",
+      "illicit_drug_use": null,
+      "substance_history": null,
+      "last_medical_visit": "2026-02-15",
+      "last_visit_reason": "Follow-up for persistent chest pain",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": null,
+      "mental_health_current": null,
+      "exercise_habits": "Exercises regularly, including yoga and jogging",
+      "diet_notes": "Maintains a balanced diet low in saturated fats",
+      "family_history_relevant": "Family history of coronary artery disease, both maternal and paternal"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-02-20",
+      "blood_pressure": "125/80 mmHg",
+      "heart_rate": "78 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "23.4 kg/m\u00b2",
+      "oxygen_saturation": "97%",
+      "temperature": "98.6\u00b0F",
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": "G2P1, last Pap smear on 2025-11-01, mammogram on 2024-10-01."
   }
 }

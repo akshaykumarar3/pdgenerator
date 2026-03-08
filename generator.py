@@ -385,7 +385,10 @@ def process_patient_workflow(
             # V3 Architecture formatting
             formatted_content = doc.content
             try:
-                structured_data = json.loads(doc.content)
+                if isinstance(doc.content, dict):
+                    structured_data = doc.content
+                else:
+                    structured_data = json.loads(doc.content)
                 
                 provider_obj = result.patient_persona.provider if result.patient_persona else None
                 if provider_obj:

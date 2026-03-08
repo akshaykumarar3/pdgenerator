@@ -38,7 +38,7 @@ remove_persona.py     → CLI tool to compeltely obliterate all persona data
   - **NEW**: `procedure_requested` (procedure name)
   - **NEW**: `procedure_facility` (FacilityDetails object)
   - **NEW**: `pa_request` (PARequestDetails object)
-- **GeneratedDocument**: Clinical document with title_hint, content, date
+- **GeneratedDocument**: Clinical document with title_hint, content (structured dictionary), date
 - **ClinicalDataPayload**: Combined persona + documents + summary
 - **AnnotatorSummary**: Verification guide with case explanation, medical details, verification pointers
 
@@ -174,7 +174,9 @@ Realistic healthcare facilities matching patient locality:
 
 - **Patient State Determinism**: Introduction of `state_manager.py` to freeze Identity/Demographics generation, reusing previously stored inputs cleanly to avoid AI hallucinations.
 - **Document Planner Logic**: Introduction of `document_planner.py` to dynamically assign rendering schemas per CPT code/case type before execution via `templates/document_plan_rules.json`.
-- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects instead of raw string narrative texts. These are later decoded in `doc_validator.py`.
+- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects. The `GeneratedDocument.content` field is enforced as a Pydantic `Dict` or `Any` to ensure the `instructor` library parses it into structured data before validation.
+- **Validator Support**: `doc_validator.py` supports both structured dictionaries and legacy plain-text as a fallback.
+- **Robust Configuration**: `ai_engine.py` now supports `.env` discovery in both the root and `cred/` directories.
 
 ### Intensive PDF Generation (March 2026)
 

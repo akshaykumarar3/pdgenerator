@@ -18,9 +18,12 @@ import httpx # For disabling HTTP/2 to prevent hangs
 import prompts
 
 
-# Load .env (from cred/ directory relative to file location)
+# Load .env (Check cred/ first, then fallback to root)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
+env_path_cred = os.path.join(BASE_DIR, "cred", ".env")
+env_path_root = os.path.join(BASE_DIR, ".env")
+env_path = env_path_cred if os.path.exists(env_path_cred) else env_path_root
+load_dotenv(env_path)
 
 # PROVIDER CONFIG
 PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -485,7 +488,7 @@ class GeneratedDocument(BaseModel):
     """
     doc_id: str = Field(..., description="Document ID e.g. 'DOC-101'")
     title_hint: str = Field(..., description="Short descriptive title e.g. 'Cardiology_Consult', 'MRI_Knee'")
-    content: str = Field(..., description="The full formatted text content of the document.")
+    content: Any = Field(..., description="The clinical document sections as a structured dictionary matching the provided template.")
 
 
 class ModifiedSQLRaw(BaseModel):

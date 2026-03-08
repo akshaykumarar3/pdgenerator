@@ -12,6 +12,7 @@
 To simplify setup, we provide launch scripts for both Windows and macOS/Linux.
 
 #### 1. Start the API Server (Web UI)
+
 The Web UI is the recommended way to use the generator.
 
 - **Windows**: Run `run_api.bat`
@@ -20,6 +21,7 @@ The Web UI is the recommended way to use the generator.
 > **Note**: The default port is `410` (to avoid macOS port 5000 conflicts). Double-click `ui/index.html` to open the studio.
 
 #### 2. Start the CLI (Terminal Mode)
+
 - **Windows**: Run `run.bat`
 - **macOS / Linux**: Run `chmod +x run.sh && ./run.sh`
 
@@ -143,7 +145,7 @@ When generating documents in different modes (persona only, reports only, summar
 To support Prior Authorization use cases, generated clinical documents are tuned for depth and audit-readiness:
 
 - **Content intensity**: Prompts require multi-sentence sections (e.g. findings, impression, clinical justification) with specific measurements and clinical detail; one-line or N/A-style answers are discouraged for core sections.
-- **Template-driven PDF layout**: Report sections follow the order defined in each template (`templates/*.json`), and nested fields (e.g. patient_information, study_information) are rendered as readable key-value text instead of raw JSON.
+- **Template-driven PDF layout**: Report sections follow the order defined in each template (`templates/*.json`). The system handles structured JSON natively, ensuring that clinical metadata is correctly injected by the pipeline rather than halluncinated by the AI.
 - **Diagnostic cases**: The default diagnostic case type now includes a consultation/office visit note in addition to the prior auth request and summary, so E&M-style cases produce three documents.
 - **Sparse-document warning**: If a report body is very short (&lt; 200 characters), the generator logs a warning suggesting regeneration with feedback.
 

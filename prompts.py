@@ -218,8 +218,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           - For each section in the DOCUMENT PLAN (findings, impression, clinical_history, procedure_description, etc.), provide at least 2-4 sentences with specific clinical detail; avoid one-line answers.
          - **DOCUMENT OUTPUT FORMAT**:
           For each document template specified in the DOCUMENT PLAN, create a entry in the `documents` list.
-          The `content` field MUST contain the fully populated JSON representation of the template as a STRING.
-          Do NOT attempt to use markdown or raw text in `content`—it MUST be the stringified JSON matching the template structure.
+          The `content` field MUST contain the fully populated JSON object matching the template structure.
+          Do NOT attempt to use markdown or raw text in `content`—it MUST be a structured JSON object.
           The `title_hint` field should match the template's title or logically reflect it.
          - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
            If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment", "Payer Policy Document"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{"doc_type": "ECG", "findings": "...", "interpretation": "..."}}`) and add them to the `documents` list.
@@ -387,11 +387,10 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
         - Female patients: Include OB/GYN history (gravida/para), last Pap smear date, mammogram date.
         - Male patients: Include PSA level (if age-appropriate), prostate screening history, urologic history.
         - If not clinically applicable: set to null.
-     24. **DOCUMENTS — NO START/END MARKERS**:
-        - Clinical documents MUST NOT contain '--- REPORT START ---' or '--- REPORT END ---' markers.
-        - Begin documents directly with the document header (facility name, patient info, document title).
-        - Each document should include: Header, Patient Demographics, Clinical Content, Provider Signature.
-        - Documents must reference encounter records and be consistent with persona data.
+      24. **DOCUMENT JSON STRUCTURE (MANDATORY)**:
+        - Each document's `content` must be a valid JSON object.
+        - Do not include raw text headers or demographics in the `content` JSON; these are handled by the system.
+        - Focus solely on populating the clinical sections defined in the DOCUMENT PLAN.
      25. **PA APPROVAL STRATEGY**:
         - If the user feedback contains "PA APPROVAL OPTIMIZATION" instruction:
           → Generate all clinical documents with the STRONGEST possible medical justification.

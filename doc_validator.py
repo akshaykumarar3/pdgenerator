@@ -126,20 +126,23 @@ VALIDATION_CONFIG = {
     "require_metadata_block": True
 }
 
-def validate_structure(document_text: str) -> tuple[bool, list[str]]:
+def validate_structure(document_text: Any) -> tuple[bool, list[str]]:
     """
     Layer 3: Validator.
     Returns (IsValid, ListOfErrors).
     """
     errors = []
 
-    # V3 Architecture Check: See if it's a valid JSON string (Template)
+    # V3 Architecture Check: See if it's already a dict or a valid JSON string (Template)
+    if isinstance(document_text, dict):
+        return True, []
+        
     try:
         data = json.loads(document_text)
         if not isinstance(data, dict):
             return False, ["JSON content must be a dictionary"]
         return True, []
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, TypeError):
         pass # Fallback to V2 legacy plain text validation if not JSON
 
     # Rule 1: Must NOT contain old start/end markers (strip artifact)
