@@ -176,6 +176,13 @@ Realistic healthcare facilities matching patient locality:
 - **Document Planner Logic**: Introduction of `document_planner.py` to dynamically assign rendering schemas per CPT code/case type before execution via `templates/document_plan_rules.json`.
 - **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects instead of raw string narrative texts. These are later decoded in `doc_validator.py`.
 
+### Intensive PDF Generation (March 2026)
+
+- **Document content intensity**: In `prompts.py`, a "Document content intensity" block requires multi-sentence sections (findings, impression, clinical_justification, HPI, etc.) with specific measurements and clinical detail; includes a minimal vs. intensive example. Each document should be self-contained for PA review.
+- **Template-driven formatting**: `doc_validator.format_clinical_document()` accepts an optional `ordered_sections_override` (from template "sections"); nested dicts are flattened to readable key-value lines instead of raw Python dict repr.
+- **Diagnostic case documents**: Diagnostic case type now includes `consult_note_template.json` so E&M-style cases produce prior_auth + consult note + summary (3 documents).
+- **Sparse-document check**: Generator logs a warning when a report body is under 200 characters, suggesting regeneration with feedback.
+
 ### Centralized Prompts
 
 - **`prompts.py`**: All AI instructions now in one file with user-friendly comments

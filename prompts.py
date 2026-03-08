@@ -207,6 +207,15 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           - Reference the CPT and ICD-10 codes from the persona where clinically appropriate.
           - Include detailed clinical narratives including doctor notes and progress notes.
           - Reference relevant encounters from the patient's encounter history.
+        - **DOCUMENT CONTENT INTENSITY (MANDATORY)**:
+          - Each document must be **self-contained** for Prior Authorization review: an auditor must understand indication and supporting evidence without opening other files.
+          - **Minimum length/detail by section type** (one-line or N/A-style answers are NOT acceptable for core clinical sections):
+            * **findings, impression, procedure_description, operative_findings, session_summary, therapist_observations**: At least 2-4 sentences (40-80 words) with specific measurements, dates, or clinical terms where appropriate.
+            * **clinical_justification, HPI, assessment, plan, clinical_indication**: Multi-sentence with clear medical necessity and timeline.
+            * **procedure_details, study_information**: Fill all sub-fields with realistic values; do not leave empty strings for required keys.
+          - **Example — MINIMAL (bad)**: findings: "No acute findings."
+          - **Example — INTENSIVE (good)**: findings: "Cardiac CT angiography was performed with contrast. The left main, LAD, circumflex, and right coronary arteries are patent. There is non-obstructive plaque in the mid-LAD (approximately 20% stenosis). Left ventricular size and function are normal. No pericardial effusion. Incidental note: small hepatic cyst in segment VII, stable from prior."
+          - For each section in the DOCUMENT PLAN (findings, impression, clinical_history, procedure_description, etc.), provide at least 2-4 sentences with specific clinical detail; avoid one-line answers.
          - **DOCUMENT OUTPUT FORMAT**:
           For each document template specified in the DOCUMENT PLAN, create a entry in the `documents` list.
           The `content` field MUST contain the fully populated JSON representation of the template as a STRING.

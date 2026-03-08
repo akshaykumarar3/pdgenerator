@@ -74,6 +74,7 @@
         ],
         "templates": [
             "prior_auth_request_template.json",
+            "consult_note_template.json",
             "summary_template.json"
         ]
     }

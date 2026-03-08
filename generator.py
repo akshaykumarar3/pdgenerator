@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -349,6 +350,20 @@ def process_patient_workflow(
 
     # ── 8b. REPORTS ────────────────────────────────────────────────────────────
     if generation_mode["reports"] and result.documents:
+        # Load template sections for template-driven PDF ordering (intensive PDF fix)
+        templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+        loaded_template_sections = []
+        for tmpl_file in document_plan.get("document_templates", []):
+            tmpl_path = os.path.join(templates_dir, tmpl_file)
+            if os.path.exists(tmpl_path):
+                try:
+                    with open(tmpl_path, "r", encoding="utf-8") as f:
+                        loaded_template_sections.append(json.load(f).get("sections", []))
+                except Exception:
+                    loaded_template_sections.append([])
+            else:
+                loaded_template_sections.append([])
+
         print(f"   📄 Generating {len(result.documents)} report(s) at v{doc_version}…")
         for seq, doc in enumerate(result.documents, start=1):
             seq_str            = f"{seq:03d}"
@@ -369,7 +384,6 @@ def process_patient_workflow(
             # V3 Architecture formatting
             formatted_content = doc.content
             try:
-                import json
                 structured_data = json.loads(doc.content)
                 
                 provider_obj = result.patient_persona.provider if result.patient_persona else None
@@ -402,7 +416,19 @@ def process_patient_workflow(
                     "doc_type": doc.title_hint,
                     "plan_type": plan_type
                 }
-                formatted_content = format_clinical_document(metadata, structured_data)
+                template_sections = (
+                    loaded_template_sections[min(seq - 1, len(loaded_template_sections) - 1)]
+                    if loaded_template_sections
+                    else None
+                )
+                formatted_content = format_clinical_document(
+                    metadata, structured_data, ordered_sections_override=template_sections
+                )
+                # Optional: minimum content depth check (intensive PDF)
+                body_start = formatted_content.find("\n[")
+                body_content = formatted_content[body_start:].strip() if body_start >= 0 else formatted_content
+                if len(body_content) < 200:
+                    print(f"      ⚠️  Document '{doc.title_hint}' may be sparse ({len(body_content)} chars); consider regenerating with feedback for more intensive output.")
             except Exception as e:
                 print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
 

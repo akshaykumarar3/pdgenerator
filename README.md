@@ -147,6 +147,15 @@ When generating documents in different modes (persona only, reports only, summar
 - Summaries align with existing persona and reports
 - No contradictory information across documents
 
+### Intensive Document Generation (PA Support)
+
+To support Prior Authorization use cases, generated clinical documents are tuned for depth and audit-readiness:
+
+- **Content intensity**: Prompts require multi-sentence sections (e.g. findings, impression, clinical justification) with specific measurements and clinical detail; one-line or N/A-style answers are discouraged for core sections.
+- **Template-driven PDF layout**: Report sections follow the order defined in each template (`templates/*.json`), and nested fields (e.g. patient_information, study_information) are rendered as readable key-value text instead of raw JSON.
+- **Diagnostic cases**: The default diagnostic case type now includes a consultation/office visit note in addition to the prior auth request and summary, so E&M-style cases produce three documents.
+- **Sparse-document warning**: If a report body is very short (&lt; 200 characters), the generator logs a warning suggesting regeneration with feedback.
+
 ### FHIR-Compliant Data
 
 - Complete patient demographics, biometrics (race, height, weight)
@@ -249,7 +258,7 @@ pdgenerator/
 ├── state_manager.py            # V3 Core: Patient State deterministic source of truth
 ├── document_planner.py         # V3 Core: Dynamic template planning and schema rendering
 ├── search_engine.py            # Web search for medical codes (Tavily)
-├── doc_validator.py            # Document structure validation
+├── doc_validator.py            # Document structure validation & template-driven formatting
 ├── data_loader.py              # Excel case data loading
 ├── history_manager.py          # Per-patient generation history
 ├── purge_manager.py            # Data cleanup utilities
