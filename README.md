@@ -183,8 +183,13 @@ pip install -r requirements.txt
 ### 3. Configuration (`cred/.env`)
 
 ```bash
-mkdir cred
-cp cred/examples/.env.example cred/.env
+# Mac/Linux
+mkdir -p cred
+cp core/.env.example cred/.env
+
+# Windows (cmd)
+mkdir cred 2>nul
+copy core\.env.example cred\.env
 ```
 
 Fill in `cred/.env`:
@@ -334,9 +339,9 @@ We have integrated full **Swagger OpenAPI documentation**. To explore the intera
 
 ## 🔐 Credentials Management
 
-- The `cred/` folder is gitignored by default (except `cred/examples/`)
+- The `cred/` folder is gitignored by default
 - Never commit API keys or service account files
-- Use `cred/examples/.env.example` to reconstruct your environment
+- Use `core/.env.example` to reconstruct your environment at `cred/.env`
 
 ---
 

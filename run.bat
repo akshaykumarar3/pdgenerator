@@ -1,5 +1,6 @@
 @echo off
 REM PD Generator - Windows CLI Launcher
+cd /d "%~dp0"
 
 IF NOT EXIST venv (
     echo [ERROR] Virtual environment 'venv' not found.

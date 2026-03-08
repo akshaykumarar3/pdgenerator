@@ -1,5 +1,6 @@
 #!/bin/bash
 # PD Generator - Linux/macOS API Server Launcher
+cd "$(dirname "$0")"
 
 if [ ! -d "venv" ]; then
     echo "[ERROR] Virtual environment 'venv' not found."

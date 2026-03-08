@@ -7,7 +7,8 @@ from typing import Dict, Any
 
 from core import patient_db
 
-DEBUG_DIR = "generated_output/debug"
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
 
 # Helper list of fictional insurance companies for random assignment if not provided
 INSURANCE_PAYERS = [
