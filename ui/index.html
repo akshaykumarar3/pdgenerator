@@ -614,11 +614,16 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 14px 16px;
-            height: 280px;
+            height: auto;
+            min-height: 0;
             overflow-y: auto;
             color: #b0c4de;
             white-space: pre-wrap;
             word-break: break-all;
+        }
+
+        .log-body {
+            min-height: 0;
         }
 
         @keyframes fadeIn {
@@ -1338,7 +1343,7 @@
                             <div class="card-title">Live Server Logs</div>
                             <button class="btn btn-ghost" onclick="clearLog()">Clear</button>
                         </div>
-                        <div class="card-body" style="flex:1; display:flex; flex-direction:column;">
+                        <div class="card-body log-body" style="flex:1; display:flex; flex-direction:column;">
                             <div id="job-progress">
                                 <div class="progress-bar-wrap">
                                     <div class="progress-bar"></div>

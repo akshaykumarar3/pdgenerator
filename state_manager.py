@@ -7,7 +7,8 @@ from typing import Dict, Any
 
 from core import patient_db
 
-DEBUG_DIR = "generated_output/debug"
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
 
 # Helper list of fictional insurance companies for random assignment if not provided
 INSURANCE_PAYERS = [
@@ -33,7 +34,7 @@ def load_patient_state(patient_id: str) -> Dict[str, Any]:
     """Loads a previously saved patient state from the debug folder."""
     path = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
     if os.path.exists(path):
-        with open(path, "r") as f:
+        with open(path, "r", encoding='utf-8') as f:
             return json.load(f)
     return {}
 
@@ -41,7 +42,7 @@ def save_patient_state(patient_id: str, state: Dict[str, Any]):
     """Saves the state to the debug folder."""
     ensure_debug_dir()
     path = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
-    with open(path, "w") as f:
+    with open(path, "w", encoding='utf-8') as f:
         json.dump(state, f, indent=2)
 
 def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -78,7 +79,9 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
             "gender": existing_record.get("gender", "Unknown"),
             "race": existing_record.get("race", "Unknown"),
             "height": existing_record.get("height", "Unknown"),
-            "weight": existing_record.get("weight", "Unknown")
+            "weight": existing_record.get("weight", "Unknown"),
+            "address": existing_record.get("address", ""),
+            "phone": existing_record.get("telecom", "")
         }
     else:
         # Generate entirely new core identifiers. 
@@ -91,7 +94,9 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
             "gender": "",
             "race": "",
             "height": "",
-            "weight": ""
+            "weight": "",
+            "address": "",
+            "phone": ""
         }
 
     # 3. Assemble Full State Object 
@@ -103,6 +108,13 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
     diagnoses = []
     
     procedure_name = case_data.get("procedure", "Unknown Procedure")
+    # CPT code from case_data or procedure text
+    cpt_code = str(case_data.get("cpt_code", "") or "").strip()
+    if not cpt_code and procedure_name:
+        import re
+        m = re.search(r"(\\d{5})", str(procedure_name))
+        if m:
+            cpt_code = m.group(1)
     
     # Pick random insurance for new patients
     selected_payer = random.choice(INSURANCE_PAYERS)
@@ -118,6 +130,7 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
         "timeline": {}, # Will be filled by AI / Generator temporal helpers
         "requested_procedure": {
              "procedure_name": procedure_name,
+             "cpt_code": cpt_code,
              "expected_date": "" # Handled by generate temporal logic later
         },
         "insurance": {

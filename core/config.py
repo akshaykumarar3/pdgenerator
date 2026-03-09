@@ -6,7 +6,7 @@ _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _env_path = os.path.join(_project_root, "cred", ".env")
 load_dotenv(_env_path)
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "generated_output")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR") or os.path.join(_project_root, "generated_output")
 
 PERSONA_DIR = os.path.join(OUTPUT_DIR, "persona")
 REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")

@@ -1,11 +1,16 @@
+import json
 import os
 import re
 import shutil
 import random
 import datetime
 from datetime import timedelta
-
 from dotenv import load_dotenv
+
+# ─── BOOTSTRAP ENVIRONMENT ───────────────────────────────────────────────────
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+_env_path = os.path.join(_BASE_DIR, "cred", ".env")
+load_dotenv(_env_path)
 
 import data_loader
 import ai_engine
@@ -19,9 +24,6 @@ import document_planner
 from doc_validator import validate_structure, format_clinical_document
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
-
-env_path = os.path.join(os.path.dirname(__file__), "cred", ".env")
-load_dotenv(env_path)
 
 from core.config import OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, ensure_output_dirs, get_patient_report_folder
 
@@ -127,6 +129,85 @@ def calculate_encounter_date(procedure_date_str: str, days_before: int) -> str:
 def get_today_date() -> str:
     """Return today's date in ISO format (YYYY-MM-DD)."""
     return datetime.datetime.now().strftime("%Y-%m-%d")
+
+
+# ─── FILENAME HELPERS ─────────────────────────────────────────────────────────
+
+def _sanitize_filename_component(name: str) -> str:
+    """Make a safe filename segment across OSes."""
+    if not name:
+        return "document"
+    name = name.replace(os.sep, "-").replace("/", "-").replace("\\", "-")
+    name = re.sub(r'[<>:"|?*]+', "-", name)
+    name = re.sub(r"\s+", " ", name).strip()
+    return name
+
+
+def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | None = None) -> str:
+    """
+    If feedback is a JSON risk assessment payload, extract key issues and
+    add deterministic remediation instructions for the AI.
+    """
+    if not feedback or "assessment_found" not in feedback:
+        return feedback
+    try:
+        data = json.loads(feedback)
+    except Exception:
+        return feedback
+
+    if not isinstance(data, dict):
+        return feedback
+
+    category_details = data.get("category_details") or []
+    contributing = []
+    for c in category_details:
+        for item in c.get("contributing_factors") or []:
+            contributing.append(str(item))
+
+    contributing_text = "\n".join(f"- {c}" for c in contributing) if contributing else "None detected"
+
+    procedure_text = (case_details or {}).get("procedure", "")
+    proc_lower = str(procedure_text).lower()
+
+    # Deterministic remediation rule-set (minimal, calculated)
+    rule_lines = []
+    if ("colonoscopy" in proc_lower) or ("45378" in proc_lower):
+        rule_lines.extend([
+            "GI/Colonoscopy Remediation Checklist (ONLY include if clinically consistent):",
+            "- Conservative treatments with dates and responses (e.g., dietary modification, hydration plan, antidiarrheal trial, fiber supplementation).",
+            "- Diagnostic workup prior to colonoscopy: CBC, CMP, CRP/ESR, stool studies (culture, ova/parasite, C. difficile), fecal calprotectin.",
+            "- Specialty evaluation: Gastroenterology consult note referencing persistent symptoms and failed conservative management.",
+            "- Risk–benefit analysis: bleeding/perforation risks vs diagnostic yield given symptoms and family history.",
+        ])
+
+    remediation = [
+        "RISK ASSESSMENT REMEDIATION (STRICT):",
+        "You MUST directly address the exact deficiencies listed below with explicit, verifiable clinical evidence.",
+        "Do NOT add unrelated or speculative data. Every remediation must be supported by concrete timeline events, tests, and treatments.",
+        "Cross-check consistency: any new data must be reflected in persona, encounters, and documents without contradictions.",
+        "If a policy criteria summary is included, state it as a synthesized checklist for test purposes and ensure it aligns with the clinical facts provided.",
+        "",
+        "Required fixes:",
+        "- Document conservative treatment attempts with dates, duration, and response.",
+        "- Document a diagnostic workup prior to the requested procedure (labs, imaging, stool studies, specialist evals).",
+        "- Include a clear risk-benefit analysis for the requested procedure.",
+        "- Include a complete clinical timeline with dated milestones.",
+        "- Ensure patient name and DOB are present in primary PA request fields.",
+        "- Ensure provider address and plan type are explicitly present.",
+        "- Include a payer policy criteria summary document or section with specific criteria and how the case meets them.",
+        "",
+        "Assessment contributing factors:",
+        contributing_text,
+        "",
+        *rule_lines,
+        "",
+        "When adding any new document to address a missing requirement, create a new document entry in the documents list with a clear title_hint.",
+    ]
+
+    remediation_block = "\n".join(remediation)
+    if remediation_block in feedback:
+        return feedback
+    return f"{feedback}\n\n{remediation_block}"
 
 
 # ─── DOCUMENT COHERENCE HELPERS ────────────────────────────────────────────────
@@ -293,6 +374,7 @@ def process_patient_workflow(
     patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
     print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
+    feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     try:
         result, usage = ai_engine.generate_clinical_data(
             case_details=case_data,
@@ -300,6 +382,7 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
+            existing_persona=existing_patient,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
@@ -349,92 +432,131 @@ def process_patient_workflow(
 
     # ── 8b. REPORTS ────────────────────────────────────────────────────────────
     if generation_mode["reports"] and result.documents:
+        # Load template sections for template-driven PDF ordering (intensive PDF fix)
+        templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+        loaded_template_sections = []
+        for tmpl_file in document_plan.get("document_templates", []):
+            tmpl_path = os.path.join(templates_dir, tmpl_file)
+            if os.path.exists(tmpl_path):
+                try:
+                    with open(tmpl_path, "r", encoding="utf-8") as f:
+                        loaded_template_sections.append(json.load(f).get("sections", []))
+                except Exception:
+                    loaded_template_sections.append([])
+            else:
+                loaded_template_sections.append([])
+
         print(f"   📄 Generating {len(result.documents)} report(s) at v{doc_version}…")
         for seq, doc in enumerate(result.documents, start=1):
-            seq_str            = f"{seq:03d}"
-            doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
-            final_filename_base = f"{doc_identifier}-{doc.title_hint}"
+            try:
+                seq_str            = f"{seq:03d}"
+                doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+                safe_title_hint = _sanitize_filename_component(getattr(doc, "title_hint", "document"))
+                final_filename_base = f"{doc_identifier}-{safe_title_hint}"
 
-            is_valid, errors = validate_structure(doc.content)
-            if not is_valid:
-                print(f"      ⚠️  '{doc.title_hint}' invalid: {errors}. Attempting AI fix…")
-                doc.content = ai_engine.fix_document_content(doc.content, errors)
                 is_valid, errors = validate_structure(doc.content)
                 if not is_valid:
-                    print(f"      ❌ Fix failed. Marking as NAF.")
-                    final_filename_base += "-NAF"
-                else:
-                    print(f"      ✅ AI fixed the document.")
+                    print(f"      ⚠️  '{doc.title_hint}' invalid: {errors}. Attempting AI fix…")
+                    doc.content = ai_engine.fix_document_content(doc.content, errors)
+                    is_valid, errors = validate_structure(doc.content)
+                    if not is_valid:
+                        print(f"      ❌ Fix failed. Marking as NAF.")
+                        final_filename_base += "-NAF"
+                    else:
+                        print(f"      ✅ AI fixed the document.")
 
-            # V3 Architecture formatting
-            formatted_content = doc.content
-            try:
-                import json
-                structured_data = json.loads(doc.content)
-                
-                provider_obj = result.patient_persona.provider if result.patient_persona else None
-                if provider_obj:
-                    provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
-                    provider_address = getattr(provider_obj, "address", "N/A")
-                    provider_phone = getattr(provider_obj, "phone", "N/A")
-                else:
-                    provider_str = "Unknown"
-                    provider_address = "N/A"
-                    provider_phone = "N/A"
-                
-                patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
-                payer_obj = result.patient_persona.payer if result.patient_persona else None
-                plan_type = getattr(payer_obj, "plan_type", "N/A") if payer_obj else "N/A"
+                # V3 Architecture formatting
+                formatted_content = doc.content
+                try:
+                    if isinstance(doc.content, dict):
+                        structured_data = doc.content
+                    else:
+                        structured_data = json.loads(doc.content)
+                    
+                    provider_obj = result.patient_persona.provider if result.patient_persona else None
+                    if provider_obj:
+                        provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
+                        provider_address = getattr(provider_obj, "address", "N/A")
+                        provider_phone = getattr(provider_obj, "phone", "N/A")
+                    else:
+                        provider_str = "Unknown"
+                        provider_address = "N/A"
+                        provider_phone = "N/A"
+                    
+                    patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
+                    payer_obj = result.patient_persona.payer if result.patient_persona else None
+                    plan_type = getattr(payer_obj, "plan_type", "N/A") if payer_obj else "N/A"
 
-                metadata = {
-                    "patient_id": patient_id,
-                    "mrn": current_mrn,
-                    "patient_name": p_full_name or "Unknown",
-                    "dob": result.patient_persona.dob if result.patient_persona else "",
-                    "gender": result.patient_persona.gender if result.patient_persona else "",
-                    "patient_phone": patient_phone,
-                    "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
-                    "provider": provider_str,
-                    "provider_address": provider_address,
-                    "provider_phone": provider_phone,
-                    "facility": "Diagnostic Center",
-                    "accession_id": f"ACC-{patient_id}-{seq_str}",
-                    "doc_type": doc.title_hint,
-                    "plan_type": plan_type
-                }
-                formatted_content = format_clinical_document(metadata, structured_data)
+                    metadata = {
+                        "patient_id": patient_id,
+                        "mrn": current_mrn,
+                        "patient_name": p_full_name or "Unknown",
+                        "dob": result.patient_persona.dob if result.patient_persona else "",
+                        "gender": result.patient_persona.gender if result.patient_persona else "",
+                        "patient_phone": patient_phone,
+                        "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                        "provider": provider_str,
+                        "provider_address": provider_address,
+                        "provider_phone": provider_phone,
+                        "facility": "Diagnostic Center",
+                        "accession_id": f"ACC-{patient_id}-{seq_str}",
+                        "doc_type": doc.title_hint,
+                        "plan_type": plan_type
+                    }
+                    template_sections = (
+                        loaded_template_sections[min(seq - 1, len(loaded_template_sections) - 1)]
+                        if loaded_template_sections
+                        else None
+                    )
+                    formatted_content = format_clinical_document(
+                        metadata, structured_data, ordered_sections_override=template_sections
+                    )
+                    # Optional: minimum content depth check (intensive PDF)
+                    body_start = formatted_content.find("\n[")
+                    body_content = formatted_content[body_start:].strip() if body_start >= 0 else formatted_content
+                    if len(body_content) < 200:
+                        print(f"      ⚠️  Document '{doc.title_hint}' may be sparse ({len(body_content)} chars); consider regenerating with feedback for more intensive output.")
+                except Exception as e:
+                    print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
+
+                image_path = None
+                imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
+                if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
+                    print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
+                    img_filename = f"{final_filename_base}_img.png"
+                    temp_image_path = os.path.join(patient_report_folder, img_filename)
+                    
+                    from ai_engine import generate_clinical_image
+                    # Pass a slice of the document description to guide DALL-E
+                    if isinstance(doc.content, dict):
+                        content_preview = json.dumps(doc.content)[:500]
+                    else:
+                        content_preview = str(doc.content)[:500]
+                    image_context = f"Visual supporting document {doc.title_hint}: {content_preview}"
+                    generated_path = generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                    
+                    if generated_path:
+                        image_path = generated_path
+                        print(f"      🖼️  Saved image to {image_path}")
+
+                pdf_path = pdf_generator.create_patient_pdf(
+                    patient_id=patient_id,
+                    doc_type=final_filename_base,
+                    content=formatted_content,
+                    patient_persona=result.patient_persona,
+                    doc_metadata=doc,
+                    base_output_folder=patient_report_folder,
+                    image_path=image_path,
+                    version=doc_version,
+                )
+                rf = os.path.basename(pdf_path)
+                docs_written.append(rf)
+                print(f"      ✅ {rf}")
             except Exception as e:
-                print(f"      ⚠️  Could not format JSON natively, defaulting to AI output text: {e}")
-
-            image_path = None
-            imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
-            if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
-                print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
-                img_filename = f"{final_filename_base}_img.png"
-                temp_image_path = os.path.join(patient_report_folder, img_filename)
-                
-                from ai_engine import generate_clinical_image
-                # Pass a slice of the document description to guide DALL-E
-                image_context = f"Visual supporting document {doc.title_hint}: {doc.content[:500]}"
-                generated_path = generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
-                
-                if generated_path:
-                    image_path = generated_path
-                    print(f"      🖼️  Saved image to {image_path}")
-
-            pdf_path = pdf_generator.create_patient_pdf(
-                patient_id=patient_id,
-                doc_type=final_filename_base,
-                content=formatted_content,
-                patient_persona=result.patient_persona,
-                doc_metadata=doc,
-                base_output_folder=patient_report_folder,
-                image_path=image_path,
-                version=doc_version,
-            )
-            rf = os.path.basename(pdf_path)
-            docs_written.append(rf)
-            print(f"      ✅ {rf}")
+                import traceback
+                print(f"      ❌ Report generation failed for '{getattr(doc, 'title_hint', 'Unknown')}'. Error: {e}")
+                print(traceback.format_exc())
+                continue
 
     # ── 8c. SUMMARY ────────────────────────────────────────────────────────────
     if generation_mode["summary"]:

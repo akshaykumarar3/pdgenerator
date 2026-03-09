@@ -47,13 +47,16 @@ class PolicyCriteria(BaseModel):
     retrieved_at: str = Field(default_factory=lambda: datetime.now().isoformat(), description="Timestamp of retrieval")
 
 
+_DEFAULT_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".search_cache")
+
+
 class SearchCache:
     """Simple file-based cache for search results"""
     
-    def __init__(self, cache_dir: str = ".search_cache", ttl_hours: int = 24):
-        self.cache_dir = cache_dir
+    def __init__(self, cache_dir: Optional[str] = None, ttl_hours: int = 24):
+        self.cache_dir = cache_dir if cache_dir is not None else _DEFAULT_CACHE_DIR
         self.ttl = timedelta(hours=ttl_hours)
-        os.makedirs(cache_dir, exist_ok=True)
+        os.makedirs(self.cache_dir, exist_ok=True)
     
     def _get_cache_path(self, key: str) -> str:
         """Get cache file path for a given key"""
@@ -68,7 +71,7 @@ class SearchCache:
             return None
         
         try:
-            with open(cache_path, 'r') as f:
+            with open(cache_path, 'r', encoding='utf-8') as f:
                 cached = json.load(f)
             
             # Check if expired
@@ -87,7 +90,7 @@ class SearchCache:
         cache_path = self._get_cache_path(key)
         
         try:
-            with open(cache_path, 'w') as f:
+            with open(cache_path, 'w', encoding='utf-8') as f:
                 json.dump({
                     'timestamp': datetime.now().isoformat(),
                     'data': data

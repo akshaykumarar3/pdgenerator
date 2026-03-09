@@ -7,39 +7,32 @@
 
 ## 🚀 Quick Start
 
-### Option A — Web UI (Recommended)
+### 🏁 Platform-Independent Launch
 
-The fastest way to use the generator is through the interactive browser interface.
+To simplify setup, we provide launch scripts for both Windows and macOS/Linux.
 
-**Step 1:** Start the API server
+#### 1. Start the API Server (Web UI)
 
-```bash
-# Mac / Linux
-API_PORT=410 venv/bin/python api_server.py
+The Web UI is the recommended way to use the generator.
 
-# Windows
-set API_PORT=410 && venv\Scripts\python api_server.py
-```
+- **Windows**: Run `run_api.bat`
+- **macOS / Linux**: Run `chmod +x run_api.sh && ./run_api.sh`
 
-> **Note (macOS):** Port 5000 is reserved by AirPlay Receiver by default. The default port is now `410`.
+> **Note**: The default port is `410` (to avoid macOS port 5000 conflicts). Double-click `ui/index.html` to open the studio.
 
-**Step 2:** Open `ui/index.html` in your browser (no web server needed — just double-click the file).
+#### 2. Start the CLI (Terminal Mode)
+
+- **Windows**: Run `run.bat`
+- **macOS / Linux**: Run `chmod +x run.sh && ./run.sh`
 
 ---
 
-### Option B — Command Line
+### 📦 Manual Setup (If scripts fail)
 
-```bash
-# Mac / Linux
-./run.sh
-# OR
-python3 generator.py
-
-# Windows
-run.bat
-# OR
-python generator.py
-```
+1. **Environment**: Python 3.10+
+2. **Virtual Env**: `python -m venv venv`
+3. **Dependencies**: `pip install -r requirements.txt`
+4. **Credentials**: Copy `core/.env.example` to `cred/.env` and add your API keys.
 
 #### Interactive Commands
 
@@ -147,6 +140,15 @@ When generating documents in different modes (persona only, reports only, summar
 - Summaries align with existing persona and reports
 - No contradictory information across documents
 
+### Intensive Document Generation (PA Support)
+
+To support Prior Authorization use cases, generated clinical documents are tuned for depth and audit-readiness:
+
+- **Content intensity**: Prompts require multi-sentence sections (e.g. findings, impression, clinical justification) with specific measurements and clinical detail; one-line or N/A-style answers are discouraged for core sections.
+- **Template-driven PDF layout**: Report sections follow the order defined in each template (`templates/*.json`). The system handles structured JSON natively, ensuring that clinical metadata is correctly injected by the pipeline rather than halluncinated by the AI.
+- **Diagnostic cases**: The default diagnostic case type now includes a consultation/office visit note in addition to the prior auth request and summary, so E&M-style cases produce three documents.
+- **Sparse-document warning**: If a report body is very short (&lt; 200 characters), the generator logs a warning suggesting regeneration with feedback.
+
 ### FHIR-Compliant Data
 
 - Complete patient demographics, biometrics (race, height, weight)
@@ -183,8 +185,13 @@ pip install -r requirements.txt
 ### 3. Configuration (`cred/.env`)
 
 ```bash
-mkdir cred
-cp cred/examples/.env.example cred/.env
+# Mac/Linux
+mkdir -p cred
+cp core/.env.example cred/.env
+
+# Windows (cmd)
+mkdir cred 2>nul
+copy core\.env.example cred\.env
 ```
 
 Fill in `cred/.env`:
@@ -249,14 +256,16 @@ pdgenerator/
 ├── state_manager.py            # V3 Core: Patient State deterministic source of truth
 ├── document_planner.py         # V3 Core: Dynamic template planning and schema rendering
 ├── search_engine.py            # Web search for medical codes (Tavily)
-├── doc_validator.py            # Document structure validation
+├── doc_validator.py            # Document structure validation & template-driven formatting
 ├── data_loader.py              # Excel case data loading
 ├── history_manager.py          # Per-patient generation history
 ├── purge_manager.py            # Data cleanup utilities
 ├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
+├── run_api.bat                 # Windows API launcher
 ├── run.sh                      # Mac/Linux CLI launcher
+├── run_api.sh                  # Mac/Linux API launcher
 └── requirements.txt
 ```
 
@@ -332,9 +341,9 @@ We have integrated full **Swagger OpenAPI documentation**. To explore the intera
 
 ## 🔐 Credentials Management
 
-- The `cred/` folder is gitignored by default (except `cred/examples/`)
+- The `cred/` folder is gitignored by default
 - Never commit API keys or service account files
-- Use `cred/examples/.env.example` to reconstruct your environment
+- Use `core/.env.example` to reconstruct your environment at `cred/.env`
 
 ---
 

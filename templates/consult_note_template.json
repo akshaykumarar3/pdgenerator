@@ -1,0 +1,31 @@
+{
+    "title": "Consultation / Office Visit Note",
+    "sections": [
+        "patient_information",
+        "chief_complaint",
+        "hpi",
+        "past_medical_history",
+        "medications",
+        "allergies",
+        "review_of_systems",
+        "vitals",
+        "physical_exam",
+        "assessment",
+        "plan"
+    ],
+    "patient_information": {
+        "name": "patient_state.demographics.name",
+        "mrn": "patient_state.identifiers.mrn",
+        "dob": "patient_state.demographics.dob"
+    },
+    "chief_complaint": "",
+    "hpi": "",
+    "past_medical_history": "",
+    "medications": "",
+    "allergies": "",
+    "review_of_systems": "",
+    "vitals": "",
+    "physical_exam": "",
+    "assessment": "",
+    "plan": ""
+}

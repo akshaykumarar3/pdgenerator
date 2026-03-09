@@ -13,7 +13,7 @@ def get_history(patient_id: str) -> str:
         
     log_path = os.path.join(LOGS_DIR, f"{patient_id}.txt")
     if os.path.exists(log_path):
-        with open(log_path, 'r') as f:
+        with open(log_path, 'r', encoding='utf-8') as f:
             return f.read()
     return ""
 
@@ -33,5 +33,5 @@ def append_history(patient_id: str, feedback: str, changes_summary: str):
     entry += f"USER FEEDBACK: {feedback if feedback else 'None'}\n"
     entry += f"AI CHANGES: {changes_summary}\n"
     
-    with open(log_path, 'a') as f:
+    with open(log_path, 'a', encoding='utf-8') as f:
         f.write(entry)

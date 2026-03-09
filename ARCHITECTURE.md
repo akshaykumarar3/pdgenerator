@@ -1,4 +1,39 @@
-Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data Generator is an AI-driven pipeline that produces realistic synthetic healthcare data for testing Prior Authorization (PA) workflows.The system generates:Patient Personas: FHIR-style patient records.Clinical Reports: Consult notes, imaging reports, and lab reports.Clinical Summaries: Aggregated case overviews.Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.2. Core Architectural Principle: Single Source of TruthAll generated documents must derive from a single structured patient record called patient_state. This object represents the canonical patient data model and prevents inconsistent patient information across documents.Patient State Hierarchypatient_stateidentifiersdemographicsprovidersdiagnosesmedicationsencountersprocedure_requestfacilityConstraint: Every module reads from this object. Documents must never "hallucinate" or invent patient attributes independently.3. System Architecturegraph TD
+# Clinical Data Generator — System Architecture (v3)
+
+## 1. Overview
+
+The Clinical Data Generator is an AI-driven pipeline that produces realistic synthetic healthcare data for testing Prior Authorization (PA) workflows.
+
+The system generates:
+
+- **Patient Personas**: FHIR-style patient records.
+- **Clinical Reports**: Consult notes, imaging reports, and lab reports.
+- **Clinical Summaries**: Aggregated case overviews.
+
+Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
+
+## 2. Core Architectural Principle: Single Source of Truth
+
+All generated documents must derive from a single structured patient record called `patient_state`. This object represents the canonical patient data model and prevents inconsistent patient information across documents.
+
+### Patient State Hierarchy
+
+- `patient_state`
+  - `identifiers`
+  - `demographics`
+  - `providers`
+  - `diagnoses`
+  - `medications`
+  - `encounters`
+  - `procedure_request`
+  - `facility`
+
+**Constraint**: Every module reads from this object. Documents must never "hallucinate" or invent patient attributes independently.
+
+## 3. System Architecture
+
+```mermaid
+graph TD
     UserInput["User Input / UI"] --> Generator["Workflow Orchestrator (generator.py)"]
     Generator --> DataLoader["Case Loader (data_loader.py)"]
     Generator --> PatientState["Patient State Builder"]
@@ -46,7 +81,10 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
     "expected_date": "2026-03-15"
   }
 }
-5. Generation WorkflowStepPhaseResponsibility1User InputReceives Patient ID, feedback, and generation mode.2Case Data LoadingLoads context from core/UAT Plan.xlsx (diagnoses, procedure requests).3Patient State ConstructionBuilds the deterministic patient_state object from Excel, DB, and AI persona fields.4Clinical Data GenerationAI generates narratives/justifications based on the patient_state context.5Document Validationdoc_validator.py checks for missing sections and structural integrity.6PDF Renderingpdf_generator.py handles layout, clinical tables, and metadata.7Output StorageSaves artifacts to generated_output/ with IDs and timestamps.6. Temporal ConsistencyMedical events follow a realistic clinical timeline relative to the requested procedure date.EventTimelineMedical History6 months – 5 years before procedureEncounters1 – 12 weeks before procedureLab Tests1 – 4 weeks before procedureProcedure7 – 90 days in the futureUtility functions in generator.py: calculate_procedure_date(), calculate_encounter_date().7. Duplicate PreventionThe system performs a pre-generation scan of existing outputs:Reads files in the patient-specific folder.Extracts existing document titles.Passes titles to the AI engine as "exclusion list."Prevents duplicate titles like Doc-221-001_CT_Scan.pdf unless explicitly required.8. Modular ComponentsAI Prompt Architecture (prompts.py)All prompts are centralized to allow for easier customization and consistent instructions (e.g., SYSTEM_PROMPT, get_clinical_data_prompt).Search Engine (search_engine.py)Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC or CMS.Caching: .search_cache/TTL: 24 hoursPatient Database (core/patient_db.py)Persistent storage of generated personas in core/patients_db.json to preserve consistency across different execution runs.9. Directory Structurepdgenerator/
+5. Generation WorkflowStepPhaseResponsibility1User InputReceives Patient ID, feedback, and generation mode.2Case Data LoadingLoads context from core/UAT Plan.xlsx (diagnoses, procedure requests).3Patient State ConstructionBuilds the deterministic patient_state object from Excel, DB, and AI persona fields.5.- **ClinicalDataPayload**: Combined persona + documents + summary. The `documents` field includes an alias `structured_documents` to improve AI fidelity during generation.
+ratives/justifications based on the patient_state context. The `document_templates` key is used to map specific templates to AI instructions.
+6. **Document Validation**: doc_validator.py checks for missing sections and structural integrity; when rendering JSON to PDF text it uses template-driven section order and flattens nested dicts for intensive, audit-ready output.
+7Output StorageSaves artifacts to generated_output/ with IDs and timestamps.6. Temporal ConsistencyMedical events follow a realistic clinical timeline relative to the requested procedure date.EventTimelineMedical History6 months – 5 years before procedureEncounters1 – 12 weeks before procedureLab Tests1 – 4 weeks before procedureProcedure7 – 90 days in the futureUtility functions in generator.py: calculate_procedure_date(), calculate_encounter_date().7. Duplicate PreventionThe system performs a pre-generation scan of existing outputs:Reads files in the patient-specific folder.Extracts existing document titles.Passes titles to the AI engine as "exclusion list."Prevents duplicate titles like Doc-221-001_CT_Scan.pdf unless explicitly required.8. Modular ComponentsAI Prompt Architecture (prompts.py)All prompts are centralized to allow for easier customization and consistent instructions (e.g., SYSTEM_PROMPT, get_clinical_data_prompt).Search Engine (search_engine.py)Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC or CMS.Caching: .search_cache/TTL: 24 hoursPatient Database (core/patient_db.py)Persistent storage of generated personas in core/patients_db.json to preserve consistency across different execution runs.9. Directory Structurepdgenerator/
 ├── cred/                       # .env and credentials
 ├── core/                       # Patient DB, Excel UAT plans
 ├── templates/                  # PDF and Document templates
@@ -60,9 +98,40 @@ Clinical Data Generator — System Architecture (v3)1. OverviewThe Clinical Data
 ├── prompts.py                  # Centralized Prompt Library
 ├── pdf_generator.py            # Rendering Engine
 ├── search_engine.py            # Web retrieval & Caching
-├── doc_validator.py            # Structural Validation
+├── doc_validator.py            # Structural Validation & template-driven formatting
 ├── data_loader.py              # File I/O for Case Data
 ├── history_manager.py          # Session tracking
 ├── purge_manager.py            # Cleanup utilities
 └── remove_persona.py           # Deep persona removal utility
-10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. SummaryThe Clinical Data Generator (v3) ensures Clinical Coherence by enforcing a deterministic patient_state layer. By combining structured data models with controlled LLM generation, the pipeline produces high-quality synthetic datasets suitable for rigorous healthcare software testing.
+10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. Cross-Platform Compatibility
+The system is designed to be OS-agnostic, supporting Windows, macOS, and Linux.
+Key implementations:
+
+- **Universal Encoding**: All file I/O operations explicitly use `utf-8` to prevent character mapping errors across different default OS encodings.
+- **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access. DEBUG_DIR, RULES_PATH, cache_dir, and OUTPUT_DIR default are project-root-relative, so the system works regardless of current working directory.
+- **Environment Isolation**: `python-dotenv` loads from `.env`. `ai_engine.py` dynamically resolves the configuration path, checking `cred/.env` first and falling back to the project root.
+- **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server. Launch scripts change to the script directory (`cd /d "%~dp0"` or `cd "$(dirname "$0")"`) before running, so invocation from any directory works.
+- **Path Resolution Flow**: All path-dependent modules resolve relative to project root (or script location), independent of cwd:
+
+```mermaid
+flowchart TB
+  subgraph runner [User Invocation]
+    RunFrom["User runs script"]
+  end
+  subgraph projectRoot [Project-Root-Relative Modules]
+    Config["core/config.py"]
+    DataLoader["data_loader.py"]
+    AIEngine["ai_engine.py"]
+    DocPlanner["document_planner.py"]
+    StateMgr["state_manager.py"]
+    SearchEng["search_engine.py"]
+  end
+  RunFrom --> Config
+  RunFrom --> DataLoader
+  RunFrom --> AIEngine
+  RunFrom --> DocPlanner
+  RunFrom --> StateMgr
+  RunFrom --> SearchEng
+```
+
+1. Summary...

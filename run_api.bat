@@ -1,5 +1,5 @@
 @echo off
-REM PD Generator - Windows CLI Launcher
+REM PD Generator - Windows API Server Launcher
 cd /d "%~dp0"
 
 IF NOT EXIST venv (
@@ -9,9 +9,8 @@ IF NOT EXIST venv (
     exit /b 1
 )
 
+echo [LAUNCH] Starting PD Generator API Server...
+set API_PORT=410
 call venv\Scripts\activate
-python generator.py %*
-if %ERRORLEVEL% NEQ 0 (
-    echo [CRASH] Generator exited with error. Check the logs.
-    pause
-)
+python api_server.py
+pause

@@ -8,8 +8,8 @@ from google import genai
 from google.oauth2 import service_account
 from google.auth.exceptions import DefaultCredentialsError
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+from pydantic import BaseModel, Field, ValidationError, ConfigDict
+from typing import Optional, List, Dict, Any
 from datetime import datetime
 import instructor
 import httpx # For disabling HTTP/2 to prevent hangs
@@ -18,9 +18,13 @@ import httpx # For disabling HTTP/2 to prevent hangs
 import prompts
 
 
-# Load .env
-# Load .env (from cred/ directory)
-load_dotenv("cred/.env")
+# ─── Load Environment ────────────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Check cred/ first, then fallback to root
+env_path_cred = os.path.join(BASE_DIR, "cred", ".env")
+env_path_root = os.path.join(BASE_DIR, ".env")
+env_path = env_path_cred if os.path.exists(env_path_cred) else env_path_root
+load_dotenv(env_path)
 
 # PROVIDER CONFIG
 PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -485,7 +489,7 @@ class GeneratedDocument(BaseModel):
     """
     doc_id: str = Field(..., description="Document ID e.g. 'DOC-101'")
     title_hint: str = Field(..., description="Short descriptive title e.g. 'Cardiology_Consult', 'MRI_Knee'")
-    content: str = Field(..., description="The full formatted text content of the document.")
+    content: Any = Field(..., description="The clinical document sections as a structured dictionary matching the provided template.")
 
 
 class ModifiedSQLRaw(BaseModel):
@@ -497,9 +501,10 @@ class ModifiedSQLRaw(BaseModel):
 
 class ClinicalDataPayload(BaseModel):
     """Public model for consumption (Pure Clinical Data)."""
+    model_config = ConfigDict(populate_by_name=True)
     # No SQL fields
     changes_summary: str = Field(..., description="A short summary of the clinical scenario generated.")
-    documents: List[GeneratedDocument]
+    documents: List[GeneratedDocument] = Field(..., alias="structured_documents", description="A MANDATORY list of generated clinical documents (consults, lab reports, imaging, etc.) matching the requested templates.")
     patient_persona: PatientPersona
 
 class VerificationPointers(BaseModel):
@@ -518,10 +523,17 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
-def generate_clinical_data(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", history_context: str = "") -> 'ClinicalDataPayload':
-
+def generate_clinical_data(
+    case_details: dict,
+    patient_state: dict,
+    document_plan: dict,
+    user_feedback: str = "",
+    history_context: str = "",
+    existing_persona: Optional[Dict] = None,
+) -> 'ClinicalDataPayload':
     """
     Calls AI to generate clinical data (Persona + Documents) based on the patient state and plan.
+    When existing_persona is provided and the AI omits patient_persona, it is used as fallback.
     """
     
     # 1. Load actual JSON templates from disk
@@ -531,7 +543,7 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         tmpl_path = os.path.join(templates_dir, tmpl_file)
         if os.path.exists(tmpl_path):
             try:
-                with open(tmpl_path, "r") as f:
+                with open(tmpl_path, "r", encoding='utf-8') as f:
                     loaded_templates[tmpl_file] = json.load(f)
             except Exception as e:
                 print(f"⚠️ Failed to load template {tmpl_file}: {e}")
@@ -540,7 +552,7 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
     full_document_plan = {
         "case_type": document_plan.get("case_type"),
         "procedure": document_plan.get("procedure"),
-        "templates": loaded_templates
+        "document_templates": loaded_templates
     }
 
     # 3. Generate main prompt from centralized prompts module
@@ -549,7 +561,8 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         patient_state=patient_state,
         document_plan=full_document_plan,
         user_feedback=user_feedback,
-        history_context=history_context
+        history_context=history_context,
+        existing_persona=existing_persona
     )
 
     # Use create_with_completion to get usage stats
@@ -557,7 +570,6 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         # Convert system prompt to user prompt for Vertex AI compatibility
         system_role = "user" if PROVIDER == "vertexai" else "system"
 
-        # Standardize arguments
         # Standardize arguments
         kwargs = {
             "model": MODEL_NAME,
@@ -611,6 +623,24 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
                          data = data[0]
                      
                      response_obj = ClinicalDataPayload.model_validate(data)
+                 except ValidationError as ve:
+                     # Recover when patient_persona is missing but we have existing_persona + documents
+                     if "patient_persona" in str(ve) and existing_persona and isinstance(data, dict):
+                         docs = data.get("documents", [])
+                         changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
+                         try:
+                             persona_obj = PatientPersona.model_validate(existing_persona)
+                             response_obj = ClinicalDataPayload(
+                                 patient_persona=persona_obj,
+                                 documents=docs,
+                                 changes_summary=changes,
+                             )
+                             print("   ⚠️  Recovered: used existing persona (AI omitted patient_persona)")
+                         except Exception as recover_err:
+                             print(f"   ⚠️  Recovery failed: {recover_err}. Re-raising original error.")
+                             raise ve
+                     else:
+                         raise ve
                  except Exception as e:
                      print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
                      response_obj = ClinicalDataPayload.model_validate_json(resp.text)
@@ -659,8 +689,41 @@ def generate_clinical_data(case_details: dict, patient_state: dict, document_pla
         return response_obj, usage_stats
         
     except Exception as e:
+        # Recover when patient_persona omitted (e.g. feedback asked for more docs)
+        def _try_recover(exc, completion_obj=None):
+            if not existing_persona or "patient_persona" not in str(exc):
+                return None
+            raw_text = ""
+            if completion_obj and hasattr(completion_obj, "choices") and completion_obj.choices:
+                raw_text = getattr(completion_obj.choices[0].message, "content", None) or ""
+            if not raw_text:
+                return None
+            raw_text = raw_text.strip()
+            for prefix in ("```json\n", "```json", "```"):
+                if raw_text.startswith(prefix):
+                    raw_text = raw_text[len(prefix):].replace("```", "").strip()
+                    break
+            try:
+                data = json.loads(raw_text)
+                if isinstance(data, list) and data:
+                    data = data[0]
+                docs = data.get("documents", [])
+                changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
+                persona_obj = PatientPersona.model_validate(existing_persona)
+                return ClinicalDataPayload(patient_persona=persona_obj, documents=docs, changes_summary=changes)
+            except (json.JSONDecodeError, ValidationError):
+                return None
+
+        try:
+            from instructor.core import InstructorRetryException
+            if isinstance(e, InstructorRetryException):
+                recovered = _try_recover(e, getattr(e, "last_completion", None))
+                if recovered:
+                    print("   ⚠️  Recovered from OpenAI retry failure: used existing persona")
+                    return recovered, {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+        except ImportError:
+            pass
         print(f"   ⚠️ AI Generation Failed: {e}")
-        # Return dummy to prevent crash if possible, or re-raise
         raise e
 
 
@@ -740,7 +803,10 @@ def fix_document_content(content: str, errors: List[str]) -> str:
         
         if PROVIDER == "openai":
             response = client.chat.completions.create(**kwargs)
-            return response
+            # Return the raw text content, not the response object
+            if response and response.choices:
+                return response.choices[0].message.content
+            return content
         elif PROVIDER == "vertexai":
             # Simplified for vertex
             chat = client.client.start_chat()

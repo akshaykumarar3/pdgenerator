@@ -37,6 +37,9 @@ def format_report_content(content):
             return html.escape(str(data))
 
         sections = data.get("sections", [])
+        # When AI returns JSON without "sections", render all top-level keys so persona PDF is not blank
+        if not sections:
+            sections = [k for k in data.keys() if k != "sections"]
         output = []
 
         def _format_value(val, depth=0):
@@ -63,7 +66,7 @@ def format_report_content(content):
 
         for sec in sections:
             value = data.get(sec)
-            if not value:
+            if value is None or value == "":
                 continue
 
             section_title = sec.replace("_", " ").title()
@@ -73,20 +76,33 @@ def format_report_content(content):
             output.append(formatted_val)
             output.append("")
 
-        return "<br/>".join(output)
+        return "<br/>".join(output) if output else html.escape(str(content)).replace('\n', '<br/>')
 
     except Exception as e:
         print(f"Error formatting report: {e}")
         return html.escape(str(content)).replace('\n', '<br/>')
+
+def _sanitize_filename(name: str) -> str:
+    """Make a safe filename segment across OSes."""
+    if not name:
+        return "document"
+    # Replace path separators and illegal filename chars
+    name = name.replace(os.sep, "-").replace("/", "-").replace("\\", "-")
+    name = re.sub(r'[<>:"|?*]+', "-", name)
+    name = re.sub(r"\s+", " ", name).strip()
+    return name
+
 
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
 
     if doc_type.startswith("DOC-"):
-        filename = f"{doc_type}.pdf" if not doc_type.endswith(".pdf") else doc_type
+        safe_doc_type = _sanitize_filename(doc_type)
+        filename = f"{safe_doc_type}.pdf" if not safe_doc_type.endswith(".pdf") else safe_doc_type
     else:
-        filename = f"Patient_{patient_id}_v{version}_{doc_type}.pdf"
+        safe_doc_type = _sanitize_filename(doc_type)
+        filename = f"Patient_{patient_id}_v{version}_{safe_doc_type}.pdf"
 
     file_path = os.path.join(patient_folder, filename)
     
@@ -473,7 +489,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     # Load template
     template_path = os.path.join(os.path.dirname(__file__), "templates", "summary_template.json")
     try:
-        with open(template_path, 'r') as f:
+        with open(template_path, 'r', encoding='utf-8') as f:
             template = json.load(f)
     except Exception as e:
         print(f"   ⚠️  Warning: Could not load summary template: {e}. Using defaults.")

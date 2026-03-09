@@ -38,7 +38,7 @@ remove_persona.py     → CLI tool to compeltely obliterate all persona data
   - **NEW**: `procedure_requested` (procedure name)
   - **NEW**: `procedure_facility` (FacilityDetails object)
   - **NEW**: `pa_request` (PARequestDetails object)
-- **GeneratedDocument**: Clinical document with title_hint, content, date
+- **GeneratedDocument**: Clinical document with title_hint, content (structured dictionary), date
 - **ClinicalDataPayload**: Combined persona + documents + summary
 - **AnnotatorSummary**: Verification guide with case explanation, medical details, verification pointers
 
@@ -174,7 +174,19 @@ Realistic healthcare facilities matching patient locality:
 
 - **Patient State Determinism**: Introduction of `state_manager.py` to freeze Identity/Demographics generation, reusing previously stored inputs cleanly to avoid AI hallucinations.
 - **Document Planner Logic**: Introduction of `document_planner.py` to dynamically assign rendering schemas per CPT code/case type before execution via `templates/document_plan_rules.json`.
-- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects instead of raw string narrative texts. These are later decoded in `doc_validator.py`.
+- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects. The `GeneratedDocument.content` field is enforced as a Pydantic `Dict` or `Any` to ensure the `instructor` library parses it into structured data before validation.
+- **Validator Support**: `doc_validator.py` supports both structured dictionaries and legacy plain-text as a fallback.
+- **Robust Configuration**: `ai_engine.py` supports `.env` discovery in both the root and `cred/` directories. Note: `generator.py` and `api_server.py` MUST call `load_dotenv` before importing `ai_engine` to ensure keys are available at module initialization.
+- **Document Alias Support**: `ClinicalDataPayload` uses `documents` with an alias `structured_documents` to improve AI understanding and adherence to document generation requirements.
+- **Template Key Synchronization**: The key `document_templates` is used consistently in `document_planner.py` and `prompts.py` to ensure the AI identifies the correct document plan.
+
+### Intensive PDF Generation (March 2026)
+
+- **Document content intensity**: In `prompts.py`, a "Document content intensity" block requires multi-sentence sections (findings, impression, clinical_justification, HPI, etc.) with specific measurements and clinical detail; includes a minimal vs. intensive example. Each document should be self-contained for PA review.
+- **Template-driven formatting**: `doc_validator.format_clinical_document()` accepts an optional `ordered_sections_override` (from template "sections"); nested dicts are flattened to readable key-value lines instead of raw Python dict repr.
+- **Diagnostic case documents**: Diagnostic case type now includes `consult_note_template.json` so E&M-style cases produce prior_auth + consult note + summary (3 documents).
+- **Sparse-document check**: Generator logs a warning when a report body is under 200 characters, suggesting regeneration with feedback.
+- **Robust Debug Directory**: `document_planner.py` includes robust error handling for `generated_output/debug` directory creation to prevent permission-related crashes.
 
 ### Centralized Prompts
 
@@ -192,7 +204,7 @@ Realistic healthcare facilities matching patient locality:
 
 - Added `run.bat` for Windows users
 - Cross-platform documentation in README
-- Example configuration files in `cred/examples/`
+- Example configuration in `core/.env.example`
 
 ### Bug Fixes
 
