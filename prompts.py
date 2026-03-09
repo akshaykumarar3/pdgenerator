@@ -5,7 +5,7 @@ This file contains all AI prompts and instructions used throughout the applicati
 Edit these prompts carefully to modify AI behavior.
 
 ⚠️ IMPORTANT GUIDELINES FOR EDITING:
-1. Maintain the exact structure markers (e.g., "--- REPORT START ---")
+1. Do NOT use any report start/end markers. Output clean, realistic clinical documents only.
 2. Keep field names consistent (e.g., PATIENT_ID, MRN, DOB)
 3. Test changes thoroughly - incorrect prompts can break document validation
 4. Add new instructions at the end of relevant sections

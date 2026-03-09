@@ -116,8 +116,9 @@ def format_clinical_document(
     if "narrative" in structured_content and structured_content["narrative"]:
         narrative_block = f"\n[CLINICAL_TEXT]\n{structured_content['narrative']}\n"
 
-    final_doc = f"{header}\n{chr(10).join(body_parts)}{narrative_block}\n"
-    return final_doc
+    final_doc = f"{header}\n{chr(10).join(body_parts)}{narrative_block}"
+    # Clean finish: no trailing blank lines
+    return final_doc.rstrip() + "\n"
 
 # CONFIG
 VALIDATION_CONFIG = {

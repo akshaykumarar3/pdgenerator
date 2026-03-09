@@ -201,6 +201,9 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                 extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(proc_lines))
 
             if pa_optimize:
+                # Ensure reports are generated to support higher approval likelihood
+                if generation_mode is not None:
+                    generation_mode["reports"] = True
                 extra_blocks.append(
                     "PA APPROVAL OPTIMIZATION: Even if clinical outcome is expected denial/low-probability, "
                     "generate all clinical documents with the STRONGEST possible medical justification to "
