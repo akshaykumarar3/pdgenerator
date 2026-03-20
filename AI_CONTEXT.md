@@ -469,7 +469,14 @@ Two interface files in `ui/` — both implement the **3-silo layout**:
 - `GET /api/download/<id>/<type>/<name>` — open PDF inline
 - `POST /api/generate` — spawn single-patient generation job
 - `POST /api/generate_all` — spawn batch generation job
-- `GET /api/job/<job_id>` — poll job status + logs
+- `GET /api/job/<job_id>?since=<offset>` — poll job status + incremental logs
+
+**Log Streaming Pattern:**
+- The job poll endpoint returns `{ status, logs: [...], log_total, ... }` — the field is `logs`, NOT `new_logs`
+- The UI tracks a `logOffset` variable (reset to 0 on each new job start)
+- Each poll request includes `?since=${logOffset}` so only new log lines are returned
+- After receiving logs, the UI increments `logOffset += d.logs.length`
+- This prevents duplicate log entries on successive polls
 
 API server runs on `http://localhost:410` by default (`API_PORT` env var).
 

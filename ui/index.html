@@ -254,6 +254,7 @@ let activeDocTab = 'all';
 let activeClinicalTab = 'meds';
 let currentJobId = null;
 let pollTimer = null;
+let logOffset = 0;
 let allPatientIds = [];
 let batchSelectAll = false;
 
@@ -451,6 +452,7 @@ async function startGeneration() {
         const r = await fetch(`${API}/api/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
         const d = await r.json();
         currentJobId = d.job_id;
+        logOffset = 0;
         appendLog(`📋 Job ID: ${currentJobId}`);
         pollTimer = setInterval(()=>pollJob(currentJobId), 2000);
     } catch(e) {
@@ -461,9 +463,11 @@ async function startGeneration() {
 
 async function pollJob(jobId) {
     try {
-        const r = await fetch(`${API}/api/job/${jobId}`);
+        const r = await fetch(`${API}/api/job/${jobId}?since=${logOffset}`);
         const d = await r.json();
-        (d.new_logs||[]).forEach(l=>appendLog(l));
+        const newLogs = d.logs || [];
+        newLogs.forEach(l => appendLog(l));
+        logOffset += newLogs.length;
         if(d.status==='done'||d.status==='error'){
             clearInterval(pollTimer); pollTimer=null;
             resetGenerateBtn();
@@ -582,6 +586,7 @@ async function startBatch() {
         const r=await fetch(`${API}/api/generate_all`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
         const d=await r.json();
         currentJobId=d.job_id;
+        logOffset=0;
         appendLog(`📋 Batch Job: ${currentJobId}`);
         pollTimer=setInterval(()=>pollJob(currentJobId),2000);
     } catch(e){ appendLog('❌ Batch failed: '+e.message); }

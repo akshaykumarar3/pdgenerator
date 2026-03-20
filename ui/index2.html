@@ -204,7 +204,7 @@
 <script>
 const API='http://localhost:410';
 let currentPatientId=null,currentPatientData=null,allFiles=[],activeDocTab='all',activeClinicalTab='meds';
-let currentJobId=null,pollTimer=null,allPatientIds=[],batchSelectAll=true;
+let currentJobId=null,pollTimer=null,logOffset=0,allPatientIds=[],batchSelectAll=true;
 
 window.addEventListener('DOMContentLoaded',()=>{
     checkServer(); loadPatients();
@@ -361,15 +361,15 @@ async function startGeneration(){
         const body={patient_id:currentPatientId,feedback:document.getElementById('feedback-input').value,
             generation_mode:{persona:document.getElementById('chk-persona').checked,reports:document.getElementById('chk-reports').checked,summary:document.getElementById('chk-summary').checked}};
         const r=await fetch(`${API}/api/generate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        const d=await r.json();currentJobId=d.job_id;
+        const d=await r.json();currentJobId=d.job_id;logOffset=0;
         appendLog('📋 Job: '+currentJobId);
         pollTimer=setInterval(()=>pollJob(currentJobId),2000);
     }catch(e){appendLog('❌ '+e.message);resetGenerateBtn();}
 }
 
 async function pollJob(jobId){
-    try{const r=await fetch(`${API}/api/job/${jobId}`);const d=await r.json();
-        (d.new_logs||[]).forEach(l=>appendLog(l));
+    try{const r=await fetch(`${API}/api/job/${jobId}?since=${logOffset}`);const d=await r.json();
+        const newLogs=d.logs||[];newLogs.forEach(l=>appendLog(l));logOffset+=newLogs.length;
         if(d.status==='done'||d.status==='error'){clearInterval(pollTimer);pollTimer=null;resetGenerateBtn();
             document.getElementById('log-dot').style.background=d.status==='done'?'#16a34a':'#ef4444';
             if(d.status==='done')loadDocuments(currentPatientId);}
@@ -454,7 +454,7 @@ async function startBatch(){
         generation_mode:{persona:document.getElementById('chk-batch-persona').checked,
             reports:document.getElementById('chk-batch-reports').checked,summary:document.getElementById('chk-batch-summary').checked}};
     try{const r=await fetch(`${API}/api/generate_all`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        const d=await r.json();currentJobId=d.job_id;appendLog('📋 Batch Job: '+d.job_id);
+        const d=await r.json();currentJobId=d.job_id;logOffset=0;appendLog('📋 Batch Job: '+d.job_id);
         pollTimer=setInterval(()=>pollJob(d.job_id),2000);}
     catch(e){appendLog('❌ Batch failed: '+e.message);}
 }
