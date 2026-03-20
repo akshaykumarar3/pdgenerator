@@ -1057,20 +1057,20 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Monica Geller",
-      "telecom": "713-555-1234",
-      "address": "Greenway Plaza, Houston, TX, 77046",
-      "gender": "female",
+      "name": "Joey Tribbiani",
+      "telecom": "713-555-4311",
+      "address": "N/A",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2025-01-01",
+      "period_start": "2017-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Ross Geller, MD",
       "formatted_npi": "1234567890",
       "managingOrganization": "Houston Methodist Hospital",
-      "address": "Houston Methodist Hospital, 6565 Fannin Street, Houston, TX 77030",
-      "phone": "713-790-3311"
+      "address": "6565 Fannin Street, Houston, TX 77030",
+      "phone": "713-555-0199"
     },
     "link": {
       "other_patient": "N/A",
@@ -1080,15 +1080,15 @@
       "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
+      "plan_type": "PPO",
       "member_id": "MBR-656319",
       "policy_number": "POL-2026-6037",
-      "effective_date": "2024-01-01",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-04-12",
+    "expected_procedure_date": "2026-04-07",
     "procedure_requested": "Upper GI Endoscopy with Biopsy (EGD)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1096,19 +1096,20 @@
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
-      "department": "Gastroenterology Department"
+      "department": "Gastroenterology Unit"
     },
     "pa_request": {
       "requesting_provider": "Dr. Ross Geller, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Persistent symptoms and relevant diagnostic findings justify EGD to manage condition and guide treatment planning.",
+      "clinical_justification": "Persistent dyspepsia with inadequate response to conservative treatment necessitates further diagnostic evaluation.",
       "supporting_diagnoses": [
-        "K21.9 - Gastro-esophageal reflux disease without esophagitis"
+        "K21.9 - Gastroesophageal reflux disease without esophagitis",
+        "R12 - Heartburn"
       ],
-      "previous_treatments": "Conservative management with OTC antacids and H2 blockers, ongoing PPI trial",
-      "expected_outcome": "Definitive diagnosis and management plan for dyspeptic symptoms."
+      "previous_treatments": "Tried OTC antacids, h2 blockers with failed results; PPI started; Continue evaluation mortality immunity schedule",
+      "expected_outcome": "ETA fully defined examination supporting"
     },
-    "bio_narrative": "Chandler Bing's health journey has been shaped by his cardiovascular condition, prompting him to make lifestyle changes post-stent placement in 2025. Despite managing his coronary artery disease with medications like Lopressor, Lipitor, and Aspirin, Chandler has experienced persistent dyspepsia for approximately six months. This issue has been exacerbated by the limited relief found through initial OTC treatment attempts. His resistance to traditional therapies necessitated the start of a Proton Pump Inhibitor (PPI) regimen, overseen by Dr. Ross Geller. With no alarming symptoms like weight loss or bleeding, the decision to proceed with an EGD is in place, contingent on the PPI trial's outcome. Chandler's proactive involvement in his healthcare is evident in his commitment to medical appointments and adherence to prescribed treatments. His supportive network, evidenced by involvement of contacts like Monica Geller for emergencies, further complements his health management strategies. The upcoming EGD aims to deliver clarity on his persistent GI issues, guiding towards a resolution that matches Chandler's enduring dedication to his health.",
+    "bio_narrative": "Chandler Bing, born April 8, 1969, is a 57-year-old Caucasian male residing in Houston, Texas. He has experienced persistent upper abdominal discomfort and heartburn for approximately six months. Over-the-counter medications failed to alleviate these symptoms, suggesting a more complex underlying gastrointestinal condition. Managing his hypertension and hypercholesterolemia with medications, Chandler also endured a cardiac event in the past that required rehabilitation therapy. Despite our attempts with various interventions, his current condition persists, warranting an Upper GI Endoscopy to examine the gastrointestinal tract more closely. With support from his physician Dr. Ross Geller at Houston Methodist Hospital, the upcoming procedure seeks to uncover or exclude serious conditions that might require different therapeutic approaches. The diagnosis relies on historical patterns of medications and symptoms. Chandler's family medical history includes relatives with gastrointestinal ailments, aligning the current suspicions of underlying conditions.",
     "medications": [
       {
         "brand": "Lopressor",
@@ -1219,13 +1220,13 @@
     "therapies": [
       {
         "therapy_type": "Cardiac Rehab",
-        "cpt_code": "G0422",
-        "cpt_description": "Intensive cardiac rehabilitation; with or without continuous ECG monitoring",
+        "cpt_code": "97404",
+        "cpt_description": "Supervised exercise therapy, per session",
         "icd10_codes": [
-          "I25.10 - Atherosclerotic heart disease"
+          "I25.10"
         ],
         "provider": "Therapist John Doe",
-        "provider_npi": "2345678901",
+        "provider_npi": "2134567890",
         "facility": "Texas Cardiac Rehab Center",
         "start_date": "2025-10-01",
         "end_date": "2026-01-30",
@@ -1236,189 +1237,38 @@
       }
     ],
     "behavioral_notes": "Chandler shows excellent medication adherence, maintaining a healthy lifestyle with routine exercises and mindful eating. Not a smoker, drinks moderately during social settings, and consults regularly with his healthcare team reflecting a robust compliance and engagement with his health plan.",
-    "encounters": [
-      {
-        "encounter_date": "2025-11-01",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Follow-up for hypertensive and cholesterol management.",
-        "provider": "Dr. Ross Geller, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2025-11-01",
-          "blood_pressure": "135/85 mmHg",
-          "heart_rate": "74 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "25.3 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Routine follow-up for cardiovascular health.",
-        "doctor_note": "Patient exhibits improved blood pressure control with current antihypertensive regimen. Cholesterol levels monitored, showing positive response to statin therapy. General health stable with no acute issues.",
-        "observations": [
-          "Blood pressure maintaining within target range.",
-          "Adherent to medication schedule.",
-          "No new cardiovascular symptoms."
-        ],
-        "procedures_performed": [
-          "Blood pressure check",
-          "Lipid panel"
-        ],
-        "diagnoses": [
-          "I10 - Essential hypertension",
-          "E78.2 - Hyperlipidemia"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Ross Geller, MD"
-        ],
-        "progress_notes": "Continue current therapies, routine follow-up in 6 months unless issues arise.",
-        "follow_up_instructions": "Maintain medication regimen and follow up with blood work in 6 months."
-      },
-      {
-        "encounter_date": "2026-02-14",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-op clearance for cardiac procedure.",
-        "provider": "Dr. Ross Geller, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-02-14",
-          "blood_pressure": "132/80 mmHg",
-          "heart_rate": "70 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "25.2 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Preoperative clearance for upcoming procedure.",
-        "doctor_note": "Pre-op consultation reveals patient fit for elective cardiac procedure, with optimized management of existing comorbidities. Labs confirm stable general health.",
-        "observations": [
-          "ECG consistent with prior infarct but stable.",
-          "Labs indicate good control of cholesterol and blood sugar levels."
-        ],
-        "procedures_performed": [
-          "Detailed examination for surgical clearance"
-        ],
-        "diagnoses": [
-          "I25.10 - Atherosclerotic heart disease"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Ross Geller, MD"
-        ],
-        "progress_notes": "Patient cleared for surgical procedure planned for next month.",
-        "follow_up_instructions": "Ensure all pre-operative instructions followed and report any changes in health."
-      },
-      {
-        "encounter_date": "2026-03-01",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Persistent upper abdominal pain and dyspepsia.",
-        "provider": "Dr. Ross Geller, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-03-01",
-          "blood_pressure": "134/82 mmHg",
-          "heart_rate": "72 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "25.1 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Persistent abdominal pain, worsening despite treatment.",
-        "doctor_note": "Patient presents with ongoing abdominal discomfort refractory to antacid therapies. Initiated PPI trial in response to unrelieved dyspepsia. Plans for diagnostic EGD being laid should PPI treatment prove ineffectual.",
-        "observations": [
-          "Abdominal examination reveals mild tenderness without palpable mass.",
-          "No evidence of acute distress.",
-          "Patient maintains normal weight with no significant loss."
-        ],
-        "procedures_performed": [
-          "Initiation of omeprazole therapy"
-        ],
-        "diagnoses": [
-          "K21.9 - Gastro-esophageal reflux disease without esophagitis",
-          "K30 - Functional dyspepsia"
-        ],
-        "medications_prescribed": [
-          "Omeprazole - 20mg daily"
-        ],
-        "care_team": [
-          "Dr. Ross Geller, MD"
-        ],
-        "progress_notes": "Continue monitoring PPI trial for efficacy, reassess need for EGD based on symptomatology.",
-        "follow_up_instructions": "Continue current medication and report any new or worsening symptoms."
-      }
-    ],
-    "images": [
-      {
-        "type": "Abdominal Ultrasound",
-        "date": "2026-02-21",
-        "provider": "Dr. Ross Geller, MD",
-        "facility": "Houston Methodist Hospital",
-        "findings": "Ultrasound shows no gallstones or biliary duct obstruction. Liver appears normal with no evidence of hepatic lesions."
-      }
-    ],
-    "reports": [
-      {
-        "type": "CBC",
-        "date": "2026-02-10",
-        "provider": "Dr. Ross Geller, MD",
-        "results": "Within normal limits, no signs of infection or anemia. Hemoglobin and hematocrit maintained at healthy levels.",
-        "notes": "Routine lab workup preceding cardiac assessment."
-      },
-      {
-        "type": "Helicobacter pylori Antigen",
-        "date": "2026-02-28",
-        "provider": "Dr. Ross Geller, MD",
-        "results": "Negative for H. pylori infection.",
-        "notes": "Completed as part of dyspepsia workup to exclude bacterial origin."
-      }
-    ],
-    "procedures": [
-      {
-        "name": "Coronary Artery Stent Placement",
-        "date": "2025-06-25",
-        "provider": "Dr. Heartwell, MD",
-        "facility": "Houston Methodist Hospital",
-        "reason": "Treatment of coronary artery disease post-myocardial infarction",
-        "notes": "Successful placement with no complications during procedure."
-      }
-    ],
+    "encounters": [],
+    "images": [],
+    "reports": [],
+    "procedures": [],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
-      "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "Occasional beer or wine in social settings",
+      "alcohol_use": "Moderate",
+      "alcohol_frequency": "2-3 drinks/week social events",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-03-01",
-      "last_visit_reason": "Persistent upper abdominal pain and dyspepsia",
+      "last_medical_visit": "2026-02-15",
+      "last_visit_reason": "medication refill",
       "missed_appointment": false,
       "missed_appointment_reason": null,
-      "early_visit_reason": null,
+      "early_visit_reason": "Persisting dyspepsia",
       "mental_health_history": null,
       "mental_health_current": null,
-      "exercise_habits": "Regular gym workouts 4x/week",
-      "diet_notes": "Follows a low-cholesterol, balanced diet",
-      "family_history_relevant": "Father had coronary artery disease"
+      "exercise_habits": "Exercises regularly; brisk walking 3x/week",
+      "diet_notes": "Mindful eating; low-fat, low-sodium diet",
+      "family_history_relevant": "Family history of GERD in father and an uncle"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-03-01",
-      "blood_pressure": "134/82 mmHg",
-      "heart_rate": "72 bpm",
+      "recorded_date": "2026-03-18",
+      "blood_pressure": "120/80 mmHg",
+      "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "25.1 kg/m\u00b2",
-      "oxygen_saturation": "98%",
+      "bmi": null,
+      "oxygen_saturation": null,
       "temperature": "98.6\u00b0F",
-      "respiratory_rate": "16 breaths/min"
+      "respiratory_rate": null
     },
     "gender_specific_history": null
   },

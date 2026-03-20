@@ -41,7 +41,8 @@
         .preview-doc-item:hover{background:rgba(180,197,255,0.08);}
         .preview-doc-item.active{background:rgba(180,197,255,0.15);color:#b4c5ff;font-weight:600;}
         .ql-toolbar.ql-snow{background:#1e1f25;border-color:#434654 !important;border-radius:8px 8px 0 0;}
-        .ql-container.ql-snow{background:#111318;border-color:#434654 !important;border-radius:0 0 8px 8px;color:#e2e2e9;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;}
+        .ql-container.ql-snow{background:transparent;border-color:#434654 !important;border-radius:0 0 8px 8px;color:#111;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;height:100%;}
+        .ql-editor{height:100%;overflow-y:auto;color:#111;}
         .ql-toolbar .ql-stroke{stroke:#c3c6d7 !important;}
         .ql-toolbar .ql-fill{fill:#c3c6d7 !important;}
         .ql-toolbar .ql-picker{color:#c3c6d7 !important;}
@@ -49,6 +50,16 @@
         .ql-editor h3{font-size:13px;font-weight:600;color:#cebdff;margin:10px 0 4px;}
         .ql-editor p{margin:0 0 6px;}
         .ql-editor ul,.ql-editor ol{padding-left:20px;margin-bottom:8px;}
+        /* Resize handle */
+        #preview-resize-handle{width:5px;cursor:col-resize;background:transparent;flex-shrink:0;transition:background 0.15s;}
+        #preview-resize-handle:hover,#preview-resize-handle.dragging{background:rgba(180,197,255,0.25);}
+        /* Demographics banner */
+        #preview-patient-banner{background:linear-gradient(90deg,rgba(97,139,255,0.08),rgba(206,189,255,0.05));border-bottom:1px solid rgba(67,70,84,0.3);}
+        /* A4 page marker */
+        .preview-page-wrap{flex:1;overflow:auto;padding:16px;background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.04), transparent 45%),radial-gradient(circle at 80% 30%, rgba(255,255,255,0.03), transparent 40%);}
+        .a4-page{width:min(100%,760px);aspect-ratio:1/1.414;min-height:520px;background:#fff;color:#111;border:1px dashed rgba(120,120,120,0.35);box-shadow:0 12px 32px rgba(0,0,0,0.35);border-radius:6px;position:relative;margin:0 auto;}
+        .a4-page::after{content:"A4";position:absolute;top:8px;right:10px;font-size:10px;letter-spacing:2px;color:rgba(0,0,0,0.35);}
+        .a4-page #quill-editor{height:100%;min-height:100%;padding:22px;}
     </style>
     <!-- Quill.js 1.3.7 -->
     <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
@@ -614,6 +625,7 @@ let previewDocIndex = 0;       // current doc index (0 = persona, 1..N = reports
 let previewJobId = null;
 let quill = null;              // single shared Quill instance
 let previewGenerationMode = {};
+let previewDocMap = [];        // [{type:'persona'} | {type:'report', docIndex} | {type:'empty'}]
 
 function _buildRequestBody() {
     const cd = currentPatientData || {};
@@ -688,24 +700,56 @@ async function pollPreviewJob(jobId) {
     } catch(_){}
 }
 
+function escapeHtml(str) {
+    if(str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function _formatTextToHtml(text) {
+    if(!text) return '';
+    return escapeHtml(text).replace(/\n/g,'<br/>');
+}
+
+function _formatValueToHtml(val) {
+    if(val === null || val === undefined || val === '') return '';
+    if(Array.isArray(val)) {
+        const items = val.map(item=>{
+            if(typeof item === 'object') return `<li>${escapeHtml(JSON.stringify(item))}</li>`;
+            return `<li>${escapeHtml(item)}</li>`;
+        }).join('');
+        return items ? `<ul>${items}</ul>` : '';
+    }
+    if(typeof val === 'object') {
+        let out = '';
+        for(const [k2, v2] of Object.entries(val)) {
+            if(v2 === null || v2 === undefined || v2 === '') continue;
+            const label = escapeHtml(k2.replace(/_/g,' '));
+            if(Array.isArray(v2) || typeof v2 === 'object') {
+                out += `<p><strong>${label}:</strong></p>${_formatValueToHtml(v2)}`;
+            } else {
+                out += `<p><strong>${label}:</strong> ${escapeHtml(v2)}</p>`;
+            }
+        }
+        return out;
+    }
+    return `<p>${escapeHtml(val)}</p>`;
+}
+
 function docContentToHtml(doc) {
     const content = doc.content;
     if(!content) return '<p>(No content generated)</p>';
-    if(typeof content === 'string') return `<p>${content}</p>`;
+    if(typeof content === 'string') return `<p>${_formatTextToHtml(content)}</p>`;
     let html = '';
     for(const [key, val] of Object.entries(content)) {
         if(val===null||val===undefined||val==='') continue;
         const label = key.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-        html += `<h3>${label}</h3>`;
-        if(Array.isArray(val)) {
-            html += '<ul>' + val.map(item=>`<li>${typeof item==='object'?JSON.stringify(item):item}</li>`).join('') + '</ul>';
-        } else if(typeof val === 'object') {
-            for(const [k2,v2] of Object.entries(val)) {
-                html += `<p><strong>${k2.replace(/_/g,' ')}:</strong> ${v2}</p>`;
-            }
-        } else {
-            html += `<p>${String(val)}</p>`;
-        }
+        html += `<h3>${escapeHtml(label)}</h3>`;
+        html += _formatValueToHtml(val);
     }
     return html || '<p>(No content)</p>';
 }
@@ -728,21 +772,54 @@ function personaToHtml(persona) {
 
 function openPreviewModal(payload) {
     previewPayload = payload;
-    previewDocIndex = 0;
+    previewDocIndex = -1;
 
-    // Build content array: [0]=persona, [1..N]=documents
-    previewDocContents = [];
-    previewDocContents.push(personaToHtml(payload.patient_persona));
-    (payload.documents||[]).forEach(doc=>{
-        previewDocContents.push(docContentToHtml(doc));
+    // ── Demographics banner ─────────────────────────────────────────────────
+    const p = payload.patient_persona || {};
+    const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || '—';
+    const year = new Date().getFullYear();
+    const mrn = currentPatientId ? `MRN-${currentPatientId}-${year}` : '—';
+    document.getElementById('pvw-name').textContent   = fullName;
+    document.getElementById('pvw-dob').textContent    = p.dob || '—';
+    document.getElementById('pvw-gender').textContent = p.gender ? p.gender.charAt(0).toUpperCase() + p.gender.slice(1) : '—';
+    document.getElementById('pvw-mrn').textContent    = mrn;
+
+    // ── Build content array and map ─────────────────────────────────────────
+    const includePersona = (previewGenerationMode?.persona !== false);
+    const includeReports = (previewGenerationMode?.reports !== false);
+    const reports = includeReports ? (payload.documents||[]) : [];
+
+    previewDocMap = [];
+    if(includePersona) previewDocMap.push({type:'persona'});
+    reports.forEach((_, i)=> previewDocMap.push({type:'report', docIndex:i}));
+
+    if(previewDocMap.length === 0) {
+        previewDocMap.push({type:'empty'});
+    }
+
+    previewDocContents = previewDocMap.map(m=>{
+        if(m.type === 'persona') return personaToHtml(payload.patient_persona);
+        if(m.type === 'report') return docContentToHtml(reports[m.docIndex]);
+        return '<p>(No documents selected for preview)</p>';
     });
 
-    // Build sidebar list
+    // ── Sidebar ─────────────────────────────────────────────────────────────
     const sidebar = document.getElementById('preview-sidebar');
-    const allDocs = [
-        {icon:'person', label: (payload.patient_persona?.first_name||'') + ' ' + (payload.patient_persona?.last_name||''), sub:'Patient Persona'},
-        ...(payload.documents||[]).map((d,i)=>({ icon:'description', label: (d.title_hint||`Document ${i+1}`).replace(/_/g,' '), sub:`Report ${i+1} of ${(payload.documents||[]).length}` }))
-    ];
+    const totalDocs = reports.length;
+    const allDocs = previewDocMap.map((m, idx)=>{
+        if(m.type === 'persona') {
+            return {icon:'person', label: fullName, sub:'Patient Persona'};
+        }
+        if(m.type === 'report') {
+            const d = reports[m.docIndex] || {};
+            return {
+                icon:'description',
+                label: (d.title_hint||`Document ${m.docIndex+1}`).replace(/_/g,' '),
+                sub: `Report ${m.docIndex+1} of ${totalDocs}`
+            };
+        }
+        return {icon:'info', label:'No Documents', sub:'Nothing selected'};
+    });
     sidebar.innerHTML = allDocs.map((d,i)=>`
         <div class="preview-doc-item ${i===0?'active':''}" id="pdoc-${i}" onclick="selectPreviewDoc(${i})">
             <div class="flex items-center gap-2">
@@ -756,7 +833,7 @@ function openPreviewModal(payload) {
 
     document.getElementById('preview-doc-total').textContent = allDocs.length;
 
-    // Init or reset Quill
+    // ── Init Quill ───────────────────────────────────────────────────────────
     const editorEl = document.getElementById('quill-editor');
     editorEl.innerHTML = '';
     quill = new Quill('#quill-editor', {
@@ -773,20 +850,53 @@ function openPreviewModal(payload) {
 
     selectPreviewDoc(0);
     document.getElementById('preview-modal').classList.add('open');
+    initResizableSidebar();
 }
+
+function initResizableSidebar() {
+    const handle = document.getElementById('preview-resize-handle');
+    const panel  = document.getElementById('preview-sidebar-panel');
+    if(!handle || !panel) return;
+    // Clean up any prior listeners by replacing element
+    const newHandle = handle.cloneNode(true);
+    handle.parentNode.replaceChild(newHandle, handle);
+
+    let dragging = false, startX = 0, startW = 0;
+
+    newHandle.addEventListener('pointerdown', e=>{
+        dragging = true;
+        startX = e.clientX;
+        startW = panel.getBoundingClientRect().width;
+        newHandle.classList.add('dragging');
+        newHandle.setPointerCapture(e.pointerId);
+        e.preventDefault();
+    });
+    newHandle.addEventListener('pointermove', e=>{
+        if(!dragging) return;
+        const delta = e.clientX - startX;
+        const newW  = Math.min(480, Math.max(160, startW + delta));
+        panel.style.width = newW + 'px';
+    });
+    newHandle.addEventListener('pointerup', ()=>{
+        dragging = false;
+        newHandle.classList.remove('dragging');
+    });
+}
+
 
 function selectPreviewDoc(idx) {
     const total = previewDocContents.length;
     if(idx<0||idx>=total) return;
 
     // Save current quill content before switching
-    if(quill && previewDocIndex < previewDocContents.length) {
+    if(quill && previewDocIndex >= 0 && previewDocIndex < previewDocContents.length) {
         previewDocContents[previewDocIndex] = quill.root.innerHTML;
     }
     previewDocIndex = idx;
 
     // Update Quill with new content
-    quill.root.innerHTML = previewDocContents[idx];
+    quill.setContents([]);
+    quill.clipboard.dangerouslyPasteHTML(previewDocContents[idx] || '<p></p>');
 
     // Update sidebar highlight
     document.querySelectorAll('.preview-doc-item').forEach((el,i)=>{
@@ -794,10 +904,14 @@ function selectPreviewDoc(idx) {
     });
 
     // Update nav
-    const allDocs = [
-        {label: 'Patient Persona'},
-        ...(previewPayload.documents||[]).map((d,i)=>({ label: (d.title_hint||`Document ${i+1}`).replace(/_/g,' ')}))
-    ];
+    const allDocs = previewDocMap.map(m=>{
+        if(m.type === 'persona') return {label:'Patient Persona'};
+        if(m.type === 'report') {
+            const d = (previewPayload.documents||[])[m.docIndex] || {};
+            return {label: (d.title_hint||`Document ${m.docIndex+1}`).replace(/_/g,' ')};
+        }
+        return {label:'No Documents'};
+    });
     document.getElementById('preview-doc-current').textContent = idx+1;
     document.getElementById('preview-doc-total-nav').textContent = total;
     document.getElementById('preview-doc-title').textContent = allDocs[idx]?.label || '';
@@ -817,6 +931,7 @@ function closePreviewModal() {
     document.getElementById('preview-modal').classList.remove('open');
     previewPayload = null;
     previewDocContents = [];
+    previewDocMap = [];
     quill = null;
 }
 
@@ -826,12 +941,18 @@ async function confirmAndGeneratePDFs() {
         previewDocContents[previewDocIndex] = quill.root.innerHTML;
     }
 
-    // Build documents array (index 1..N, skipping persona at 0)
-    const documents = (previewPayload.documents||[]).map((doc,i)=>({
-        title_hint: doc.title_hint || `Document_${i+1}`,
-        content_html: previewDocContents[i+1] || '',
-    }));
+    // Build documents array aligned to preview map
+    const rawDocs = previewPayload?.documents || [];
+    const documents = previewDocMap.map((m, i)=>{
+        if(m.type !== 'report') return null;
+        const doc = rawDocs[m.docIndex] || {};
+        return {
+            title_hint: doc.title_hint || `Document_${m.docIndex+1}`,
+            content_html: previewDocContents[i] || '',
+        };
+    }).filter(Boolean);
 
+    const personaSnapshot = previewPayload?.patient_persona || null;
     closePreviewModal();
     clearLogs();
     appendLog('📄 Sending confirmed content for PDF rendering…');
@@ -844,7 +965,7 @@ async function confirmAndGeneratePDFs() {
             patient_id: currentPatientId,
             generation_mode: previewGenerationMode,
             documents: documents,
-            persona: previewPayload.patient_persona || null,
+            persona: personaSnapshot,
         };
         const r = await fetch(`${API}/api/generate_from_content`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
         const d = await r.json();
@@ -876,16 +997,32 @@ async function confirmAndGeneratePDFs() {
         </button>
     </div>
 
+    <!-- Patient demographics banner -->
+    <div id="preview-patient-banner" class="flex items-center gap-6 px-6 py-2.5 shrink-0">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary/70 text-base" style="font-variation-settings:'FILL'1;">person</span>
+            <span id="pvw-name" class="text-sm font-bold text-on-surface">—</span>
+        </div>
+        <div class="flex items-center gap-4 text-[11px] text-on-surface-variant">
+            <span><span class="text-on-surface-variant/60 mr-1">DOB</span><span id="pvw-dob">—</span></span>
+            <span><span class="text-on-surface-variant/60 mr-1">Gender</span><span id="pvw-gender">—</span></span>
+            <span><span class="text-on-surface-variant/60 mr-1">MRN</span><span id="pvw-mrn">—</span></span>
+            <span><span class="text-on-surface-variant/60 mr-1">Docs</span><span id="preview-doc-total" class="text-tertiary font-bold">0</span></span>
+        </div>
+        <div class="ml-auto text-[10px] text-on-surface-variant/50 italic">Drag the divider to resize panels</div>
+    </div>
+
     <!-- Modal body -->
     <div class="flex flex-1 overflow-hidden">
 
-        <!-- Left sidebar: document list -->
-        <div class="w-60 shrink-0 flex flex-col bg-surface-container-lowest border-r border-outline-variant/10 overflow-hidden">
-            <div class="px-4 py-2.5 text-[9px] font-bold uppercase tracking-widest text-on-surface-variant border-b border-outline-variant/10 shrink-0">
-                Documents (<span id="preview-doc-total">0</span>)
-            </div>
+        <!-- Left sidebar: document list (resizable) -->
+        <div id="preview-sidebar-panel" class="flex flex-col bg-surface-container-lowest border-r border-outline-variant/10 overflow-hidden" style="width:240px;min-width:160px;max-width:480px;">
+            <div class="px-4 py-2.5 text-[9px] font-bold uppercase tracking-widest text-on-surface-variant border-b border-outline-variant/10 shrink-0">Documents</div>
             <div id="preview-sidebar" class="flex-1 overflow-y-auto scrollbar-hide p-2 space-y-0.5"></div>
         </div>
+
+        <!-- Resize handle -->
+        <div id="preview-resize-handle" title="Drag to resize"></div>
 
         <!-- Right: editor area -->
         <div class="flex-1 flex flex-col overflow-hidden">
@@ -898,7 +1035,7 @@ async function confirmAndGeneratePDFs() {
                 </button>
                 <div class="flex-1 text-sm font-semibold text-on-surface truncate" id="preview-doc-title">—</div>
                 <div class="text-[10px] font-mono text-on-surface-variant">
-                    <span id="preview-doc-current">1</span> / <span id="preview-doc-total2" style="display:none"></span><span id="preview-doc-total-nav">—</span>
+                    <span id="preview-doc-current">1</span> / <span id="preview-doc-total-nav">—</span>
                 </div>
                 <button id="btn-next-doc" onclick="navigateDoc(1)" disabled
                     class="w-7 h-7 flex items-center justify-center rounded-lg bg-surface-variant/30 hover:bg-surface-variant/60 transition-colors disabled:opacity-30">
@@ -907,8 +1044,12 @@ async function confirmAndGeneratePDFs() {
             </div>
 
             <!-- Quill editor -->
-            <div class="flex-1 overflow-hidden p-4 flex flex-col">
-                <div id="quill-editor" class="flex-1 overflow-y-auto" style="min-height:0;"></div>
+            <div class="flex-1 overflow-hidden" style="display:flex;flex-direction:column;">
+                <div class="preview-page-wrap">
+                    <div class="a4-page">
+                        <div id="quill-editor"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

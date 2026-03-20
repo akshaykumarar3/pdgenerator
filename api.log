@@ -9,14 +9,14 @@
  * Running on http://127.0.0.1:410
  * Running on http://192.168.1.21:410
 [33mPress CTRL+C to quit[0m
-127.0.0.1 - - [21/Mar/2026 01:20:38] "GET /api/status HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:20:38] "GET /api/patients HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:20:52] "GET /api/patient/261 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:20:52] "GET /api/output/261 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:21:59] "OPTIONS /api/preview HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:21:59] "POST /api/preview HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:01] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=0 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:03] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=1 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:03] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:03] "GET /api/patients HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:15] "GET /api/patient/261 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:15] "GET /api/output/261 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:17] "OPTIONS /api/preview HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:17] "POST /api/preview HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:19] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=0 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:21] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=1 HTTP/1.1" 200 -
 /Users/akshaykumar/code/lucenz/pdgenerator/venv/lib/python3.13/site-packages/instructor/providers/gemini/client.py:5: FutureWarning: 
 
 All support for the `google.generativeai` package has ended. It will no longer be receiving 
@@ -31,35 +31,147 @@ https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/READM
 🔍 Preview generation for Patient ID: 261
    [DEBUG] Calling AI Provider: openai, Model: gpt-4o
    [DEBUG] Sending request...
-127.0.0.1 - - [21/Mar/2026 01:22:05] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=1 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:07] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:09] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:11] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:13] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:15] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:17] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:19] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:21] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:23] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:25] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:27] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:29] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:31] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:33] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:35] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:37] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:39] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:41] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:43] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:45] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:47] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:49] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:51] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:53] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:55] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:57] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:22:59] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:23:01] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:23:03] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:23:05] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
-127.0.0.1 - - [21/Mar/2026 01:23:07] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:23] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=1 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:25] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:27] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:29] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:31] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:33] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:35] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:37] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:39] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:41] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:43] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:45] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:47] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:49] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:51] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:53] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:55] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:57] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:47:59] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:01] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:03] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:05] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:07] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:09] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:11] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:13] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:15] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:17] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:19] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:21] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:23] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:25] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:27] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:29] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:31] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:33] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:35] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:37] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+   [DEBUG] Request complete.
+      💾 Patient 261 (Unknown) saved to Core DB.
+✅ Preview ready: 3 document(s)
+127.0.0.1 - - [21/Mar/2026 01:48:39] "GET /api/job/ad55bd38-1b4e-4e82-aa83-4895bebc021d?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:56] "OPTIONS /api/generate_from_content HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:48:56] "POST /api/generate_from_content HTTP/1.1" 200 -
+      📦 Archived 1 file(s) from persona/
+      📦 Archived 1 file(s) from summary/
+      📦 Archived 4 file(s) from 261/
+   👤 Persona → 261-Chandler_Bing-persona-v7.pdf
+      ✅ DOC-261-v7-001-Prior Authorization Request.pdf
+      ✅ DOC-261-v7-002-Consultation for Persistent Dyspepsia.pdf
+      ✅ DOC-261-v7-003-Payer Policy Criteria Summary.pdf
+   📋 Generating Annotator Verification Guide...
+   [DEBUG] Calling OpenAI for Annotator Summary - Model: gpt-4o
+127.0.0.1 - - [21/Mar/2026 01:48:58] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=0 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:49:00] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:49:02] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:49:04] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:49:06] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=10 HTTP/1.1" 200 -
+   ✅ Annotator Summary Generated Successfully
+   📊 Summary → Clinical_Summary_Patient_261-v7.pdf
+
+✅ 5 PDF(s) rendered from confirmed content.
+127.0.0.1 - - [21/Mar/2026 01:49:08] "GET /api/job/80c11f8e-61f4-44ff-94ac-cae3678d1416?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:49:08] "GET /api/output/261 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:00:55] "OPTIONS /api/generate HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:00:55] "POST /api/generate HTTP/1.1" 200 -
+
+🚀 Starting Workflow for Patient ID: 261
+   Mode → Persona:True | Reports:True | Summary:True
+
+📂 Loading Case Data for ID: 261…
+   ✅ Case: Upper GI Endoscopy with Biopsy (EGD) → PA Approval
+   📜 Prior history loaded.
+   🔄 Existing record: Chandler Bing
+
+🧠 Generating with AI… (Outcome: PA Approval)
+   [DEBUG] Calling AI Provider: openai, Model: gpt-4o
+   [DEBUG] Sending request...
+127.0.0.1 - - [21/Mar/2026 02:00:57] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=0 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:00:59] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:01] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:03] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:05] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:07] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:09] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:11] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:13] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:15] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:17] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:19] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:21] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:23] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:25] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:27] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:29] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:31] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:33] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:35] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:37] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:39] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:41] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:43] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:45] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:47] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:49] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:51] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+   [DEBUG] Request complete.
+      💾 Patient 261 (Unknown) saved to Core DB.
+   💾 Patient DB updated: Chandler Bing (ID 261)
+   🔖 Document version: v8
+      📦 Archived 1 file(s) from persona/
+      📦 Archived 1 file(s) from summary/
+      📦 Archived 3 file(s) from 261/
+127.0.0.1 - - [21/Mar/2026 02:01:53] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=10 HTTP/1.1" 200 -
+   👤 Persona → 261-Chandler_Bing-persona-v8.pdf
+   📄 Generating 4 report(s) at v8…
+      ✅ DOC-261-v8-001-Prior Authorization Request.pdf
+      ✅ DOC-261-v8-002-Consultation - Office Visit Note.pdf
+      ✅ DOC-261-v8-003-Patient Clinical Summary.pdf
+      ✅ DOC-261-v8-004-Payer Policy Criteria Summary.pdf
+   📋 Generating annotator summary at v8…
+INFO:search_engine:Tavily search engine initialized successfully
+   📋 Generating Annotator Verification Guide...
+   [DEBUG] Calling OpenAI for Annotator Summary - Model: gpt-4o
+127.0.0.1 - - [21/Mar/2026 02:01:55] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=17 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:01:55] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=17 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:57] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:01:57] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:01:59] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:01:59] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:02:01] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:02:01] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:02:03] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:02:03] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+   ✅ Annotator Summary Generated Successfully
+   📊 Summary → Clinical_Summary_Patient_261-v8.pdf
+   📝 Patient record updated: 261-record.txt
+
+✅ Workflow complete for patient 261. 6 document(s) written.
+127.0.0.1 - - [21/Mar/2026 02:02:05] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:02:05] "GET /api/job/0bbefaa3-fd4b-44c7-a6f0-218e23abceb1?since=26 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 02:02:05] "GET /api/output/261 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [21/Mar/2026 02:02:05] "GET /api/output/261 HTTP/1.1" 200 -

@@ -727,7 +727,8 @@ def api_job_status(job_id: str):
         "patient_id": job.get("patient_id"),
         "changes_summary": job.get("changes_summary"),
         "request_context": job.get("request_context", {}),
-        "all_logs": job["logs"],  # Full log for summary panel
+        "all_logs": job["logs"],
+        "preview_payload": job.get("preview_payload"),   # populated by /api/preview jobs
     })
 
 

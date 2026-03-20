@@ -4,6 +4,7 @@ import re
 import shutil
 import random
 import datetime
+import html as html_lib
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -718,6 +719,50 @@ def preview_patient_generation(
 
 # ─── RENDER PDFs FROM CONFIRMED CONTENT ────────────────────────────────────────
 
+def _strip_html_tags(text: str) -> str:
+    return re.sub(r"<[^>]+>", "", text or "")
+
+
+def _html_to_sectioned_text(content_html: str) -> str:
+    """
+    Convert editor HTML into a deterministic, PDF-friendly plain-text format
+    with optional [SECTION] headings. This preserves structure without relying
+    on HTML rendering in ReportLab.
+    """
+    if not content_html:
+        return ""
+
+    text = content_html
+
+    # Headings to [SECTION] markers
+    def _heading_repl(match):
+        heading = _strip_html_tags(match.group(1))
+        heading = html_lib.unescape(heading)
+        heading = re.sub(r"\s+", " ", heading).strip()
+        if not heading:
+            return ""
+        label = heading.upper().replace(" ", "_")
+        return f"\n[{label}]\n"
+
+    text = re.sub(r"<h[1-6][^>]*>(.*?)</h[1-6]>", _heading_repl, text, flags=re.IGNORECASE | re.DOTALL)
+
+    # Lists and line breaks
+    text = re.sub(r"</p\s*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<li[^>]*>", "- ", text, flags=re.IGNORECASE)
+    text = re.sub(r"</li\s*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"</(ul|ol)\s*>", "\n", text, flags=re.IGNORECASE)
+
+    # Strip remaining tags, unescape entities
+    text = _strip_html_tags(text)
+    text = html_lib.unescape(text)
+
+    # Normalize whitespace
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 def render_patient_pdfs_from_content(
     patient_id: str,
     generation_mode: dict,
@@ -781,6 +826,10 @@ def render_patient_pdfs_from_content(
             try:
                 title_hint = doc_info.get("title_hint", f"Document_{seq}")
                 content_html = doc_info.get("content_html", "")
+                content_body = _html_to_sectioned_text(content_html)
+                if not content_body and content_html:
+                    # Fallback: best-effort plain text
+                    content_body = _strip_html_tags(content_html).strip()
                 seq_str = f"{seq:03d}"
                 doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
                 safe_title = _sanitize_filename_component(title_hint)
@@ -806,7 +855,7 @@ def render_patient_pdfs_from_content(
                 pdf_path = pdf_generator.create_patient_pdf(
                     patient_id=patient_id,
                     doc_type=final_base,
-                    content=content_html,
+                    content=content_body,
                     patient_persona=persona_obj,
                     doc_metadata=doc_meta,
                     base_output_folder=patient_report_folder,
