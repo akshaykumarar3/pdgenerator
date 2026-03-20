@@ -9,11 +9,57 @@
  * Running on http://127.0.0.1:410
  * Running on http://192.168.1.21:410
 [33mPress CTRL+C to quit[0m
-127.0.0.1 - - [20/Mar/2026 22:12:35] "GET /api/status HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:36] "GET /api/patients HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:43] "GET /api/patient/262 HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:43] "GET /api/output/262 HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:52] "GET /api/patient/261 HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:52] "GET /api/output/261 HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:56] "GET /api/patient/260 HTTP/1.1" 200 -
-127.0.0.1 - - [20/Mar/2026 22:12:56] "GET /api/output/260 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:20:38] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:20:38] "GET /api/patients HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:20:52] "GET /api/patient/261 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:20:52] "GET /api/output/261 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:21:59] "OPTIONS /api/preview HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:21:59] "POST /api/preview HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:01] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=0 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:03] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=1 HTTP/1.1" 200 -
+/Users/akshaykumar/code/lucenz/pdgenerator/venv/lib/python3.13/site-packages/instructor/providers/gemini/client.py:5: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai  # type: ignore[import-not-found]
+   🤖 AI Provider: OPENAI
+
+🔍 Preview generation for Patient ID: 261
+   [DEBUG] Calling AI Provider: openai, Model: gpt-4o
+   [DEBUG] Sending request...
+127.0.0.1 - - [21/Mar/2026 01:22:05] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=1 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:07] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:09] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:11] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:13] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:15] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:17] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:19] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:21] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:23] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:25] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:27] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:29] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:31] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:33] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:35] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:37] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:39] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:41] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:43] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:45] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:47] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:49] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:51] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:53] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:55] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:57] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:22:59] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:23:01] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:23:03] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:23:05] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -
+127.0.0.1 - - [21/Mar/2026 01:23:07] "GET /api/job/86f81b99-d435-49af-9a2d-891073c7d3e5?since=5 HTTP/1.1" 200 -

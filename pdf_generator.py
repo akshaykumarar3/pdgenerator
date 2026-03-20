@@ -93,6 +93,45 @@ def _sanitize_filename(name: str) -> str:
     return name
 
 
+def _clean_doc_title(title_hint: str, doc_type_fallback: str = "") -> str:
+    """Clean AI-generated title hints into proper clinical report titles."""
+    raw = title_hint or doc_type_fallback or "Clinical Report"
+    # Strip file-ID prefix e.g. DOC-221-v1-001-
+    raw = re.sub(r'^DOC-\d+-v\d+-\d+-', '', raw)
+    # Replace underscores/dashes with spaces
+    raw = raw.replace('_', ' ').replace('-', ' ')
+    # Remove common AI-residue suffixes
+    raw = re.sub(
+        r'\s+(supporting document|for prior authorization|for PA|with contrast|related to|prepared for|supporting pa|per request).*$',
+        '', raw, flags=re.IGNORECASE
+    )
+    return raw.strip().title()
+
+
+def _parse_formatted_sections(content_str: str) -> list:
+    """
+    Parse content from format_clinical_document() which uses [SECTION_LABEL] markers.
+    Returns list of (label_or_None, body) tuples. Skips REPORT_METADATA block.
+    """
+    import re as _re
+    if '[REPORT_METADATA]' not in content_str and not _re.search(r'\[[A-Z][A-Z_ ]+\]', content_str):
+        return [(None, content_str)]  # plain text, no markers
+
+    sections = []
+    pattern = _re.compile(r'^\[([A-Z][A-Z_ ]*)\]\s*$', _re.MULTILINE)
+    matches = list(pattern.finditer(content_str))
+    for idx, m in enumerate(matches):
+        label = m.group(1).strip()
+        start = m.end()
+        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(content_str)
+        body = content_str[start:end].strip()
+        if label == 'REPORT_METADATA':
+            continue  # skip raw metadata block – already in PDF header
+        if body:
+            sections.append((label, body))
+    return sections if sections else [(None, content_str)]
+
+
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
@@ -112,11 +151,13 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     col_dark_blue = colors.HexColor("#34495e")
     col_gray = colors.gray
     
-    style_tit = ParagraphStyle('cpdf_MainTitle', parent=styles['Heading1'], textColor=col_dark_blue, 
+    style_tit = ParagraphStyle('cpdf_MainTitle', parent=styles['Heading1'], textColor=col_dark_blue,
                                borderPadding=0, borderWidth=0, alignment=1)
     style_sub = ParagraphStyle('cpdf_SubTitle', parent=styles['Normal'], fontSize=9, textColor=col_gray, alignment=0)
     style_sub_right = ParagraphStyle('cpdf_SubTitleRight', parent=styles['Normal'], fontSize=9, textColor=col_dark_blue, alignment=2)
-    style_normal = ParagraphStyle('cpdf_Justify', parent=styles['Normal'], alignment=4, leading=14) 
+    style_normal = ParagraphStyle('cpdf_Justify', parent=styles['Normal'], alignment=4, leading=14)
+    style_sec_h = ParagraphStyle('cpdf_SectionH', parent=styles['Normal'], fontName='Helvetica-Bold',
+                                 fontSize=10, textColor=col_dark_blue, spaceBefore=10, spaceAfter=3, leading=13)
 
     Story = []
     
@@ -158,16 +199,15 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(header_table)
         Story.append(Spacer(1, 20))
         
-        clean_title = doc_type.replace('_', ' ').upper()
-        if hasattr(doc_metadata, 'title_hint'):
-            clean_title = doc_metadata.title_hint.replace('_', ' ').upper()
-            
-        Story.append(Paragraph(f"{clean_title}", style_tit))
+        raw_hint = getattr(doc_metadata, 'title_hint', '') if doc_metadata else ''
+        clean_title = _clean_doc_title(raw_hint, doc_type_fallback=doc_type)
+
+        Story.append(Paragraph(clean_title, style_tit))
         Story.append(Spacer(1, 20))
         
     else:
-        title_str = doc_type.replace('_', ' ').title()
-        Story.append(Paragraph(f"{title_str}", styles['Heading1']))
+        clean_title = _clean_doc_title('', doc_type_fallback=doc_type)
+        Story.append(Paragraph(clean_title, styles['Heading1']))
         Story.append(Spacer(1, 20))
     
     if image_path and os.path.exists(image_path):
@@ -177,21 +217,20 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(img)
         Story.append(Spacer(1, 15))
 
-    # Render content body
+    # Render content body – parse [SECTION_LABEL] markers into styled headings
+    sections = _parse_formatted_sections(content) if isinstance(content, str) else [(None, str(content))]
+    for (label, body) in sections:
+        if label:
+            section_display = label.replace('_', ' ').title()
+            Story.append(Paragraph(section_display, style_sec_h))
+        body_fmt = format_clinical_text(body).replace('\n', '<br/>')
+        try:
+            Story.append(Paragraph(body_fmt, style_normal))
+        except ValueError:
+            Story.append(Paragraph(html.escape(body).replace('\n', '<br/>'), style_normal))
+        Story.append(Spacer(1, 6))
 
-    formatted_content = format_clinical_text(content)
-    
-    formatted_content = formatted_content.replace('\n', '<br/>')
-    
-    try:
-        Story.append(Paragraph(formatted_content, style_normal))
-    except ValueError as e:
-        import html
-        safe_content = html.escape(content).replace('\n', '<br/>')
-        Story.append(Paragraph(safe_content, style_normal))
-        print(f"   ⚠️ PDF Format Warning: Used plain text fallback due to: {e}")
-    
-    Story.append(Spacer(1, 12))
+    Story.append(Spacer(1, 6))
             
     doc.build(Story)
     return file_path

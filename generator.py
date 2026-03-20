@@ -646,6 +646,207 @@ def process_patient_workflow(
     return p_full_name
 
 
+# ─── PREVIEW GENERATION (AI only, no PDF write) ────────────────────────────────
+
+def preview_patient_generation(
+    patient_id: str,
+    feedback: str = "",
+    excluded_names: list[str] = None,
+    generation_mode: dict = None,
+) -> dict | None:
+    """
+    Run AI generation for a patient WITHOUT writing any PDFs.
+    Returns a JSON-serialisable payload dict for the preview UI.
+    """
+    if excluded_names is None:
+        excluded_names = []
+    if generation_mode is None:
+        generation_mode = {"persona": True, "reports": True, "summary": False}
+
+    generation_mode = {
+        "persona": generation_mode.get("persona", True),
+        "reports": generation_mode.get("reports", True),
+        "summary": False,   # summary is deferred until PDF confirm
+    }
+
+    print(f"\n🔍 Preview generation for Patient ID: {patient_id}")
+    case_data = data_loader.load_patient_case(patient_id)
+    if not case_data:
+        print(f"❌ Patient ID '{patient_id}' not found in Excel plan.")
+        return None
+
+    history_txt = history_manager.get_history(patient_id)
+    existing_patient = patient_db.load_patient(patient_id)
+    patient_state = state_manager.build_patient_state(patient_id, case_data)
+    document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
+
+    feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
+    try:
+        result, _usage = ai_engine.generate_clinical_data(
+            case_details=case_data,
+            patient_state=patient_state,
+            document_plan=document_plan,
+            user_feedback=feedback,
+            history_context=history_txt,
+            existing_persona=existing_patient,
+        )
+    except Exception as e:
+        print(f"❌ AI generation failed: {e}")
+        return None
+
+    # Persist persona to DB so PDF rendering later has the correct identity
+    if result.patient_persona:
+        patient_db.save_patient(patient_id, result.patient_persona.model_dump())
+
+    # Serialise to plain JSON
+    docs_serialised = []
+    for doc in (result.documents or []):
+        docs_serialised.append({
+            "title_hint": getattr(doc, "title_hint", "Clinical Document"),
+            "content": doc.content if isinstance(doc.content, dict) else str(doc.content),
+            "date": getattr(doc, "date", ""),
+        })
+
+    payload = {
+        "patient_persona": result.patient_persona.model_dump() if result.patient_persona else {},
+        "documents": docs_serialised,
+        "changes_summary": result.changes_summary,
+    }
+    print(f"✅ Preview ready: {len(docs_serialised)} document(s)")
+    return payload
+
+
+# ─── RENDER PDFs FROM CONFIRMED CONTENT ────────────────────────────────────────
+
+def render_patient_pdfs_from_content(
+    patient_id: str,
+    generation_mode: dict,
+    documents_content: list,   # [{title_hint, content_html}]
+    persona_json: dict | None = None,
+    summarize: bool = True,
+) -> list[str]:
+    """
+    Write PDFs from user-confirmed (possibly edited) content.
+    Skips AI re-generation — content is rendered directly.
+    Returns list of written filenames.
+    """
+    import types
+
+    docs_written: list[str] = []
+    current_year = datetime.datetime.now().year
+    current_mrn = f"MRN-{patient_id}-{current_year}"
+    doc_version = get_persona_version(patient_id)
+
+    # Reconstruct persona Pydantic object
+    persona_obj = None
+    source = persona_json or patient_db.load_patient(patient_id)
+    if source:
+        try:
+            from ai_engine import PatientPersona
+            persona_obj = PatientPersona(**source)
+        except Exception as e:
+            print(f"   ⚠️  Persona reconstruction failed: {e}")
+
+    case_data = None
+    try:
+        case_data = data_loader.load_patient_case(patient_id)
+    except Exception:
+        pass
+
+    p_full_name = (
+        f"{persona_obj.first_name} {persona_obj.last_name}" if persona_obj
+        else f"Patient_{patient_id}"
+    )
+
+    archive_patient_files(patient_id, generation_mode)
+    patient_report_folder = get_patient_report_folder(patient_id)
+    os.makedirs(patient_report_folder, exist_ok=True)
+
+    # ── Persona PDF ───────────────────────────────────────────────────────────
+    if generation_mode.get("persona", False) and persona_obj:
+        try:
+            persona_path = pdf_generator.create_persona_pdf(
+                patient_id, p_full_name, persona_obj, [],
+                image_map=None, mrn=current_mrn,
+                output_folder=PERSONA_DIR, version=doc_version,
+            )
+            docs_written.append(os.path.basename(persona_path))
+            print(f"   👤 Persona → {os.path.basename(persona_path)}")
+        except Exception as e:
+            print(f"   ⚠️  Persona PDF failed: {e}")
+
+    # ── Report PDFs from edited content ──────────────────────────────────────
+    if generation_mode.get("reports", False) and documents_content:
+        for seq, doc_info in enumerate(documents_content, start=1):
+            try:
+                title_hint = doc_info.get("title_hint", f"Document_{seq}")
+                content_html = doc_info.get("content_html", "")
+                seq_str = f"{seq:03d}"
+                doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+                safe_title = _sanitize_filename_component(title_hint)
+                final_base = f"{doc_identifier}-{safe_title}"
+
+                fac_name = "Medical Center"
+                if persona_obj:
+                    proc_fac = getattr(persona_obj, "procedure_facility", None)
+                    if proc_fac:
+                        fac_name = getattr(proc_fac, "facility_name", "Medical Center")
+
+                prov_name = "Unknown Provider"
+                if persona_obj and getattr(persona_obj, "provider", None):
+                    prov_name = getattr(persona_obj.provider, "generalPractitioner", "Unknown Provider")
+
+                doc_meta = types.SimpleNamespace(
+                    title_hint=title_hint,
+                    facility_name=fac_name,
+                    provider_name=prov_name,
+                    service_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                    accession_number=f"ACC-{patient_id}-{seq_str}",
+                )
+                pdf_path = pdf_generator.create_patient_pdf(
+                    patient_id=patient_id,
+                    doc_type=final_base,
+                    content=content_html,
+                    patient_persona=persona_obj,
+                    doc_metadata=doc_meta,
+                    base_output_folder=patient_report_folder,
+                    image_path=None,
+                    version=doc_version,
+                )
+                docs_written.append(os.path.basename(pdf_path))
+                print(f"      ✅ {os.path.basename(pdf_path)}")
+            except Exception as e:
+                import traceback
+                print(f"      ❌ PDF failed for '{doc_info.get('title_hint','?')}': {e}")
+                print(traceback.format_exc())
+
+    # ── Summary PDF ───────────────────────────────────────────────────────────
+    if summarize and generation_mode.get("summary", False) and case_data and persona_obj:
+        try:
+            annotator_summary = ai_engine.generate_annotator_summary(
+                case_details=case_data,
+                patient_persona=persona_obj,
+                generated_documents=None,
+                search_results=None,
+            )
+            sum_path = pdf_generator.create_annotator_summary_pdf(
+                patient_id=patient_id,
+                annotator_summary=annotator_summary,
+                case_details=case_data,
+                patient_persona=persona_obj,
+                output_folder=SUMMARY_DIR,
+                version=doc_version,
+            )
+            if sum_path:
+                docs_written.append(os.path.basename(sum_path))
+                print(f"   📊 Summary → {os.path.basename(sum_path)}")
+        except Exception as e:
+            print(f"   ⚠️  Summary failed: {e}")
+
+    print(f"\n✅ {len(docs_written)} PDF(s) rendered from confirmed content.")
+    return docs_written
+
+
 # ─── CLI ENTRY POINT ───────────────────────────────────────────────────────────
 
 _MODE_MAP = {
