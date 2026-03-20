@@ -157,19 +157,31 @@ def load_patient_case(target_id: str):
                     procedure = str(row.get('Procedure', '')) or str(row.get('Code', 'Unknown'))
                     if not procedure.strip(): procedure = "Unknown"
                     cpt_code = _extract_cpt_code(row.get('CPT Code', ''), procedure, row.get('Test Case Details', ''))
-                        
+                    department = _normalize_text(row.get('Department', ''))
+                    test_case_number = _normalize_text(row.get('Test Case #', ''))
+                    expected_outcome = _normalize_text(row.get('Expected Result', 'Unknown'))
+                    details = _normalize_text(row.get('Test Case Details', 'No details provided'))
+
                     return {
                         "id": p_id,
+                        "test_case_number": test_case_number,
+                        "department": department,
                         "procedure": procedure,
                         "cpt_code": cpt_code,
-                        "outcome": str(row.get('Expected Result', 'Unknown')),
-                        "details": str(row.get('Test Case Details', 'No details provided'))
+                        "outcome": expected_outcome,
+                        "details": details,
                     }
         return None
 
     except Exception as e:
         print(f"Error reading Excel: {e}")
         return None
+
+
+def get_case_details(patient_id: str) -> dict | None:
+    """Public alias for load_patient_case — returns UAT case info for a patient ID."""
+    return load_patient_case(patient_id)
+
 
 def get_all_patient_ids() -> list:
     """

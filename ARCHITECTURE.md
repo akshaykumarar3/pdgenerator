@@ -1,4 +1,4 @@
-# Clinical Data Generator — System Architecture (v3)
+# Clinical Data Generator — System Architecture (v4)
 
 ## 1. Overview
 
@@ -11,6 +11,8 @@ The system generates:
 - **Clinical Summaries**: Aggregated case overviews.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
+
+---
 
 ## 2. Core Architectural Principle: Single Source of Truth
 
@@ -30,27 +32,43 @@ All generated documents must derive from a single structured patient record call
 
 **Constraint**: Every module reads from this object. Documents must never "hallucinate" or invent patient attributes independently.
 
+---
+
 ## 3. System Architecture
 
 ```mermaid
 graph TD
-    UserInput["User Input / UI"] --> Generator["Workflow Orchestrator (generator.py)"]
+    UI["User Input / UI (ui/index.html, index2.html)"] --> API["API Server (api_server.py)"]
+    API --> Generator["Workflow Orchestrator (generator.py)"]
     Generator --> DataLoader["Case Loader (data_loader.py)"]
     Generator --> PatientState["Patient State Builder"]
-
     PatientState --> AIEngine["AI Engine (ai_engine.py)"]
     AIEngine --> Documents["Clinical Document Generator"]
-    
-    note right of AIEngine: Robust Vertex AI initialization via explicit imports
-    
     Documents --> Validator["Document Validator (doc_validator.py)"]
     Validator --> PDFFactory["PDF Renderer (pdf_generator.py)"]
     PDFFactory --> Output["generated_output/"]
-    
     Generator --> Search["Search Engine (search_engine.py)"]
     Generator --> History["History Manager (history_manager.py)"]
     Generator --> DB["Patient Database (core/patient_db.py)"]
-4. Patient State LayerPurposeThe Patient State Layer ensures that all documents reference the same patient data, preventing:Conflicting demographics.Mismatched MRNs.Inconsistent providers.Timeline drift.Schema Example{
+```
+
+---
+
+## 4. Patient State Layer
+
+### Purpose
+
+The Patient State Layer ensures that all documents reference the same patient data, preventing:
+
+- Conflicting demographics
+- Mismatched MRNs
+- Inconsistent providers
+- Timeline drift
+
+### Schema Example
+
+```json
+{
   "patient_id": "212",
   "identifiers": {
     "mrn": "MRN-212-2026",
@@ -65,17 +83,10 @@ graph TD
     "weight": "250 lbs"
   },
   "providers": [
-    {
-      "name": "Dr Jane Smith",
-      "specialty": "Cardiology",
-      "npi": "1234567890"
-    }
+    { "name": "Dr Jane Smith", "specialty": "Cardiology", "npi": "1234567890" }
   ],
   "diagnoses": [
-    {
-      "code": "I25.10",
-      "condition": "Atherosclerotic heart disease"
-    }
+    { "code": "I25.10", "condition": "Atherosclerotic heart disease" }
   ],
   "requested_procedure": {
     "procedure_name": "Cardiac CT Angiography",
@@ -83,10 +94,125 @@ graph TD
     "expected_date": "2026-03-15"
   }
 }
-5. Generation WorkflowStepPhaseResponsibility1User InputReceives Patient ID, feedback, and generation mode.2Case Data LoadingLoads context from core/UAT Plan.xlsx (diagnoses, procedure requests).3Patient State ConstructionBuilds the deterministic patient_state object from Excel, DB, and AI persona fields.5.- **ClinicalDataPayload**: Combined persona + documents + summary. The `documents` field includes an alias `structured_documents` to improve AI fidelity during generation.
-ratives/justifications based on the patient_state context. The `document_templates` key is used to map specific templates to AI instructions.
-6. **Document Validation**: doc_validator.py checks for missing sections and structural integrity; when rendering JSON to PDF text it uses template-driven section order and flattens nested dicts for intensive, audit-ready output.
-7Output StorageSaves artifacts to generated_output/ with IDs and timestamps.6. Temporal ConsistencyMedical events follow a realistic clinical timeline relative to the requested procedure date.EventTimelineMedical History6 months – 5 years before procedureEncounters1 – 12 weeks before procedureLab Tests1 – 4 weeks before procedureProcedure7 – 90 days in the futureUtility functions in generator.py: calculate_procedure_date(), calculate_encounter_date().7. Duplicate PreventionThe system performs a pre-generation scan of existing outputs:Reads files in the patient-specific folder.Extracts existing document titles.Passes titles to the AI engine as "exclusion list."Prevents duplicate titles like Doc-221-001_CT_Scan.pdf unless explicitly required.8. Modular ComponentsAI Prompt Architecture (prompts.py)All prompts are centralized to allow for easier customization and consistent instructions (e.g., SYSTEM_PROMPT, get_clinical_data_prompt).Search Engine (search_engine.py)Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC or CMS.Caching: .search_cache/TTL: 24 hoursPatient Database (core/patient_db.py)Persistent storage of generated personas in core/patients_db.json to preserve consistency across different execution runs.9. Directory Structurepdgenerator/
+```
+
+---
+
+## 5. Generation Workflow
+
+| Step | Phase | Responsibility |
+|------|-------|----------------|
+| 1 | User Input | Receives Patient ID, feedback, and generation mode |
+| 2 | Case Data Loading | Loads context from `core/UAT Plan.xlsx` (diagnoses, procedure requests) |
+| 3 | Patient State Construction | Builds `patient_state` from Excel, DB, and AI persona fields |
+| 4 | AI Generation | Calls LLM to produce `ClinicalDataPayload` (persona + documents) |
+| 5 | Document Validation | `doc_validator.py` checks structural integrity |
+| 6 | PDF Rendering | Converts validated JSON to PDFs via template-driven layout |
+| 7 | Output Storage | Saves artifacts to `generated_output/` with IDs and timestamps |
+
+### Key Data Models (Pydantic)
+
+- **`PatientPersona`**: Full synthetic patient record (demographics, diagnoses, medications, encounters, imaging, labs, etc.)
+- **`GeneratedDocument`**: Single clinical document (title, type, content sections).
+- **`ClinicalDataPayload`**: Combined persona + documents + changes summary. The `documents` field uses the alias `structured_documents` for AI fidelity; both keys are normalised by `_parse_vertex_response()`.
+- **`AnnotatorSummary`**: Post-generation quality summary used for PA optimization scoring.
+
+---
+
+## 6. AI Engine (`ai_engine.py`)
+
+### LLM Provider Selection
+
+Controlled by `LLM_PROVIDER` in `cred/.env`. Switch between providers without code changes.
+
+| Provider | Production Model | Test Model |
+|----------|-----------------|------------|
+| `openai` | `gpt-4o` | `gpt-4o-mini` |
+| `vertexai` | `gemini-2.5-pro` | `gemini-2.5-flash` |
+
+### Vertex AI Specifics
+
+- Uses `instructor.from_vertexai` with `Mode.VERTEXAI_TOOLS`
+- Direct `model_instance.generate_content()` calls (bypasses Instructor for raw JSON control)
+- `GOOGLE_APPLICATION_CREDENTIALS` resolved relative to `BASE_DIR` — CWD-independent
+- REST transport enforced to prevent gRPC deadlocks on macOS
+
+### Shared Helpers
+
+```python
+_strip_json_fences(text)
+# Strips ```json / ``` markdown fences from raw model output
+
+_parse_vertex_response(resp, model_class, existing_persona=None)
+# Full Vertex response parser:
+#   - Strips fences
+#   - Unwraps list responses ([{...}] → {...})
+#   - Normalises 'documents' → 'structured_documents' key alias
+#   - Pydantic model_validate with ValidationError recovery
+```
+
+A `vertex_doc_reminder` CRITICAL instruction is always prepended to Vertex prompts to force inclusion of `structured_documents`.
+
+---
+
+## 7. Temporal Consistency
+
+Medical events follow a realistic clinical timeline relative to the requested procedure date.
+
+| Event | Timeline |
+|-------|----------|
+| Medical History | 6 months – 5 years before procedure |
+| Encounters | 1 – 12 weeks before procedure |
+| Lab Tests | 1 – 4 weeks before procedure |
+| Procedure | 7 – 90 days in the future |
+
+Utility functions: `calculate_procedure_date()`, `calculate_encounter_date()` in `generator.py`.
+
+---
+
+## 8. Duplicate Prevention
+
+The system performs a pre-generation scan of existing outputs:
+
+1. Reads files in the patient-specific folder.
+2. Extracts existing document titles.
+3. Passes titles to the AI engine as an exclusion list.
+4. Prevents duplicate titles like `Doc-221-001_CT_Scan.pdf` unless explicitly required.
+
+---
+
+## 9. Modular Components
+
+### AI Prompt Architecture (`prompts.py`)
+
+All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`).
+
+### Search Engine (`search_engine.py`)
+
+Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC/CMS.
+
+- Cache: `.search_cache/`
+- TTL: 24 hours
+
+### Patient Database (`core/patient_db.py`)
+
+Persistent storage of generated personas in `core/patients_db.json` to preserve consistency across runs.
+
+### UI Layer (`ui/`)
+
+| File | Theme | Description |
+|------|-------|-------------|
+| `index.html` | Dark (Material You) | Original Stitch dark design |
+| `index2.html` | Light (Command Center) | New Stitch light design |
+
+Both UIs wire dynamically to the API server at `http://localhost:410`.
+
+---
+
+## 10. Directory Structure
+
+```text
+pdgenerator/
 ├── cred/                       # .env and credentials
 ├── core/                       # Patient DB, Excel UAT plans
 ├── templates/                  # PDF and Document templates
@@ -95,45 +221,37 @@ ratives/justifications based on the patient_state context. The `document_templat
 │   ├── patient-reports/
 │   ├── summary/
 │   └── logs/
+├── ui/
+│   ├── index.html              # Dark UI (Material You)
+│   └── index2.html             # Light UI (Command Center)
 ├── generator.py                # Main Orchestrator
 ├── ai_engine.py                # LLM Interaction Layer
 ├── prompts.py                  # Centralized Prompt Library
+├── api_server.py               # Flask REST API (port 410)
 ├── pdf_generator.py            # Rendering Engine
 ├── search_engine.py            # Web retrieval & Caching
-├── doc_validator.py            # Structural Validation & template-driven formatting
+├── doc_validator.py            # Structural Validation
 ├── data_loader.py              # File I/O for Case Data
 ├── history_manager.py          # Session tracking
 ├── purge_manager.py            # Cleanup utilities
 └── remove_persona.py           # Deep persona removal utility
-10. Future ExtensionsPatient State Manager: A dedicated class to handle state mutations.Timeline Engine: Deterministic scheduling of all historical medical events.Planning Layer: A pre-generation step to outline all needed documents before calling the AI.11. Cross-Platform Compatibility
-The system is designed to be OS-agnostic, supporting Windows, macOS, and Linux.
-Key implementations:
-
-- **Universal Encoding**: All file I/O operations explicitly use `utf-8` to prevent character mapping errors across different default OS encodings.
-- **Path Abstraction**: Uses `os.path.join` and absolute path resolution relative to each script's directory for reliable resource access. DEBUG_DIR, RULES_PATH, cache_dir, and OUTPUT_DIR default are project-root-relative, so the system works regardless of current working directory.
-- **Environment Isolation**: `python-dotenv` loads from `.env`. `ai_engine.py` dynamically resolves the configuration path, checking `cred/.env` first and falling back to the project root.
-- **Entry Points**: Parity provided via `.bat` (Windows) and `.sh` (Mac/Linux) scripts for both CLI and API server. Launch scripts change to the script directory (`cd /d "%~dp0"` or `cd "$(dirname "$0")"`) before running, so invocation from any directory works.
-- **Path Resolution Flow**: All path-dependent modules resolve relative to project root (or script location), independent of cwd:
-
-```mermaid
-flowchart TB
-  subgraph runner [User Invocation]
-    RunFrom["User runs script"]
-  end
-  subgraph projectRoot [Project-Root-Relative Modules]
-    Config["core/config.py"]
-    DataLoader["data_loader.py"]
-    AIEngine["ai_engine.py"]
-    DocPlanner["document_planner.py"]
-    StateMgr["state_manager.py"]
-    SearchEng["search_engine.py"]
-  end
-  RunFrom --> Config
-  RunFrom --> DataLoader
-  RunFrom --> AIEngine
-  RunFrom --> DocPlanner
-  RunFrom --> StateMgr
-  RunFrom --> SearchEng
 ```
 
-1. Summary...
+---
+
+## 11. Cross-Platform Compatibility
+
+The system supports Windows, macOS, and Linux.
+
+- **Universal Encoding**: All file I/O uses `utf-8`.
+- **Path Abstraction**: `os.path.join` + absolute path resolution relative to each script's `__file__` directory. `GOOGLE_APPLICATION_CREDENTIALS` relative paths are resolved against `BASE_DIR` in `ai_engine.py`.
+- **Environment Isolation**: `python-dotenv` loads from `cred/.env`. No `export` prefixes in `.env` values.
+- **Entry Points**: `.sh` (Mac/Linux) and `.bat` (Windows) scripts change to the script directory before running — CWD-independent invocation.
+
+---
+
+## 12. Future Extensions
+
+- **Patient State Manager**: A dedicated class to handle state mutations.
+- **Timeline Engine**: Deterministic scheduling of all historical medical events.
+- **Planning Layer**: A pre-generation step to outline all needed documents before calling the AI.

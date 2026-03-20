@@ -1,2209 +1,591 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PD Generator — Clinical Data Studio</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0d0f14;
-            --surface: #141720;
-            --surface2: #1c2030;
-            --surface3: #232840;
-            --border: #2a3050;
-            --border2: #3a4268;
-            --accent: #4f7fff;
-            --accent2: #6c9dff;
-            --accent-glow: rgba(79, 127, 255, .18);
-            --green: #22c55e;
-            --green-dim: rgba(34, 197, 94, .15);
-            --yellow: #f59e0b;
-            --red: #ef4444;
-            --red-dim: rgba(239, 68, 68, .15);
-            --purple: #a78bfa;
-            --teal: #14b8a6;
-            --text: #e2e8f0;
-            --text2: #94a3b8;
-            --text3: #64748b;
-            --radius: 10px;
-            --radius-lg: 16px;
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--surface);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border2);
-            border-radius: 4px;
-        }
-
-        /* ── HEADER ── */
-        .app-header {
-            background: linear-gradient(135deg, #111827 0%, #1a2035 100%);
-            border-bottom: 1px solid var(--border);
-            padding: 0 32px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, .5);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
-            background: linear-gradient(135deg, var(--accent), var(--purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            box-shadow: 0 0 16px var(--accent-glow);
-        }
-
-        .logo-text {
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: -.3px;
-        }
-
-        .logo-text span {
-            color: var(--accent2);
-        }
-
-        #status-badge {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text2);
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            padding: 5px 12px;
-            border-radius: 20px;
-        }
-
-        #status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text3);
-            transition: background .3s;
-        }
-
-        #status-dot.online {
-            background: var(--green);
-            box-shadow: 0 0 6px var(--green);
-            animation: pulse 2s infinite;
-        }
-
-        #status-dot.offline {
-            background: var(--red);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1
-            }
-
-            50% {
-                opacity: .5
-            }
-        }
-
-        /* ── LAYOUT ── */
-        .main {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            height: calc(100vh - 64px);
-        }
-
-        .sidebar {
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-inner {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            flex: 1;
-        }
-
-        .sidebar-footer {
-            padding: 16px 24px;
-            border-top: 1px solid var(--border);
-            background: var(--surface);
-            position: sticky;
-            bottom: 0;
-        }
-
-        .content {
-            overflow-y: hidden;
-            display: flex;
-            flex-direction: column;
-            background: var(--bg);
-        }
-
-        .pane-top {
-            flex: 1 1 50%;
-            min-height: 150px;
-            overflow-y: auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .pane-bottom {
-            flex: 1 1 50%;
-            min-height: 150px;
-            overflow-y: auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ── TABS ── */
-        .tabs-header {
-            display: flex;
-            gap: 8px;
-            border-bottom: 2px solid var(--border);
-            margin-bottom: 16px;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text3);
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-            transition: all .2s;
-        }
-
-        .tab-btn:hover {
-            color: var(--text);
-        }
-
-        .tab-btn.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn .3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ── RESIZER ── */
-        .resizer {
-            height: 8px;
-            background: var(--surface2);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            cursor: row-resize;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background .2s;
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
-        .resizer:hover,
-        .resizer.dragging {
-            background: #2a3455;
-        }
-
-        .resizer::after {
-            content: '';
-            width: 40px;
-            height: 3px;
-            background: var(--border2);
-            border-radius: 2px;
-        }
-
-
-        /* ── CARDS ── */
-        .card {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: border-color .2s;
-        }
-
-        .card:hover {
-            border-color: var(--border2);
-        }
-
-        .card-header {
-            padding: 14px 18px;
-            background: var(--surface3);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .card-header:hover {
-            background: #282e4a;
-        }
-
-        .card-title {
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-body {
-            padding: 18px;
-            word-wrap: break-word;
-        }
-
-        .card-body.collapsed {
-            display: none;
-        }
-
-        /* ── FORMS ── */
-        label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text2);
-            display: block;
-            margin-bottom: 5px;
-            word-wrap: break-word;
-        }
-
-        input[type="text"],
-        input[type="date"],
-        select,
-        textarea {
-            width: 100%;
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            padding: 9px 12px;
-            transition: border-color .2s, box-shadow .2s;
-            outline: none;
-            word-wrap: break-word;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        select option {
-            background: var(--surface3);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-            line-height: 1.5;
-        }
-
-        /* ── CHECK PILLS ── */
-        .check-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .check-pill {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: all .2s;
-            user-select: none;
-        }
-
-        .check-pill input {
-            display: none;
-        }
-
-        .check-pill.checked {
-            background: var(--accent-glow);
-            border-color: var(--accent);
-            color: var(--accent2);
-        }
-
-        .check-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--text3);
-            transition: background .2s;
-        }
-
-        .check-pill.checked .check-dot {
-            background: var(--accent2);
-        }
-
-        /* ── TOGGLE ── */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .toggle-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text2);
-        }
-
-        .toggle-desc {
-            font-size: 11px;
-            color: var(--text3);
-            margin-top: 2px;
-        }
-
-        .switch {
-            position: relative;
-            width: 40px;
-            height: 22px;
-            flex-shrink: 0;
-        }
-
-        .switch input {
-            display: none;
-        }
-
-        .slider {
-            position: absolute;
-            inset: 0;
-            border-radius: 11px;
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .slider::before {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--text3);
-            top: 2px;
-            left: 2px;
-            transition: .3s;
-        }
-
-        .switch input:checked+.slider {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .switch input:checked+.slider::before {
-            transform: translateX(18px);
-            background: #fff;
-        }
-
-        /* ── BUTTONS ── */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 10px 20px;
-            border-radius: var(--radius);
-            font-size: 13px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all .2s;
-        }
-
-        .btn-ghost {
-            background: var(--surface3);
-            color: var(--text2);
-            border: 1px solid var(--border);
-            font-size: 11px;
-            padding: 6px 12px;
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--border2);
-            color: var(--text);
-        }
-
-        .btn-danger {
-            background: var(--red-dim);
-            color: var(--red);
-            border: 1px solid rgba(239, 68, 68, .3);
-            font-size: 11px;
-            padding: 4px 9px;
-        }
-
-        .btn-danger:hover {
-            background: var(--red);
-            color: #fff;
-        }
-
-        .btn-add {
-            background: var(--green-dim);
-            color: var(--green);
-            border: 1px solid rgba(34, 197, 94, .25);
-            font-size: 11px;
-            padding: 6px 12px;
-        }
-
-        .btn-add:hover {
-            background: var(--green);
-            color: #000;
-        }
-
-        .btn-generate {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: .3px;
-            background: linear-gradient(135deg, #4f7fff, #7c3aed);
-            color: #fff;
-            border: none;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 20px rgba(79, 127, 255, .35);
-            cursor: pointer;
-            transition: all .2s;
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(79, 127, 255, .45);
-        }
-
-        .btn-generate:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ── DYNAMIC TABLES ── */
-        .table-overflow {
-            overflow-x: auto;
-            width: 100%;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .dynamic-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-            /* Force scroll on small screens */
-        }
-
-        .dynamic-table th {
-            text-align: left;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: .7px;
-            padding: 6px 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .dynamic-table td {
-            padding: 5px 4px;
-            vertical-align: top;
-            word-wrap: break-word;
-        }
-
-        .dynamic-table td input,
-        .dynamic-table td select {
-            padding: 6px 8px;
-            font-size: 12px;
-            min-width: 120px;
-        }
-
-        .dynamic-table td:last-child {
-            width: 36px;
-            padding-left: 6px;
-        }
-
-        .section-add-row {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-
-        /* ── LOG CONSOLE ── */
-        #log-console {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            line-height: 1.7;
-            background: #080a10;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-            height: auto;
-            min-height: 0;
-            overflow-y: auto;
-            color: #b0c4de;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-
-        .log-body {
-            min-height: 0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(3px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        .log-line {
-            animation: fadeIn .15s ease-in;
-        }
-
-        .log-line.success {
-            color: var(--green);
-        }
-
-        .log-line.error {
-            color: var(--red);
-        }
-
-        .log-line.warn {
-            color: var(--yellow);
-        }
-
-        .log-line.info {
-            color: var(--accent2);
-        }
-
-        /* ── PROGRESS ── */
-        #job-progress {
-            display: none;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .progress-bar-wrap {
-            height: 4px;
-            background: var(--surface3);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--purple));
-            border-radius: 4px;
-            animation: prog-anim 1.5s ease infinite;
-        }
-
-        @keyframes prog-anim {
-            0% {
-                width: 0%;
-                margin-left: 0%
-            }
-
-            50% {
-                width: 60%;
-                margin-left: 20%
-            }
-
-            100% {
-                width: 0%;
-                margin-left: 100%
-            }
-        }
-
-        .job-status-text {
-            font-size: 11px;
-            color: var(--text2);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* ── OUTPUT FILES ── */
-        #output-files {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-height: 40px;
-        }
-
-        .file-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            font-size: 12px;
-            animation: fadeIn .2s ease-in;
-            text-decoration: none;
-        }
-
-        .file-item:hover {
-            border-color: var(--accent);
-            background: #282e4a;
-        }
-
-        .file-item .file-icon {
-            font-size: 15px;
-        }
-
-        .file-type {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 7px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-
-        .file-type.report {
-            background: rgba(79, 127, 255, .15);
-            color: var(--accent2);
-        }
-
-        .file-type.persona {
-            background: rgba(167, 139, 250, .15);
-            color: var(--purple);
-        }
-
-        .file-type.summary {
-            background: rgba(20, 184, 166, .15);
-            color: var(--teal);
-        }
-
-        .file-name {
-            color: var(--text);
-            flex: 1;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
-        .empty-msg {
-            color: var(--text3);
-            font-size: 12px;
-            text-align: center;
-            padding: 20px;
-        }
-
-        /* ── PATIENT SUMMARY ── */
-        #patient-summary {
-            display: none;
-            margin-top: 8px;
-            background: linear-gradient(135deg, rgba(79, 127, 255, .08), rgba(167, 139, 250, .05));
-            border: 1px solid rgba(79, 127, 255, .2);
-            border-radius: var(--radius);
-            padding: 12px 14px;
-            font-size: 12px;
-            animation: fadeIn .3s ease;
-        }
-
-        .ps-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--accent2);
-            margin-bottom: 6px;
-        }
-
-        .ps-row {
-            display: flex;
-            gap: 6px;
-            color: var(--text2);
-            margin-top: 3px;
-        }
-
-        .ps-label {
-            color: var(--text3);
-            font-weight: 500;
-            min-width: 70px;
-        }
-
-        .badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 8px;
-        }
-
-        .badge-green {
-            background: rgba(34, 197, 94, .12);
-            color: var(--green);
-            border: 1px solid rgba(34, 197, 94, .25);
-        }
-
-        .badge-yellow {
-            background: rgba(245, 158, 11, .1);
-            color: var(--yellow);
-            border: 1px solid rgba(245, 158, 11, .2);
-        }
-
-        /* ── CHEVRON ── */
-        .chevron {
-            display: inline-block;
-            transition: transform .25s;
-            color: var(--text3);
-            font-size: 13px;
-        }
-
-        .chevron.open {
-            transform: rotate(180deg);
-        }
-
-        /* ── CHANGES SUMMARY PANEL ── */
-        .summary-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        @media (max-width: 700px) {
-            .summary-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .summary-block {
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px;
-        }
-
-        .summary-block h4 {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .summary-block h4.clr-yellow {
-            color: var(--yellow);
-        }
-
-        .summary-block h4.clr-green {
-            color: var(--green);
-        }
-
-        .summary-block h4.clr-purple {
-            color: var(--purple);
-        }
-
-        .summary-block h4.clr-teal {
-            color: var(--teal);
-        }
-
-        .sum-row {
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .sum-key {
-            color: var(--text3);
-            font-weight: 500;
-            min-width: 110px;
-            flex-shrink: 0;
-        }
-
-        .sum-val {
-            color: var(--text);
-            word-break: break-word;
-        }
-
-        .sum-tag {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 1px 7px;
-            border-radius: 8px;
-            margin: 2px 2px 0 0;
-        }
-
-        .tag-on {
-            background: rgba(34, 197, 94, .12);
-            color: var(--green);
-            border: 1px solid rgba(34, 197, 94, .25);
-        }
-
-        .tag-off {
-            background: rgba(100, 116, 139, .1);
-            color: var(--text3);
-            border: 1px solid var(--border);
-        }
-
-        .tag-opt {
-            background: rgba(245, 158, 11, .1);
-            color: var(--yellow);
-            border: 1px solid rgba(245, 158, 11, .25);
-        }
-
-        .log-event {
-            font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            padding: 3px 0;
-            color: var(--text2);
-            border-bottom: 1px solid var(--border);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .log-event:last-child {
-            border-bottom: none;
-        }
-
-        .ai-narrative {
-            font-size: 12px;
-            color: var(--text2);
-            line-height: 1.6;
-            white-space: pre-wrap;
-            max-height: 140px;
-            overflow-y: auto;
-        }
-
-        /* ── MODAL ── */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(4px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            width: 90%;
-            max-width: 1000px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        .modal-content.full-page {
-            width: 100vw;
-            height: 100vh;
-            max-width: none;
-            max-height: none;
-            border-radius: 0;
-            border: none;
-        }
-
-        /* ── CLINICAL CARDS ── */
-        .cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .clinical-card {
-            background: var(--surface3);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            animation: fadeIn 0.2s ease-in;
-        }
-
-        .clinical-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .clinical-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent2);
-        }
-
-        .clinical-card-body {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-        }
-
-        .clinical-card-full-width {
-            grid-column: 1 / -1;
-        }
-
-        .clinical-card label {
-            display: block;
-            font-size: 11px;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .clinical-card input,
-        .clinical-card select,
-        .clinical-card textarea {
-            width: 100%;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 6px;
-            padding: 8px 10px;
-            font-size: 13px;
-        }
-
-        .clinical-card textarea {
-            resize: none;
-            overflow: hidden;
-            min-height: 40px;
-            font-family: inherit;
-        }
-
-        .modal-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        /* ── UTILS ── */
-        .mt-8 {
-            margin-top: 8px;
-        }
-
-        .mt-12 {
-            margin-top: 12px;
-        }
-
-        @media (max-width: 900px) {
-            .main {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                height: auto;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- ═══ HEADER ═══════════════════════════════════════════════════════════ -->
-    <header class="app-header">
-        <div class="header-left">
-            <div class="logo-icon">🏥</div>
-            <div>
-                <div class="logo-text">PD <span>Generator</span></div>
-                <div style="font-size:10px;color:var(--text3);margin-top:-2px;">Clinical Data Studio · Texas</div>
-            </div>
-        </div>
-        <div id="status-badge">
-            <div id="status-dot"></div>
-            <span id="status-text">Connecting…</span>
-        </div>
-    </header>
-
-    <!-- ═══ MAIN ══════════════════════════════════════════════════════════════ -->
-    <div class="main">
-
-        <!-- ────────────────── SIDEBAR ────────────────── -->
-        <aside class="sidebar">
-            <div class="sidebar-inner">
-
-                <!-- Patient selector -->
-                <div>
-                    <label>🎯 Patient ID</label>
-                    <select id="patient-select" onchange="onPatientChange()">
-                        <option value="">— Select patient —</option>
-                    </select>
-                    <div id="patient-summary"></div>
-                </div>
-
-                <!-- Generation sections -->
-                <div>
-                    <label>📦 Generate</label>
-                    <div class="check-group">
-                        <label class="check-pill checked" onclick="togglePill(this,'gen_persona')">
-                            <input type="checkbox" id="gen_persona" checked>
-                            <div class="check-dot"></div> Persona
-                        </label>
-                        <label class="check-pill checked" onclick="togglePill(this,'gen_reports')">
-                            <input type="checkbox" id="gen_reports" checked>
-                            <div class="check-dot"></div> Reports
-                        </label>
-                        <label class="check-pill checked" onclick="togglePill(this,'gen_summary')">
-                            <input type="checkbox" id="gen_summary" checked>
-                            <div class="check-dot"></div> Summary
-                        </label>
-                    </div>
-                </div>
-
-                <!-- PA optimization toggle -->
-                <div class="card">
-                    <div class="card-body" style="padding:12px 14px;">
-                        <div class="toggle-row">
-                            <div>
-                                <div class="toggle-label">⚡ PA Approval Optimization</div>
-                                <div class="toggle-desc">Strengthen clinical justification for likely-denied cases</div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="pa-optimize">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Feedback -->
-                <div>
-                    <label>💬 Feedback / Instructions</label>
-                    <textarea id="feedback" rows="8"
-                        placeholder="Enter detailed instructions for the AI…&#10;&#10;Examples:&#10;• Use a 55-year-old diabetic patient&#10;• Strengthen clinical justification for SPECT imaging&#10;• Add a recent hospitalization in the history&#10;• Use Tony Stark as the patient character"></textarea>
-                    <div style="font-size:10px;color:var(--text3);margin-top:4px;">Multi-line · No character limit</div>
-                </div>
-
-            </div>
-            <div class="sidebar-footer">
-                <button class="btn-generate" id="btn-generate" onclick="startGeneration()">
-                    🚀 Generate Clinical Data
-                </button>
-            </div>
-        </aside>
-
-        <!-- ────────────────── CONTENT ────────────────── -->
-        <section class="content" id="main-content">
-
-            <!-- TOP PANE: CLINICAL CONDITIONS tabs -->
-            <div class="pane-top" id="pane-top">
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <h2 style="font-size:16px; margin-bottom:12px; color:var(--text);">🩺 Patient Conditions</h2>
-                    <button class="btn btn-outline" style="margin-bottom:12px; font-size: 13px; padding: 6px 14px;"
-                        onclick="openClinicalHistory()"><span style="font-size: 15px; margin-right: 6px;">🏥</span>
-                        Clinical History</button>
-                </div>
-                <div class="tabs-header">
-                    <button class="tab-btn active" onclick="switchClinicalTab('meds')">💊 Medications (<span
-                            id="count-meds">0</span>)</button>
-                    <button class="tab-btn" onclick="switchClinicalTab('allergies')">⚠️ Allergies (<span
-                            id="count-allergies">0</span>)</button>
-                    <button class="tab-btn" onclick="switchClinicalTab('vax')">💉 Vaccinations (<span
-                            id="count-vax">0</span>)</button>
-                    <button class="tab-btn" onclick="switchClinicalTab('therapy')">🧠 Therapy (<span
-                            id="count-therapy">0</span>)</button>
-                </div>
-
-                <div class="card card-body">
-                    <!-- MEDICATIONS TAB -->
-                    <div id="tab-meds" class="tab-content active clinical-tab">
-                        <div class="table-overflow">
-                            <table class="dynamic-table">
-                                <thead>
-                                    <tr>
-                                        <th>Brand</th>
-                                        <th>Generic / Dosage</th>
-                                        <th>Qty</th>
-                                        <th>Prescribed By</th>
-                                        <th>Status</th>
-                                        <th>Start</th>
-                                        <th>End</th>
-                                        <th>Reason</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-meds"></tbody>
-                            </table>
-                        </div>
-                        <div class="section-add-row">
-                            <button class="btn btn-add" onclick="addMed()">+ Add Medication</button>
-                        </div>
-                    </div>
-
-                    <!-- ALLERGIES TAB -->
-                    <div id="tab-allergies" class="tab-content clinical-tab">
-                        <div class="table-overflow">
-                            <table class="dynamic-table">
-                                <thead>
-                                    <tr>
-                                        <th>Allergen</th>
-                                        <th>Type</th>
-                                        <th>Reaction</th>
-                                        <th>Severity</th>
-                                        <th>Onset Date</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-allergies"></tbody>
-                            </table>
-                        </div>
-                        <div class="section-add-row">
-                            <button class="btn btn-add" onclick="addAllergy()">+ Add Allergy</button>
-                        </div>
-                    </div>
-
-                    <!-- VACCINATIONS TAB -->
-                    <div id="tab-vax" class="tab-content clinical-tab">
-                        <div class="table-overflow">
-                            <table class="dynamic-table">
-                                <thead>
-                                    <tr>
-                                        <th>Vaccine Name</th>
-                                        <th>Type</th>
-                                        <th>Date</th>
-                                        <th>Administered By</th>
-                                        <th>Dose #</th>
-                                        <th>Reason</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-vax"></tbody>
-                            </table>
-                        </div>
-                        <div class="section-add-row">
-                            <button class="btn btn-add" onclick="addVax()">+ Add Vaccination</button>
-                        </div>
-                    </div>
-
-                    <!-- THERAPY & BEHAVIORAL HEALTH TAB -->
-                    <div id="tab-therapy" class="tab-content clinical-tab">
-                        <div class="table-overflow">
-                            <table class="dynamic-table">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Provider</th>
-                                        <th>Facility</th>
-                                        <th>Frequency</th>
-                                        <th>Status</th>
-                                        <th>Start</th>
-                                        <th>End</th>
-                                        <th>Reason</th>
-                                        <th>Notes</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-therapy"></tbody>
-                            </table>
-                        </div>
-                        <div class="section-add-row">
-                            <button class="btn btn-add" onclick="addTherapy()">+ Add Therapy</button>
-                        </div>
-                        <div class="mt-12" style="border-top:1px solid var(--border); padding-top:12px;">
-                            <label>📝 Behavioral Notes</label>
-                            <textarea id="behavioral-notes" rows="3"
-                                placeholder="Medication adherence, lifestyle habits, substance use, mental health observations…"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RESIZER DIVIDER -->
-            <div class="resizer" id="drag-divider"></div>
-
-            <!-- BOTTOM PANE: OUTPUT tabs -->
-            <div class="pane-bottom" id="pane-bottom">
-                <div class="tabs-header">
-                    <button class="tab-btn active" onclick="switchOutputTab('log')">🖥 Generation Log</button>
-                    <button class="tab-btn" onclick="switchOutputTab('output')">📂 Generation Output</button>
-                </div>
-
-                <!-- LOG TAB -->
-                <div id="tab-log" class="tab-content active output-tab"
-                    style="height: 100%; display: flex; flex-direction: column;">
-                    <div class="card" style="flex: 1; display: flex; flex-direction: column;">
-                        <div class="card-header" style="cursor:default;">
-                            <div class="card-title">Live Server Logs</div>
-                            <button class="btn btn-ghost" onclick="clearLog()">Clear</button>
-                        </div>
-                        <div class="card-body log-body" style="flex:1; display:flex; flex-direction:column;">
-                            <div id="job-progress">
-                                <div class="progress-bar-wrap">
-                                    <div class="progress-bar"></div>
-                                </div>
-                                <div class="job-status-text">⏳ <span id="job-status-text">Running…</span></div>
-                            </div>
-                            <div id="log-console" style="flex:1;"><span style="color:var(--text3);">Awaiting
-                                    generation…</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- OUTPUT TAB -->
-                <div id="tab-output" class="tab-content output-tab" style="height: 100%;">
-
-                    <!-- CHANGES SUMMARY -->
-                    <div class="card" id="changes-panel" style="display:none; margin-bottom:16px;">
-                        <div class="card-header" style="cursor:default;">
-                            <div class="card-title">📋 Generation Summary — What Changed</div>
-                            <button class="btn btn-ghost"
-                                onclick="document.getElementById('changes-panel').style.display='none'">✕
-                                Dismiss</button>
-                        </div>
-                        <div class="card-body" id="changes-panel-body"></div>
-                    </div>
-
-                    <!-- OUTPUT FILES -->
-                    <div class="card">
-                        <div class="card-header" style="cursor:default;">
-                            <div class="card-title">Generated Documents</div>
-                            <button class="btn btn-ghost" id="refresh-files-btn" onclick="refreshOutputFiles()"
-                                style="display:none;">↻ Refresh</button>
-                        </div>
-                        <div class="card-body">
-                            <div id="output-files"
-                                style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:10px;">
-                                <div class="empty-msg" style="grid-column: 1 / -1;">No files yet — run a generation to
-                                    see output here</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-    </div>
-
-    <!-- ═══ CLINICAL HISTORY MODAL ════════════════════════════════════════════ -->
-    <div id="clinical-modal" class="modal-overlay">
-        <div class="modal-content full-page">
-            <div class="modal-header">
-                <div class="modal-title"><span>🏥</span> Extended Clinical History</div>
-                <button class="btn btn-ghost" onclick="closeClinicalHistory()"
-                    style="padding: 4px 8px; font-size: 16px;">✕</button>
-            </div>
-            <div class="modal-body" style="padding: 0; display: flex; flex-direction: column; height: 100%;">
-
-                <div class="tabs-header"
-                    style="border-bottom: 1px solid var(--border); border-radius: 0; margin-bottom: 0px; padding: 0 16px; background: var(--surface2)">
-                    <button class="tab-btn active" onclick="switchModalTab('encounters')">🏥 Encounters (<span
-                            id="count-encounters">0</span>)</button>
-                    <button class="tab-btn" onclick="switchModalTab('images')">🩻 Imaging (<span
-                            id="count-images">0</span>)</button>
-                    <button class="tab-btn" onclick="switchModalTab('reports')">🔬 Lab &amp; Path (<span
-                            id="count-reports">0</span>)</button>
-                    <button class="tab-btn" onclick="switchModalTab('procedures')">🔪 Procedures (<span
-                            id="count-procedures">0</span>)</button>
-                </div>
-
-                <div style="padding: 24px 32px; flex: 1; overflow-y: auto; background: var(--surface);">
-
-                    <!-- ENCOUNTERS TAB -->
-                    <div id="modal-tab-encounters" class="tab-content active modal-tab" style="display: block;">
-                        <div id="tbody-encounters" class="cards-container"></div>
-                        <div class="section-add-row" style="margin-top:20px;">
-                            <button class="btn btn-add" onclick="addEncounter()">+ Add Encounter</button>
-                        </div>
-                    </div>
-
-                    <!-- IMAGES TAB -->
-                    <div id="modal-tab-images" class="tab-content modal-tab" style="display: none;">
-                        <div id="tbody-images" class="cards-container"></div>
-                        <div class="section-add-row" style="margin-top:20px;">
-                            <button class="btn btn-add" onclick="addImage()">+ Add Imaging Study</button>
-                        </div>
-                    </div>
-
-                    <!-- REPORTS TAB -->
-                    <div id="modal-tab-reports" class="tab-content modal-tab" style="display: none;">
-                        <div id="tbody-reports" class="cards-container"></div>
-                        <div class="section-add-row" style="margin-top:20px;">
-                            <button class="btn btn-add" onclick="addReport()">+ Add Lab/Path Report</button>
-                        </div>
-                    </div>
-
-                    <!-- PROCEDURES TAB -->
-                    <div id="modal-tab-procedures" class="tab-content modal-tab" style="display: none;">
-                        <div id="tbody-procedures" class="cards-container"></div>
-                        <div class="section-add-row" style="margin-top:20px;">
-                            <button class="btn btn-add" onclick="addProcedure()">+ Add Procedure</button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" onclick="closeClinicalHistory()">Done</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════════ -->
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Clinical Studio | PD Generator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
-        /* ── CONFIG ─────────────────────────────────────────────────────────── */
-        const API = 'http://localhost:410';
-        let currentJobId = null;
-        let pollTimer = null;
-        let logIndex = 0;
-        let currentPatient = null;
-        let currentLoadedPatientData = null;
-        let isClinicalHistoryRendered = false;
-
-        /* ── SERVER HEALTH ──────────────────────────────────────────────────── */
-        async function checkStatus() {
-            try {
-                await fetch(`${API}/api/status`, { signal: AbortSignal.timeout(3000) });
-                document.getElementById('status-dot').className = 'online';
-                document.getElementById('status-text').textContent = 'Server Online';
-            } catch {
-                document.getElementById('status-dot').className = 'offline';
-                document.getElementById('status-text').textContent = 'Server Offline';
-            }
-        }
-        setInterval(checkStatus, 5000);
-        checkStatus();
-
-        /* ── PATIENT LIST ───────────────────────────────────────────────────── */
-        async function loadPatients() {
-            try {
-                const r = await fetch(`${API}/api/patients`);
-                const data = await r.json();
-                const sel = document.getElementById('patient-select');
-                sel.innerHTML = '<option value="">— Select patient —</option>';
-                (data.patients || []).forEach(id => {
-                    const o = document.createElement('option');
-                    o.value = id; o.textContent = `Patient ${id}`;
-                    sel.appendChild(o);
-                });
-            } catch { appendLog('⚠️ Could not load patient list. Is the server running?', 'warn'); }
-        }
-        loadPatients();
-
-        /* ── PATIENT CHANGE ─────────────────────────────────────────────────── */
-        async function onPatientChange() {
-            const id = document.getElementById('patient-select').value;
-            currentPatient = id || null;
-            const sumEl = document.getElementById('patient-summary');
-            document.getElementById('refresh-files-btn').style.display = id ? 'inline-flex' : 'none';
-
-            if (!id) { sumEl.style.display = 'none'; clearAllSections(); clearOutputFiles(); return; }
-
-            try {
-                const r = await fetch(`${API}/api/patient/${id}`);
-                const data = await r.json();
-
-                if (data.found && data.data) {
-                    const p = data.data;
-                    const name = `${p.first_name || ''} ${p.last_name || ''}`.trim() || 'Unknown';
-                    sumEl.innerHTML = `
-        <div class="ps-name">${name} <span class="badge badge-green">Existing Patient</span></div>
-        <div class="ps-row"><span class="ps-label">DOB:</span>${p.dob || '—'}</div>
-        <div class="ps-row"><span class="ps-label">Gender:</span>${p.gender || '—'}</div>
-        <div class="ps-row"><span class="ps-label">Address:</span>${p.address || '—'}</div>
-        <div class="ps-row"><span class="ps-label">Insurance:</span>${(p.payer || {}).payer_name || 'UnitedHealthcare'} · ${(p.payer || {}).plan_name || '—'}</div>
-        <div style="margin-top:6px;font-size:11px;color:var(--text3);">🔒 Identity locked — medications, allergies, vaccinations, therapies will be kept consistent</div>`;
-                    sumEl.style.display = 'block';
-
-                    /* Pre-fill top-level fields */
-                    prefillSection('meds', p.medications || []);
-                    prefillSection('allergies', p.allergies || []);
-                    prefillSection('vax', p.vaccinations || []);
-                    prefillSection('therapy', p.therapies || []);
-                    if (p.behavioral_notes) document.getElementById('behavioral-notes').value = p.behavioral_notes;
-
-                    // Lazy load the clinical history parts
-                    currentLoadedPatientData = p;
-                    isClinicalHistoryRendered = false;
-                } else {
-                    sumEl.innerHTML = `
-        <div class="ps-name">Patient ${id} <span class="badge badge-yellow">New Patient</span></div>
-        <div style="color:var(--text3);font-size:11px;margin-top:4px;">
-          No existing record — AI will generate a fresh Texas-based profile.<br>
-          Leave sections below blank to randomize, or fill them in to constrain.
-        </div>`;
-                    sumEl.style.display = 'block';
-                    clearAllSections();
+        tailwind.config = {
+            darkMode:"class",
+            theme:{
+                extend:{
+                    colors:{
+                        "background":"#111318","surface-container-lowest":"#0c0e13","primary":"#b4c5ff",
+                        "outline-variant":"#434654","primary-container":"#618bff","surface-container-low":"#1a1b21",
+                        "on-surface":"#e2e2e9","error":"#ffb4ab","tertiary":"#cebdff","tertiary-container":"#9b7fed",
+                        "on-primary-container":"#00246a","surface-variant":"#33353a","on-background":"#e2e2e9",
+                        "surface-container-high":"#282a2f","surface":"#111318","on-surface-variant":"#c3c6d7",
+                        "on-tertiary-container":"#31057e","on-primary":"#002a78","on-secondary-container":"#a6b7f0",
+                        "surface-container":"#1e1f25","secondary":"#b4c5fe","secondary-container":"#364778",
+                    },
+                    fontFamily:{"body":["Inter"],"mono":["JetBrains Mono"]},
                 }
-                refreshOutputFiles();
-            } catch { sumEl.style.display = 'none'; }
-        }
-
-        /* ── PREFILL / CLEAR ────────────────────────────────────────────────── */
-        function clearAllSections() {
-            ['meds', 'allergies', 'vax', 'therapy', 'encounters', 'images', 'reports', 'procedures'].forEach(s => {
-                document.getElementById(`tbody-${s}`).innerHTML = '';
-                updateCount(s);
-            });
-            document.getElementById('behavioral-notes').value = '';
-            currentLoadedPatientData = null;
-            isClinicalHistoryRendered = false;
-        }
-        function prefillSection(sec, items) {
-            document.getElementById(`tbody-${sec}`).innerHTML = '';
-            const fn = { meds: addMed, allergies: addAllergy, vax: addVax, therapy: addTherapy, encounters: addEncounter, images: addImage, reports: addReport, procedures: addProcedure }[sec];
-            items.forEach(item => fn && fn(item));
-            updateCount(sec);
-        }
-        function updateCount(sec) {
-            const elBody = document.getElementById(`tbody-${sec}`);
-            const n = elBody.tagName === 'TBODY' ? elBody.rows.length : elBody.children.length;
-            const el = document.getElementById(`count-${sec}`);
-            if (el) el.textContent = n > 0 ? `${n} entr${n === 1 ? 'y' : 'ies'}` : '';
-        }
-
-        /* ── ADD ROW HELPERS ────────────────────────────────────────────────── */
-        function appendRow(sec, html) {
-            const elBody = document.getElementById(`tbody-${sec}`);
-            if (elBody.tagName === 'TBODY') {
-                const tr = document.createElement('tr');
-                tr.innerHTML = html;
-                elBody.appendChild(tr);
-            } else {
-                const div = document.createElement('div');
-                div.className = 'clinical-card';
-                div.innerHTML = html;
-                elBody.appendChild(div);
             }
-            updateCount(sec);
-        }
-        function removeRow(btn) {
-            const item = btn.closest('.clinical-card') || btn.closest('tr');
-            const elBody = item.closest('tbody') || item.closest('.cards-container');
-            const sec = elBody.id.replace('tbody-', '');
-            item.style.opacity = '0'; item.style.transition = 'opacity .2s';
-            setTimeout(() => { item.remove(); updateCount(sec); }, 200);
-        }
-
-        /* ── AUTO-EXPAND TEXTAREAS ─────────────────────────────────────────── */
-        function autoExpand(el) {
-            el.style.height = 'auto';
-            el.style.height = (el.scrollHeight) + 'px';
-        }
-        function triggerAutoExpand(containerId) {
-            setTimeout(() => {
-                const els = document.querySelectorAll(`#${containerId} textarea`);
-                els.forEach(el => autoExpand(el));
-            }, 10);
-        }
-        const sel = (v, opt) => v === opt ? 'selected' : '';
-        const esc = s => String(s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-
-        function addMed(d = {}) {
-            appendRow('meds', `
-    <td><input type="text" placeholder="Lipitor" value="${esc(d.brand)}"/></td>
-    <td><input type="text" placeholder="Atorvastatin 20mg" value="${esc(d.generic_name)}"/></td>
-    <td><input type="text" placeholder="30 tabs" value="${esc(d.qty)}"/></td>
-    <td><input type="text" placeholder="Dr. Smith, MD" value="${esc(d.prescribed_by)}"/></td>
-    <td><select>
-      <option value="current" ${sel(d.status, 'current')}>Current</option>
-      <option value="past" ${sel(d.status, 'past')}>Past</option>
-      <option value="ongoing" ${sel(d.status, 'ongoing')}>Ongoing</option>
-    </select></td>
-    <td><input type="date" value="${esc(d.start_date)}"/></td>
-    <td><input type="text" placeholder="ongoing" value="${esc(d.end_date || 'ongoing')}"/></td>
-    <td><input type="text" placeholder="Reason…" value="${esc(d.reason)}"/></td>
-    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
-        }
-
-        function addAllergy(d = {}) {
-            appendRow('allergies', `
-    <td><input type="text" placeholder="Penicillin" value="${esc(d.allergen)}"/></td>
-    <td><select>
-      <option value="Drug" ${sel(d.allergy_type, 'Drug')}>Drug</option>
-      <option value="Food" ${sel(d.allergy_type, 'Food')}>Food</option>
-      <option value="Environmental" ${sel(d.allergy_type, 'Environmental')}>Environmental</option>
-      <option value="Latex" ${sel(d.allergy_type, 'Latex')}>Latex</option>
-      <option value="Other" ${sel(d.allergy_type, 'Other')}>Other</option>
-    </select></td>
-    <td><input type="text" placeholder="Hives, Anaphylaxis…" value="${esc(d.reaction)}"/></td>
-    <td><select>
-      <option value="Mild" ${sel(d.severity, 'Mild')}>Mild</option>
-      <option value="Moderate" ${sel(d.severity, 'Moderate')}>Moderate</option>
-      <option value="Severe" ${sel(d.severity, 'Severe')}>Severe</option>
-      <option value="Life-threatening" ${sel(d.severity, 'Life-threatening')}>Life-threatening</option>
-    </select></td>
-    <td><input type="date" value="${esc(d.onset_date)}"/></td>
-    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
-        }
-
-        function addVax(d = {}) {
-            appendRow('vax', `
-    <td><input type="text" placeholder="Influenza" value="${esc(d.vaccine_name)}"/></td>
-    <td><select>
-      <option value="Inactivated" ${sel(d.vaccine_type, 'Inactivated')}>Inactivated</option>
-      <option value="mRNA" ${sel(d.vaccine_type, 'mRNA')}>mRNA</option>
-      <option value="Live-attenuated" ${sel(d.vaccine_type, 'Live-attenuated')}>Live-attenuated</option>
-      <option value="Toxoid" ${sel(d.vaccine_type, 'Toxoid')}>Toxoid</option>
-      <option value="Subunit" ${sel(d.vaccine_type, 'Subunit')}>Subunit</option>
-      <option value="Viral vector" ${sel(d.vaccine_type, 'Viral vector')}>Viral vector</option>
-      <option value="Other" ${sel(d.vaccine_type, 'Other')}>Other</option>
-    </select></td>
-    <td><input type="date" value="${esc(d.date_administered)}"/></td>
-    <td><input type="text" placeholder="CVS Pharmacy" value="${esc(d.administered_by)}"/></td>
-    <td><input type="text" placeholder="1" style="width:54px" value="${esc(d.dose_number || '1')}"/></td>
-    <td><select>
-      <option value="Routine Immunization" ${sel(d.reason, 'Routine Immunization')}>Routine</option>
-      <option value="Travel" ${sel(d.reason, 'Travel')}>Travel</option>
-      <option value="Occupational" ${sel(d.reason, 'Occupational')}>Occupational</option>
-      <option value="Post-exposure Prophylaxis" ${sel(d.reason, 'Post-exposure Prophylaxis')}>Post-exposure</option>
-      <option value="Catch-up" ${sel(d.reason, 'Catch-up')}>Catch-up</option>
-    </select></td>
-    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
-        }
-
-        function addTherapy(d = {}) {
-            appendRow('therapy', `
-    <td><select>
-      <option value="Physical"                  ${sel(d.therapy_type, 'Physical')}>Physical</option>
-      <option value="Occupational"              ${sel(d.therapy_type, 'Occupational')}>Occupational</option>
-      <option value="Behavioral"                ${sel(d.therapy_type, 'Behavioral')}>Behavioral</option>
-      <option value="Cognitive-Behavioral (CBT)"${sel(d.therapy_type, 'Cognitive-Behavioral (CBT)')}>CBT</option>
-      <option value="Speech"                    ${sel(d.therapy_type, 'Speech')}>Speech</option>
-      <option value="Respiratory"               ${sel(d.therapy_type, 'Respiratory')}>Respiratory</option>
-      <option value="Cardiac Rehab"             ${sel(d.therapy_type, 'Cardiac Rehab')}>Cardiac Rehab</option>
-      <option value="Aquatic"                   ${sel(d.therapy_type, 'Aquatic')}>Aquatic</option>
-      <option value="Other"                     ${sel(d.therapy_type, 'Other')}>Other</option>
-    </select></td>
-    <td><input type="text" placeholder="Dr. Amy Reed, PT" value="${esc(d.provider)}"/></td>
-    <td><input type="text" placeholder="TX Rehab Center" value="${esc(d.facility)}"/></td>
-    <td><input type="text" placeholder="2x/week" value="${esc(d.frequency)}"/></td>
-    <td><select>
-      <option value="Active"        ${sel(d.status, 'Active')}>Active</option>
-      <option value="Completed"     ${sel(d.status, 'Completed')}>Completed</option>
-      <option value="Discontinued"  ${sel(d.status, 'Discontinued')}>Discontinued</option>
-    </select></td>
-    <td><input type="date" value="${esc(d.start_date)}"/></td>
-    <td><input type="text" placeholder="ongoing" value="${esc(d.end_date || 'ongoing')}"/></td>
-    <td><input type="text" placeholder="Referral reason…" value="${esc(d.reason)}"/></td>
-    <td><input type="text" placeholder="Notes…" value="${esc(d.notes)}"/></td>
-    <td><button class="btn btn-danger" onclick="removeRow(this)">✕</button></td>`);
-        }
-
-        /* ── MODAL UI & ROWS ── */
-        function openClinicalHistory() {
-            if (!isClinicalHistoryRendered && currentLoadedPatientData) {
-                const p = currentLoadedPatientData;
-                prefillSection('encounters', p.encounters || []);
-                prefillSection('images', p.images || []);
-                prefillSection('reports', p.reports || []);
-                prefillSection('procedures', p.procedures || []);
-                isClinicalHistoryRendered = true;
-            }
-            document.getElementById('clinical-modal').style.display = 'flex';
-        }
-        function closeClinicalHistory() {
-            document.getElementById('clinical-modal').style.display = 'none';
-        }
-        function switchModalTab(tabId) {
-            document.querySelectorAll('.modal-tab').forEach(t => {
-                t.classList.remove('active');
-                t.style.display = 'none';
-            });
-            document.querySelectorAll('#clinical-modal .tabs-header .tab-btn').forEach(b => b.classList.remove('active'));
-
-            const target = document.getElementById(`modal-tab-${tabId}`);
-            if (target) {
-                target.classList.add('active');
-                target.style.display = 'block';
-            }
-            event.currentTarget.classList.add('active');
-        }
-
-        function addEncounter(d = {}) {
-            appendRow('encounters', `
-        <div class="clinical-card-header">
-            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
-                <select style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;">
-                  <option value="Office Visit" ${sel(d.type, 'Office Visit')}>Office Visit</option>
-                  <option value="Specialist Visit" ${sel(d.type, 'Specialist Visit')}>Specialist</option>
-                  <option value="Telehealth" ${sel(d.type, 'Telehealth')}>Telehealth</option>
-                  <option value="Urgent Care" ${sel(d.type, 'Urgent Care')}>Urgent Care</option>
-                  <option value="Emergency Room" ${sel(d.type, 'Emergency Room')}>Emergency Room</option>
-                  <option value="Inpatient Admission" ${sel(d.type, 'Inpatient Admission')}>Inpatient</option>
-                  <option value="Observation" ${sel(d.type, 'Observation')}>Observation</option>
-                </select>
-            </div>
-            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
-        </div>
-        <div class="clinical-card-body">
-            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
-            <div><label>Provider</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
-            <div><label>Facility</label><input type="text" placeholder="General Hospital" value="${esc(d.facility)}"/></div>
-            <div class="clinical-card-full-width"><label>Reason (CC)</label><textarea oninput="autoExpand(this)">${esc(d.reason)}</textarea></div>
-            <div class="clinical-card-full-width"><label>Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
-        </div>`);
-            triggerAutoExpand('tbody-encounters');
-        }
-
-        function addImage(d = {}) {
-            appendRow('images', `
-        <div class="clinical-card-header">
-            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
-                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="CT Abdomen W/O Contrast" value="${esc(d.type)}"/>
-            </div>
-            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
-        </div>
-        <div class="clinical-card-body">
-            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
-            <div><label>Ordered By</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
-            <div><label>Facility</label><input type="text" placeholder="Imaging Center" value="${esc(d.facility)}"/></div>
-            <div class="clinical-card-full-width"><label>Findings / Impression</label><textarea oninput="autoExpand(this)">${esc(d.findings)}</textarea></div>
-        </div>`);
-            triggerAutoExpand('tbody-images');
-        }
-
-        function addReport(d = {}) {
-            appendRow('reports', `
-        <div class="clinical-card-header">
-            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
-                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="CBC, CMP, Biopsy…" value="${esc(d.type)}"/>
-            </div>
-            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
-        </div>
-        <div class="clinical-card-body">
-            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
-            <div><label>Ordered By</label><input type="text" placeholder="Dr. XYZ" value="${esc(d.provider)}"/></div>
-            <div class="clinical-card-full-width"><label>Results</label><textarea oninput="autoExpand(this)">${esc(d.results)}</textarea></div>
-            <div class="clinical-card-full-width"><label>Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
-        </div>`);
-            triggerAutoExpand('tbody-reports');
-        }
-
-        function addProcedure(d = {}) {
-            appendRow('procedures', `
-        <div class="clinical-card-header">
-            <div class="clinical-card-title" style="flex:1; margin-right: 12px;">
-                <input style="width:100%; font-size: 14px; font-weight: 600; color:var(--accent2); background: transparent; border: 1px solid var(--border2); padding: 5px;" type="text" placeholder="Appendectomy" value="${esc(d.name)}"/>
-            </div>
-            <button class="btn btn-danger" onclick="removeRow(this)">✕</button>
-        </div>
-        <div class="clinical-card-body">
-            <div><label>Date</label><input type="date" value="${esc(d.date)}"/></div>
-            <div><label>Performed By</label><input type="text" placeholder="Dr. Surgeon" value="${esc(d.provider)}"/></div>
-            <div><label>Facility</label><input type="text" placeholder="Surgery Center" value="${esc(d.facility)}"/></div>
-            <div class="clinical-card-full-width"><label>Indication / Reason</label><textarea oninput="autoExpand(this)">${esc(d.reason)}</textarea></div>
-            <div class="clinical-card-full-width"><label>Complications / Notes</label><textarea oninput="autoExpand(this)">${esc(d.notes)}</textarea></div>
-        </div>`);
-            triggerAutoExpand('tbody-procedures');
-        }
-
-
-        /* ── TAB SWITCHING & DRAGGING ───────────────────────────────────────── */
-
-        function switchClinicalTab(tabId) {
-            document.querySelectorAll('.clinical-tab').forEach(t => {
-                t.classList.remove('active');
-                t.style.display = 'none';
-            });
-            document.querySelectorAll('#pane-top .tab-btn').forEach(b => b.classList.remove('active'));
-
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) {
-                target.classList.add('active');
-                target.style.display = 'block';
-            }
-            event.currentTarget.classList.add('active');
-        }
-
-        function switchOutputTab(tabId) {
-            document.querySelectorAll('.output-tab').forEach(t => {
-                t.classList.remove('active');
-                t.style.setProperty('display', 'none', 'important');
-            });
-            document.querySelectorAll('#pane-bottom .tab-btn').forEach(b => b.classList.remove('active'));
-
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) {
-                target.classList.add('active');
-                target.style.setProperty('display', 'flex', 'important');
-            }
-            event.currentTarget.classList.add('active');
-        }
-
-        /* DRAGGABLE DIVIDER LOGIC */
-        const resizer = document.getElementById('drag-divider');
-        const topPane = document.getElementById('pane-top');
-        const bottomPane = document.getElementById('pane-bottom');
-        const mainContent = document.getElementById('main-content');
-
-        let isDragging = false;
-
-        resizer.addEventListener('mousedown', function (e) {
-            isDragging = true;
-            document.body.style.cursor = 'row-resize';
-            resizer.classList.add('dragging');
-        });
-
-        document.addEventListener('mousemove', function (e) {
-            if (!isDragging) return;
-            const containerOffsetTop = mainContent.offsetTop;
-            const pointerRelativeYpos = e.clientY - containerOffsetTop;
-
-            const boxMinHeight = 150;
-            const containerHeight = mainContent.clientHeight;
-
-            // Constrain dragging bounds
-            let flexBasis = Math.max(boxMinHeight, Math.min(containerHeight - boxMinHeight - resizer.offsetHeight, pointerRelativeYpos));
-
-            const percentage = (flexBasis / containerHeight) * 100;
-
-            topPane.style.flex = `0 0 ${percentage}%`;
-            bottomPane.style.flex = `1 1 0%`; // allow bottom pane to fill the rest
-        });
-
-        document.addEventListener('mouseup', function (e) {
-            if (isDragging) {
-                isDragging = false;
-                document.body.style.cursor = 'default';
-                resizer.classList.remove('dragging');
-            }
-        });
-
-        /* ── CHECK PILLS ────────────────────────────────────────────────────── */
-        function togglePill(label, cbId) {
-            const cb = document.getElementById(cbId);
-            cb.checked = !cb.checked;
-            label.classList.toggle('checked', cb.checked);
-        }
-
-        /* ── COLLECT DATA ───────────────────────────────────────────────────── */
-        function collectRows(sec) {
-            return [...document.getElementById(`tbody-${sec}`).rows].map(tr => {
-                const inputs = [...tr.querySelectorAll('input,select')];
-                return inputs.reduce((obj, el, i) => ({ ...obj, [i]: el.value }), {});
-            });
-        }
-        function collectMeds() {
-            return [...document.getElementById('tbody-meds').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return {
-                    brand: i[0].value, generic_name: i[1].value, qty: i[2].value,
-                    prescribed_by: i[3].value, status: i[4].value, start_date: i[5].value,
-                    end_date: i[6].value, reason: i[7].value
-                };
-            });
-        }
-        function collectAllergies() {
-            return [...document.getElementById('tbody-allergies').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return {
-                    allergen: i[0].value, allergy_type: i[1].value, reaction: i[2].value,
-                    severity: i[3].value, onset_date: i[4].value
-                };
-            });
-        }
-        function collectVax() {
-            return [...document.getElementById('tbody-vax').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return {
-                    vaccine_name: i[0].value, vaccine_type: i[1].value, date_administered: i[2].value,
-                    administered_by: i[3].value, dose_number: i[4].value, reason: i[5].value
-                };
-            });
-        }
-        function collectTherapies() {
-            return [...document.getElementById('tbody-therapy').rows].map(tr => {
-                const i = tr.querySelectorAll('input,select');
-                return {
-                    therapy_type: i[0].value, provider: i[1].value, facility: i[2].value,
-                    frequency: i[3].value, status: i[4].value, start_date: i[5].value,
-                    end_date: i[6].value, reason: i[7].value, notes: i[8].value
-                };
-            });
-        }
-        function collectEncounters() {
-            const container = document.getElementById('tbody-encounters');
-            if (!container) return [];
-            return [...container.children].map(card => {
-                const i = card.querySelectorAll('input,select,textarea');
-                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
-            });
-        }
-        function collectImages() {
-            const container = document.getElementById('tbody-images');
-            if (!container) return [];
-            return [...container.children].map(card => {
-                const i = card.querySelectorAll('input,select,textarea');
-                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, findings: i[4]?.value };
-            });
-        }
-        function collectReports() {
-            const container = document.getElementById('tbody-reports');
-            if (!container) return [];
-            return [...container.children].map(card => {
-                const i = card.querySelectorAll('input,select,textarea');
-                return { type: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, results: i[3]?.value, notes: i[4]?.value };
-            });
-        }
-        function collectProcedures() {
-            const container = document.getElementById('tbody-procedures');
-            if (!container) return [];
-            return [...container.children].map(card => {
-                const i = card.querySelectorAll('input,select,textarea');
-                return { name: i[0]?.value, date: i[1]?.value, provider: i[2]?.value, facility: i[3]?.value, reason: i[4]?.value, notes: i[5]?.value };
-            });
-        }
-
-        /* ── GENERATE ───────────────────────────────────────────────────────── */
-        async function startGeneration() {
-            const patientId = document.getElementById('patient-select').value;
-            if (!patientId) { alert('Please select a patient first.'); return; }
-
-            const btn = document.getElementById('btn-generate');
-            btn.disabled = true; btn.textContent = '⏳ Generating…';
-            clearLog(); showProgress(true);
-            document.getElementById('changes-panel').style.display = 'none';
-
-            const payload = {
-                patient_id: patientId,
-                feedback: document.getElementById('feedback').value.trim(),
-                generation_mode: {
-                    persona: document.getElementById('gen_persona').checked,
-                    reports: document.getElementById('gen_reports').checked,
-                    summary: document.getElementById('gen_summary').checked,
-                },
-                pa_optimize: document.getElementById('pa-optimize').checked,
-                medications: collectMeds().filter(m => m.brand || m.generic_name),
-                allergies: collectAllergies().filter(a => a.allergen),
-                vaccinations: collectVax().filter(v => v.vaccine_name),
-                therapies: collectTherapies().filter(t => t.therapy_type),
-                encounters: collectEncounters().filter(e => e.type || e.reason),
-                images: collectImages().filter(i => i.type || i.findings),
-                reports: collectReports().filter(r => r.type || r.results),
-                procedures: collectProcedures().filter(p => p.name || p.reason),
-                behavioral_notes: document.getElementById('behavioral-notes').value.trim(),
-            };
-
-            try {
-                const r = await fetch(`${API}/api/generate`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-                });
-                const data = await r.json();
-                if (!data.job_id) throw new Error(data.error || 'No job_id returned');
-                currentJobId = data.job_id; logIndex = 0;
-                appendLog(`📋 Job started: ${data.job_id}`, 'info');
-                startPolling();
-            } catch (e) {
-                appendLog(`❌ Failed to start: ${e.message}`, 'error');
-                btn.disabled = false; btn.textContent = '🚀 Generate Clinical Data';
-                showProgress(false);
-            }
-        }
-
-        /* ── POLLING ────────────────────────────────────────────────────────── */
-        function startPolling() {
-            if (pollTimer) clearInterval(pollTimer);
-            pollTimer = setInterval(pollJob, 2000);
-        }
-        async function pollJob() {
-            if (!currentJobId) return;
-            try {
-                const r = await fetch(`${API}/api/job/${currentJobId}?since=${logIndex}`);
-                const data = await r.json();
-
-                (data.logs || []).forEach(line => appendLog(line));
-                logIndex = data.log_total;
-                document.getElementById('job-status-text').textContent = `Status: ${data.status}`;
-
-                if (data.status === 'done' || data.status === 'error') {
-                    clearInterval(pollTimer); pollTimer = null; showProgress(false);
-                    const btn = document.getElementById('btn-generate');
-                    btn.disabled = false; btn.textContent = '🚀 Generate Clinical Data';
-
-                    if (data.status === 'done') {
-                        appendLog('✅ Generation complete!', 'success');
-
-                        const logs = data.all_logs || [];
-                        const docsCreated = logs.filter(l => /Created:.*DOC-/i.test(l));
-                        if (docsCreated.length > 0) {
-                            appendLog('📄 Generated Documents:', 'info');
-                            docsCreated.forEach(docLog => {
-                                appendLog(`  - ${docLog.split('Created: ')[1]}`, 'success');
-                            });
-                        }
-
-                        document.getElementById('refresh-files-btn').style.display = 'inline-flex';
-                        await refreshOutputFiles();
-                    } else {
-                        appendLog('❌ Generation failed.', 'error');
-                    }
-                    buildSummaryPanel(data);
-                }
-            } catch (e) { appendLog(`⚠️ Poll error: ${e.message}`, 'warn'); }
-        }
-
-        /* ── CHANGES SUMMARY PANEL ──────────────────────────────────────────── */
-        function buildSummaryPanel(data) {
-            const ctx = data.request_context || {};
-            const logs = data.all_logs || [];
-            const succeeded = data.status === 'done';
-            const panel = document.getElementById('changes-panel');
-            const body = document.getElementById('changes-panel-body');
-
-            /* Milestone log lines */
-            const milestones = [/🚀/, /🧠/, /📄.*generat/i, /✅.*creat|saved|complet/i,
-                /👤.*persona/i, /📊.*annotator/i, /💾.*saved/i,
-                /Processing.*patient/i, /Case Found/i, /History Found/i];
-            const keyLines = logs.filter(l => milestones.some(p => p.test(l))).slice(0, 10);
-
-            /* Docs created */
-            const docsCreated = logs.filter(l => /Created:.*DOC-/i.test(l));
-            const personaOk = logs.some(l => /Persona Created:/i.test(l));
-            const summaryOk = logs.some(l => /Annotator Summary Created:/i.test(l));
-            const patientName = data.result || '(see log)';
-
-            /* Section tags */
-            const gm = ctx.generation_mode || {};
-            const secTags = [
-                { k: 'Persona', on: gm.persona },
-                { k: 'Reports', on: gm.reports },
-                { k: 'Summary', on: gm.summary },
-            ].map(s => `<span class="sum-tag ${s.on ? 'tag-on' : 'tag-off'}">${s.on ? '✓' : '✕'} ${s.k}</span>`).join('');
-
-            const dataTags = [
-                { k: `💊 ${ctx.medication_count || 0} Meds`, v: ctx.medication_count },
-                { k: `⚠️ ${ctx.allergy_count || 0} Allergies`, v: ctx.allergy_count },
-                { k: `💉 ${ctx.vaccination_count || 0} Vaccines`, v: ctx.vaccination_count },
-                { k: `🧠 ${ctx.therapy_count || 0} Therapies`, v: ctx.therapy_count },
-                { k: `🏥 ${ctx.encounter_count || 0} Encs`, v: ctx.encounter_count },
-                { k: `🩻 ${ctx.image_count || 0} Imgs`, v: ctx.image_count },
-                { k: `🔬 ${ctx.report_count || 0} Labs`, v: ctx.report_count },
-                { k: `🔪 ${ctx.procedure_count || 0} Procs`, v: ctx.procedure_count },
-            ].map(d => `<span class="sum-tag ${d.v ? 'tag-on' : 'tag-off'}">${d.k}</span>`).join('');
-
-            const fbPreview = (ctx.feedback || '').slice(0, 220) || '<em style="color:var(--text3)">No feedback provided</em>';
-            const aiNote = data.changes_summary || '<em style="color:var(--text3)">AI narrative will appear here on next run once history_manager captures it.</em>';
-
-            body.innerHTML = `
-    <div style="margin-bottom:14px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;
-      background:${succeeded ? 'rgba(34,197,94,.08)' : 'rgba(239,68,68,.08)'};
-      border:1px solid ${succeeded ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'};
-      color:${succeeded ? 'var(--green)' : 'var(--red)'};">
-      ${succeeded ? `✅ Generation completed &nbsp;·&nbsp; Patient: <strong>${esc(patientName)}</strong>`
-                    : '❌ Generation encountered an error — see log for details'}
-    </div>
-    <div class="summary-grid">
-
-      <div class="summary-block">
-        <h4 class="clr-yellow">⚡ What Was Requested</h4>
-        <div class="sum-row"><span class="sum-key">Sections:</span><span class="sum-val">${secTags}</span></div>
-        <div class="sum-row"><span class="sum-key">Data provided:</span><span class="sum-val">${dataTags}</span></div>
-        <div class="sum-row"><span class="sum-key">PA Optimize:</span>
-          <span class="sum-val"><span class="sum-tag ${ctx.pa_optimize ? 'tag-opt' : 'tag-off'}">
-            ${ctx.pa_optimize ? '⚡ ON — Strongest Justification' : 'OFF'}</span></span></div>
-        <div class="sum-row" style="align-items:flex-start;">
-          <span class="sum-key">Feedback:</span>
-          <span class="sum-val" style="color:var(--text2);">${fbPreview}${(ctx.feedback || '').length > 220 ? '…' : ''}</span>
-        </div>
-      </div>
-
-      <div class="summary-block">
-        <h4 class="clr-green">✅ What Was Produced</h4>
-        <div class="sum-row"><span class="sum-key">Patient name:</span><span class="sum-val">${esc(patientName)}</span></div>
-        <div class="sum-row"><span class="sum-key">Reports:</span>
-          <span class="sum-val">${docsCreated.length ? docsCreated.length + ' document(s)' : '—'}</span></div>
-        ${docsCreated.map(l => `<div class="log-event">📄 ${esc(l.replace(/.*Created:/, '').trim())}</div>`).join('')}
-        <div class="sum-row"><span class="sum-key">Persona:</span><span class="sum-val">${personaOk ? '✓ Created' : '—'}</span></div>
-        <div class="sum-row"><span class="sum-key">Summary:</span><span class="sum-val">${summaryOk ? '✓ Created' : '—'}</span></div>
-      </div>
-
-      <div class="summary-block">
-        <h4 class="clr-teal">📍 Key Events</h4>
-        ${keyLines.length
-                    ? keyLines.map(l => `<div class="log-event">${esc(l)}</div>`).join('')
-                    : '<span style="color:var(--text3);font-size:12px;">No milestone events captured</span>'}
-      </div>
-
-      <div class="summary-block">
-        <h4 class="clr-purple">🧠 AI Changes Narrative</h4>
-        <div class="ai-narrative">${aiNote}</div>
-      </div>
-
-    </div>`;
-
-            panel.style.display = 'block';
-            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        /* ── OUTPUT FILES ───────────────────────────────────────────────────── */
-        async function refreshOutputFiles() {
-            const id = currentPatient || document.getElementById('patient-select').value;
-            if (!id) return;
-            try {
-                const r = await fetch(`${API}/api/output/${id}`);
-                const data = await r.json();
-                renderOutputFiles(data.files || []);
-            } catch { }
-        }
-        function renderOutputFiles(files) {
-            const el = document.getElementById('output-files');
-            if (!files.length) {
-                el.innerHTML = '<div class="empty-msg">No generated files yet</div>';
-                return;
-            }
-
-            const id = currentPatient || document.getElementById('patient-select').value;
-
-            el.innerHTML = files.map(f => `
-                <a href="${API}/api/download/${id}/${f.type}/${f.name}" target="_blank" class="file-item">
-                    <span class="file-icon">📄</span>
-                    <span class="file-type ${f.type}">${f.type}</span>
-                    <span class="file-name">${esc(f.name)}</span>
-                </a>
-            `).join('');
-        }
-        function clearOutputFiles() {
-            document.getElementById('output-files').innerHTML = '<div class="empty-msg">No files yet — run a generation to see output here</div>';
-        }
-
-        /* ── LOG ────────────────────────────────────────────────────────────── */
-        function appendLog(text, cls = '') {
-            const con = document.getElementById('log-console');
-            if (con.querySelector('span[style]')) con.innerHTML = '';
-            const line = document.createElement('div');
-            if (!cls) {
-                if (/✅|success|complete/i.test(text)) cls = 'success';
-                else if (/❌|error|failed/i.test(text)) cls = 'error';
-                else if (/⚠️|warn/i.test(text)) cls = 'warn';
-                else if (/🚀|📋|📄|💾|📊|👤|🧠/i.test(text)) cls = 'info';
-            }
-            line.className = `log-line ${cls}`;
-            line.textContent = text;
-            con.appendChild(line);
-
-            // Auto scroll to bottom smoothly utilizing JS event queue
-            setTimeout(() => {
-                con.scrollTo({
-                    top: con.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 10);
-        }
-        function clearLog() {
-            document.getElementById('log-console').innerHTML = '<span style="color:var(--text3);">Log cleared.</span>';
-            logIndex = 0;
-        }
-        function showProgress(show) {
-            document.getElementById('job-progress').style.display = show ? 'flex' : 'none';
         }
     </script>
-</body>
+    <style>
+        .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 20;}
+        .scrollbar-hide::-webkit-scrollbar{display:none;}
+        .status-pulse{box-shadow:0 0 8px rgba(206,189,255,.4);}
+        .log-entry{font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.5;}
+        .tab-active{color:#b4c5ff;border-bottom:2px solid #b4c5ff;}
+        .tab-inactive{color:#c3c6d7;border-bottom:2px solid transparent;}
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body overflow-hidden h-screen flex flex-col">
 
+<!-- ═══ HEADER ════════════════════════════════════════════════════════════ -->
+<header class="h-12 flex items-center justify-between px-6 bg-[#1a1b21] border-b border-[#434654]/30 shrink-0 z-50">
+    <div class="flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">biotech</span>
+        <span class="text-sm font-black tracking-wider text-primary uppercase">Clinical Studio</span>
+        <div class="h-4 w-px bg-outline-variant/40"></div>
+        <span class="text-xs font-mono text-on-surface-variant">PD Generator v4</span>
+    </div>
+    <div class="flex items-center gap-3">
+        <div id="server-dot" class="w-2 h-2 rounded-full bg-gray-600" title="API status"></div>
+        <span id="server-label" class="text-[10px] font-mono text-on-surface-variant uppercase">Checking…</span>
+        <div class="h-4 w-px bg-outline-variant/40"></div>
+        <button onclick="openBatchModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary-container/30 text-secondary text-[11px] font-bold hover:bg-secondary-container/50 transition-all">
+            <span class="material-symbols-outlined text-sm">batch_prediction</span> Batch Run
+        </button>
+        <div class="w-7 h-7 rounded-full bg-surface-variant flex items-center justify-center border border-primary/20 overflow-hidden">
+            <img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTDu4MOuMOs0W6jTWPV71zpxHjMy44pi5CSqXnvyMi0CthsHHHGye33MnLt-4CABhybyhfOv5AfJZrfS-7__iytpf2mV6buuCUcSEtZgFFrFjJIQL-OBSJLlKWPDN_tuM9ULtNJ1UoDgIlE8tPtApQs_sTUfPKjKHa1J409OwjQSJT5zxsfiLnztGjib9og5dWmAAH6tANmnkuLdbaUO4n6IF_qD3KPp6b3AeFJzchNg-XKLW5S_DtSoNK1nWiZMxn62-mdnM1kTY"/>
+        </div>
+    </div>
+</header>
+
+<!-- ═══ 3-SILO BODY ═══════════════════════════════════════════════════════ -->
+<div class="flex-1 flex overflow-hidden">
+
+    <!-- ─── SILO 1: Patient + Case Info ─────────────────────────────── -->
+    <aside class="w-72 flex flex-col bg-surface-container-low border-r border-outline-variant/10 overflow-hidden shrink-0">
+        <!-- Patient selector -->
+        <div class="p-4 border-b border-outline-variant/10 bg-surface-container/50 shrink-0">
+            <label class="block text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Active Patient</label>
+            <div class="relative">
+                <select id="patient-select" class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-lg text-sm text-on-surface px-3 py-2.5 pr-8 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/40 focus:outline-none">
+                    <option value="">Loading…</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-2 top-3 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+            </div>
+        </div>
+
+        <!-- Patient identity -->
+        <div class="p-4 border-b border-outline-variant/10 shrink-0">
+            <div class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Identity</div>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-surface-container rounded-lg p-2">
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">DOB</div>
+                    <div id="info-dob" class="font-mono text-xs mt-0.5">—</div>
+                </div>
+                <div class="bg-surface-container rounded-lg p-2">
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Gender</div>
+                    <div id="info-gender" class="font-mono text-xs mt-0.5">—</div>
+                </div>
+                <div class="col-span-2 bg-surface-container rounded-lg p-2">
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Provider / Org</div>
+                    <div id="info-provider" class="text-xs mt-0.5 truncate">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case info -->
+        <div class="p-4 flex-1 overflow-y-auto scrollbar-hide space-y-2">
+            <div class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">UAT Case Details</div>
+
+            <div class="bg-surface-container rounded-lg p-3 space-y-2">
+                <div>
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Test Case #</div>
+                    <div id="case-num" class="text-xs font-mono mt-0.5">—</div>
+                </div>
+                <div>
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Department</div>
+                    <div id="case-dept" class="text-xs mt-0.5">—</div>
+                </div>
+                <div>
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Procedure / CPT</div>
+                    <div id="case-cpt" class="text-xs font-mono mt-0.5">—</div>
+                </div>
+            </div>
+
+            <div id="case-outcome-card" class="rounded-lg p-3">
+                <div class="text-[9px] text-on-surface-variant/60 uppercase mb-1">Expected Outcome</div>
+                <div id="case-outcome" class="text-xs font-bold">—</div>
+            </div>
+
+            <div class="bg-surface-container rounded-lg p-3">
+                <div class="text-[9px] text-on-surface-variant/60 uppercase mb-1">Case Details</div>
+                <div id="case-details-text" class="text-[11px] text-on-surface-variant leading-relaxed">—</div>
+            </div>
+
+            <div class="bg-surface-container rounded-lg p-3">
+                <div class="text-[9px] text-on-surface-variant/60 uppercase mb-1">Primary Diagnosis</div>
+                <div id="info-dx" class="text-xs">—</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ─── SILO 2: Clinical Detail Tabs ─────────────────────────────── -->
+    <section class="flex-1 flex flex-col overflow-hidden border-r border-outline-variant/10">
+        <!-- Tabs -->
+        <div class="flex shrink-0 border-b border-outline-variant/10 bg-surface-container/40">
+            <button onclick="switchClinicalTab('meds')" id="ctab-meds" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-active">Medications</button>
+            <button onclick="switchClinicalTab('allergies')" id="ctab-allergies" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Allergies</button>
+            <button onclick="switchClinicalTab('therapy')" id="ctab-therapy" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Therapy</button>
+            <button onclick="switchClinicalTab('procedures')" id="ctab-procedures" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Procedures</button>
+            <button onclick="switchClinicalTab('encounters')" id="ctab-encounters" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Encounters</button>
+            <button onclick="switchClinicalTab('imaging')" id="ctab-imaging" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Imaging</button>
+            <button onclick="switchClinicalTab('labs')" id="ctab-labs" class="clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest tab-inactive">Labs</button>
+        </div>
+        <!-- Tab content -->
+        <div id="clinical-content" class="flex-1 overflow-y-auto scrollbar-hide p-4">
+            <p class="text-on-surface-variant italic text-sm">Select a patient to load clinical data…</p>
+        </div>
+    </section>
+
+    <!-- ─── SILO 3: Generate + Logs + Docs ───────────────────────────── -->
+    <aside class="w-80 flex flex-col bg-surface-container-low overflow-hidden shrink-0">
+
+        <!-- Generation Controls -->
+        <div class="p-4 border-b border-outline-variant/10 shrink-0 space-y-3">
+            <div class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Generate Documents</div>
+
+            <!-- Feedback -->
+            <textarea id="feedback-input" rows="3" placeholder="Optional feedback / instructions…"
+                class="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-lg text-xs text-on-surface-variant placeholder-on-surface-variant/40 p-3 font-mono resize-none focus:ring-2 focus:ring-primary/30 focus:outline-none leading-relaxed"></textarea>
+
+            <!-- Doc type checkboxes -->
+            <div class="flex gap-3">
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                    <input type="checkbox" id="chk-persona" checked class="w-3 h-3 rounded accent-primary"> Persona
+                </label>
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                    <input type="checkbox" id="chk-reports" checked class="w-3 h-3 rounded accent-primary"> Reports
+                </label>
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                    <input type="checkbox" id="chk-summary" checked class="w-3 h-3 rounded accent-primary"> Summary
+                </label>
+            </div>
+
+            <!-- Generate button -->
+            <button id="btn-generate" onclick="startGeneration()"
+                class="w-full py-2.5 bg-primary text-on-primary rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                <span id="gen-icon" class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">play_arrow</span>
+                <span id="gen-label">Generate</span>
+            </button>
+        </div>
+
+        <!-- Live Logs -->
+        <div class="flex flex-col overflow-hidden border-b border-outline-variant/10" style="height:200px;">
+            <div class="flex items-center justify-between px-4 py-2 bg-surface-container-high/30 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span id="log-dot" class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>
+                    <span class="text-[9px] font-mono uppercase text-on-surface-variant">Generation Logs</span>
+                </div>
+                <button onclick="clearLogs()" class="text-[9px] text-on-surface-variant/60 hover:text-on-surface-variant">Clear</button>
+            </div>
+            <div id="log-panel" class="flex-1 overflow-y-auto scrollbar-hide p-3 space-y-0.5 bg-surface-container-lowest/60">
+                <div class="log-entry text-on-surface-variant/50">— Awaiting generation —</div>
+            </div>
+        </div>
+
+        <!-- Generated Documents -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2.5 border-b border-outline-variant/10 shrink-0">
+                <div class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Documents</div>
+                <div class="flex gap-1">
+                    <button onclick="switchDocTab('all')" id="dtab-all" class="px-2 py-0.5 text-[9px] font-bold uppercase rounded bg-primary/20 text-primary">All</button>
+                    <button onclick="switchDocTab('persona')" id="dtab-persona" class="px-2 py-0.5 text-[9px] font-bold uppercase rounded text-on-surface-variant hover:bg-surface-container transition-colors">P</button>
+                    <button onclick="switchDocTab('reports')" id="dtab-reports" class="px-2 py-0.5 text-[9px] font-bold uppercase rounded text-on-surface-variant hover:bg-surface-container transition-colors">R</button>
+                    <button onclick="switchDocTab('summary')" id="dtab-summary" class="px-2 py-0.5 text-[9px] font-bold uppercase rounded text-on-surface-variant hover:bg-surface-container transition-colors">S</button>
+                </div>
+            </div>
+            <div id="doc-list" class="flex-1 overflow-y-auto scrollbar-hide p-3 space-y-1.5">
+                <p class="text-[11px] text-on-surface-variant/50 italic">Select a patient…</p>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- ═══ BATCH MODAL ══════════════════════════════════════════════════════ -->
+<div id="batch-modal" class="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] hidden items-center justify-center">
+    <div class="bg-surface-container-low border border-outline-variant/20 rounded-2xl w-[480px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
+        <div class="p-6 border-b border-outline-variant/10 flex justify-between items-center shrink-0">
+            <div>
+                <h2 class="font-black text-base">Batch Generation</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">Select patients to generate documents for</p>
+            </div>
+            <button onclick="closeBatchModal()" class="p-2 rounded-full hover:bg-surface-variant transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-4 border-b border-outline-variant/10 shrink-0">
+            <div class="flex gap-3 mb-3">
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-persona" checked class="accent-primary"> Persona</label>
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-reports" checked class="accent-primary"> Reports</label>
+                <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-summary" checked class="accent-primary"> Summary</label>
+                <button onclick="toggleSelectAll()" class="ml-auto text-[10px] text-primary underline">Select All</button>
+            </div>
+        </div>
+        <div id="batch-patient-list" class="flex-1 overflow-y-auto p-4 space-y-1">
+            <p class="text-xs text-on-surface-variant">Loading patients…</p>
+        </div>
+        <div class="p-4 border-t border-outline-variant/10 flex gap-3 shrink-0">
+            <button onclick="closeBatchModal()" class="flex-1 py-2 rounded-xl border border-outline-variant/30 text-xs font-bold hover:bg-surface-variant transition-colors">Cancel</button>
+            <button onclick="startBatch()" class="flex-1 py-2 rounded-xl bg-primary text-on-primary text-xs font-black hover:opacity-90 transition-all">
+                Run Batch
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════ -->
+<script>
+const API = 'http://localhost:410';
+let currentPatientId = null;
+let currentPatientData = null;
+let currentCaseDetails = null;
+let allFiles = [];
+let activeDocTab = 'all';
+let activeClinicalTab = 'meds';
+let currentJobId = null;
+let pollTimer = null;
+let allPatientIds = [];
+let batchSelectAll = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+    checkServer();
+    loadPatients();
+    document.getElementById('patient-select').addEventListener('change', onPatientChange);
+    document.getElementById('batch-modal').addEventListener('click', function(e){ if(e.target===this)closeBatchModal(); });
+});
+
+// ── Server ────────────────────────────────────────────────────────────────
+async function checkServer() {
+    const dot = document.getElementById('server-dot');
+    const lbl = document.getElementById('server-label');
+    try {
+        const r = await fetch(`${API}/api/status`);
+        if(r.ok){ dot.className='w-2 h-2 rounded-full bg-tertiary status-pulse'; lbl.textContent='API Online'; }
+        else throw new Error();
+    } catch(_){ dot.className='w-2 h-2 rounded-full bg-error'; lbl.textContent='API Offline'; }
+}
+
+// ── Patients ──────────────────────────────────────────────────────────────
+async function loadPatients() {
+    try {
+        const r = await fetch(`${API}/api/patients`);
+        const d = await r.json();
+        allPatientIds = d.patients || [];
+        const sel = document.getElementById('patient-select');
+        sel.innerHTML = '<option value="">— Select patient —</option>';
+        allPatientIds.forEach(id => {
+            const o = document.createElement('option');
+            o.value=id; o.textContent='Patient '+id; sel.appendChild(o);
+        });
+    } catch(e){ console.error(e); }
+}
+
+async function onPatientChange() {
+    currentPatientId = document.getElementById('patient-select').value;
+    currentPatientData = null; currentCaseDetails = null;
+    if(!currentPatientId){ clearDossier(); setDocList([]); return; }
+    try {
+        const r = await fetch(`${API}/api/patient/${currentPatientId}`);
+        const d = await r.json();
+        currentPatientData = d.data;
+        currentCaseDetails = d.case_details;
+        populateIdentity(d.data);
+        populateCaseInfo(d.case_details);
+    } catch(e){ console.error(e); clearDossier(); }
+    switchClinicalTab(activeClinicalTab);
+    loadDocuments(currentPatientId);
+}
+
+function get(obj, ...keys){ return keys.reduce((o,k)=>(o&&o[k]!==undefined?o[k]:null),obj); }
+
+function populateIdentity(p) {
+    if(!p){ clearDossier(); return; }
+    document.getElementById('info-dob').textContent = get(p,'dob')||get(p,'demographics','dob')||'—';
+    document.getElementById('info-gender').textContent = p.gender||'—';
+    document.getElementById('info-provider').textContent =
+        get(p,'provider','managingOrganization')||(p.providers&&p.providers[0]&&p.providers[0].name)||'—';
+    document.getElementById('info-dx').textContent =
+        (p.diagnoses&&p.diagnoses[0]&&(p.diagnoses[0].condition||p.diagnoses[0].code))||'—';
+}
+
+function populateCaseInfo(c) {
+    if(!c){
+        ['case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>{ document.getElementById(id).textContent='—'; });
+        return;
+    }
+    document.getElementById('case-num').textContent = c.test_case_number||'—';
+    document.getElementById('case-dept').textContent = c.department||'—';
+    document.getElementById('case-cpt').textContent = `${c.procedure||'—'}` + (c.cpt_code?` | CPT ${c.cpt_code}`:'');
+    const outEl = document.getElementById('case-outcome');
+    const outCard = document.getElementById('case-outcome-card');
+    outEl.textContent = c.outcome||'—';
+    const isApproval = (c.outcome||'').toLowerCase().includes('approval');
+    const isDenial = (c.outcome||'').toLowerCase().includes('denial');
+    outCard.className = `rounded-lg p-3 ${isApproval?'bg-green-900/30 border border-green-700/30':isDenial?'bg-error/10 border border-error/30':'bg-surface-container'}`;
+    outEl.className = `text-xs font-bold ${isApproval?'text-green-400':isDenial?'text-error':'text-on-surface'}`;
+    document.getElementById('case-details-text').textContent = c.details||'—';
+}
+
+function clearDossier() {
+    ['info-dob','info-gender','info-provider','info-dx','case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>{
+        if(document.getElementById(id)) document.getElementById(id).textContent='—';
+    });
+}
+
+// ── Clinical Detail Tabs ──────────────────────────────────────────────────
+function switchClinicalTab(tab) {
+    activeClinicalTab = tab;
+    document.querySelectorAll('.clinical-tab').forEach(b=>{
+        b.className = `clinical-tab px-4 py-3 text-[10px] font-bold uppercase tracking-widest ${b.id==='ctab-'+tab?'tab-active':'tab-inactive'}`;
+    });
+    renderClinicalTab(tab);
+}
+
+function renderClinicalTab(tab) {
+    const el = document.getElementById('clinical-content');
+    const p = currentPatientData;
+    if(!p){ el.innerHTML='<p class="text-on-surface-variant italic text-sm">Select a patient…</p>'; return; }
+
+    const renderers = {
+        meds: ()=>{
+            const meds=p.medications||[];
+            if(!meds.length) return '<p class="text-on-surface-variant italic text-sm">No medications on record.</p>';
+            return `<table class="w-full text-xs"><thead><tr class="text-[9px] uppercase text-on-surface-variant/60 tracking-widest border-b border-outline-variant/10">
+                <th class="pb-2 text-left">Medication</th><th class="pb-2 text-left">Dosage</th><th class="pb-2 text-left">Status</th><th class="pb-2 text-left">Prescribed By</th></tr></thead>
+                <tbody class="divide-y divide-outline-variant/5">${meds.map(m=>`<tr class="hover:bg-surface-container/50">
+                <td class="py-2.5 pr-4"><div class="font-medium">${m.brand||'—'}</div><div class="text-[10px] text-on-surface-variant">${m.generic_name||''}</div></td>
+                <td class="py-2.5 pr-4 font-mono text-[10px]">${m.dosage||'—'}</td>
+                <td class="py-2.5 pr-4"><span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-secondary-container/40 text-on-secondary-container">${m.status||'—'}</span></td>
+                <td class="py-2.5 text-[10px] text-on-surface-variant">${m.prescribed_by||'—'}</td></tr>`).join('')}</tbody></table>`;
+        },
+        allergies: ()=>{
+            const alg=p.allergies||[];
+            if(!alg.length) return '<p class="text-on-surface-variant italic text-sm">NKDA — No known drug allergies.</p>';
+            return alg.map(a=>`<div class="flex items-center justify-between p-3 bg-surface-container rounded-xl mb-2">
+                <div><div class="font-medium text-xs">${a.allergen||a}</div>
+                <div class="text-[10px] text-on-surface-variant mt-0.5">${a.reaction||''} ${a.severity?'· '+a.severity:''}</div></div>
+                ${a.severity==='Severe'||a.severity==='Life-threatening'?'<span class="text-error text-[10px] font-black">⚠ '+a.severity+'</span>':''}</div>`).join('');
+        },
+        therapy: ()=>{
+            const th=p.therapies||[];
+            if(!th.length) return '<p class="text-on-surface-variant italic text-sm">No therapy records.</p>';
+            return th.map(t=>`<div class="p-3 bg-surface-container rounded-xl mb-2 space-y-1">
+                <div class="flex justify-between"><span class="font-medium text-xs">${t.therapy_type||'—'}</span>
+                <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${t.status==='Active'?'bg-tertiary/20 text-tertiary':'bg-surface-container-high text-on-surface-variant'}">${t.status||'—'}</span></div>
+                <div class="text-[10px] font-mono text-primary">${t.cpt_code||''} ${t.cpt_description?'— '+t.cpt_description:''}</div>
+                <div class="text-[10px] text-on-surface-variant">${t.provider||'—'} @ ${t.facility||'—'} · ${t.frequency||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant">${t.reason||''}</div></div>`).join('');
+        },
+        procedures: ()=>{
+            const pr=p.procedures||[];
+            if(!pr.length) return '<p class="text-on-surface-variant italic text-sm">No procedures on record.</p>';
+            return pr.map(r=>`<div class="p-3 bg-surface-container rounded-xl mb-2">
+                <div class="font-medium text-xs">${r.name||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-1">${r.date||'—'} · ${r.provider||'—'} @ ${r.facility||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-0.5">${r.reason||''}</div></div>`).join('');
+        },
+        encounters: ()=>{
+            const en=p.encounters||[];
+            if(!en.length) return '<p class="text-on-surface-variant italic text-sm">No encounters on record.</p>';
+            return en.map(e=>`<div class="p-3 bg-surface-container rounded-xl mb-2">
+                <div class="flex justify-between"><span class="font-medium text-xs">${e.encounter_type||'Encounter'}</span>
+                <span class="text-[9px] font-mono text-on-surface-variant">${e.encounter_date||'—'}</span></div>
+                <div class="text-[10px] text-on-surface-variant mt-1">${e.provider||'—'} @ ${e.facility||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-0.5">${e.chief_complaint||e.purpose_of_visit||''}</div></div>`).join('');
+        },
+        imaging: ()=>{
+            const im=p.images||[];
+            if(!im.length) return '<p class="text-on-surface-variant italic text-sm">No imaging studies on record.</p>';
+            return im.map(i=>`<div class="p-3 bg-surface-container rounded-xl mb-2">
+                <div class="font-medium text-xs">${i.type||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-1">${i.date||'—'} · ${i.facility||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-1 leading-relaxed">${i.findings||'—'}</div></div>`).join('');
+        },
+        labs: ()=>{
+            const lb=p.reports||[];
+            if(!lb.length) return '<p class="text-on-surface-variant italic text-sm">No lab reports on record.</p>';
+            return lb.map(r=>`<div class="p-3 bg-surface-container rounded-xl mb-2">
+                <div class="font-medium text-xs">${r.type||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-1">${r.date||'—'} · ${r.provider||'—'}</div>
+                <div class="text-[10px] text-on-surface-variant mt-1 leading-relaxed">${r.results||'—'}</div></div>`).join('');
+        },
+    };
+    el.innerHTML = (renderers[tab]||(() => ''))();
+}
+
+// ── Generation ────────────────────────────────────────────────────────────
+async function startGeneration() {
+    if(!currentPatientId){ appendLog('⚠ Select a patient first.'); return; }
+    if(currentJobId && pollTimer){ clearInterval(pollTimer); pollTimer=null; }
+
+    const btn = document.getElementById('btn-generate');
+    const icon = document.getElementById('gen-icon');
+    const lbl = document.getElementById('gen-label');
+    btn.disabled=true; icon.textContent='autorenew'; lbl.textContent='Generating…';
+    icon.classList.add('animate-spin');
+
+    clearLogs();
+    appendLog('🚀 Dispatching generation job…');
+    document.getElementById('log-dot').className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse';
+
+    try {
+        const body = {
+            patient_id: currentPatientId,
+            feedback: document.getElementById('feedback-input').value,
+            generation_mode: {
+                persona: document.getElementById('chk-persona').checked,
+                reports: document.getElementById('chk-reports').checked,
+                summary: document.getElementById('chk-summary').checked,
+            }
+        };
+        const r = await fetch(`${API}/api/generate`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+        const d = await r.json();
+        currentJobId = d.job_id;
+        appendLog(`📋 Job ID: ${currentJobId}`);
+        pollTimer = setInterval(()=>pollJob(currentJobId), 2000);
+    } catch(e) {
+        appendLog('❌ Failed to dispatch: '+e.message);
+        resetGenerateBtn();
+    }
+}
+
+async function pollJob(jobId) {
+    try {
+        const r = await fetch(`${API}/api/job/${jobId}`);
+        const d = await r.json();
+        (d.new_logs||[]).forEach(l=>appendLog(l));
+        if(d.status==='done'||d.status==='error'){
+            clearInterval(pollTimer); pollTimer=null;
+            resetGenerateBtn();
+            document.getElementById('log-dot').className='w-1.5 h-1.5 rounded-full '+(d.status==='done'?'bg-tertiary':'bg-error');
+            if(d.status==='done') loadDocuments(currentPatientId);
+        }
+    } catch(_){}
+}
+
+function resetGenerateBtn() {
+    const btn=document.getElementById('btn-generate');
+    btn.disabled=false;
+    document.getElementById('gen-icon').textContent='play_arrow';
+    document.getElementById('gen-icon').classList.remove('animate-spin');
+    document.getElementById('gen-label').textContent='Generate';
+}
+
+function appendLog(msg) {
+    const panel=document.getElementById('log-panel');
+    const empty=panel.querySelector('.text-on-surface-variant\\/50');
+    if(empty) empty.remove();
+    const div=document.createElement('div');
+    div.className='log-entry text-on-surface-variant';
+    div.textContent=msg;
+    panel.appendChild(div);
+    panel.scrollTop=panel.scrollHeight;
+}
+
+function clearLogs() {
+    document.getElementById('log-panel').innerHTML='<div class="log-entry text-on-surface-variant/50">— Cleared —</div>';
+}
+
+// ── Documents ─────────────────────────────────────────────────────────────
+async function loadDocuments(pid) {
+    setDocList(null);
+    try {
+        const r=await fetch(`${API}/api/output/${pid}`);
+        const d=await r.json();
+        allFiles=d.files||[];
+        renderDocTab(activeDocTab);
+    } catch(_){ setDocList([]); }
+}
+
+function switchDocTab(tab) {
+    activeDocTab=tab;
+    document.querySelectorAll('[id^="dtab-"]').forEach(b=>{
+        b.className='px-2 py-0.5 text-[9px] font-bold uppercase rounded transition-colors '+
+            (b.id===`dtab-${tab}`?'bg-primary/20 text-primary':'text-on-surface-variant hover:bg-surface-container');
+    });
+    renderDocTab(tab);
+}
+
+function renderDocTab(tab) {
+    setDocList(tab==='all'?allFiles:allFiles.filter(f=>f.type===tab));
+}
+
+function setDocList(files) {
+    const list=document.getElementById('doc-list');
+    if(files===null){ list.innerHTML='<p class="text-[11px] text-on-surface-variant/50 italic animate-pulse">Loading…</p>'; return; }
+    if(!files.length){ list.innerHTML='<p class="text-[11px] text-on-surface-variant/50 italic">No documents found</p>'; return; }
+    const icons={persona:'person',reports:'article',summary:'summarize'};
+    list.innerHTML=files.map(f=>`
+        <a href="${API}/api/download/${currentPatientId}/${f.type}/${encodeURIComponent(f.name)}" target="_blank" rel="noopener"
+           class="group flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-primary text-sm shrink-0" style="font-variation-settings:'FILL' 1;">${icons[f.type]||'description'}</span>
+            <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-medium truncate">${f.name.replace(/\.pdf$/i,'').replace(/_/g,' ')}</div>
+                <div class="text-[9px] text-on-surface-variant font-mono uppercase">${f.type}</div>
+            </div>
+            <span class="material-symbols-outlined text-[14px] text-primary/60 opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+        </a>`).join('');
+}
+
+// ── Batch Modal ───────────────────────────────────────────────────────────
+function openBatchModal() {
+    const modal=document.getElementById('batch-modal');
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+    const list=document.getElementById('batch-patient-list');
+    list.innerHTML=allPatientIds.map(id=>`
+        <label class="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-surface-container cursor-pointer">
+            <input type="checkbox" class="batch-chk accent-primary" value="${id}" checked>
+            <span class="text-sm">Patient ${id}</span>
+        </label>`).join('');
+    batchSelectAll=true;
+}
+
+function closeBatchModal() {
+    const modal=document.getElementById('batch-modal');
+    modal.classList.add('hidden'); modal.classList.remove('flex');
+}
+
+function toggleSelectAll() {
+    batchSelectAll=!batchSelectAll;
+    document.querySelectorAll('.batch-chk').forEach(c=>c.checked=batchSelectAll);
+    document.querySelector('[onclick="toggleSelectAll()"]').textContent=batchSelectAll?'Deselect All':'Select All';
+}
+
+async function startBatch() {
+    const selected=[...document.querySelectorAll('.batch-chk:checked')].map(c=>c.value);
+    if(!selected.length){ alert('Select at least one patient.'); return; }
+    closeBatchModal();
+    clearLogs();
+    appendLog(`🚀 Starting batch for ${selected.length} patients…`);
+    document.getElementById('log-dot').className='w-1.5 h-1.5 rounded-full bg-primary animate-pulse';
+
+    const body={
+        patient_ids: selected,
+        feedback: document.getElementById('feedback-input').value,
+        generation_mode:{
+            persona:document.getElementById('chk-batch-persona').checked,
+            reports:document.getElementById('chk-batch-reports').checked,
+            summary:document.getElementById('chk-batch-summary').checked,
+        }
+    };
+    try {
+        const r=await fetch(`${API}/api/generate_all`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        const d=await r.json();
+        currentJobId=d.job_id;
+        appendLog(`📋 Batch Job: ${currentJobId}`);
+        pollTimer=setInterval(()=>pollJob(currentJobId),2000);
+    } catch(e){ appendLog('❌ Batch failed: '+e.message); }
+}
+</script>
+</body>
 </html>

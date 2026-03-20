@@ -166,8 +166,8 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(Spacer(1, 20))
         
     else:
-        title_str = doc_type.replace('_', ' ').upper()
-        Story.append(Paragraph(f"CLINICAL DOCUMENT: {title_str}", styles['Heading1']))
+        title_str = doc_type.replace('_', ' ').title()
+        Story.append(Paragraph(f"{title_str}", styles['Heading1']))
         Story.append(Spacer(1, 20))
     
     if image_path and os.path.exists(image_path):
@@ -177,10 +177,8 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(img)
         Story.append(Spacer(1, 15))
 
-    if not patient_persona:
-        Story.append(Paragraph(f"<b>REPORT CONTENT:</b>", styles["Heading3"]))
-        Story.append(Spacer(1, 10))
-    
+    # Render content body
+
     formatted_content = format_clinical_text(content)
     
     formatted_content = formatted_content.replace('\n', '<br/>')

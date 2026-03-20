@@ -301,15 +301,49 @@ ENABLE_WEB_SEARCH=true | false
 OUTPUT_DIR=<path>
 ```
 
+> **Switching providers**: Only change `LLM_PROVIDER` in `cred/.env`. All credentials for both
+> providers are always present in the file. No code changes required.
+
+`GOOGLE_APPLICATION_CREDENTIALS` may be a relative path (e.g. `./cred/gcp_auth_key.json`);
+`ai_engine.py` resolves it against `BASE_DIR` automatically.
+
 Models:
 
 Production:
-- GPT-4o
-- Gemini 2.5 Pro (via vertexai with explicit GenerativeModel imports)
+- GPT-4o (OpenAI)
+- Gemini 2.5 Pro (Vertex AI)
 
 Testing:
-- GPT-4o-mini
-- Gemini 2.5 Flash
+- GPT-4o-mini (OpenAI)
+- Gemini 2.5 Flash (Vertex AI)
+
+---
+
+# Internal Helpers (`ai_engine.py`)
+
+Shared utilities in `ai_engine.py`:
+
+```
+_strip_json_fences(text)
+    → Strips ```json fences from raw model output
+
+_parse_vertex_response(resp, model_class, existing_persona=None)
+    → Full Vertex response parser: list unwrap, key alias fix,
+      Pydantic validation, and persona recovery fallback
+
+_quantize_prompt(prompt, case_details, patient_state, document_plan,
+                 user_feedback, history_context, existing_persona)
+    → 3-pass prompt size reducer activated when prompt > 80,000 chars:
+      Pass 1 — Trim history_context to first 2000 chars
+      Pass 2 — Strip template bodies (keep key names only)
+      Pass 3 — Hard truncate at budget boundary
+```
+
+Vertex AI `generate_content` calls use `max_output_tokens=65536` in `GenerationConfig`
+to prevent JSON truncation on large clinical payloads.
+
+A `vertex_doc_reminder` prefix is prepended to all Vertex AI prompts to force
+the `structured_documents` array in responses.
 
 ---
 
@@ -408,12 +442,48 @@ python generator.py
 
 ---
 
+# UI
+
+Two interface files in `ui/` — both implement the **3-silo layout**:
+
+| File | Theme | Description |
+|------|-------|-------------|
+| `index.html` | Dark (Material You) | Material dark design |
+| `index2.html` | Light (Command Center) | Clean light design |
+
+**3-Silo Layout:**
+
+| Silo | Content |
+|------|---------|
+| Left (280px) | Patient selector + UAT case info (test case #, dept, CPT, expected outcome) + identity dossier |
+| Center (flex) | 7 inline clinical tabs: Medications / Allergies / Therapy / Procedures / Encounters / Imaging / Labs |
+| Right (300px) | Generation controls (feedback, doc type checkboxes, generate button) + live log stream + doc list |
+
+**Batch Modal:** Header button opens modal with all-patient checklist → `POST /api/generate_all`.
+
+**API endpoints used:**
+
+- `GET /api/patients` — patient ID list for selector
+- `GET /api/patient/<id>` — identity + case_details (UAT info) + clinical history
+- `GET /api/output/<id>` — list of generated documents
+- `GET /api/download/<id>/<type>/<name>` — open PDF inline
+- `POST /api/generate` — spawn single-patient generation job
+- `POST /api/generate_all` — spawn batch generation job
+- `GET /api/job/<job_id>` — poll job status + logs
+
+API server runs on `http://localhost:410` by default (`API_PORT` env var).
+
+---
+
 # Key Rules for AI Agents
 
 1. Dates must use `YYYY-MM-DD`
 2. Patient IDs are numeric strings
 3. Document titles must use underscores
 4. Avoid generating duplicate reports
-5. Generation mode controls output scope
-6. Prompts must only be edited in `prompts.py`
-7. All documents must be internally consistent
+5. Prompts must only be edited in `prompts.py`
+6. All documents must be internally consistent
+7. Do NOT add parsing logic inline — use `_parse_vertex_response()`
+8. Do NOT call `client.client.start_chat()` — use `generate_content()` directly
+9. All Vertex AI calls must include `max_output_tokens=65536`
+10. Call `_quantize_prompt()` before sending large prompts to Vertex AI

@@ -39,9 +39,6 @@ MODEL_MAP = {
     "openai":   {"prod": "gpt-4o",         "test": "gpt-4o-mini"}
 }
 
-# ... (lines 28-30 skipped/implied by patch location, actuall I need to do this carefully)
-
-
 # Select Model
 mode_key = "test" if TEST_MODE else "prod"
 MODEL_NAME = MODEL_MAP.get(PROVIDER, {}).get(mode_key, "gemini-2.5-pro")
@@ -75,18 +72,22 @@ elif PROVIDER == "vertexai":
     project_id = os.getenv("GCP_PROJECT_ID", "").strip()
     location = os.getenv("GCP_LOCATION", "").strip()
     key_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
-    
+
     if not project_id or not location:
-         raise ValueError("Missing GCP_PROJECT_ID or GCP_LOCATION in .env for Vertex AI")
+        raise ValueError("Missing GCP_PROJECT_ID or GCP_LOCATION in .env for Vertex AI")
+
+    # Resolve relative paths against BASE_DIR so the server works regardless of CWD
+    if key_path and not os.path.isabs(key_path):
+        key_path = os.path.normpath(os.path.join(BASE_DIR, key_path))
 
     print(f"   🔑 Validating Credentials: {key_path}")
     if not key_path or not os.path.exists(key_path):
         raise ValueError(f"❌ GOOGLE_APPLICATION_CREDENTIALS not found at: {key_path}")
 
-    # Validate JSON integrity & Permissions
+    # Validate JSON integrity & permissions
     try:
         creds = service_account.Credentials.from_service_account_file(
-            key_path, 
+            key_path,
             scopes=["https://www.googleapis.com/auth/cloud-platform"]
         )
         print(f"   ✅ Service Account Loaded: {creds.service_account_email}")
@@ -94,49 +95,98 @@ elif PROVIDER == "vertexai":
         raise ValueError(f"❌ Invalid Service Account Key File: {e}")
 
     # Auto-correct Zone to Region
-    if len(location.split('-')) > 2:
+    if len(location.split("-")) > 2:
         old_loc = location
-        location = '-'.join(location.split('-')[:2])
+        location = "-".join(location.split("-")[:2])
         print(f"   ⚠️ Adjusted GCP_LOCATION from '{old_loc}' to Region '{location}'")
 
     try:
-        # 1. Init Vertex SDK
         # Force REST transport to avoid gRPC deadlocks on macOS
         vertexai.init(
-            project=project_id, 
-            location=location, 
+            project=project_id,
+            location=location,
             credentials=creds,
             api_transport="rest"
         )
-        
-        # 2. Init Instructor with Vertex AI Model
-        # Using the specific model instance prevents client/version conflicts
+
         model = GenerativeModel(MODEL_NAME)
         client = instructor.from_vertexai(
             client=model,
             mode=instructor.Mode.VERTEXAI_TOOLS,
         )
-
     except Exception as e:
         raise RuntimeError(f"❌ Failed to initialize Vertex AI Client: {e}")
+
+# ─── Shared Vertex AI Response Parser ──────────────────────────────────────────
+
+def _strip_json_fences(text: str) -> str:
+    """Strip markdown code fences (```json ... ```) from a raw response string."""
+    text = text.strip()
+    for prefix in ("```json\n", "```json", "```"):
+        if text.startswith(prefix):
+            text = text[len(prefix):]
+            break
+    if text.endswith("```"):
+        text = text[:-3]
+    return text.strip()
+
+
+def _parse_vertex_response(resp, model_class, existing_persona=None):
+    """
+    Parse a raw Vertex AI GenerateContent response into a Pydantic model.
+
+    Handles:
+    - Markdown JSON fences
+    - List unwrapping (AI occasionally returns [{...}])
+    - Missing 'patient_persona' recovery when existing_persona is provided
+    - Both 'documents' and 'structured_documents' key aliases
+
+    Returns the parsed Pydantic object.
+    """
+    raw_text = _strip_json_fences(resp.text)
+    data = json.loads(raw_text)
+
+    # Unwrap list responses
+    if isinstance(data, list) and len(data) > 0:
+        print("   ⚠️  AI returned a LIST — extracted first item.")
+        data = data[0]
+
+    # Normalise document key: Gemini may return 'documents' instead of 'structured_documents'
+    if isinstance(data, dict) and "structured_documents" not in data and "documents" in data:
+        data["structured_documents"] = data["documents"]
+
+    try:
+        return model_class.model_validate(data)
+    except ValidationError as ve:
+        # Recovery: if only patient_persona is missing and we have an existing one, inject it
+        if "patient_persona" in str(ve) and existing_persona and isinstance(data, dict):
+            docs = data.get("structured_documents") or data.get("documents", [])
+            changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
+            try:
+                persona_obj = PatientPersona.model_validate(existing_persona)
+                return ClinicalDataPayload(
+                    patient_persona=persona_obj,
+                    documents=docs,
+                    changes_summary=changes,
+                )
+            except Exception as recover_err:
+                print(f"   ⚠️  Persona recovery failed: {recover_err}")
+        raise ve
+
 
 def check_connection() -> bool:
     """Pre-flight check to verify LLM reachability."""
     try:
         print(f"   📡 Testing AI Connection... (Model: {MODEL_NAME})", end="", flush=True)
         if PROVIDER == "vertexai":
-            # Direct SDK call to avoid Instructor retries on Auth fail
             model = GenerativeModel(MODEL_NAME)
             resp = model.generate_content("Hello")
             if resp:
                 print(" OK! ✅")
                 return True
-
         elif PROVIDER == "openai":
-             # Simple client check
-             print(" OK! (OpenAI) ✅")
-             return True
-             
+            print(" OK! (OpenAI) ✅")
+            return True
         return False
     except Exception as e:
         print(f" FAILED! ❌\n   ⚠️  Connection Error: {e}")
@@ -190,7 +240,7 @@ class PatientCommunication(BaseModel):
 class PatientProvider(BaseModel):
     """Care provider details - ALL fields required."""
     generalPractitioner: str = Field(..., description="Full name of primary care provider e.g. 'Dr. Jane Smith, MD'")
-    formatted_npi: str = Field(..., description="National Provider Identifier (10 digits) e.g. '1234567890'")
+    formatted_npi: str = Field(..., description="National Provider Identifier: exactly 10 digits. MUST start with 1, 2, 3, or 4 (CMS rule). e.g. '1234567890', '2198765432', '3041234567'")
     managingOrganization: str = Field(..., description="Name of managing clinic/hospital e.g. 'Mercy General Hospital'")
     address: str = Field(default="123 Medical Center Blvd, Suite 100, City, TX 12345", description="Full address of the provider's clinic/office")
     phone: str = Field(default="555-019-8273", description="Provider's office phone number")
@@ -245,7 +295,7 @@ class TherapyEntry(BaseModel):
     cpt_description: str = Field(..., description="Full description of the CPT/HCPCS/CDT code")
     icd10_codes: List[str] = Field(default_factory=list, description="Supporting ICD-10 diagnosis codes e.g. ['M54.5 - Low back pain', 'F32.1 - Major depressive disorder']")
     provider: str = Field(..., description="Therapist/provider name e.g. 'Dr. Amy Reed, PT'")
-    provider_npi: str = Field(default="", description="Provider NPI (10 digits) if known")
+    provider_npi: str = Field(default="", description="Provider NPI: 10 digits starting with 1–4 (CMS rule), or empty string if unknown")
     facility: str = Field(..., description="Facility or clinic name")
     start_date: str = Field(..., description="Start date YYYY-MM-DD")
     end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
@@ -319,7 +369,7 @@ class EncounterRecord(BaseModel):
     encounter_type: str = Field(..., description="'Office Visit', 'ER Visit', 'Telehealth', 'Follow-up', 'Specialist Consult', 'Pre-op Evaluation'")
     purpose_of_visit: str = Field(..., description="Primary reason patient came in — concise 1-2 sentence statement")
     provider: str = Field(..., description="Full name and credentials of encounter provider")
-    provider_npi: str = Field(default="", description="Provider NPI if known")
+    provider_npi: str = Field(default="", description="Provider NPI: 10 digits starting with 1–4 (CMS rule), or empty string if unknown")
     facility: str = Field(..., description="Facility/clinic name")
     vital_signs: Optional[VitalSigns] = Field(None, description="Vitals recorded at this encounter, or null")
     chief_complaint: str = Field(..., description="Patient's chief complaint in their own words")
@@ -523,6 +573,77 @@ class AnnotatorSummary(BaseModel):
     verification_pointers: VerificationPointers = Field(..., description="Key elements to verify against expected outcome")
 
 
+# ─── Prompt Quantization ──────────────────────────────────────────────────────
+
+# Vertex AI REST context window: gemini-2.5-pro supports up to ~1M tokens input,
+# but keeping the prompt under ~80K characters (≈20K tokens) ensures the model
+# has enough budget to emit a full clinical payload without truncation.
+_PROMPT_CHAR_BUDGET = 80_000
+
+
+def _quantize_prompt(
+    prompt: str,
+    case_details: dict,
+    patient_state: dict,
+    document_plan: dict,
+    user_feedback: str,
+    history_context: str,
+    existing_persona,
+) -> str:
+    """
+    If the assembled prompt exceeds _PROMPT_CHAR_BUDGET characters, progressively
+    deflate the least-critical sections to bring it within budget:
+
+    Pass 1 — Trim history_context to its first 2000 characters.
+    Pass 2 — Drop individual template bodies from document_plan (keep keys only).
+    Pass 3 — Trim the assembled prompt hard at budget boundary with a warning appended.
+    """
+    if len(prompt) <= _PROMPT_CHAR_BUDGET:
+        return prompt
+
+    print(f"   ⚠️  Prompt too large ({len(prompt):,} chars > {_PROMPT_CHAR_BUDGET:,}). Quantizing…")
+
+    # Pass 1: trim history_context
+    if history_context and len(history_context) > 2000:
+        history_context = history_context[:2000] + "\n[...history truncated for context budget...]"
+        prompt = prompts.get_clinical_data_prompt(
+            case_details=case_details,
+            patient_state=patient_state,
+            document_plan=document_plan,
+            user_feedback=user_feedback,
+            history_context=history_context,
+            existing_persona=existing_persona,
+        )
+        print(f"   ⚠️  Pass 1 — history trimmed → {len(prompt):,} chars")
+
+    if len(prompt) <= _PROMPT_CHAR_BUDGET:
+        return prompt
+
+    # Pass 2: strip template bodies, keep only template filenames
+    slim_plan = dict(document_plan)
+    if isinstance(slim_plan.get("document_templates"), dict):
+        slim_plan["document_templates"] = {
+            k: {"_note": "template body omitted to reduce context"}
+            for k in slim_plan["document_templates"]
+        }
+        prompt = prompts.get_clinical_data_prompt(
+            case_details=case_details,
+            patient_state=patient_state,
+            document_plan=slim_plan,
+            user_feedback=user_feedback,
+            history_context=history_context,
+            existing_persona=existing_persona,
+        )
+        print(f"   ⚠️  Pass 2 — templates slimmed → {len(prompt):,} chars")
+
+    if len(prompt) <= _PROMPT_CHAR_BUDGET:
+        return prompt
+
+    # Pass 3: hard truncation at budget
+    print(f"   ⚠️  Pass 3 — hard truncation applied")
+    return prompt[:_PROMPT_CHAR_BUDGET] + "\n\n[CONTEXT TRUNCATED — generate best clinical output from available data]"
+
+
 def generate_clinical_data(
     case_details: dict,
     patient_state: dict,
@@ -565,7 +686,13 @@ def generate_clinical_data(
         existing_persona=existing_persona
     )
 
-    # Use create_with_completion to get usage stats
+    # Build prompt with an explicit instruction to always include documents
+    vertex_doc_reminder = (
+        "CRITICAL: Your JSON response MUST contain both 'patient_persona' AND "
+        "'structured_documents' (an array of at least 1 clinical document). "
+        "Never return a response with an empty or missing 'structured_documents' array."
+    )
+
     try:
         # Convert system prompt to user prompt for Vertex AI compatibility
         system_role = "user" if PROVIDER == "vertexai" else "system"
@@ -579,83 +706,57 @@ def generate_clinical_data(
                 {"role": "user", "content": prompt}
             ]
         }
-        
+
         if PROVIDER == "vertexai":
-             print(f"   [DEBUG] Calling Vertex AI Direct (Bypassing Instructor) - Model: {MODEL_NAME}")
-             print("   [DEBUG] Sending request...")
-             
-             try:
-                 # Flatten messages for simple prompt (or use chat)
-                 # Vertex chat needs history... let's just use the final user prompt + system context
-                 # Note: client is Instructor, client.client is GenerativeModel
-                 model_instance = client.client 
-                 
-                 # Prepare Prompt
-                 msgs = kwargs['messages']
-                 # msgs is a list of dicts: [{'role':..., 'content':...}, ...]
-                 full_prompt = f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
-                 
-                 resp = model_instance.generate_content(
+            try:
+                model_instance = client.client  # GenerativeModel instance
+                msgs = kwargs["messages"]
+                full_prompt = (
+                    f"{vertex_doc_reminder}\n\n"
+                    f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
+                )
+
+                # Quantize if input is too large for safe output generation
+                full_prompt = _quantize_prompt(
+                    full_prompt,
+                    case_details=case_details,
+                    patient_state=patient_state,
+                    document_plan={
+                        "case_type": document_plan.get("case_type"),
+                        "procedure": document_plan.get("procedure"),
+                        "document_templates": document_plan.get("document_templates", {}),
+                    },
+                    user_feedback=user_feedback,
+                    history_context=history_context,
+                    existing_persona=existing_persona,
+                )
+
+                print(f"   🤖 Calling {MODEL_NAME} via Vertex AI ({len(full_prompt):,} chars input)…")
+                resp = model_instance.generate_content(
                     full_prompt,
                     generation_config=GenerationConfig(
                         response_mime_type="application/json",
-                        # response_schema=ModifiedSQL.model_json_schema() # Causing hangs
+                        max_output_tokens=65536,
                     )
-                 )
-                 
-                 print("   [DEBUG] Request complete.")
-                 print(f"   [DEBUG] Raw Response Length: {len(resp.text)}")
-                 
-                 # Handle potential List response (e.g. [Object]) vs Object
-                 try:
-                     raw_text = resp.text.strip()
-                     # Basic cleanup if md block
-                     if raw_text.startswith("```json"):
-                         raw_text = raw_text[7:]
-                     if raw_text.endswith("```"):
-                         raw_text = raw_text[:-3]
-                     
-                     data = json.loads(raw_text)
-                     if isinstance(data, list) and len(data) > 0:
-                         print("   ⚠️  AI returned a LIST. extracted first item.")
-                         data = data[0]
-                     
-                     response_obj = ClinicalDataPayload.model_validate(data)
-                 except ValidationError as ve:
-                     # Recover when patient_persona is missing but we have existing_persona + documents
-                     if "patient_persona" in str(ve) and existing_persona and isinstance(data, dict):
-                         docs = data.get("documents", [])
-                         changes = data.get("changes_summary", "Generated with recovery (persona was omitted).")
-                         try:
-                             persona_obj = PatientPersona.model_validate(existing_persona)
-                             response_obj = ClinicalDataPayload(
-                                 patient_persona=persona_obj,
-                                 documents=docs,
-                                 changes_summary=changes,
-                             )
-                             print("   ⚠️  Recovered: used existing persona (AI omitted patient_persona)")
-                         except Exception as recover_err:
-                             print(f"   ⚠️  Recovery failed: {recover_err}. Re-raising original error.")
-                             raise ve
-                     else:
-                         raise ve
-                 except Exception as e:
-                     print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
-                     response_obj = ClinicalDataPayload.model_validate_json(resp.text)
-                 
-                 # Fake clean usage for now or extract
-                 usage_stats = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
-                 if resp.usage_metadata:
-                     usage_stats["prompt_tokens"] = resp.usage_metadata.prompt_token_count
-                     usage_stats["completion_tokens"] = resp.usage_metadata.candidates_token_count
-                     usage_stats["total_tokens"] = resp.usage_metadata.total_token_count
-                     
-                 return response_obj, usage_stats
-                 
-             except Exception as e:
-                 print(f"   ❌ Vertex Direct Call Failed: {e}")
-                 # Fallback or raise
-                 raise e
+                )
+
+                tok_in  = getattr(resp.usage_metadata, "prompt_token_count", 0) if resp.usage_metadata else 0
+                tok_out = getattr(resp.usage_metadata, "candidates_token_count", 0) if resp.usage_metadata else 0
+                print(f"   ✅ Response: {len(resp.text):,} chars | tokens in={tok_in} out={tok_out}")
+
+                response_obj = _parse_vertex_response(resp, ClinicalDataPayload, existing_persona)
+
+                usage_stats = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+                if resp.usage_metadata:
+                    usage_stats["prompt_tokens"] = resp.usage_metadata.prompt_token_count
+                    usage_stats["completion_tokens"] = resp.usage_metadata.candidates_token_count
+                    usage_stats["total_tokens"] = resp.usage_metadata.total_token_count
+
+                return response_obj, usage_stats
+
+            except Exception as e:
+                print(f"   ❌ Vertex Direct Call Failed: {e}")
+                raise e
 
         # ORIGINAL PATH FOR OPENAI
         print(f"   [DEBUG] Calling AI Provider: {PROVIDER}, Model: {MODEL_NAME}")
@@ -782,38 +883,41 @@ def generate_clinical_image(context: str, image_type: str, output_path: str = No
         return None
 
 def fix_document_content(content: str, errors: List[str]) -> str:
+    """
+    Attempts to repair a malformed clinical document.
+
+    Args:
+        content: The raw document text to repair.
+        errors: A list of validation error messages to guide the repair.
+
+    Returns:
+        The repaired document string, or the original if repair fails.
+    """
     try:
-        system_role = "user" if PROVIDER == "vertexai" else "system"
-        
-        # Get repair prompt from centralized prompts module
+        repair_system = "You are a document repair bot. Output only the fixed text, no explanations."
         prompt = prompts.get_document_repair_prompt(content, errors)
-        
-        # Use lightweight model for fixes if possible, or just same model
-        # For now reusing the main configured client
-        kwargs = {
-            "model": MODEL_NAME, # Could use lighter model
-            "response_model": str,
-            "messages": [
-                {"role": system_role, "content": "You are a document repair bot. Output only the fixed text."},
-                {"role": "user", "content": prompt}
-            ]
-        }
-        
-        if PROVIDER == "openai":
-            response = client.chat.completions.create(**kwargs)
-            # Return the raw text content, not the response object
+        full_prompt = f"{repair_system}\n\n{prompt}"
+
+        if PROVIDER == "vertexai":
+            model_instance = client.client  # GenerativeModel instance
+            resp = model_instance.generate_content(full_prompt)
+            return resp.text.strip()
+
+        elif PROVIDER == "openai":
+            response = client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {"role": "system", "content": repair_system},
+                    {"role": "user", "content": prompt},
+                ]
+            )
             if response and response.choices:
-                return response.choices[0].message.content
+                return response.choices[0].message.content or content
             return content
-        elif PROVIDER == "vertexai":
-            # Simplified for vertex
-            chat = client.client.start_chat()
-            resp = chat.send_message(prompt)
-            return resp.text
-            
+
     except Exception as e:
         print(f"   ⚠️ Repair Failed: {e}")
-        return content # Return original if fix fails
+        return content  # Return original if fix fails
 
 def generate_annotator_summary(
     case_details: dict,
@@ -869,46 +973,24 @@ Focus on being specific, clear, and helpful for non-clinical annotators."""
         }
         
         if PROVIDER == "vertexai":
-            print(f"   [DEBUG] Calling Vertex AI for Annotator Summary - Model: {MODEL_NAME}")
-            
+            print(f"   [DEBUG] Calling Vertex AI for Annotator Summary — Model: {MODEL_NAME}")
             try:
                 model_instance = client.client
-                from vertexai.generative_models import GenerationConfig
-                
-                # Prepare Prompt
-                msgs = kwargs['messages']
+                msgs = kwargs["messages"]
                 full_prompt = f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
-                
+
                 resp = model_instance.generate_content(
                     full_prompt,
                     generation_config=GenerationConfig(
                         response_mime_type="application/json",
                     )
                 )
-                
+
                 print(f"   [DEBUG] Annotator Summary Response Length: {len(resp.text)}")
-                
-                # Parse response
-                import json
-                try:
-                    raw_text = resp.text.strip()
-                    if raw_text.startswith("```json"):
-                        raw_text = raw_text[7:]
-                    if raw_text.endswith("```"):
-                        raw_text = raw_text[:-3]
-                    
-                    data = json.loads(raw_text)
-                    if isinstance(data, list) and len(data) > 0:
-                        data = data[0]
-                    
-                    summary_obj = AnnotatorSummary.model_validate(data)
-                except Exception as e:
-                    print(f"   ⚠️  Manual JSON Parsing Failed: {e}. Retrying with strict validate...")
-                    summary_obj = AnnotatorSummary.model_validate_json(resp.text)
-                
-                print(f"   ✅ Annotator Summary Generated Successfully")
+                summary_obj = _parse_vertex_response(resp, AnnotatorSummary)
+                print("   ✅ Annotator Summary Generated Successfully")
                 return summary_obj
-                
+
             except Exception as e:
                 print(f"   ❌ Vertex AI Annotator Summary Failed: {e}")
                 raise e

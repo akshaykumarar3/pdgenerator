@@ -356,11 +356,24 @@ def api_patients():
 
 @app.route("/api/patient/<patient_id>")
 def api_get_patient(patient_id: str):
-    """Return the current DB record for a patient (if it exists)."""
+    """Return the current DB record for a patient plus UAT case details."""
     record = patient_db.load_patient(patient_id)
-    if record:
-        return jsonify({"found": True, "data": record})
-    return jsonify({"found": False, "data": None})
+
+    # Enrich with case/UAT info from the Excel plan so the UI can show
+    # case type, expected outcome, CPT/ICD codes without a separate call.
+    case_details: dict | None = None
+    try:
+        case_details = data_loader.get_case_details(patient_id)
+    except Exception:
+        pass
+
+    if record or case_details:
+        return jsonify({
+            "found": bool(record),
+            "data": record,
+            "case_details": case_details,
+        })
+    return jsonify({"found": False, "data": None, "case_details": None})
 
 
 @app.route("/api/generate", methods=["POST"])

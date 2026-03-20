@@ -1334,30 +1334,30 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Christopher Turk",
-      "telecom": "555-765-4321",
-      "address": "321 Friend Ave, Dallas, TX 75201",
-      "gender": "male",
+      "name": "Carla Espinosa",
+      "telecom": "555-987-6543",
+      "address": "456 County Rd, Houston, TX 77001",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2000-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Elliott Reid, MD",
-      "formatted_npi": "9876543210",
+      "generalPractitioner": "Dr. Elliot Reid, MD",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Houston Methodist Hospital",
-      "address": "321 Medical Way, Austin, TX 73301",
-      "phone": "555-987-6543"
+      "address": "6565 Fannin St, Houston, TX 77030",
+      "phone": "713-790-3311"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
+      "plan_type": "Medicare",
       "member_id": "MBR-147115",
       "policy_number": "POL-2026-4184",
       "effective_date": "2024-01-01",
@@ -1365,28 +1365,27 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-03-25",
+    "expected_procedure_date": "2026-04-10",
     "procedure_requested": "Upper GI Endoscopy with Biopsy (EGD)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin St",
+      "street_address": "6565 Fannin Street",
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
       "department": "Gastroenterology Department"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Elliott Reid, MD",
+      "requesting_provider": "Dr. Elliot Reid, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "The patient presents with persistent gastrointestinal symptoms that have been unresponsive to initial conservative management. The Upper GI Endoscopy with Biopsy is necessary to diagnose potential abnormalities such as Barrett's esophagus or malignancy.",
+      "clinical_justification": "Patient presents with persistent symptoms and relevant diagnostic findings. The requested procedure is medically necessary to manage the patient's condition and guide treatment planning.",
       "supporting_diagnoses": [
-        "K21.9 - Gastro-esophageal reflux disease without esophagitis",
-        "R10.13 - Epigastric pain"
+        "K21.9 - Gastro-esophageal reflux disease without esophagitis"
       ],
-      "previous_treatments": "None as first-line treatment.",
-      "expected_outcome": "Definitive diagnosis to guide further treatment planning."
+      "previous_treatments": "Conservative management with PPIs and lifestyle modifications",
+      "expected_outcome": "Definitive diagnosis and management plan adjustment."
     },
-    "bio_narrative": "Born and raised in Houston, John Dorian, a 55-year-old bachelor, has enjoyed a relatively healthy life, focusing on a balance between his medical career and leisure activities. His recent struggle with persistent epigastric pain began about 6 months ago, overshadowing his previously active lifestyle. Known for his humorous yet introspective personality, John has keenly observed these changes, noting that meal times are often follow-ups to discomfort. The first indication of consistent pain prompted an office visit where lifestyle adjustments were advised; despite diligently adhering, symptoms persisted. While no family history directly correlates with his current presentation, both parents managed mild GERD successfully controlled with medication. John\u2019s singlehood has meant his social circle plays a significant role in his support system, frequenting local fests and participating in shared fitness activities. Despite a moderate drinker profile, his conditions necessitated a reduction in alcohol intake, now limited to social settings. Overall, his healthcare journey reflects a pragmatic approach, seeking clarity via diagnostic evaluation to resume uninterrupted day-to-day engagements.",
+    "bio_narrative": "",
     "medications": [
       {
         "brand": "Protonix",
@@ -1395,7 +1394,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Elliott Reid, MD",
         "status": "ongoing",
-        "start_date": "2026-01-01",
+        "start_date": "2025-01-01",
         "end_date": "ongoing",
         "reason": "GERD management"
       },
@@ -1403,10 +1402,10 @@
         "brand": "Maalox",
         "generic_name": "Aluminum hydroxide/magnesium hydroxide",
         "dosage": "10 mL after meals",
-        "qty": "200 mL",
+        "qty": "240 mL",
         "prescribed_by": "Over-the-counter",
         "status": "current",
-        "start_date": "2025-12-15",
+        "start_date": "2026-02-10",
         "end_date": "ongoing",
         "reason": "Heartburn relief"
       },
@@ -1414,7 +1413,7 @@
         "brand": "Tums",
         "generic_name": "Calcium carbonate",
         "dosage": "2 tablets per episode",
-        "qty": "100 tablets",
+        "qty": "60 tablets",
         "prescribed_by": "Over-the-counter",
         "status": "past",
         "start_date": "2025-06-01",
@@ -1428,7 +1427,7 @@
         "allergy_type": "Drug",
         "reaction": "Hives",
         "severity": "Moderate",
-        "onset_date": "2015-06-01"
+        "onset_date": "2020-01-01"
       }
     ],
     "vaccinations": [
@@ -1444,15 +1443,15 @@
         "vaccine_name": "COVID-19 Pfizer-BioNTech",
         "vaccine_type": "mRNA",
         "date_administered": "2024-03-01",
-        "administered_by": "Public Health Clinic",
-        "dose_number": "Booster",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "Tdap",
         "vaccine_type": "Inactivated",
         "date_administered": "2023-10-15",
-        "administered_by": "Family Doctor",
+        "administered_by": "CVS Pharmacy",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -1460,8 +1459,8 @@
         "vaccine_name": "Hepatitis A",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-05-22",
-        "administered_by": "Family Doctor",
-        "dose_number": "2",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
         "reason": "Catch-up"
       }
     ],
@@ -1471,17 +1470,17 @@
         "cpt_code": "90834",
         "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
-          "F41.1 - Generalized Anxiety Disorder"
+          "F41.1 - Generalized anxiety disorder"
         ],
         "provider": "Dr. Jonathan Cox, PsyD",
-        "provider_npi": "8765432190",
-        "facility": "Mindful Therapy Clinic",
-        "start_date": "2025-04-01",
-        "end_date": "2026-02-01",
+        "provider_npi": "2345678901",
+        "facility": "Houston Behavioral Health Center",
+        "start_date": "2025-01-01",
+        "end_date": "2026-01-01",
         "frequency": "Weekly",
         "status": "Completed",
         "reason": "Anxiety management",
-        "notes": "Patient showed significant improvement following therapy sessions."
+        "notes": "Significant improvement in anxiety symptoms noted."
       }
     ],
     "behavioral_notes": "John adheres well to medication regimens and shows an active lifestyle, incorporating walks and occasional gym sessions. He is moderate in his alcohol use, mainly confined to weekends. There is no history of smoking or illicit drug use. His recent anxiety-driven therapy sessions have yielded tangible improvement, enhancing his response to life stresses.",
@@ -1489,94 +1488,72 @@
       {
         "encounter_date": "2026-01-15",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluation of persistent epigastric pain and treatment consideration.",
-        "provider": "Dr. Elliott Reid, MD",
-        "provider_npi": "9876543210",
+        "purpose_of_visit": "Persistent heartburn and stomach pain after meals.",
+        "provider": "Dr. Elliot Reid, MD",
+        "provider_npi": "1234567890",
         "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-01-15",
           "blood_pressure": "130/85 mmHg",
-          "heart_rate": "76 bpm",
+          "heart_rate": "78 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "27.8 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": "98.4\u00b0F",
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": "98.6\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "Persistent heartburn and stomach pain after meals.",
-        "doctor_note": "Patient is a 55-year-old male presenting with chronic epigastric pain and heartburn for the last several months. Over-the-counter antacids provide minimal relief. Physical examination reveals mild epigastric tenderness without rebound. Suspected GERD not adequately managed with lifestyle changes. Plan includes initiating Pantoprazole and considering endoscopic evaluation for further investigation.",
+        "chief_complaint": "Heartburn and abdominal pain inattentive to over-the-counter medications.",
+        "doctor_note": "S: Patient complains of recurrent heartburn and abdominal pain, especially postprandial. O: Mild epigastric tenderness noted, no acute distress. Assessment includes GERD persistence. P: Reinforce PPI adherence, monitor symptoms, consider further GI evaluation if persistent.",
         "observations": [
-          "Mild tenderness in the epigastric region",
-          "Heart rate slightly elevated during discomfort episodes"
+          "Epigastric tenderness",
+          "Gastrointestinal pain"
         ],
         "procedures_performed": [
-          "99213 - E&M Office Visit Level 3"
-        ],
-        "diagnoses": [
-          "K21.9 - Gastro-esophageal reflux disease without esophagitis"
-        ],
-        "medications_prescribed": [
-          "Pantoprazole 40mg"
-        ],
-        "care_team": [
-          "Dr. Elliott Reid, MD"
-        ],
-        "progress_notes": "Patient needs definitive diagnosis for ongoing symptoms not relieved by OTC measures and lifestyle changes. Initiate Pantoprazole and reassess.",
-        "follow_up_instructions": "Follow up in 2 weeks or sooner if symptoms persist or worsen."
-      },
-      {
-        "encounter_date": "2026-02-28",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Follow-up assessment for symptom progression and endoscopy referral.",
-        "provider": "Dr. Elliott Reid, MD",
-        "provider_npi": "9876543210",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-02-28",
-          "blood_pressure": "132/86 mmHg",
-          "heart_rate": "75 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "27.8 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "Worsening epigastric pain exceeding prior frequency.",
-        "doctor_note": "Follow-up visit for the continuation of GERD symptoms. The patient reports some improvement with Pantoprazole but still experiences significant episodes of epigastric pain, particularly at night. Physical exam consistent with previous, recommends proceeding with Upper GI endoscopy as symptoms suggest possible peptic ulcer or Barrett's.",
-        "observations": [
-          "No significant change from prior examination",
-          "Heart rate normalized on current treatment"
-        ],
-        "procedures_performed": [
-          "99213 - E&M Office Visit Level 3"
+          "Encounter Review - Level 3 (99213)"
         ],
         "diagnoses": [
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Elliott Reid, MD"
+          "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Increase frequency of epigastric episodes noted. Endoscopy is justified for ruling out malignancies or severe gastric conditions.",
-        "follow_up_instructions": "Schedule Upper GI Endoscopy within 4 weeks."
+        "progress_notes": "Symptoms persistent despite medication compliance, EGD for further investigation advised if worsening.",
+        "follow_up_instructions": "Monitor symptoms for 2 weeks"
       }
     ],
     "images": [],
     "reports": [],
     "procedures": [],
-    "social_history": null,
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Moderate - 1-2 drinks on weekends",
+      "alcohol_frequency": null,
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-28",
+      "last_visit_reason": "Check-up for persistent GERD symptoms",
+      "missed_appointment": null,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": "Anxiety managed with CBT",
+      "mental_health_current": "Stable post-therapy",
+      "exercise_habits": "Regular walks and gym sessions",
+      "diet_notes": "Balanced diet with occasional spicy foods",
+      "family_history_relevant": "Father has a history of GERD"
+    },
     "vital_signs_current": {
-      "recorded_date": "2026-02-28",
-      "blood_pressure": "132/86 mmHg",
-      "heart_rate": "75 bpm",
+      "recorded_date": "2026-03-10",
+      "blood_pressure": "125/80 mmHg",
+      "heart_rate": "76 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": null,
-      "oxygen_saturation": null,
-      "temperature": "98.6\u00b0F",
-      "respiratory_rate": "18 breaths/min"
+      "bmi": "25.1 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": null,
+      "respiratory_rate": null
     },
     "gender_specific_history": null
   },
@@ -2303,6 +2280,301 @@
       "oxygen_saturation": "98%",
       "temperature": "98.1\u00b0F",
       "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": null
+  },
+  "270": {
+    "first_name": "Leonard",
+    "last_name": "Hofstadter",
+    "gender": "male",
+    "dob": "1985-01-16",
+    "address": "105 Broad St, Houston, TX, 77002",
+    "telecom": "281-555-0113",
+    "race": "Caucasian",
+    "height": "5 ft 8 in",
+    "weight": "165 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Sheldon Cooper",
+      "telecom": "281-555-0199",
+      "address": "2311 N Las Robles Ave, Pasadena, CA, 91101",
+      "gender": "male",
+      "organization": "N/A",
+      "period_start": "2010-06-07",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Rajiv Nayyar, MD",
+      "formatted_npi": "1201234567",
+      "managingOrganization": "Houston Methodist Hospital",
+      "address": "6550 Fannin St, Houston, TX 77030",
+      "phone": "281-555-0199"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "CIG-004",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-835856",
+      "policy_number": "POL-2026-9360",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "expected_procedure_date": "2026-04-15",
+    "procedure_requested": "Therapeutic Exercise (Post-injury Physiotherapy)",
+    "procedure_facility": {
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "6550 Fannin St",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Rehabilitation Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Rajiv Nayyar, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Patient exhibits functional impairment following a sports injury as demonstrated by diagnostic imaging. Physiotherapy is crucial to improve mobility, reduce pain, and restore function. Timely intervention is essential to prevent further muscle atrophy and ensure a return to pre-injury activity levels.",
+      "supporting_diagnoses": [
+        "S83.511A - Sprain of anterior cruciate ligament of right knee, initial encounter"
+      ],
+      "previous_treatments": "RICE (Rest, Ice, Compression, Elevation) protocol followed immediately after injury.",
+      "expected_outcome": "Full recovery of knee function, improved strength and flexibility, and prevention of future injury."
+    },
+    "bio_narrative": "Dr. Leonard Hofstadter, a highly analytical and meticulous individual, recently experienced a significant knee injury while engaging in one of his favorite pastimes \u2014 a spirited game of basketball. Following the injury, Leonard's usual high-energy activities have been notably curtailed. With no significant past medical issues, this injury is his primary concern. Leonard lives an active lifestyle but is keenly focused on risk management and preventive health measures due to his methodical nature. He has a family history of joint issues, which he frequently contemplates statistically. His decision to seek medical advice came after failing to see improvement from initial conservative measures such as rest and self-administered treatments. The injury notably impacted not just his physical but his occupational life, limiting his interaction with friends and causing disruption in his professional activities as a researcher. He anticipates the need for physiotherapy to regain full functionality of his knee, stressing the procedural necessity with the enthusiasm of someone accustomed to solving intricate problems.",
+    "medications": [
+      {
+        "brand": "Advil",
+        "generic_name": "Ibuprofen 200mg",
+        "dosage": "400 mg as needed",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Rajiv Nayyar, MD",
+        "status": "current",
+        "start_date": "2026-03-01",
+        "end_date": "ongoing",
+        "reason": "Pain relief from knee injury."
+      },
+      {
+        "brand": "Flexeril",
+        "generic_name": "Cyclobenzaprine 5mg",
+        "dosage": "5 mg at bedtime",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Rajiv Nayyar, MD",
+        "status": "past",
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-15",
+        "reason": "Muscle relaxation post-injury."
+      },
+      {
+        "brand": "Aleve",
+        "generic_name": "Naproxen 250mg",
+        "dosage": "250 mg twice daily",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Rajiv Nayyar, MD",
+        "status": "past",
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-10",
+        "reason": "Initial pain management post-injury."
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Rash",
+        "severity": "Moderate",
+        "onset_date": "Unknown"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-01",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "2",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 Moderna",
+        "vaccine_type": "mRNA",
+        "date_administered": "2026-01-15",
+        "administered_by": "Houston Methodist Hospital",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tdap",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2022-03-25",
+        "administered_by": "Dr. Rajiv Nayyar, MD",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B",
+        "vaccine_type": "Subunit",
+        "date_administered": "2025-06-20",
+        "administered_by": "Houston Methodist Hospital",
+        "dose_number": "3",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Physical",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion, and flexibility",
+        "icd10_codes": [
+          "S83.511A"
+        ],
+        "provider": "Dr. Rajiv Nayyar, MD",
+        "provider_npi": "1201234567",
+        "facility": "Houston Methodist Hospital",
+        "start_date": "2026-03-15",
+        "end_date": "ongoing",
+        "frequency": "2x/week",
+        "status": "Active",
+        "reason": "Post-injury rehabilitation",
+        "notes": ""
+      }
+    ],
+    "behavioral_notes": "Leonard adheres to medication schedules meticulously and follows healthcare directives strictly. He leads an active lifestyle, reflected in his regular participation in sports. Although he has no history of smoking, Leonard occasionally consumes alcohol socially, favoring red wine for its purported health benefits. Mentally, he is focused and determined, qualities that are evident in his approach to injury recovery. Although managing his physical health diligently, he occasionally experiences frustration due to immobility from the injury.",
+    "encounters": [
+      {
+        "encounter_date": "2026-03-01",
+        "encounter_type": "ER Visit",
+        "purpose_of_visit": "Acute knee injury post-basketball game.",
+        "provider": "Dr. Rajiv Nayyar, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-03-01",
+          "blood_pressure": "122/78 mmHg",
+          "heart_rate": "70 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "98%",
+          "temperature": "98.6\u00b0F",
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Severe pain and swelling in the right knee following a basketball injury.",
+        "doctor_note": "Subjective: Leonard came in reporting severe pain and swelling in his right knee. Objective: Physical exam showed noticeable effusion, tenderness, and Lachman sign positive for possible ACL tear. Assessment: Suspected ACL sprain. Plan: MRI scheduled, orthopedic referral given, advised rest and symptomatic treatment with NSAIDs.",
+        "observations": [
+          "Noticeable knee effusion",
+          "Positive Lachman test"
+        ],
+        "procedures_performed": [
+          "99283 - Evaluation and Management of a New Problem",
+          "73560 - X-ray Knee, Single View"
+        ],
+        "diagnoses": [
+          "S83.511A - Sprain of anterior cruciate ligament of right knee"
+        ],
+        "medications_prescribed": [
+          "Ibuprofen 400 mg"
+        ],
+        "care_team": [
+          "Dr. Rajiv Nayyar, MD"
+        ],
+        "progress_notes": "Initial diagnosis confirmed as ACL sprain. MRI ordered to evaluate extent of injury. RICE protocol administered, and ongoing PT discussed.",
+        "follow_up_instructions": "Follow-up with orthopedic specialist within 1 week."
+      },
+      {
+        "encounter_date": "2026-03-08",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Evaluation of right knee ligament injury.",
+        "provider": "Dr. Emily Gordon, MD",
+        "provider_npi": "",
+        "facility": "Houston Orthopedic Center",
+        "vital_signs": null,
+        "chief_complaint": "Concerns about the extent of ligament injury and long-term mobility issues.",
+        "doctor_note": "Subjective: Leonard was referred to our clinic for specialized evaluation. He continues to experience knee instability. Objective: Confirmed effusion on physical exam, along with tenderness over ACL. Lachman positive, additional stress tests indicate ligament laxity. Plan: MRI results reviewed, showing partial ACL tear. Initiate PT for rehabilitation, scheduling follow-up in 3 weeks.",
+        "observations": [
+          "Continued effusion",
+          "Ligament laxity noted"
+        ],
+        "procedures_performed": [
+          "99214 - Established Patient E&M"
+        ],
+        "diagnoses": [
+          "S83.511A - Sprain of anterior cruciate ligament of right knee"
+        ],
+        "medications_prescribed": [
+          "Ibuprofen 400 mg"
+        ],
+        "care_team": [
+          "Dr. Emily Gordon, MD"
+        ],
+        "progress_notes": "Patient exhibits classic signs of ACL sprain with progressive improvement noted. Emphasized importance of adherence to physical therapy regimen. Outline expected recovery trajectory to Leonard.",
+        "follow_up_instructions": "Begin PT immediately; follow-up in 3 weeks to assess progress."
+      },
+      {
+        "encounter_date": "2026-03-15",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-physiotherapy assessment and planning.",
+        "provider": "Dr. Rajiv Nayyar, MD",
+        "provider_npi": "",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-03-15",
+          "blood_pressure": "118/76 mmHg",
+          "heart_rate": "68 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "99%",
+          "temperature": "98.5\u00b0F",
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Preparation for physiotherapy post ACL injury diagnosis.",
+        "doctor_note": "Subjective: Leonard reports readiness for therapy, concerned about recovery speed given ongoing knee discomfort. Objective: Examination shows residual joint swelling and reduced range of motion. Assessment: Stable post-injury condition with noted need for structured PT to regain full mobility. Plan: Initiate therapeutic exercise sessions starting next week. Emphasize gradual progress with exercise tolerance monitoring.",
+        "observations": [
+          "Residual joint swelling",
+          "Reduced range of motion persists"
+        ],
+        "procedures_performed": [
+          "97001 - Physical Therapy Evaluation"
+        ],
+        "diagnoses": [
+          "S83.511A - Sprain of anterior cruciate ligament of right knee"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Rajiv Nayyar, MD"
+        ],
+        "progress_notes": "Prepared patient for upcoming physical therapy sessions. Reinforced benefits and necessity of adhering to exercise plan.",
+        "follow_up_instructions": "Commence PT per approved schedule. Routine check-up after initial two weeks of PT to review progress."
+      }
+    ],
+    "images": [],
+    "reports": [],
+    "procedures": [],
+    "social_history": null,
+    "vital_signs_current": {
+      "recorded_date": "2026-03-16",
+      "blood_pressure": "116/76 mmHg",
+      "heart_rate": "65 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": null,
+      "oxygen_saturation": "99%",
+      "temperature": "98.6\u00b0F",
+      "respiratory_rate": null
     },
     "gender_specific_history": null
   }
