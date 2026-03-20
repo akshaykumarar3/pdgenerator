@@ -303,19 +303,13 @@ OUTPUT_DIR=<path>
 
 Models:
 
-Production
+Production:
+- GPT-4o
+- Gemini 2.5 Pro (via vertexai with explicit GenerativeModel imports)
 
-```
-GPT-4o
-Gemini 2.5 Pro
-```
-
-Testing
-
-```
-GPT-4o-mini
-Gemini 2.5 Flash
-```
+Testing:
+- GPT-4o-mini
+- Gemini 2.5 Flash
 
 ---
 

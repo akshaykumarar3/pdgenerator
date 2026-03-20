@@ -41,6 +41,8 @@ graph TD
     PatientState --> AIEngine["AI Engine (ai_engine.py)"]
     AIEngine --> Documents["Clinical Document Generator"]
     
+    note right of AIEngine: Robust Vertex AI initialization via explicit imports
+    
     Documents --> Validator["Document Validator (doc_validator.py)"]
     Validator --> PDFFactory["PDF Renderer (pdf_generator.py)"]
     PDFFactory --> Output["generated_output/"]

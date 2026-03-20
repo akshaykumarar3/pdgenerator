@@ -3,6 +3,7 @@ import json
 import random # For persona diversity
 from openai import OpenAI
 import vertexai
+from vertexai.generative_models import GenerativeModel, GenerationConfig
 from vertexai.vision_models import ImageGenerationModel
 from google import genai
 from google.oauth2 import service_account
@@ -110,7 +111,7 @@ elif PROVIDER == "vertexai":
         
         # 2. Init Instructor with Vertex AI Model
         # Using the specific model instance prevents client/version conflicts
-        model = vertexai.generative_models.GenerativeModel(MODEL_NAME)
+        model = GenerativeModel(MODEL_NAME)
         client = instructor.from_vertexai(
             client=model,
             mode=instructor.Mode.VERTEXAI_TOOLS,
@@ -125,7 +126,6 @@ def check_connection() -> bool:
         print(f"   📡 Testing AI Connection... (Model: {MODEL_NAME})", end="", flush=True)
         if PROVIDER == "vertexai":
             # Direct SDK call to avoid Instructor retries on Auth fail
-            from vertexai.generative_models import GenerativeModel
             model = GenerativeModel(MODEL_NAME)
             resp = model.generate_content("Hello")
             if resp:
@@ -589,8 +589,6 @@ def generate_clinical_data(
                  # Vertex chat needs history... let's just use the final user prompt + system context
                  # Note: client is Instructor, client.client is GenerativeModel
                  model_instance = client.client 
-                 
-                 from vertexai.generative_models import GenerationConfig
                  
                  # Prepare Prompt
                  msgs = kwargs['messages']
