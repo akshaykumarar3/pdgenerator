@@ -1290,39 +1290,39 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Next of Kin",
-      "name": "Carla Espinosa",
+      "relationship": "Emergency Contact",
+      "name": "Christopher Turk",
       "telecom": "555-987-6543",
-      "address": "456 Willow Bend Dr, Houston, TX 77002",
-      "gender": "female",
+      "address": "456 Newlywed Rd, Austin, TX 78701",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2000-01-01",
+      "period_start": "2020-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Elliot Reid, MD",
-      "formatted_npi": "2345678901",
+      "formatted_npi": "1234567890",
       "managingOrganization": "Houston Methodist Hospital",
       "address": "6565 Fannin Street, Houston, TX 77030",
-      "phone": "555-019-8273"
+      "phone": "713-790-3311"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC-001",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-147115",
       "policy_number": "POL-2026-4184",
-      "effective_date": "2024-01-01",
+      "effective_date": "2025-01-01",
       "termination_date": "ongoing",
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-04-05",
+    "expected_procedure_date": "2026-04-10",
     "procedure_requested": "Upper GI Endoscopy with Biopsy (EGD)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1330,19 +1330,19 @@
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
-      "department": "Gastroenterology"
+      "department": "Gastroenterology Department"
     },
     "pa_request": {
       "requesting_provider": "Dr. Elliot Reid, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "The patient has persistent and worsening GERD symptoms despite ongoing Protonix therapy and lifestyle modifications. Diagnostic workup is needed to evaluate for potential complications or underlying causes not identified through conservative management.",
+      "clinical_justification": "Patient's GERD remains unresolved despite maximum tolerated doses of PPI, necessitating EGD to rule out Barrett's esophagus.",
       "supporting_diagnoses": [
         "K21.9 - Gastro-esophageal reflux disease without esophagitis"
       ],
-      "previous_treatments": "Ongoing therapy with Protonix and Maalox; lifestyle modifications in place.",
-      "expected_outcome": "Clarification of diagnosis to appropriately manage and treat GERD symptoms."
+      "previous_treatments": "Protonix, lifestyle modifications",
+      "expected_outcome": "Clarify potential complications and guide management."
     },
-    "bio_narrative": "John Dorian, a 55-year-old male from Houston, Texas, has long term GERD that has persisted and worsened over the past year. He has adhered to medications and lifestyle changes but continues to suffer significant discomfort and nocturnal symptoms disrupting his sleep. He actively engages in physical exercise and consumes alcohol moderately on weekends without smoking or drug use. His prior cognitive therapy greatly aided his anxiety management and improved his life quality.",
+    "bio_narrative": "John Dorian, a 56-year-old Caucasian male, has been grappling with persistent symptoms of gastroesophageal reflux disease (GERD) for over two years. Despite adhering to a PPI regimen prescribed by his primary care physician, Dr. Elliot Reid, his symptoms have escalated, manifesting as more frequent episodes of burning sensation and regurgitation. John is actively engaged in modifying his lifestyle, embracing dietary changes by avoiding trigger foods and maintaining a regular exercise routine to manage his weight. However, these modifications have failed to provide symptomatic relief. Remembering his mother\u2019s prolonged battle with GERD, he\u2019s particularly concerned about the risks of Barrett's esophagus. His recent visits to Houston Methodist Hospital have primarily focused on managing these upticks in symptoms, leading Dr. Reid to recommend an upper GI endoscopy with biopsy to comprehensively evaluate his esophageal health and preempt further complications. John remains proactive in his healthcare, cognizant of the importance of conducting this invasive diagnostic procedure to safeguard his gastrointestinal health.",
     "medications": [
       {
         "brand": "Protonix",
@@ -1430,7 +1430,7 @@
           "F41.1 - Generalized anxiety disorder"
         ],
         "provider": "Dr. Jonathan Cox, PsyD",
-        "provider_npi": "1236547890",
+        "provider_npi": "2345678901",
         "facility": "Houston Behavioral Health",
         "start_date": "2025-01-10",
         "end_date": "2025-12-31",
@@ -1445,25 +1445,25 @@
       {
         "encounter_date": "2026-01-15",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluating persistent heartburn and discomfort.",
+        "purpose_of_visit": "Persistent heartburn and discomfort management.",
         "provider": "Dr. Elliot Reid, MD",
-        "provider_npi": "2345678901",
+        "provider_npi": "1234567890",
         "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-01-15",
-          "blood_pressure": "128/84 mmHg",
-          "heart_rate": "72 bpm",
+          "blood_pressure": "127/85 mmHg",
+          "heart_rate": "76 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "25.0 kg/m\u00b2",
+          "bmi": "25.2 kg/m\u00b2",
           "oxygen_saturation": null,
-          "temperature": null,
+          "temperature": "98.4\u00b0F",
           "respiratory_rate": null
         },
         "chief_complaint": "I've been experiencing persistent heartburn and discomfort.",
-        "doctor_note": "HPI: Patient reports ongoing heartburn unresponsive to current medication regimen, including PPIs. Over the last six months, symptoms have become more frequent, particularly during evenings. Partial relief achieved with over-the-counter antacids but inadequate.\n\nReview of Systems: Patient denies weight loss, melena, or dysphagia. Reports sleep disturbances secondary to reflux.\n\nPhysical Exam: Alert, in no acute distress. Heart sounds regular. Lungs clear. Abdominal examination reveals mild epigastric tenderness.\n\nAssessment: GERD - persistent symptoms necessitate further diagnostic evaluation.\n\nPlan: Continue current Protonix. Schedule GI consult for consideration of EGD.",
+        "doctor_note": "S: Patient reports increased heartburn despite PPI therapy. O: Abdominal exam shows soft, non-tender abdomen. A: GERD not adequately controlled with current therapy. P: Consider EGD to evaluate esophageal pathology.",
         "observations": [
-          "Epigastric tenderness noted"
+          "Patient reports unsuccessful symptom control with current medications."
         ],
         "procedures_performed": [
           "99213 - Established patient office visit"
@@ -1472,52 +1472,51 @@
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [
-          "Protonix 40mg daily",
-          "Maalox as needed"
+          "Protonix 40mg, Maalox 10ml"
         ],
         "care_team": [
           "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Patient continues to experience persistent symptoms despite PPI therapy. Requires further investigation to rule out complications.",
-        "follow_up_instructions": "Consider GI consultation for endoscopy."
+        "progress_notes": "Increased heartburn severity acknowledged. Plan to evaluate further via EGD.",
+        "follow_up_instructions": "Maintain current medications, return in two weeks or sooner if symptoms worsen."
       },
       {
         "encounter_date": "2026-03-05",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Heartburn symptoms worsening, considering further evaluation options.",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Review of treatment and consideration for further diagnostic evaluation.",
         "provider": "Dr. Elliot Reid, MD",
-        "provider_npi": "2345678901",
+        "provider_npi": "1234567890",
         "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-05",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "75 bpm",
+          "blood_pressure": "125/80 mmHg",
+          "heart_rate": "78 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "25.1 kg/m\u00b2",
           "oxygen_saturation": null,
-          "temperature": null,
+          "temperature": "98.6\u00b0F",
           "respiratory_rate": null
         },
         "chief_complaint": "My heartburn isn't improving, and it's getting harder to ignore.",
-        "doctor_note": "HPI: Continued heartburn with increasing frequency and intensity despite PPI therapy. Notable increase in nocturnal symptoms affecting sleep.\n\nReview of Systems: Symptoms include typical heartburn, worse at night, no hematemesis or significant weight loss.\n\nPhysical Exam: No acute distress, normal heart and lung sounds, abdomen soft with localized tenderness, no masses.\n\nAssessment: Worsening GERD, requires diagnostic assessment for potential esophagitis or Barrett's.\n\nPlan: Referral for upper GI endoscopy to assess esophageal condition and rule out severe complications.",
+        "doctor_note": "S: Continued worsening of symptoms without relief from PPIs. O: Physical exam unremarkable. GI referral recommended for endoscopic evaluation. A: GERD unresponsive to medical treatment. P: Schedule EGD to assess for Barrett's esophagus or other pathology.",
         "observations": [
-          "Tenderness in the epigastric region persists"
+          "Ongoing symptoms required escalation in diagnostic approach."
         ],
         "procedures_performed": [
-          "99213 - Established patient office visit"
+          "99214 - E&M Office Visit"
         ],
         "diagnoses": [
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [
-          "Add Famotidine for breakthrough symptoms"
+          "Protonix, Maalox"
         ],
         "care_team": [
           "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Symptoms persist; additional diagnostic procedures necessary.",
-        "follow_up_instructions": "Schedule EGD for comprehensive evaluation."
+        "progress_notes": "Unresolved symptoms necessitate GI endoscopic examination to assess structural esophageal changes.",
+        "follow_up_instructions": "Schedule EGD; continue medications until then."
       }
     ],
     "images": [],
@@ -1526,33 +1525,33 @@
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
-      "alcohol_use": "Moderate - 3 drinks/week",
+      "alcohol_use": "Moderate - 4 drinks/week",
       "alcohol_frequency": "2-3 beers on weekends",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-03-05",
-      "last_visit_reason": "Worsening heartburn symptoms",
+      "last_visit_reason": "Uncontrolled GERD symptoms",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Anxiety management through CBT",
-      "mental_health_current": "PHQ-9: 3 - Minimal depression",
-      "exercise_habits": "Walks 3x/week",
-      "diet_notes": "Avoids spicy and trigger foods",
-      "family_history_relevant": "Father with history of GERD"
+      "mental_health_history": "Anxiety (2025, managed with CBT)",
+      "mental_health_current": "Improved post-therapy",
+      "exercise_habits": "Walks regularly, gym twice a week",
+      "diet_notes": "Low spicy foods diet",
+      "family_history_relevant": "Mother had a history of GERD"
     },
     "vital_signs_current": {
       "recorded_date": "2026-03-05",
-      "blood_pressure": "128/84 mmHg",
-      "heart_rate": "72 bpm",
+      "blood_pressure": "125/80 mmHg",
+      "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": "25.1 kg/m\u00b2",
-      "oxygen_saturation": "98%",
-      "temperature": null,
-      "respiratory_rate": "16 breaths/min"
+      "oxygen_saturation": null,
+      "temperature": "98.6\u00b0F",
+      "respiratory_rate": null
     },
-    "gender_specific_history": null
+    "gender_specific_history": "PSA screening planned due to family history of prostate issues."
   },
   "262": {
     "first_name": "Maxine",
@@ -1575,19 +1574,19 @@
     "contact": {
       "relationship": "Next of Kin",
       "name": "Caroline Channing",
-      "telecom": "713-555-0247",
-      "address": "125 Mockingbird Lane, Houston, TX 77056",
+      "telecom": "713-555-7890",
+      "address": "456 Oak Street, Houston, TX 77002",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2024-01-01",
+      "period_start": "2015-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Sarah Matthews, MD",
-      "formatted_npi": "1234567890",
+      "formatted_npi": "1987654321",
       "managingOrganization": "Houston General Hospital",
-      "address": "123 Medical Center Blvd, Suite 100, Houston, TX 77056",
-      "phone": "555-019-8273"
+      "address": "123 Main Street, Houston, TX 77002",
+      "phone": "713-123-4567"
     },
     "link": {
       "other_patient": "N/A",
@@ -1605,7 +1604,7 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-04-18",
+    "expected_procedure_date": "2026-04-15",
     "procedure_requested": "Colonoscopy, Diagnostic",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1618,12 +1617,14 @@
     "pa_request": {
       "requesting_provider": "Dr. Sarah Matthews, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "The patient presents with persistent mild abdominal discomfort that has not resolved with basic interventions, warranting diagnostic escalation through colonoscopy.",
-      "supporting_diagnoses": [],
-      "previous_treatments": "Use of acid reducers and dietary modification show partial but insufficient symptom control.",
-      "expected_outcome": "To rule out gastrointestinal pathologies and provide reassurance through visual confirmation."
+      "clinical_justification": "The patient is experiencing persistent symptoms that require evaluation for reassurance purposes, although the current clinical indications and age do not strongly warrant urgent colonoscopy.",
+      "supporting_diagnoses": [
+        "R10.9 - Abdominal pain, unspecified"
+      ],
+      "previous_treatments": "Attempted dietary changes and use of over-the-counter medications.",
+      "expected_outcome": "Peace of mind for the patient and exclusion of significant GI pathology."
     },
-    "bio_narrative": "Maxine Black, a 36-year-old female residing in Houston, TX, lives an active lifestyle, maintaining a balanced diet free from smoking and involving moderate alcohol use. She works in a creative field, leading a life filled with humor and social connections. No significant family history of colorectal issues. After experiencing mild abdominal discomfort, Maxine has tried managing her symptoms with lifestyle changes and OTC medications which provided limited relief, leading her healthcare provider to consider further diagnostic inspection to rule out more serious conditions. The conservative management roadmap included a gradual modification of her diet, stress management practices, and the introduction of nutritional supplements to aid digestion. These measures helped manage symptom recurrence, yet have not eradicated the underlying discomfort, making a diagnostic colonoscopy a considered next step after initial tests failed to uncover clear etiologies.",
+    "bio_narrative": "",
     "medications": [
       {
         "brand": "Ibuprofen",
@@ -1683,13 +1684,13 @@
     "therapies": [
       {
         "therapy_type": "Nutritional Counseling",
-        "cpt_code": "97802",
-        "cpt_description": "Medical nutrition therapy; initial assessment and intervention",
+        "cpt_code": "G0463",
+        "cpt_description": "Hospital outpatient clinic visit for assessment and management",
         "icd10_codes": [
           "R10.9 - Abdominal pain, unspecified"
         ],
         "provider": "Jane Doe, RD",
-        "provider_npi": "2345678901",
+        "provider_npi": "2123456789",
         "facility": "Houston General Hospital",
         "start_date": "2026-01-20",
         "end_date": "2026-03-01",
@@ -1704,99 +1705,63 @@
       {
         "encounter_date": "2026-01-15",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "I have mild stomach aches that come and go.",
+        "purpose_of_visit": "Mild stomach aches that come and go",
         "provider": "Dr. Sarah Matthews, MD",
-        "provider_npi": "1234567890",
+        "provider_npi": "1987654321",
         "facility": "Houston General Hospital",
         "vital_signs": {
           "recorded_date": "2026-01-15",
           "blood_pressure": "120/80 mmHg",
-          "heart_rate": "75 bpm",
+          "heart_rate": "70 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "21.5 kg/m\u00b2",
+          "bmi": null,
           "oxygen_saturation": null,
           "temperature": null,
           "respiratory_rate": null
         },
-        "chief_complaint": "Mild stomach aches that come and go.",
-        "doctor_note": "SOAP NOTE: Patient reports mild, intermittent stomach pain over several months, often after meals. No associated fever, weight loss, or changes in bowel habits noted. Exam is unremarkable, and symptoms began improving with dietary modifications.",
+        "chief_complaint": "Mild stomach aches",
+        "doctor_note": "Maxine Black presented with ongoing mild abdominal discomfort. Efforts have included over-the-counter medication and lifestyle tips. Family history does not illustrate GI cancer.",
         "observations": [
-          "Patient shows no signs of acute distress."
+          "Patient noted no major changes in bowel function."
         ],
         "procedures_performed": [
-          "CPT 99213 - E&M Office Visit Level 3"
+          "99213 - Office Visit"
         ],
         "diagnoses": [
           "R10.9 - Abdominal pain, unspecified"
         ],
         "medications_prescribed": [
-          "Ibuprofen 200mg"
+          "Ibuprofen"
         ],
         "care_team": [
           "Dr. Sarah Matthews, MD"
         ],
-        "progress_notes": "Symptoms improved with dietary changes, with reduced frequency of episodes.",
-        "follow_up_instructions": "Continue current diet and monitor symptoms. Return if symptoms worsen."
+        "progress_notes": "No alarming symptoms or changes, continue monitoring.",
+        "follow_up_instructions": "Continue current regimen and return in three weeks if symptoms persist."
       },
       {
         "encounter_date": "2026-02-01",
         "encounter_type": "Follow-up",
-        "purpose_of_visit": "Review symptoms and evaluate response to dietary changes and medication.",
+        "purpose_of_visit": "Continued mild stomach discomfort",
         "provider": "Dr. Sarah Matthews, MD",
-        "provider_npi": "1234567890",
+        "provider_npi": "1987654321",
         "facility": "Houston General Hospital",
         "vital_signs": {
           "recorded_date": "2026-02-01",
-          "blood_pressure": "118/78 mmHg",
+          "blood_pressure": "119/78 mmHg",
           "heart_rate": "72 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "21.4 kg/m\u00b2",
+          "bmi": null,
           "oxygen_saturation": null,
           "temperature": null,
           "respiratory_rate": null
         },
-        "chief_complaint": "Continued mild stomach discomfort.",
-        "doctor_note": "Maxine Black returns for follow-up on ongoing mild stomach discomfort. Dietary modification showed some improvement, but discomfort persists intermittently. Counseled on additional nutritional adjustments and stress-reduction techniques. Agreed upon monitoring for another month before considering further diagnostic evaluation.",
+        "chief_complaint": "Stomach pain with no changes",
+        "doctor_note": "Symptoms persisted; patient adheres to treatment well but no breakthrough in discomfort. The safety of a colonoscopy is debated based on age and initial responses.",
         "observations": [
-          "Slight improvement in symptom severity but persistence noted."
-        ],
-        "procedures_performed": [
-          "CPT 99214 - E&M Office Visit Level 4"
-        ],
-        "diagnoses": [
-          "R10.9 - Abdominal pain, unspecified"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Sarah Matthews, MD"
-        ],
-        "progress_notes": "Symptoms persist despite intervention; next steps include monitoring with potential escalation to diagnostic test.",
-        "follow_up_instructions": "Monitor symptoms; return in one month or sooner if symptoms change."
-      },
-      {
-        "encounter_date": "2026-03-10",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Consultation on persistent mild abdominal discomfort.",
-        "provider": "Dr. Jane Owens, MD",
-        "provider_npi": "3456789012",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-03-10",
-          "blood_pressure": "117/75 mmHg",
-          "heart_rate": "71 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "21.3 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Ongoing mild abdominal pain lasting several months.",
-        "doctor_note": "Dr. Jane Owens consulted regarding persistent mild abdominal discomfort unresponsive to diet and lifestyle modification. Previous diagnostic workup including labs and stool studies were unremarkable. Discussed potential need for further evaluation by colonoscopy due to symptom persistence.",
-        "observations": [
-          "Continued mild symptoms without new alarming features."
+          "No changes in system analysis noted since last visit."
         ],
         "procedures_performed": [],
         "diagnoses": [
@@ -1804,29 +1769,81 @@
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Sarah Matthews, MD",
-          "Dr. Jane Owens, MD"
+          "Dr. Sarah Matthews, MD"
         ],
-        "progress_notes": "Recommendation for colonoscopy to exclude other potential diagnoses.",
-        "follow_up_instructions": "Schedule colonoscopy, monitor symptoms, and return if symptoms worsen."
+        "progress_notes": "Awaiting symptom retreat; considering further tests if continuation.",
+        "follow_up_instructions": "Maintain dietary modifications and regular exercise, revisit if ongoing discomfort."
+      },
+      {
+        "encounter_date": "2026-03-10",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Ongoing mild abdominal pain lasting several months",
+        "provider": "Dr. Sarah Matthews, MD",
+        "provider_npi": "1987654321",
+        "facility": "Houston General Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-03-10",
+          "blood_pressure": "118/72 mmHg",
+          "heart_rate": "74 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": null,
+          "temperature": null,
+          "respiratory_rate": null
+        },
+        "chief_complaint": "Adding a specialist's overview",
+        "doctor_note": "Patient demonstrates persistent mild abdominal discomfort; however, considering no severe risk factors, the necessity of an immediate colonoscopy is low.",
+        "observations": [
+          "Abdomen is soft without tenderness."
+        ],
+        "procedures_performed": [],
+        "diagnoses": [
+          "R10.9 - Abdominal pain, unspecified"
+        ],
+        "medications_prescribed": [
+          "Ibuprofen"
+        ],
+        "care_team": [
+          "Dr. Sarah Matthews, MD"
+        ],
+        "progress_notes": "Follow-up in three months. Continued evaluation if symptoms remain.",
+        "follow_up_instructions": "Contact if symptoms worsen or new symptoms appear. Exercise and dietary adjustments."
       }
     ],
     "images": [],
     "reports": [],
     "procedures": [],
-    "social_history": null,
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "2-3 glasses of wine on weekends",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-03-10",
+      "last_visit_reason": "Specialist Consult for abdominal pain",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": "Managed through social connections and humor",
+      "mental_health_current": "PHQ-9 score 5, indicating minimal depression",
+      "exercise_habits": "Regular exercise",
+      "diet_notes": "Balanced diet, increased fiber intake",
+      "family_history_relevant": null
+    },
     "vital_signs_current": {
       "recorded_date": "2026-03-10",
-      "blood_pressure": "117/75 mmHg",
-      "heart_rate": "71 bpm",
+      "blood_pressure": "118/72 mmHg",
+      "heart_rate": "74 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "21.3 kg/m\u00b2",
-      "oxygen_saturation": "98%",
-      "temperature": "98.4\u00b0F",
-      "respiratory_rate": "16 breaths/min"
+      "bmi": "21.4 kg/m\u00b2",
+      "oxygen_saturation": null,
+      "temperature": "98.2\u00b0F",
+      "respiratory_rate": null
     },
-    "gender_specific_history": "Last pap smear on 2025-06-01, normal results. Regular menstrual cycles."
+    "gender_specific_history": null
   },
   "210": {
     "first_name": "Jonah",

@@ -1116,14 +1116,6 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             t.setStyle(table_style)
             Story.append(t)
 
-            # Behavioral Notes
-            beh_notes = getattr(p, 'behavioral_notes', None)
-            if beh_notes:
-                Story.append(Spacer(1, 5))
-                Story.append(Paragraph("<b>Behavioral Context Notes:</b>", style_normal))
-                Story.append(Spacer(1, 3))
-                Story.append(Paragraph(beh_notes, style_normal))
-
             Story.append(Spacer(1, 10))
 
         # 5. Social History

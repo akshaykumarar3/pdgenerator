@@ -14,6 +14,7 @@ Outputs include:
 * Patient personas (FHIR-aligned records)
 * Clinical summaries for case review
 * Verification summaries for annotators
+* Policy criteria summaries are intentionally excluded from patient-facing reports and persona outputs
 
 ---
 
@@ -204,6 +205,11 @@ The function `load_existing_context()` guarantees that:
 * reports reference the same procedure
 
 Contradictory data across documents must never occur.
+
+Quality guardrails:
+
+* `bio_narrative` is never blank; if the LLM omits it or returns a too-short narrative, it is backfilled from persona data, encounters, diagnoses, and case details.
+* Report `past_medical_history` sections are never blank; missing history is backfilled from supporting diagnoses or case context.
 
 ---
 

@@ -9,6 +9,7 @@ The system generates:
 - **Patient Personas**: FHIR-style patient records.
 - **Clinical Reports**: Consult notes, imaging reports, and lab reports.
 - **Clinical Summaries**: Aggregated case overviews.
+- **Policy criteria summaries are not emitted in clinical outputs** (reports/persona); any policy/criteria content is reserved for internal annotator guidance.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
 
@@ -152,6 +153,11 @@ _parse_vertex_response(resp, model_class, existing_persona=None)
 ```
 
 A `vertex_doc_reminder` CRITICAL instruction is always prepended to Vertex prompts to force inclusion of `structured_documents`.
+
+### Output Quality Guards
+
+- **Bio narrative is enforced non-empty**: if the LLM returns a blank or too-short `bio_narrative`, it is backfilled from persona data, encounters, diagnoses, and case details.
+- **Report medical history is enforced**: if a document includes `past_medical_history` but it is blank, it is backfilled using supporting diagnoses or case context.
 
 ---
 

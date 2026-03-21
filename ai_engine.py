@@ -1,6 +1,7 @@
 import os
 import json
 import random # For persona diversity
+import re
 from openai import OpenAI
 import vertexai
 from vertexai.generative_models import GenerativeModel, GenerationConfig
@@ -581,6 +582,231 @@ class AnnotatorSummary(BaseModel):
 _PROMPT_CHAR_BUDGET = 80_000
 
 
+def _word_count(text: str) -> int:
+    if not text:
+        return 0
+    return len([w for w in re.split(r"\s+", text.strip()) if w])
+
+
+def _safe_str(val: Any, default: str = "") -> str:
+    if val is None:
+        return default
+    val = str(val).strip()
+    return val if val else default
+
+
+def _calc_age(dob_str: str) -> Optional[int]:
+    if not dob_str:
+        return None
+    try:
+        dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+        today = datetime.now().date()
+        return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+    except Exception:
+        return None
+
+
+def _dedupe_preserve(items: List[str]) -> List[str]:
+    seen = set()
+    out = []
+    for item in items:
+        s = _safe_str(item)
+        if not s or s in seen:
+            continue
+        seen.add(s)
+        out.append(s)
+    return out
+
+
+def _extract_supporting_diagnoses(persona) -> List[str]:
+    dx = []
+    if persona and getattr(persona, "pa_request", None):
+        dx.extend(getattr(persona.pa_request, "supporting_diagnoses", []) or [])
+    if persona and getattr(persona, "encounters", None):
+        for enc in persona.encounters or []:
+            dx.extend(getattr(enc, "diagnoses", []) or [])
+    return _dedupe_preserve(dx)
+
+
+def _extract_medications(persona, max_items: int = 4) -> List[str]:
+    meds = []
+    for m in (getattr(persona, "medications", None) or [])[:max_items]:
+        brand = _safe_str(getattr(m, "brand", ""))
+        generic = _safe_str(getattr(m, "generic_name", ""))
+        dosage = _safe_str(getattr(m, "dosage", ""))
+        name = brand or generic
+        if name and generic and brand and brand != generic:
+            name = f"{brand} ({generic})"
+        if dosage:
+            name = f"{name} {dosage}".strip()
+        if name:
+            meds.append(name)
+    return meds
+
+
+def _extract_procedures(persona, max_items: int = 3) -> List[str]:
+    procs = []
+    for p in (getattr(persona, "procedures", None) or [])[:max_items]:
+        name = _safe_str(getattr(p, "name", ""))
+        date = _safe_str(getattr(p, "date", ""))
+        reason = _safe_str(getattr(p, "reason", ""))
+        if name:
+            detail = f"{name} ({date})" if date else name
+            if reason:
+                detail = f"{detail} for {reason}"
+            procs.append(detail)
+    return procs
+
+
+def _extract_therapies(persona, max_items: int = 3) -> List[str]:
+    therapies = []
+    for t in (getattr(persona, "therapies", None) or [])[:max_items]:
+        t_type = _safe_str(getattr(t, "therapy_type", ""))
+        reason = _safe_str(getattr(t, "reason", ""))
+        if t_type:
+            therapies.append(f"{t_type} for {reason}".strip() if reason else t_type)
+    return therapies
+
+
+def _summarize_encounters(persona, max_items: int = 2) -> List[str]:
+    summaries = []
+    encounters = getattr(persona, "encounters", None) or []
+    for enc in encounters[:max_items]:
+        date = _safe_str(getattr(enc, "encounter_date", ""))
+        enc_type = _safe_str(getattr(enc, "encounter_type", ""))
+        complaint = _safe_str(getattr(enc, "chief_complaint", ""))
+        purpose = _safe_str(getattr(enc, "purpose_of_visit", ""))
+        if date or enc_type or complaint:
+            parts = []
+            if date:
+                parts.append(f"On {date}")
+            if enc_type:
+                parts.append(f"{enc_type.lower()} visit")
+            if complaint:
+                parts.append(f"for {complaint}")
+            elif purpose:
+                parts.append(f"for {purpose}")
+            summaries.append(" ".join(parts).strip() + ".")
+    return summaries
+
+
+def _build_bio_narrative(persona, case_details: dict, patient_state: dict) -> str:
+    name = _safe_str(f"{getattr(persona, 'first_name', '')} {getattr(persona, 'last_name', '')}".strip(), "The patient")
+    gender = _safe_str(getattr(persona, "gender", ""))
+    dob = _safe_str(getattr(persona, "dob", ""))
+    age = _calc_age(dob)
+    age_str = f"{age}-year-old" if age is not None else "adult"
+    address = _safe_str(getattr(persona, "address", ""), "Texas")
+    procedure = _safe_str(getattr(persona, "procedure_requested", ""), _safe_str(case_details.get("procedure", "")))
+    expected_date = _safe_str(getattr(persona, "expected_procedure_date", ""), _safe_str(patient_state.get("requested_procedure", {}).get("expected_date", "")))
+    cpt_code = _safe_str(patient_state.get("requested_procedure", {}).get("cpt_code", ""))
+    if not cpt_code and procedure:
+        match = re.search(r"(\\d{5})", procedure)
+        if match:
+            cpt_code = match.group(1)
+    cpt_text = f"CPT {cpt_code}" if cpt_code else "the requested CPT"
+
+    dx_list = _extract_supporting_diagnoses(persona)
+    dx_text = ", ".join(dx_list[:4]) if dx_list else "clinically documented conditions"
+    meds = _extract_medications(persona)
+    meds_text = ", ".join(meds) if meds else "medications appropriate for the above conditions"
+    procs = _extract_procedures(persona)
+    procs_text = "; ".join(procs) if procs else "no prior operative history of note"
+    therapies = _extract_therapies(persona)
+    therapies_text = ", ".join(therapies) if therapies else "supportive therapy as clinically indicated"
+
+    social = getattr(persona, "social_history", None)
+    tobacco = _safe_str(getattr(social, "tobacco_use", ""), "denies tobacco use") if social else "denies tobacco use"
+    alcohol = _safe_str(getattr(social, "alcohol_use", ""), "reports minimal alcohol use") if social else "reports minimal alcohol use"
+    family_history = _safe_str(getattr(social, "family_history_relevant", ""), "family history reviewed with no major hereditary risk noted") if social else "family history reviewed with no major hereditary risk noted"
+
+    enc_summaries = _summarize_encounters(persona)
+    enc_text = " ".join(enc_summaries) if enc_summaries else "Recent clinical encounters document persistent symptoms and functional impact."
+
+    case_details_text = _safe_str(case_details.get("details", ""))
+    expected_outcome = _safe_str(case_details.get("outcome", ""))
+
+    para1 = (
+        f"{name} is a {age_str} {gender} from {address} presenting for evaluation related to {procedure or 'the requested procedure'}. "
+        f"The referral is tied to {cpt_text} with an anticipated procedure date of {expected_date or 'the upcoming weeks'}. "
+        f"Key diagnoses include {dx_text}."
+    )
+    para2 = (
+        f"{enc_text} "
+        f"Symptoms have progressed over months with measurable impact on daily function and work capacity. "
+        f"{case_details_text}" if case_details_text else
+        f"{enc_text} Symptoms have progressed over months with measurable impact on daily function and work capacity."
+    )
+    para3 = (
+        f"Past medical history is notable for {dx_text}. "
+        f"Prior procedures and interventions include {procs_text}. "
+        f"Current and recent medications include {meds_text}. "
+        f"Therapy history includes {therapies_text}."
+    )
+    para4 = (
+        f"Social history: {tobacco}; {alcohol}. "
+        f"Family history: {family_history}. "
+        f"The clinical rationale supports proceeding with {procedure or 'the requested procedure'} to address ongoing symptoms and prevent further decline. "
+        f"Expected outcome for this case is {expected_outcome or 'based on documented medical necessity'}."
+    )
+
+    paragraphs = [para1, para2, para3, para4]
+    narrative = "\n\n".join([p.strip() for p in paragraphs if p and p.strip()])
+
+    # Ensure narrative length target
+    if _word_count(narrative) < 300:
+        extra = (
+            f"Additional context includes consistent documentation across encounters, objective findings, and response patterns to prior conservative management. "
+            f"Imaging and lab results in the chart align with the above diagnoses and support the requested intervention."
+        )
+        narrative = narrative + "\n\n" + extra
+
+    if _word_count(narrative) < 300:
+        narrative = narrative + "\n\n" + (
+            "The longitudinal record shows adherence to follow-up plans, escalating symptom burden despite treatment, "
+            "and a clear need for definitive intervention based on current standards of care."
+        )
+
+    return narrative.strip()
+
+
+def _ensure_persona_quality(payload: "ClinicalDataPayload", case_details: dict, patient_state: dict) -> "ClinicalDataPayload":
+    if not payload or not getattr(payload, "patient_persona", None):
+        return payload
+    persona = payload.patient_persona
+    bio = _safe_str(getattr(persona, "bio_narrative", ""))
+    if _word_count(bio) < 300:
+        persona.bio_narrative = _build_bio_narrative(persona, case_details, patient_state)
+    payload.patient_persona = persona
+
+    # Backfill report medical history sections when missing
+    if getattr(payload, "documents", None):
+        for doc in payload.documents:
+            content = getattr(doc, "content", None)
+            structured = None
+            if isinstance(content, dict):
+                structured = content
+            elif isinstance(content, str):
+                try:
+                    structured = json.loads(content)
+                except Exception:
+                    structured = None
+            if not isinstance(structured, dict):
+                continue
+            key = "past_medical_history"
+            if key in structured:
+                val = structured.get(key)
+                is_blank = val is None or (isinstance(val, str) and not val.strip()) or (isinstance(val, list) and len(val) == 0)
+                if is_blank:
+                    history_items = _extract_supporting_diagnoses(persona)
+                    if not history_items:
+                        detail = _safe_str(case_details.get("details", ""))
+                        history_items = [detail] if detail else ["History notable for symptoms prompting the requested procedure."]
+                    structured[key] = history_items
+                    doc.content = structured
+    return payload
+
+
 def _quantize_prompt(
     prompt: str,
     case_details: dict,
@@ -745,6 +971,7 @@ def generate_clinical_data(
                 print(f"   ✅ Response: {len(resp.text):,} chars | tokens in={tok_in} out={tok_out}")
 
                 response_obj = _parse_vertex_response(resp, ClinicalDataPayload, existing_persona)
+                response_obj = _ensure_persona_quality(response_obj, case_details, patient_state)
 
                 usage_stats = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
                 if resp.usage_metadata:
@@ -785,6 +1012,7 @@ def generate_clinical_data(
              usage_stats["completion_tokens"] = completion.usage.completion_tokens
              usage_stats["total_tokens"] = completion.usage.total_tokens
 
+        response_obj = _ensure_persona_quality(response_obj, case_details, patient_state)
         return response_obj, usage_stats
         
     except Exception as e:
@@ -819,6 +1047,7 @@ def generate_clinical_data(
                 recovered = _try_recover(e, getattr(e, "last_completion", None))
                 if recovered:
                     print("   ⚠️  Recovered from OpenAI retry failure: used existing persona")
+                    recovered = _ensure_persona_quality(recovered, case_details, patient_state)
                     return recovered, {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
         except ImportError:
             pass

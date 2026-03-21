@@ -96,6 +96,7 @@ J. **Medical Biography & History (bio_narrative - MANDATORY)**:
      * Detailed Family History relevant to the current condition.
      * Longitudinal timeline of symptoms and previous treatments.
      * Clinical rationale for the current referral/request.
+   - **NEVER leave this section blank**. If source data is limited, synthesize a clinically plausible, high-quality narrative that stays consistent with the persona, encounters, diagnoses, and requested procedure.
    - USE PLAIN TEXT. NO MARKDOWN. NO BOLDING.
 
 === PERSONA DOCUMENT AS SOURCE OF TRUTH ===

@@ -167,6 +167,8 @@ When generating documents in different modes (persona only, reports only, summar
 - Reports reference the same facility and dates from the persona
 - Summaries align with existing persona and reports
 - No contradictory information across documents
+- **Policy criteria summary is excluded from clinical reports and the persona** (reserved for internal annotator summary content)
+- **Medical history and biography are never blank** — bio narrative and report history sections are backfilled if missing
 
 ### Intensive Document Generation (PA Support)
 

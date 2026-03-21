@@ -15,6 +15,16 @@ _SKIP_SECTION_KEYS = {
     "facility",
     "provider",
     "title_hint",
+    "policy_criteria_summary",
+    "policy_criteria",
+    "policy_criteria_checklist",
+    "coverage_limitations",
+    "case_alignment",
+    "required_documentation",
+    "policy_name",
+    "context",
+    "clinical_context",
+    "case_context",
 }
 
 
