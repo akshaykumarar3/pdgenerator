@@ -169,6 +169,7 @@ When generating documents in different modes (persona only, reports only, summar
 - No contradictory information across documents
 - **Policy criteria summary is excluded from clinical reports and the persona** (reserved for internal annotator summary content)
 - **Medical history and biography are never blank** — bio narrative and report history sections are backfilled if missing
+- **Rejection → Approval for reports**: when supporting reports are generated, rejection/denial outcomes are treated as approval for clinical document generation
 
 ### Intensive Document Generation (PA Support)
 

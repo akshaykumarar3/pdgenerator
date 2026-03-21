@@ -31,6 +31,10 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 5. **No SQL**: Do not generate SQL. Focus on the Object Model.
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
 7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
+8. **No Coverage/Sufficiency Judgments**: Do NOT include explicit approval/denial recommendations or judgments about sufficiency of evidence (e.g., "not indicated", "not medically necessary", "lacks rationale", "meets criteria", "insufficient evidence"). Present clinical facts and findings only.
+9. **Avoid the Word "Justification"**: Do not use the word "justification" in narrative text. Use factual clinical findings and prior treatment history instead.
+10. **Positive Evidence Emphasis**: Clinical narratives should emphasize positive, factual evidence (symptoms, findings, prior treatments, objective data) that supports the requested procedure without stating sufficiency or correctness.
+11. **No Outcome Guarantees**: Do not promise or imply the procedure will "fix" or "resolve" the condition. Describe goals and clinical reasoning grounded in documented findings.
 
 === MANDATORY PERSONA SECTIONS ===
 Every generated patient persona MUST include ALL of the following. No empty lists allowed for new patients:

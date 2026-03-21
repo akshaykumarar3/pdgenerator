@@ -724,6 +724,8 @@ def _build_bio_narrative(persona, case_details: dict, patient_state: dict) -> st
     enc_text = " ".join(enc_summaries) if enc_summaries else "Recent clinical encounters document persistent symptoms and functional impact."
 
     case_details_text = _safe_str(case_details.get("details", ""))
+    if case_details_text:
+        case_details_text = _sanitize_judgment_text(case_details_text)
     expected_outcome = _safe_str(case_details.get("outcome", ""))
 
     para1 = (
@@ -746,8 +748,8 @@ def _build_bio_narrative(persona, case_details: dict, patient_state: dict) -> st
     para4 = (
         f"Social history: {tobacco}; {alcohol}. "
         f"Family history: {family_history}. "
-        f"The clinical rationale supports proceeding with {procedure or 'the requested procedure'} to address ongoing symptoms and prevent further decline. "
-        f"Expected outcome for this case is {expected_outcome or 'based on documented medical necessity'}."
+        f"The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. "
+        f"The requested procedure has been planned accordingly."
     )
 
     paragraphs = [para1, para2, para3, para4]
@@ -756,27 +758,131 @@ def _build_bio_narrative(persona, case_details: dict, patient_state: dict) -> st
     # Ensure narrative length target
     if _word_count(narrative) < 300:
         extra = (
-            f"Additional context includes consistent documentation across encounters, objective findings, and response patterns to prior conservative management. "
-            f"Imaging and lab results in the chart align with the above diagnoses and support the requested intervention."
+            "Additional documentation across encounters includes objective findings and response patterns to prior conservative management. "
+            "Imaging and lab results in the chart align with the above diagnoses."
         )
         narrative = narrative + "\n\n" + extra
 
     if _word_count(narrative) < 300:
         narrative = narrative + "\n\n" + (
-            "The longitudinal record shows adherence to follow-up plans, escalating symptom burden despite treatment, "
-            "and a clear need for definitive intervention based on current standards of care."
+            "The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment."
         )
 
     return narrative.strip()
+
+
+_DISALLOWED_JUDGMENT_PATTERNS = [
+    r"\bnot medically necessary\b",
+    r"\bnot indicated\b",
+    r"\bnot appropriate\b",
+    r"\bnot warranted\b",
+    r"\bnot justified\b",
+    r"\bno indication\b",
+    r"\bno clear indication\b",
+    r"\binsufficient justification\b",
+    r"\bmedical necessity is lacking\b",
+    r"\bnot necessary\b",
+    r"\blacks?\s+(urgent|clinical|medical)?\s*rationale\b",
+    r"\blacks?\s+medical\s+necessity\b",
+    r"\bmeets?\s+criteria\b",
+    r"\bdoes\s+not\s+meet\s+criteria\b",
+    r"\binsufficient\s+evidence\b",
+    r"\bnot\s+enough\s+evidence\b",
+    r"\badequate\s+justification\b",
+    r"\binadequate\s+justification\b",
+    r"\bjustification\s+is\s+(sufficient|insufficient|lacking|inadequate|adequate)\b",
+    r"\bsupports?\s+(approval|denial)\b",
+    r"\bwarrants?\s+approval\b",
+    r"\bdoes\s+not\s+warrant\b",
+    r"\bjustification\b",
+    r"\bno\s+prior\s+treatment\b",
+    r"\bno\s+[^.]*\btrial\b",
+    r"\bno\s+[^.]*\btest(s|ing)?\b",
+    r"\bnot\s+documented\b",
+    r"\bno\s+documentation\b",
+    r"\ball\s+required\s+supporting\s+documentation\s+present\b",
+    r"\bsupporting\s+documentation\s+present\b",
+    r"\bdocumentation\s+present\b",
+    r"\bclear\s+need\b",
+    r"\bdefinitive\s+intervention\b",
+    r"\bsupports?\s+the\s+requested\s+intervention\b",
+    r"\bsupports?\s+the\s+requested\s+procedure\b",
+    r"\bsupports?\s+the\s+procedure\b",
+    r"\bsupports?\s+the\s+request\b",
+    r"\bwill\s+(resolve|cure|fix|eliminate)\b",
+    r"\bguarantee(s|d)?\b",
+    r"\bmake(s)?\s+(things\s+right|it\s+right)\b",
+]
+
+
+def _sanitize_judgment_text(text: str) -> str:
+    if not text:
+        return text
+    parts = re.split(r"(?<=[.!?])\s+|\n+", text.strip())
+    kept = []
+    for part in parts:
+        if not part:
+            continue
+        lowered = part.lower()
+        if any(re.search(pat, lowered, re.IGNORECASE) for pat in _DISALLOWED_JUDGMENT_PATTERNS):
+            continue
+        kept.append(part.strip())
+    cleaned = " ".join(kept).strip()
+    if not cleaned:
+        cleaned = "Relevant clinical findings are documented in this note."
+    return cleaned
+
+
+def _sanitize_document_content(value: Any) -> Any:
+    if isinstance(value, str):
+        text = value.strip()
+        if text and text[0] in "{[":
+            try:
+                parsed = json.loads(text)
+                return _sanitize_document_content(parsed)
+            except Exception:
+                pass
+        return _sanitize_judgment_text(value)
+    if isinstance(value, list):
+        return [_sanitize_document_content(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _sanitize_document_content(v) for k, v in value.items()}
+    return value
 
 
 def _ensure_persona_quality(payload: "ClinicalDataPayload", case_details: dict, patient_state: dict) -> "ClinicalDataPayload":
     if not payload or not getattr(payload, "patient_persona", None):
         return payload
     persona = payload.patient_persona
+    def _pad_bio(text: str) -> str:
+        if _word_count(text) >= 300:
+            return text
+        fillers = [
+            "The chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.",
+            "Prior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.",
+            "Relevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
+        ]
+        out = text
+        for f in fillers:
+            if _word_count(out) >= 300:
+                break
+            out = out + "\n\n" + f
+        return out
+
     bio = _safe_str(getattr(persona, "bio_narrative", ""))
     if _word_count(bio) < 300:
-        persona.bio_narrative = _build_bio_narrative(persona, case_details, patient_state)
+        bio = _build_bio_narrative(persona, case_details, patient_state)
+    bio_clean = _sanitize_judgment_text(bio)
+    if _word_count(bio_clean) < 300:
+        bio_clean = _build_bio_narrative(persona, case_details, patient_state)
+        bio_clean = _sanitize_judgment_text(bio_clean)
+    persona.bio_narrative = _pad_bio(bio_clean)
+    # Sanitize PA clinical justification to avoid judgment language
+    pa_request = getattr(persona, "pa_request", None)
+    if pa_request and hasattr(pa_request, "clinical_justification"):
+        pa_request.clinical_justification = _sanitize_judgment_text(
+            _safe_str(getattr(pa_request, "clinical_justification", ""))
+        )
     payload.patient_persona = persona
 
     # Backfill report medical history sections when missing
@@ -804,6 +910,8 @@ def _ensure_persona_quality(payload: "ClinicalDataPayload", case_details: dict, 
                         history_items = [detail] if detail else ["History notable for symptoms prompting the requested procedure."]
                     structured[key] = history_items
                     doc.content = structured
+            # Sanitize judgment language in document body text
+            doc.content = _sanitize_document_content(doc.content)
     return payload
 
 

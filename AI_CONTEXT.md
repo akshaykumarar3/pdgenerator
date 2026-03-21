@@ -210,6 +210,8 @@ Quality guardrails:
 
 * `bio_narrative` is never blank; if the LLM omits it or returns a too-short narrative, it is backfilled from persona data, encounters, diagnoses, and case details.
 * Report `past_medical_history` sections are never blank; missing history is backfilled from supporting diagnoses or case context.
+* Clinical documents must avoid coverage/appropriateness or sufficiency judgments (e.g., "not indicated", "not medically necessary", "meets criteria", "insufficient evidence"). Notes should remain factual and clinically descriptive.
+* When supporting reports are generated, rejection/denial outcomes are converted to approval for clinical document generation. (Annotator summaries may still reflect original test case outcomes.)
 
 ---
 

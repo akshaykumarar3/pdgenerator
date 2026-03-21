@@ -152,6 +152,23 @@ def _is_policy_criteria_doc(doc) -> bool:
     return False
 
 
+def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
+    """
+    For clinical document generation, convert rejection/denial cases to approval
+    when supporting reports are being generated.
+    """
+    if not case_details:
+        return case_details
+    outcome = str(case_details.get("outcome", "") or "")
+    if not generation_mode.get("reports", False):
+        return case_details
+    if re.search(r"(reject|rejection|deny|denial)", outcome, re.IGNORECASE):
+        updated = dict(case_details)
+        updated["outcome"] = "PA Approval"
+        return updated
+    return case_details
+
+
 # ─── FILENAME HELPERS ─────────────────────────────────────────────────────────
 
 def _sanitize_filename_component(name: str) -> str:
@@ -392,11 +409,15 @@ def process_patient_workflow(
     
     patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
-    print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
+    case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    if case_details_for_generation.get("outcome") != (case_data or {}).get("outcome"):
+        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')} → {case_details_for_generation.get('outcome', '?')})")
+    else:
+        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     try:
         result, usage = ai_engine.generate_clinical_data(
-            case_details=case_data,
+            case_details=case_details_for_generation,
             patient_state=patient_state,
             document_plan=document_plan,
             user_feedback=feedback,
