@@ -1056,31 +1056,31 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Joey Tribbiani",
-      "telecom": "713-555-4311",
-      "address": "N/A",
-      "gender": "male",
+      "relationship": "Spouse",
+      "name": "Monica Geller",
+      "telecom": "832-555-1234",
+      "address": "Apartment 20, 90 Bedford St, New York, NY",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2017-01-01",
+      "period_start": "1998-05-18",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Ross Geller, MD",
-      "formatted_npi": "1234567890",
+      "formatted_npi": "1425678930",
       "managingOrganization": "Houston Methodist Hospital",
-      "address": "6565 Fannin Street, Houston, TX 77030",
-      "phone": "713-555-0199"
+      "address": "6565 Fannin Street, Houston, TX, 77030",
+      "phone": "713-790-3333"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "MBR-656319",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "PPO",
+      "plan_type": "Medicare Advantage",
       "member_id": "MBR-656319",
       "policy_number": "POL-2026-6037",
       "effective_date": "2026-01-01",
@@ -1088,7 +1088,7 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-04-07",
+    "expected_procedure_date": "2026-05-08",
     "procedure_requested": "Upper GI Endoscopy with Biopsy (EGD)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1096,20 +1096,19 @@
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
-      "department": "Gastroenterology Unit"
+      "department": "Endoscopy Center"
     },
     "pa_request": {
       "requesting_provider": "Dr. Ross Geller, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "Persistent dyspepsia with inadequate response to conservative treatment necessitates further diagnostic evaluation.",
+      "clinical_justification": "Chandler Bing requires an EGD due to persistent dyspepsia that has been unresponsive to standard conservative medications. This procedure is necessary for diagnostic elucidation of the cause of his condition.",
       "supporting_diagnoses": [
-        "K21.9 - Gastroesophageal reflux disease without esophagitis",
-        "R12 - Heartburn"
+        "K30 - Dyspepsia"
       ],
-      "previous_treatments": "Tried OTC antacids, h2 blockers with failed results; PPI started; Continue evaluation mortality immunity schedule",
-      "expected_outcome": "ETA fully defined examination supporting"
+      "previous_treatments": "OTC antacids, H2 blockers, ongoing PPI trial.",
+      "expected_outcome": "Determination of gastrointestinal issues potentially enabling specific treatment."
     },
-    "bio_narrative": "Chandler Bing, born April 8, 1969, is a 57-year-old Caucasian male residing in Houston, Texas. He has experienced persistent upper abdominal discomfort and heartburn for approximately six months. Over-the-counter medications failed to alleviate these symptoms, suggesting a more complex underlying gastrointestinal condition. Managing his hypertension and hypercholesterolemia with medications, Chandler also endured a cardiac event in the past that required rehabilitation therapy. Despite our attempts with various interventions, his current condition persists, warranting an Upper GI Endoscopy to examine the gastrointestinal tract more closely. With support from his physician Dr. Ross Geller at Houston Methodist Hospital, the upcoming procedure seeks to uncover or exclude serious conditions that might require different therapeutic approaches. The diagnosis relies on historical patterns of medications and symptoms. Chandler's family medical history includes relatives with gastrointestinal ailments, aligning the current suspicions of underlying conditions.",
+    "bio_narrative": "Chandler Bing, a 56-year-old man residing in Houston, TX, has led a largely healthy lifestyle marked by regular exercise and balanced nutrition. Despite his commitment to wellness, he has encountered episodes of persistent dyspepsia and upper abdominal discomfort over the past six months. Chandler has been actively engaged in his healthcare, attending routine check-ups and following through with medical advice, which included the prescription of various medications under the guidance of his long-term physician, Dr. Ross Geller. The failure of over-the-counter solutions and H2 blockers to provide relief prompted consideration of a PPI trial initiated recently. A planned Upper GI Endoscopy with biopsy is scheduled to further explore these unresolved symptoms once the PPI trial reaches its outcome. Chandler's family medical history shows a predisposition to similar gastric issues, likely contributing to his current condition. His medical journey reflects consistent monitoring and responsive care, aiming to uncover the underpinnings of his discomfort. Chandler's life, generally active and compliant with his health plan, serves as a testament to his determination in managing his health proactively while seeking definitive answers through professional medical guidance.",
     "medications": [
       {
         "brand": "Lopressor",
@@ -1220,13 +1219,13 @@
     "therapies": [
       {
         "therapy_type": "Cardiac Rehab",
-        "cpt_code": "97404",
-        "cpt_description": "Supervised exercise therapy, per session",
+        "cpt_code": "G0422",
+        "cpt_description": "Cardiac rehabilitation program",
         "icd10_codes": [
-          "I25.10"
+          "I25.10 - Atherosclerotic heart disease"
         ],
         "provider": "Therapist John Doe",
-        "provider_npi": "2134567890",
+        "provider_npi": "1336789014",
         "facility": "Texas Cardiac Rehab Center",
         "start_date": "2025-10-01",
         "end_date": "2026-01-30",
@@ -1242,35 +1241,35 @@
     "reports": [],
     "procedures": [],
     "social_history": {
-      "tobacco_use": "Never",
+      "tobacco_use": "Non-smoker",
       "tobacco_frequency": null,
-      "alcohol_use": "Moderate",
-      "alcohol_frequency": "2-3 drinks/week social events",
-      "illicit_drug_use": "None",
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": null,
+      "illicit_drug_use": null,
       "substance_history": null,
-      "last_medical_visit": "2026-02-15",
-      "last_visit_reason": "medication refill",
-      "missed_appointment": false,
+      "last_medical_visit": "2026-03-05",
+      "last_visit_reason": "Persistent upper abdominal discomfort",
+      "missed_appointment": null,
       "missed_appointment_reason": null,
-      "early_visit_reason": "Persisting dyspepsia",
-      "mental_health_history": null,
+      "early_visit_reason": null,
+      "mental_health_history": "None",
       "mental_health_current": null,
-      "exercise_habits": "Exercises regularly; brisk walking 3x/week",
-      "diet_notes": "Mindful eating; low-fat, low-sodium diet",
-      "family_history_relevant": "Family history of GERD in father and an uncle"
+      "exercise_habits": "Jogging 3 times a week",
+      "diet_notes": "Balanced diet with controlled portions",
+      "family_history_relevant": "Gastric issues on maternal side"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-03-18",
-      "blood_pressure": "120/80 mmHg",
+      "recorded_date": "2026-03-05",
+      "blood_pressure": "130/85 mmHg",
       "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": null,
+      "bmi": "25.1 kg/m\u00b2",
       "oxygen_saturation": null,
-      "temperature": "98.6\u00b0F",
+      "temperature": null,
       "respiratory_rate": null
     },
-    "gender_specific_history": null
+    "gender_specific_history": "Recent annual checkup revealed healthy prostate examination. No urologic issues reported."
   },
   "260": {
     "first_name": "John",
@@ -1282,7 +1281,7 @@
     "race": "Caucasian",
     "height": "6 ft",
     "weight": "185 lbs",
-    "maritalStatus": "Married",
+    "maritalStatus": "Single",
     "multipleBirthBoolean": false,
     "multipleBirthInteger": 1,
     "photo": "placeholder_patient_photo.png",
@@ -1291,18 +1290,18 @@
       "preferred": true
     },
     "contact": {
-      "relationship": "Spouse",
-      "name": "Dr. Perry Cox",
+      "relationship": "Next of Kin",
+      "name": "Carla Espinosa",
       "telecom": "555-987-6543",
-      "address": "456 Chestnut St, Houston, TX 77002",
-      "gender": "male",
+      "address": "456 Willow Bend Dr, Houston, TX 77002",
+      "gender": "female",
       "organization": "N/A",
-      "period_start": "2020-01-01",
+      "period_start": "2000-01-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Elliot Reid, MD",
-      "formatted_npi": "2345678910",
+      "formatted_npi": "2345678901",
       "managingOrganization": "Houston Methodist Hospital",
       "address": "6565 Fannin Street, Houston, TX 77030",
       "phone": "555-019-8273"
@@ -1312,10 +1311,10 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
-      "plan_type": "PPO",
+      "plan_type": "Medicare Advantage",
       "member_id": "MBR-147115",
       "policy_number": "POL-2026-4184",
       "effective_date": "2024-01-01",
@@ -1323,7 +1322,7 @@
       "copay_amount": "$25",
       "deductible_amount": "$500"
     },
-    "expected_procedure_date": "2026-04-01",
+    "expected_procedure_date": "2026-04-05",
     "procedure_requested": "Upper GI Endoscopy with Biopsy (EGD)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -1336,14 +1335,14 @@
     "pa_request": {
       "requesting_provider": "Dr. Elliot Reid, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "The patient presents with persistent GERD symptoms despite an adequate PPI trial and lifestyle modifications. The procedure is needed for definitive diagnosis.",
+      "clinical_justification": "The patient has persistent and worsening GERD symptoms despite ongoing Protonix therapy and lifestyle modifications. Diagnostic workup is needed to evaluate for potential complications or underlying causes not identified through conservative management.",
       "supporting_diagnoses": [
         "K21.9 - Gastro-esophageal reflux disease without esophagitis"
       ],
-      "previous_treatments": "Protonix therapy and lifestyle modifications.",
-      "expected_outcome": "Diagnosis confirmation and targeted treatment planning."
+      "previous_treatments": "Ongoing therapy with Protonix and Maalox; lifestyle modifications in place.",
+      "expected_outcome": "Clarification of diagnosis to appropriately manage and treat GERD symptoms."
     },
-    "bio_narrative": "John Dorian, a 56-year-old Caucasian male, has experienced symptoms consistent with gastroesophageal reflux disease (GERD) over the past year. Despite adherence to his prescribed Protonix regimen and making recommended lifestyle changes, his symptoms have persisted and worsened. These include frequent heartburn and abdominal discomfort, affecting his daily activities. John has a history of occasional heartburn managed with over-the-counter medications in the past, but now requires more definitive diagnostic procedures to guide treatment plan.\n\nSocially, John works as an engineer and maintains an active lifestyle with regular exercise to manage stress. He has never smoked and drinks alcohol moderately on weekends. His support system includes his spouse, who is actively involved in his healthcare decisions. In terms of family history, there is no significant history of gastrointestinal disorders that could predispose him to his current condition.\n\nMedically, John has had no major surgeries or hospitalizations. He has completed cognitive-behavioral therapy for anxiety, which helped him cope better with stress, reflecting positively on his commitment to health.\n\nIn summary, John Dorian's medical history and current symptoms necessitate the requested Upper GI Endoscopy with Biopsy to obtain a clear and targeted treatment pathway, particularly given the failure of conservative management.",
+    "bio_narrative": "John Dorian, a 55-year-old male from Houston, Texas, has long term GERD that has persisted and worsened over the past year. He has adhered to medications and lifestyle changes but continues to suffer significant discomfort and nocturnal symptoms disrupting his sleep. He actively engages in physical exercise and consumes alcohol moderately on weekends without smoking or drug use. His prior cognitive therapy greatly aided his anxiety management and improved his life quality.",
     "medications": [
       {
         "brand": "Protonix",
@@ -1352,7 +1351,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Elliot Reid, MD",
         "status": "ongoing",
-        "start_date": "2025-05-01",
+        "start_date": "2025-01-10",
         "end_date": "ongoing",
         "reason": "GERD management"
       },
@@ -1360,10 +1359,10 @@
         "brand": "Maalox",
         "generic_name": "Aluminum hydroxide/magnesium hydroxide",
         "dosage": "10 mL after meals",
-        "qty": "OTC",
+        "qty": "240 mL",
         "prescribed_by": "Over-the-counter",
         "status": "current",
-        "start_date": "2025-08-15",
+        "start_date": "2025-12-15",
         "end_date": "ongoing",
         "reason": "Heartburn relief"
       },
@@ -1371,11 +1370,11 @@
         "brand": "Tums",
         "generic_name": "Calcium carbonate",
         "dosage": "2 tablets per episode",
-        "qty": "OTC",
+        "qty": "30 tablets",
         "prescribed_by": "Over-the-counter",
         "status": "past",
-        "start_date": "2024-10-01",
-        "end_date": "2025-07-01",
+        "start_date": "2025-06-01",
+        "end_date": "2025-12-01",
         "reason": "Occasional heartburn"
       }
     ],
@@ -1393,7 +1392,7 @@
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-20",
-        "administered_by": "Dr. Stevie G., Clinic",
+        "administered_by": "Dr. Elliot Reid, MD",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -1401,7 +1400,7 @@
         "vaccine_name": "COVID-19 Pfizer-BioNTech",
         "vaccine_type": "mRNA",
         "date_administered": "2024-03-01",
-        "administered_by": "Local Pharmacy",
+        "administered_by": "Dr. Elliot Reid, MD",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -1409,7 +1408,7 @@
         "vaccine_name": "Tdap",
         "vaccine_type": "Inactivated",
         "date_administered": "2023-10-15",
-        "administered_by": "Community Health Center",
+        "administered_by": "Dr. Elliot Reid, MD",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -1417,8 +1416,8 @@
         "vaccine_name": "Hepatitis A",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-05-22",
-        "administered_by": "Travel Clinic",
-        "dose_number": "2",
+        "administered_by": "Dr. Elliot Reid, MD",
+        "dose_number": "1",
         "reason": "Catch-up"
       }
     ],
@@ -1431,14 +1430,14 @@
           "F41.1 - Generalized anxiety disorder"
         ],
         "provider": "Dr. Jonathan Cox, PsyD",
-        "provider_npi": "3456789012",
-        "facility": "Counseling and Guidance Center",
+        "provider_npi": "1236547890",
+        "facility": "Houston Behavioral Health",
         "start_date": "2025-01-10",
-        "end_date": "2026-01-10",
+        "end_date": "2025-12-31",
         "frequency": "Weekly",
         "status": "Completed",
         "reason": "Anxiety management",
-        "notes": ""
+        "notes": "Sessions focused on anxiety reduction and coping strategies."
       }
     ],
     "behavioral_notes": "John adheres well to medication regimens and shows an active lifestyle, incorporating walks and occasional gym sessions. He is moderate in his alcohol use, mainly confined to weekends. There is no history of smoking or illicit drug use. His recent anxiety-driven therapy sessions have yielded tangible improvement, enhancing his response to life stresses.",
@@ -1446,80 +1445,79 @@
       {
         "encounter_date": "2026-01-15",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Persistent heartburn and abdominal discomfort.",
+        "purpose_of_visit": "Evaluating persistent heartburn and discomfort.",
         "provider": "Dr. Elliot Reid, MD",
-        "provider_npi": "2345678910",
-        "facility": "Houston Methodist Primary Care Group",
+        "provider_npi": "2345678901",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-01-15",
-          "blood_pressure": "130/85 mmHg",
-          "heart_rate": "78 bpm",
+          "blood_pressure": "128/84 mmHg",
+          "heart_rate": "72 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "25.3 kg/m\u00b2",
+          "bmi": "25.0 kg/m\u00b2",
           "oxygen_saturation": null,
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "16 breaths/min"
+          "temperature": null,
+          "respiratory_rate": null
         },
         "chief_complaint": "I've been experiencing persistent heartburn and discomfort.",
-        "doctor_note": "Subjective: The patient reports ongoing heartburn and abdominal discomfort despite the regular use of Protonix. He has noticed these symptoms persisting for the past several months and mentions that OTC remedies only provide temporary relief.\n\nObjective: During the physical exam, the patient appeared in no acute distress. Vital signs were stable.\n\nAssessment: GERD with persistent symptoms.\n\nPlan: Continue Protonix as prescribed. Consider potential referral for EGD given the lack of significant improvement after initial conservative therapy.",
+        "doctor_note": "HPI: Patient reports ongoing heartburn unresponsive to current medication regimen, including PPIs. Over the last six months, symptoms have become more frequent, particularly during evenings. Partial relief achieved with over-the-counter antacids but inadequate.\n\nReview of Systems: Patient denies weight loss, melena, or dysphagia. Reports sleep disturbances secondary to reflux.\n\nPhysical Exam: Alert, in no acute distress. Heart sounds regular. Lungs clear. Abdominal examination reveals mild epigastric tenderness.\n\nAssessment: GERD - persistent symptoms necessitate further diagnostic evaluation.\n\nPlan: Continue current Protonix. Schedule GI consult for consideration of EGD.",
         "observations": [
-          "Patient compliant with medication regimen",
-          "Symptoms persistent despite treatment"
+          "Epigastric tenderness noted"
         ],
         "procedures_performed": [
-          "99213 - Established patient office or other outpatient visit"
+          "99213 - Established patient office visit"
         ],
         "diagnoses": [
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [
-          "Protonix"
+          "Protonix 40mg daily",
+          "Maalox as needed"
         ],
         "care_team": [
           "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Patient's symptoms of GERD persist despite ongoing PPI therapy, observed for potential further diagnostic intervention if no improvement is seen.",
-        "follow_up_instructions": "Follow up in 3 months if symptoms persist or worsen."
+        "progress_notes": "Patient continues to experience persistent symptoms despite PPI therapy. Requires further investigation to rule out complications.",
+        "follow_up_instructions": "Consider GI consultation for endoscopy."
       },
       {
         "encounter_date": "2026-03-05",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Review recent imaging and persistent symptoms.",
+        "purpose_of_visit": "Heartburn symptoms worsening, considering further evaluation options.",
         "provider": "Dr. Elliot Reid, MD",
-        "provider_npi": "2345678910",
-        "facility": "Houston Methodist Primary Care Group",
+        "provider_npi": "2345678901",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-05",
-          "blood_pressure": "135/88 mmHg",
-          "heart_rate": "80 bpm",
+          "blood_pressure": "130/85 mmHg",
+          "heart_rate": "75 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": null,
+          "bmi": "25.1 kg/m\u00b2",
           "oxygen_saturation": null,
-          "temperature": "98.7\u00b0F",
+          "temperature": null,
           "respiratory_rate": null
         },
         "chief_complaint": "My heartburn isn't improving, and it's getting harder to ignore.",
-        "doctor_note": "Subjective: The patient reports persistent heartburn with episodes of regurgitation. Protonix provides some relief, but symptoms remain bothersome.\n\nObjective: Blood pressure slightly elevated compared to last visit; otherwise, patient in stable condition.\n\nAssessment: Continued GERD symptoms, consider advanced imaging and potential EGD for detailed evaluation.\n\nPlan: Assessment suggests need for EGD to evaluate ongoing symptoms where conservative management shows limited success. Discussed the potential role of an EGD with biopsy to understand and address prolonged symptoms.",
+        "doctor_note": "HPI: Continued heartburn with increasing frequency and intensity despite PPI therapy. Notable increase in nocturnal symptoms affecting sleep.\n\nReview of Systems: Symptoms include typical heartburn, worse at night, no hematemesis or significant weight loss.\n\nPhysical Exam: No acute distress, normal heart and lung sounds, abdomen soft with localized tenderness, no masses.\n\nAssessment: Worsening GERD, requires diagnostic assessment for potential esophagitis or Barrett's.\n\nPlan: Referral for upper GI endoscopy to assess esophageal condition and rule out severe complications.",
         "observations": [
-          "Patient exhibits compliant posture and attentive demeanor",
-          "Persistent GERD symptoms"
+          "Tenderness in the epigastric region persists"
         ],
         "procedures_performed": [
-          "99214 - Office or other outpatient visit for established patient"
+          "99213 - Established patient office visit"
         ],
         "diagnoses": [
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [
-          "Continue Protonix"
+          "Add Famotidine for breakthrough symptoms"
         ],
         "care_team": [
           "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Symptoms have worsened, supporting rationale for more definitive diagnostics via EGD has been discussed.",
-        "follow_up_instructions": "Schedule EGD within the next month to ensure no further deterioration in condition. Maintain current PPI regimen."
+        "progress_notes": "Symptoms persist; additional diagnostic procedures necessary.",
+        "follow_up_instructions": "Schedule EGD for comprehensive evaluation."
       }
     ],
     "images": [],
@@ -1528,33 +1526,33 @@
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
-      "alcohol_use": "Moderate - 4-5 drinks/week",
+      "alcohol_use": "Moderate - 3 drinks/week",
       "alcohol_frequency": "2-3 beers on weekends",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-03-05",
-      "last_visit_reason": "Review recent imaging and persistent symptoms",
+      "last_visit_reason": "Worsening heartburn symptoms",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Completed CBT for anxiety",
-      "mental_health_current": "Stable with no significant anxiety episodes",
+      "mental_health_history": "Anxiety management through CBT",
+      "mental_health_current": "PHQ-9: 3 - Minimal depression",
       "exercise_habits": "Walks 3x/week",
-      "diet_notes": "Follows balanced diet with moderate sodium and fat",
-      "family_history_relevant": "No significant gastrointestinal illnesses in family history."
+      "diet_notes": "Avoids spicy and trigger foods",
+      "family_history_relevant": "Father with history of GERD"
     },
     "vital_signs_current": {
       "recorded_date": "2026-03-05",
-      "blood_pressure": "135/88 mmHg",
-      "heart_rate": "80 bpm",
+      "blood_pressure": "128/84 mmHg",
+      "heart_rate": "72 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": null,
-      "oxygen_saturation": null,
-      "temperature": "98.7\u00b0F",
-      "respiratory_rate": null
+      "bmi": "25.1 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": null,
+      "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "Last prostate screening was unremarkable, no urologic issues reported."
+    "gender_specific_history": null
   },
   "262": {
     "first_name": "Maxine",

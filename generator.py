@@ -132,6 +132,26 @@ def get_today_date() -> str:
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
+def _is_policy_criteria_doc(doc) -> bool:
+    """
+    Identify payer policy criteria documents to exclude from output for now.
+    """
+    title = str(getattr(doc, "title_hint", "") or "")
+    if re.search(r"(payer\s+policy|policy\s+criteria|policy\s+summary)", title, re.IGNORECASE):
+        return True
+    try:
+        content = doc.content
+        if isinstance(content, dict):
+            content_text = json.dumps(content)
+        else:
+            content_text = str(content)
+        if re.search(r"(payer\s+policy|policy\s+criteria)", content_text, re.IGNORECASE):
+            return True
+    except Exception:
+        pass
+    return False
+
+
 # ─── FILENAME HELPERS ─────────────────────────────────────────────────────────
 
 def _sanitize_filename_component(name: str) -> str:
@@ -186,7 +206,6 @@ def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | N
         "You MUST directly address the exact deficiencies listed below with explicit, verifiable clinical evidence.",
         "Do NOT add unrelated or speculative data. Every remediation must be supported by concrete timeline events, tests, and treatments.",
         "Cross-check consistency: any new data must be reflected in persona, encounters, and documents without contradictions.",
-        "If a policy criteria summary is included, state it as a synthesized checklist for test purposes and ensure it aligns with the clinical facts provided.",
         "",
         "Required fixes:",
         "- Document conservative treatment attempts with dates, duration, and response.",
@@ -195,7 +214,6 @@ def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | N
         "- Include a complete clinical timeline with dated milestones.",
         "- Ensure patient name and DOB are present in primary PA request fields.",
         "- Ensure provider address and plan type are explicitly present.",
-        "- Include a payer policy criteria summary document or section with specific criteria and how the case meets them.",
         "",
         "Assessment contributing factors:",
         contributing_text,
@@ -392,6 +410,13 @@ def process_patient_workflow(
     # Persist history entry regardless of subsequent steps
     history_manager.append_history(patient_id, feedback, result.changes_summary)
 
+    # Filter out policy criteria summary documents for now
+    documents_all = result.documents or []
+    filtered_documents = [doc for doc in documents_all if not _is_policy_criteria_doc(doc)]
+    if len(filtered_documents) != len(documents_all):
+        removed = len(documents_all) - len(filtered_documents)
+        print(f"   🧹 Removed {removed} payer policy criteria document(s) from output.")
+
     # ── 6. SAVE PATIENT PERSONA TO DB ─────────────────────────────────────────
     p_full_name = None
     if result.patient_persona:
@@ -421,7 +446,7 @@ def process_patient_workflow(
             patient_id,
             p_full_name,
             result.patient_persona,
-            result.documents,
+            filtered_documents,
             image_map=None,
             mrn=current_mrn,
             output_folder=PERSONA_DIR,
@@ -432,7 +457,7 @@ def process_patient_workflow(
         print(f"   👤 Persona → {pf}")
 
     # ── 8b. REPORTS ────────────────────────────────────────────────────────────
-    if generation_mode["reports"] and result.documents:
+    if generation_mode["reports"] and filtered_documents:
         # Load template sections for template-driven PDF ordering (intensive PDF fix)
         templates_dir = os.path.join(os.path.dirname(__file__), "templates")
         loaded_template_sections = []
@@ -447,8 +472,8 @@ def process_patient_workflow(
             else:
                 loaded_template_sections.append([])
 
-        print(f"   📄 Generating {len(result.documents)} report(s) at v{doc_version}…")
-        for seq, doc in enumerate(result.documents, start=1):
+        print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
+        for seq, doc in enumerate(filtered_documents, start=1):
             try:
                 seq_str            = f"{seq:03d}"
                 doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
@@ -475,14 +500,21 @@ def process_patient_workflow(
                         structured_data = json.loads(doc.content)
                     
                     provider_obj = result.patient_persona.provider if result.patient_persona else None
-                    if provider_obj:
-                        provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
-                        provider_address = getattr(provider_obj, "address", "N/A")
-                        provider_phone = getattr(provider_obj, "phone", "N/A")
-                    else:
-                        provider_str = "Unknown"
-                        provider_address = "N/A"
-                        provider_phone = "N/A"
+                    pa_request = getattr(result.patient_persona, "pa_request", None) if result.patient_persona else None
+                    provider_name = (
+                        getattr(pa_request, "requesting_provider", None)
+                        or getattr(provider_obj, "generalPractitioner", None)
+                        or "Unknown"
+                    )
+                    provider_address = getattr(provider_obj, "address", "N/A") if provider_obj else "N/A"
+                    provider_phone = getattr(provider_obj, "phone", "N/A") if provider_obj else "N/A"
+
+                    facility_obj = getattr(result.patient_persona, "procedure_facility", None) if result.patient_persona else None
+                    facility_name = (
+                        getattr(facility_obj, "facility_name", None)
+                        or getattr(provider_obj, "managingOrganization", None)
+                        or "Diagnostic Center"
+                    )
                     
                     patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
                     payer_obj = result.patient_persona.payer if result.patient_persona else None
@@ -496,10 +528,10 @@ def process_patient_workflow(
                         "gender": result.patient_persona.gender if result.patient_persona else "",
                         "patient_phone": patient_phone,
                         "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
-                        "provider": provider_str,
+                        "provider": provider_name,
                         "provider_address": provider_address,
                         "provider_phone": provider_phone,
-                        "facility": "Diagnostic Center",
+                        "facility": facility_name,
                         "accession_id": f"ACC-{patient_id}-{seq_str}",
                         "doc_type": doc.title_hint,
                         "plan_type": plan_type
@@ -602,7 +634,7 @@ def process_patient_workflow(
                 search_results = search_results or {}
                 search_results["verification_notes"] = verification_notes
 
-            documents_for_summary = result.documents if generation_mode["reports"] else None
+            documents_for_summary = filtered_documents if generation_mode["reports"] else None
             annotator_summary = ai_engine.generate_annotator_summary(
                 case_details=case_data,
                 patient_persona=result.patient_persona,

@@ -25,7 +25,6 @@ def test_feedback():
 - Missing detailed chest pain symptom characteristics
 - Missing basic physical examination findings
 - Missing documentation of preliminary cardiac diagnostic steps
-- Absence of payer policy documents, preventing assessment against specific coverage criteria.
 - Absence of all supporting clinical documentation (e.g., medical records, lab results, imaging reports), which are critical for demonstrating medical necessity and policy alignment.
 - Absence of clinical timeline
 - Lack of supporting medical documentation (e.g., patient notes, lab results, imaging reports)
@@ -58,7 +57,7 @@ No clinical timeline data provided'''
         for idx, doc in enumerate(payload.documents):
             print(f"Document {idx+1}: {doc.title_hint}")
             doc_content = json.loads(doc.content)
-            # Find if it looks like an ECG, Payer Policy, etc.
+            # Find if it looks like an ECG or similar supportive document
             keys = list(doc_content.keys())[:3]
             print(f"  Keys: {keys}")
     except Exception as e:

@@ -9,6 +9,20 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 
+_REPORT_META_SKIP_KEYS = {
+    "sections",
+    "title",
+    "content",
+    "doc_id",
+    "doc_type",
+    "document_title",
+    "report_title",
+    "service_date",
+    "facility",
+    "provider",
+    "title_hint",
+}
+
 def _ensure_folder(path: str):
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
@@ -39,15 +53,31 @@ def format_report_content(content):
         sections = data.get("sections", [])
         # When AI returns JSON without "sections", render all top-level keys so persona PDF is not blank
         if not sections:
-            sections = [k for k in data.keys() if k != "sections"]
+            sections = [
+                k for k in data.keys()
+                if k != "sections" and str(k).lower() not in _REPORT_META_SKIP_KEYS
+            ]
         output = []
+
+        def _maybe_parse_json(val):
+            if not isinstance(val, str):
+                return val
+            text = val.strip()
+            if not text or text[0] not in "[{":
+                return val
+            try:
+                return json.loads(text)
+            except Exception:
+                return val
 
         def _format_value(val, depth=0):
             indent = "&nbsp;" * (depth * 4)
+            val = _maybe_parse_json(val)
             if isinstance(val, dict):
                 parts = []
                 for k, v in val.items():
                     key_title = str(k).replace("_", " ").title()
+                    v = _maybe_parse_json(v)
                     if isinstance(v, (dict, list)):
                         parts.append(f"{indent}<b>{key_title}:</b><br/>{_format_value(v, depth + 1)}")
                     else:
@@ -56,6 +86,7 @@ def format_report_content(content):
             elif isinstance(val, list):
                 parts = []
                 for item in val:
+                    item = _maybe_parse_json(item)
                     if isinstance(item, (dict, list)):
                         parts.append(f"{indent}•<br/>{_format_value(item, depth + 1)}")
                     else:
@@ -65,6 +96,8 @@ def format_report_content(content):
                 return f"{indent}{html.escape(str(val))}"
 
         for sec in sections:
+            if str(sec).lower() in _REPORT_META_SKIP_KEYS:
+                continue
             value = data.get(sec)
             if value is None or value == "":
                 continue
@@ -132,6 +165,32 @@ def _parse_formatted_sections(content_str: str) -> list:
     return sections if sections else [(None, content_str)]
 
 
+def _extract_report_metadata(content: str) -> dict:
+    """
+    Extract metadata from the [REPORT_METADATA] block produced by format_clinical_document().
+    Returns a dict with lowercase keys.
+    """
+    if not isinstance(content, str):
+        return {}
+    idx = content.find("[REPORT_METADATA]")
+    if idx == -1:
+        return {}
+    lines = content[idx:].splitlines()
+    metadata = {}
+    for line in lines[1:]:
+        if not line.strip():
+            if metadata:
+                break
+            continue
+        if line.startswith("[") and line.endswith("]"):
+            break
+        if ":" not in line:
+            continue
+        key, val = line.split(":", 1)
+        metadata[key.strip().lower()] = val.strip()
+    return metadata
+
+
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
@@ -160,27 +219,57 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
                                  fontSize=10, textColor=col_dark_blue, spaceBefore=10, spaceAfter=3, leading=13)
 
     Story = []
-    
-    if patient_persona and doc_metadata:
-        fac_name = getattr(doc_metadata, 'facility_name', 'General Hospital')
-        prov_name = getattr(doc_metadata, 'provider_name', 'Unknown Provider')
-        svc_date = getattr(doc_metadata, 'service_date', datetime.now().strftime("%Y-%m-%d"))
-        acc_num = getattr(doc_metadata, 'accession_number', f"ACC-{patient_id}-000")
-        
+
+    report_meta = _extract_report_metadata(content) if isinstance(content, str) else {}
+
+    if patient_persona:
+        facility_obj = getattr(patient_persona, "procedure_facility", None)
+        provider_obj = getattr(patient_persona, "provider", None)
+        pa_request = getattr(patient_persona, "pa_request", None)
+
+        fac_name = (
+            getattr(facility_obj, "facility_name", None)
+            or report_meta.get("facility")
+            or "General Hospital"
+        )
+        facility_lines = []
+        if facility_obj:
+            facility_lines = [
+                getattr(facility_obj, "department", ""),
+                getattr(facility_obj, "street_address", ""),
+                f"{getattr(facility_obj, 'city', '')}, {getattr(facility_obj, 'state', '')} {getattr(facility_obj, 'zip_code', '')}".strip()
+            ]
+        elif report_meta.get("facility"):
+            facility_lines = [report_meta.get("facility")]
+        facility_lines = [line for line in facility_lines if line]
+
+        prov_name = (
+            getattr(pa_request, "requesting_provider", None)
+            or getattr(provider_obj, "generalPractitioner", None)
+            or report_meta.get("provider")
+            or "Unknown Provider"
+        )
+        prov_npi = getattr(provider_obj, "formatted_npi", "N/A") if provider_obj else "N/A"
+
+        svc_date = (
+            report_meta.get("report_date")
+            or report_meta.get("service_date")
+            or datetime.now().strftime("%Y-%m-%d")
+        )
+        acc_num = report_meta.get("accession_id") or f"ACC-{patient_id}-000"
+
         p_name = f"{patient_persona.first_name} {patient_persona.last_name}"
         p_dob = patient_persona.dob
-        
-        p_mrn = f"MRN-{patient_id}-{svc_date[:4]}"
-        
+        p_mrn = report_meta.get("mrn") or f"MRN-{patient_id}-{svc_date[:4]}"
+
         header_left = [
             Paragraph(f"<b>{fac_name}</b>", styles['Heading3']),
-            Paragraph(f"123 Medical Center Dr, Suite 100", style_sub),
-            Paragraph(f"City, State, 12345", style_sub),
+            *[Paragraph(line, style_sub) for line in facility_lines],
             Spacer(1, 4),
             Paragraph(f"<b>Ordering Provider:</b><br/>{prov_name}", style_sub),
-            Paragraph(f"<b>NPI:</b> {getattr(patient_persona.provider, 'formatted_npi', 'N/A')}", style_sub)
+            Paragraph(f"<b>NPI:</b> {prov_npi}", style_sub)
         ]
-        
+
         header_right = [
             Paragraph(f"<b>PATIENT: {p_name.upper()}</b>", style_sub_right),
             Paragraph(f"MRN: {p_mrn} | DOB: {p_dob}", style_sub_right),
@@ -189,7 +278,7 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
             Paragraph(f"<b>SERVICE DATE: {svc_date}</b>", style_sub_right),
             Paragraph(f"ACCESSION #: {acc_num}", style_sub_right)
         ]
-        
+
         header_table = Table([[header_left, header_right]], colWidths=[3.5*inch, 3.5*inch])
         header_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
@@ -198,13 +287,15 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         ]))
         Story.append(header_table)
         Story.append(Spacer(1, 20))
-        
+
         raw_hint = getattr(doc_metadata, 'title_hint', '') if doc_metadata else ''
+        if not raw_hint:
+            raw_hint = report_meta.get("doc_type", "")
         clean_title = _clean_doc_title(raw_hint, doc_type_fallback=doc_type)
 
         Story.append(Paragraph(clean_title, style_tit))
         Story.append(Spacer(1, 20))
-        
+
     else:
         clean_title = _clean_doc_title('', doc_type_fallback=doc_type)
         Story.append(Paragraph(clean_title, styles['Heading1']))
