@@ -1,4 +1,4 @@
-# Clinical Data Generator (v3.0)
+# Clinical Data Generator (v5.0)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -18,7 +18,10 @@ The Web UI is the recommended way to use the generator.
 - **Windows**: Run `run_api.bat`
 - **macOS / Linux**: Run `chmod +x run_api.sh && ./run_api.sh`
 
-> **Note**: The default port is `410` (to avoid macOS port 5000 conflicts). Double-click `ui/index.html` to open the studio.
+> **Note**: The default port is `410` (to avoid macOS port 5000 conflicts). Open either UI in your browser:
+>
+> - **Dark UI**: `ui/index.html` (Material You dark theme)
+> - **Light UI**: `ui/index2.html` (Command Center light theme)
 
 #### 2. Start the CLI (Terminal Mode)
 
@@ -56,18 +59,43 @@ python remove_persona.py -f <Patient_ID>
 
 ---
 
-## 🖥️ Web UI Features
+## 🖥️ Web UI — 3-Silo Layout
 
-The `ui/index.html` interface provides a rich, dark-themed clinical data studio.
+Two interface files in `ui/` share the same **3-silo layout**:
 
-### Sidebar Controls
+| File | Theme |
+|------|-------|
+| `index.html` | Dark (Material You) |
+| `index2.html` | Light (Command Center) |
 
-- **Patient ID** — Select an existing patient or leave blank for a new one
-- **Generate Selected Patient** — Toggle which documents to create: Persona, Reports, Summary
-- **Generate All Patients (Batch)** — 🔁 Automatically generate documents for all patients in the database sequentially
-- **Purge Data** — 🗑️ Open a management modal to permanently clear specific generated data, personas, or the entire database
-- **PA Approval Optimization** — Strengthens clinical justifications for cases likely to be denied
-- **Feedback / Instructions** — Multi-line instruction field (no character limit)
+### Silo 1 — Patient & Case Info (Left)
+
+- Patient selector dropdown (all IDs from Excel plan)
+- Identity summary: DOB, Gender, Provider
+- UAT case details: Test Case #, Department, Procedure / CPT code
+- Expected outcome with **approval** (green) / **denial** (red) color coding
+- Primary diagnosis
+
+### Silo 2 — Clinical Detail Tabs (Center)
+
+7 inline tabs (no modal required):
+
+- **Medications** — brand, generic, dosage, status, prescriber
+- **Allergies** — allergen, reaction, severity with warnings
+- **Therapy** — CPT code, provider, frequency, status
+- **Procedures** — procedure, date, provider, facility
+- **Encounters** — type, date, provider, chief complaint
+- **Imaging** — type, date, facility, findings
+- **Labs** — type, date, results
+
+### Silo 3 — Generate & Documents (Right)
+
+- **Feedback textarea** — optional AI instructions
+- **Doc type checkboxes** — Persona / Reports / Summary
+- **Generate button** → `POST /api/generate` → live log polling
+- **Live log panel** — streams real-time generation output
+- **Document list** with type filter tabs (All / P / R / S) + inline PDF links
+- **Batch Modal** — header button opens patient checklist → `POST /api/generate_all`
 
 ### Clinical Data Input Tabs
 
@@ -139,6 +167,9 @@ When generating documents in different modes (persona only, reports only, summar
 - Reports reference the same facility and dates from the persona
 - Summaries align with existing persona and reports
 - No contradictory information across documents
+- **Policy criteria summary is excluded from clinical reports and the persona** (reserved for internal annotator summary content)
+- **Medical history and biography are never blank** — bio narrative and report history sections are backfilled if missing
+- **Rejection → Approval for reports**: when supporting reports are generated, rejection/denial outcomes are treated as approval for clinical document generation
 
 ### Intensive Document Generation (PA Support)
 
@@ -197,24 +228,24 @@ copy core\.env.example cred\.env
 Fill in `cred/.env`:
 
 ```bash
-# Choose provider
+# ─── LLM Provider Configuration ───────────────────────────────────────────────
+# Switch between 'openai' and 'vertexai' here. No other changes needed.
 LLM_PROVIDER=openai          # or vertexai
 
-# OpenAI
+# ─── OpenAI ───────────────────────────────────────────────────────────────────
 OPENAI_API_KEY=sk-your-key-here
 
-# OR Vertex AI
+# ─── Google Cloud / Vertex AI ─────────────────────────────────────────────────
 GCP_PROJECT_ID=your-project-id
 GCP_LOCATION=us-central1
+# Relative paths (./cred/...) are resolved against BASE_DIR automatically
 GOOGLE_APPLICATION_CREDENTIALS=./cred/gcp_auth_key.json
 
-# Output directory (absolute path recommended)
+# ─── Output & Runtime ─────────────────────────────────────────────────────────
 OUTPUT_DIR=/path/to/generated_output
+TEST_MODE=false
 
-# API server port (default: 410)
-API_PORT=410
-
-# Optional: Web Search
+# ─── Optional: Web Search ─────────────────────────────────────────────────────
 ENABLE_WEB_SEARCH=false
 TAVILY_API_KEY=your_tavily_key
 ```
@@ -237,7 +268,8 @@ pdgenerator/
 │   └── patients_db.json        # Patient records (auto-generated)
 │
 ├── ui/
-│   └── index.html              # Interactive web UI
+│   ├── index.html              # Dark interactive UI (Material You)
+│   └── index2.html             # Light interactive UI (Command Center)
 │
 ├── templates/
 │   └── summary_template.json   # Clinical summary PDF layout

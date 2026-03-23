@@ -5,7 +5,7 @@ This file contains all AI prompts and instructions used throughout the applicati
 Edit these prompts carefully to modify AI behavior.
 
 ⚠️ IMPORTANT GUIDELINES FOR EDITING:
-1. Maintain the exact structure markers (e.g., "--- REPORT START ---")
+1. Do NOT use any report start/end markers. Output clean, realistic clinical documents only.
 2. Keep field names consistent (e.g., PATIENT_ID, MRN, DOB)
 3. Test changes thoroughly - incorrect prompts can break document validation
 4. Add new instructions at the end of relevant sections
@@ -31,6 +31,10 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 5. **No SQL**: Do not generate SQL. Focus on the Object Model.
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
 7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
+8. **No Coverage/Sufficiency Judgments**: Do NOT include explicit approval/denial recommendations or judgments about sufficiency of evidence (e.g., "not indicated", "not medically necessary", "lacks rationale", "meets criteria", "insufficient evidence"). Present clinical facts and findings only.
+9. **Avoid the Word "Justification"**: Do not use the word "justification" in narrative text. Use factual clinical findings and prior treatment history instead.
+10. **Positive Evidence Emphasis**: Clinical narratives should emphasize positive, factual evidence (symptoms, findings, prior treatments, objective data) that supports the requested procedure without stating sufficiency or correctness.
+11. **No Outcome Guarantees**: Do not promise or imply the procedure will "fix" or "resolve" the condition. Describe goals and clinical reasoning grounded in documented findings.
 
 === MANDATORY PERSONA SECTIONS ===
 Every generated patient persona MUST include ALL of the following. No empty lists allowed for new patients:
@@ -96,6 +100,7 @@ J. **Medical Biography & History (bio_narrative - MANDATORY)**:
      * Detailed Family History relevant to the current condition.
      * Longitudinal timeline of symptoms and previous treatments.
      * Clinical rationale for the current referral/request.
+   - **NEVER leave this section blank**. If source data is limited, synthesize a clinically plausible, high-quality narrative that stays consistent with the persona, encounters, diagnoses, and requested procedure.
    - USE PLAIN TEXT. NO MARKDOWN. NO BOLDING.
 
 === PERSONA DOCUMENT AS SOURCE OF TRUTH ===
@@ -254,7 +259,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           Do NOT attempt to use markdown or raw text in `content`—it MUST be a structured JSON object.
           The `title_hint` field should match the template's title or logically reflect it.
          - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
-           If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment", "Payer Policy Document"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{"doc_type": "ECG", "findings": "...", "interpretation": "..."}}`) and add them to the `documents` list.
+           If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{"doc_type": "ECG", "findings": "...", "interpretation": "..."}}`) and add them to the `documents` list.
         - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
         - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
@@ -593,7 +598,7 @@ def get_feedback_instruction(user_feedback: str) -> str:
     **FEEDBACK IMPLEMENTATION MANDATE:**
     - If feedback requests a DEMOGRAPHIC change (e.g. gender, name, age) or baseline clinical change (e.g. remove an allergy, change a medication), you MUST immediately break the "Strict Identity Lock" and apply the requested change across ALL sections (persona, bio narrative, documents, pronouns).
     - If feedback requests **more supporting reports**, **more observations**, or **clinical timeline** — ADD those documents and enrich encounters/bio_narrative. The `patient_persona` object remains MANDATORY in the output; never omit it when adding documents.
-    - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test, Payer Policy Document), you MUST invent and generate those specific documents and add them to the `documents` list. DO NOT wait for a template. Invent a logical JSON structure for the newly requested document. The `patient_persona` MUST still be included.
+    - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test), you MUST invent and generate those specific documents and add them to the `documents` list. DO NOT wait for a template. Invent a logical JSON structure for the newly requested document. The `patient_persona` MUST still be included.
     - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters`, `images`, `reports`, and `procedures` lists AND `bio_narrative` to show a clear longitudinal history matching the findings.
     - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
     - If feedback points out **missing or empty administrative fields** (e.g. patient phone number, provider address, plan type), you MUST explicitly fill them in the persona and documents with realistic data instead of N/A or defaults.

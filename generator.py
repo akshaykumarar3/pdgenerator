@@ -4,6 +4,7 @@ import re
 import shutil
 import random
 import datetime
+import html as html_lib
 from datetime import timedelta
 from dotenv import load_dotenv
 
@@ -131,6 +132,43 @@ def get_today_date() -> str:
     return datetime.datetime.now().strftime("%Y-%m-%d")
 
 
+def _is_policy_criteria_doc(doc) -> bool:
+    """
+    Identify payer policy criteria documents to exclude from output for now.
+    """
+    title = str(getattr(doc, "title_hint", "") or "")
+    if re.search(r"(payer\s+policy|policy\s+criteria|policy\s+summary)", title, re.IGNORECASE):
+        return True
+    try:
+        content = doc.content
+        if isinstance(content, dict):
+            content_text = json.dumps(content)
+        else:
+            content_text = str(content)
+        if re.search(r"(payer\s+policy|policy\s+criteria)", content_text, re.IGNORECASE):
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
+    """
+    For clinical document generation, convert rejection/denial cases to approval
+    when supporting reports are being generated.
+    """
+    if not case_details:
+        return case_details
+    outcome = str(case_details.get("outcome", "") or "")
+    if not generation_mode.get("reports", False):
+        return case_details
+    if re.search(r"(reject|rejection|deny|denial)", outcome, re.IGNORECASE):
+        updated = dict(case_details)
+        updated["outcome"] = "PA Approval"
+        return updated
+    return case_details
+
+
 # ─── FILENAME HELPERS ─────────────────────────────────────────────────────────
 
 def _sanitize_filename_component(name: str) -> str:
@@ -185,7 +223,6 @@ def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | N
         "You MUST directly address the exact deficiencies listed below with explicit, verifiable clinical evidence.",
         "Do NOT add unrelated or speculative data. Every remediation must be supported by concrete timeline events, tests, and treatments.",
         "Cross-check consistency: any new data must be reflected in persona, encounters, and documents without contradictions.",
-        "If a policy criteria summary is included, state it as a synthesized checklist for test purposes and ensure it aligns with the clinical facts provided.",
         "",
         "Required fixes:",
         "- Document conservative treatment attempts with dates, duration, and response.",
@@ -194,7 +231,6 @@ def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | N
         "- Include a complete clinical timeline with dated milestones.",
         "- Ensure patient name and DOB are present in primary PA request fields.",
         "- Ensure provider address and plan type are explicitly present.",
-        "- Include a payer policy criteria summary document or section with specific criteria and how the case meets them.",
         "",
         "Assessment contributing factors:",
         contributing_text,
@@ -373,11 +409,15 @@ def process_patient_workflow(
     
     patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
-    print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
+    case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    if case_details_for_generation.get("outcome") != (case_data or {}).get("outcome"):
+        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')} → {case_details_for_generation.get('outcome', '?')})")
+    else:
+        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     try:
         result, usage = ai_engine.generate_clinical_data(
-            case_details=case_data,
+            case_details=case_details_for_generation,
             patient_state=patient_state,
             document_plan=document_plan,
             user_feedback=feedback,
@@ -390,6 +430,13 @@ def process_patient_workflow(
 
     # Persist history entry regardless of subsequent steps
     history_manager.append_history(patient_id, feedback, result.changes_summary)
+
+    # Filter out policy criteria summary documents for now
+    documents_all = result.documents or []
+    filtered_documents = [doc for doc in documents_all if not _is_policy_criteria_doc(doc)]
+    if len(filtered_documents) != len(documents_all):
+        removed = len(documents_all) - len(filtered_documents)
+        print(f"   🧹 Removed {removed} payer policy criteria document(s) from output.")
 
     # ── 6. SAVE PATIENT PERSONA TO DB ─────────────────────────────────────────
     p_full_name = None
@@ -420,7 +467,7 @@ def process_patient_workflow(
             patient_id,
             p_full_name,
             result.patient_persona,
-            result.documents,
+            filtered_documents,
             image_map=None,
             mrn=current_mrn,
             output_folder=PERSONA_DIR,
@@ -431,7 +478,7 @@ def process_patient_workflow(
         print(f"   👤 Persona → {pf}")
 
     # ── 8b. REPORTS ────────────────────────────────────────────────────────────
-    if generation_mode["reports"] and result.documents:
+    if generation_mode["reports"] and filtered_documents:
         # Load template sections for template-driven PDF ordering (intensive PDF fix)
         templates_dir = os.path.join(os.path.dirname(__file__), "templates")
         loaded_template_sections = []
@@ -446,8 +493,8 @@ def process_patient_workflow(
             else:
                 loaded_template_sections.append([])
 
-        print(f"   📄 Generating {len(result.documents)} report(s) at v{doc_version}…")
-        for seq, doc in enumerate(result.documents, start=1):
+        print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
+        for seq, doc in enumerate(filtered_documents, start=1):
             try:
                 seq_str            = f"{seq:03d}"
                 doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
@@ -474,14 +521,21 @@ def process_patient_workflow(
                         structured_data = json.loads(doc.content)
                     
                     provider_obj = result.patient_persona.provider if result.patient_persona else None
-                    if provider_obj:
-                        provider_str = f"{provider_obj.generalPractitioner} (NPI: {provider_obj.formatted_npi})"
-                        provider_address = getattr(provider_obj, "address", "N/A")
-                        provider_phone = getattr(provider_obj, "phone", "N/A")
-                    else:
-                        provider_str = "Unknown"
-                        provider_address = "N/A"
-                        provider_phone = "N/A"
+                    pa_request = getattr(result.patient_persona, "pa_request", None) if result.patient_persona else None
+                    provider_name = (
+                        getattr(pa_request, "requesting_provider", None)
+                        or getattr(provider_obj, "generalPractitioner", None)
+                        or "Unknown"
+                    )
+                    provider_address = getattr(provider_obj, "address", "N/A") if provider_obj else "N/A"
+                    provider_phone = getattr(provider_obj, "phone", "N/A") if provider_obj else "N/A"
+
+                    facility_obj = getattr(result.patient_persona, "procedure_facility", None) if result.patient_persona else None
+                    facility_name = (
+                        getattr(facility_obj, "facility_name", None)
+                        or getattr(provider_obj, "managingOrganization", None)
+                        or "Diagnostic Center"
+                    )
                     
                     patient_phone = result.patient_persona.telecom if result.patient_persona else "N/A"
                     payer_obj = result.patient_persona.payer if result.patient_persona else None
@@ -495,10 +549,10 @@ def process_patient_workflow(
                         "gender": result.patient_persona.gender if result.patient_persona else "",
                         "patient_phone": patient_phone,
                         "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
-                        "provider": provider_str,
+                        "provider": provider_name,
                         "provider_address": provider_address,
                         "provider_phone": provider_phone,
-                        "facility": "Diagnostic Center",
+                        "facility": facility_name,
                         "accession_id": f"ACC-{patient_id}-{seq_str}",
                         "doc_type": doc.title_hint,
                         "plan_type": plan_type
@@ -601,7 +655,7 @@ def process_patient_workflow(
                 search_results = search_results or {}
                 search_results["verification_notes"] = verification_notes
 
-            documents_for_summary = result.documents if generation_mode["reports"] else None
+            documents_for_summary = filtered_documents if generation_mode["reports"] else None
             annotator_summary = ai_engine.generate_annotator_summary(
                 case_details=case_data,
                 patient_persona=result.patient_persona,
@@ -644,6 +698,255 @@ def process_patient_workflow(
 
     print(f"\n✅ Workflow complete for patient {patient_id}. {len(docs_written)} document(s) written.")
     return p_full_name
+
+
+# ─── PREVIEW GENERATION (AI only, no PDF write) ────────────────────────────────
+
+def preview_patient_generation(
+    patient_id: str,
+    feedback: str = "",
+    excluded_names: list[str] = None,
+    generation_mode: dict = None,
+) -> dict | None:
+    """
+    Run AI generation for a patient WITHOUT writing any PDFs.
+    Returns a JSON-serialisable payload dict for the preview UI.
+    """
+    if excluded_names is None:
+        excluded_names = []
+    if generation_mode is None:
+        generation_mode = {"persona": True, "reports": True, "summary": False}
+
+    generation_mode = {
+        "persona": generation_mode.get("persona", True),
+        "reports": generation_mode.get("reports", True),
+        "summary": False,   # summary is deferred until PDF confirm
+    }
+
+    print(f"\n🔍 Preview generation for Patient ID: {patient_id}")
+    case_data = data_loader.load_patient_case(patient_id)
+    if not case_data:
+        print(f"❌ Patient ID '{patient_id}' not found in Excel plan.")
+        return None
+
+    history_txt = history_manager.get_history(patient_id)
+    existing_patient = patient_db.load_patient(patient_id)
+    patient_state = state_manager.build_patient_state(patient_id, case_data)
+    document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
+
+    feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
+    try:
+        result, _usage = ai_engine.generate_clinical_data(
+            case_details=case_data,
+            patient_state=patient_state,
+            document_plan=document_plan,
+            user_feedback=feedback,
+            history_context=history_txt,
+            existing_persona=existing_patient,
+        )
+    except Exception as e:
+        print(f"❌ AI generation failed: {e}")
+        return None
+
+    # Persist persona to DB so PDF rendering later has the correct identity
+    if result.patient_persona:
+        patient_db.save_patient(patient_id, result.patient_persona.model_dump())
+
+    # Serialise to plain JSON
+    docs_serialised = []
+    for doc in (result.documents or []):
+        docs_serialised.append({
+            "title_hint": getattr(doc, "title_hint", "Clinical Document"),
+            "content": doc.content if isinstance(doc.content, dict) else str(doc.content),
+            "date": getattr(doc, "date", ""),
+        })
+
+    payload = {
+        "patient_persona": result.patient_persona.model_dump() if result.patient_persona else {},
+        "documents": docs_serialised,
+        "changes_summary": result.changes_summary,
+    }
+    print(f"✅ Preview ready: {len(docs_serialised)} document(s)")
+    return payload
+
+
+# ─── RENDER PDFs FROM CONFIRMED CONTENT ────────────────────────────────────────
+
+def _strip_html_tags(text: str) -> str:
+    return re.sub(r"<[^>]+>", "", text or "")
+
+
+def _html_to_sectioned_text(content_html: str) -> str:
+    """
+    Convert editor HTML into a deterministic, PDF-friendly plain-text format
+    with optional [SECTION] headings. This preserves structure without relying
+    on HTML rendering in ReportLab.
+    """
+    if not content_html:
+        return ""
+
+    text = content_html
+
+    # Headings to [SECTION] markers
+    def _heading_repl(match):
+        heading = _strip_html_tags(match.group(1))
+        heading = html_lib.unescape(heading)
+        heading = re.sub(r"\s+", " ", heading).strip()
+        if not heading:
+            return ""
+        label = heading.upper().replace(" ", "_")
+        return f"\n[{label}]\n"
+
+    text = re.sub(r"<h[1-6][^>]*>(.*?)</h[1-6]>", _heading_repl, text, flags=re.IGNORECASE | re.DOTALL)
+
+    # Lists and line breaks
+    text = re.sub(r"</p\s*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<li[^>]*>", "- ", text, flags=re.IGNORECASE)
+    text = re.sub(r"</li\s*>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"</(ul|ol)\s*>", "\n", text, flags=re.IGNORECASE)
+
+    # Strip remaining tags, unescape entities
+    text = _strip_html_tags(text)
+    text = html_lib.unescape(text)
+
+    # Normalize whitespace
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def render_patient_pdfs_from_content(
+    patient_id: str,
+    generation_mode: dict,
+    documents_content: list,   # [{title_hint, content_html}]
+    persona_json: dict | None = None,
+    summarize: bool = True,
+) -> list[str]:
+    """
+    Write PDFs from user-confirmed (possibly edited) content.
+    Skips AI re-generation — content is rendered directly.
+    Returns list of written filenames.
+    """
+    import types
+
+    docs_written: list[str] = []
+    current_year = datetime.datetime.now().year
+    current_mrn = f"MRN-{patient_id}-{current_year}"
+    doc_version = get_persona_version(patient_id)
+
+    # Reconstruct persona Pydantic object
+    persona_obj = None
+    source = persona_json or patient_db.load_patient(patient_id)
+    if source:
+        try:
+            from ai_engine import PatientPersona
+            persona_obj = PatientPersona(**source)
+        except Exception as e:
+            print(f"   ⚠️  Persona reconstruction failed: {e}")
+
+    case_data = None
+    try:
+        case_data = data_loader.load_patient_case(patient_id)
+    except Exception:
+        pass
+
+    p_full_name = (
+        f"{persona_obj.first_name} {persona_obj.last_name}" if persona_obj
+        else f"Patient_{patient_id}"
+    )
+
+    archive_patient_files(patient_id, generation_mode)
+    patient_report_folder = get_patient_report_folder(patient_id)
+    os.makedirs(patient_report_folder, exist_ok=True)
+
+    # ── Persona PDF ───────────────────────────────────────────────────────────
+    if generation_mode.get("persona", False) and persona_obj:
+        try:
+            persona_path = pdf_generator.create_persona_pdf(
+                patient_id, p_full_name, persona_obj, [],
+                image_map=None, mrn=current_mrn,
+                output_folder=PERSONA_DIR, version=doc_version,
+            )
+            docs_written.append(os.path.basename(persona_path))
+            print(f"   👤 Persona → {os.path.basename(persona_path)}")
+        except Exception as e:
+            print(f"   ⚠️  Persona PDF failed: {e}")
+
+    # ── Report PDFs from edited content ──────────────────────────────────────
+    if generation_mode.get("reports", False) and documents_content:
+        for seq, doc_info in enumerate(documents_content, start=1):
+            try:
+                title_hint = doc_info.get("title_hint", f"Document_{seq}")
+                content_html = doc_info.get("content_html", "")
+                content_body = _html_to_sectioned_text(content_html)
+                if not content_body and content_html:
+                    # Fallback: best-effort plain text
+                    content_body = _strip_html_tags(content_html).strip()
+                seq_str = f"{seq:03d}"
+                doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+                safe_title = _sanitize_filename_component(title_hint)
+                final_base = f"{doc_identifier}-{safe_title}"
+
+                fac_name = "Medical Center"
+                if persona_obj:
+                    proc_fac = getattr(persona_obj, "procedure_facility", None)
+                    if proc_fac:
+                        fac_name = getattr(proc_fac, "facility_name", "Medical Center")
+
+                prov_name = "Unknown Provider"
+                if persona_obj and getattr(persona_obj, "provider", None):
+                    prov_name = getattr(persona_obj.provider, "generalPractitioner", "Unknown Provider")
+
+                doc_meta = types.SimpleNamespace(
+                    title_hint=title_hint,
+                    facility_name=fac_name,
+                    provider_name=prov_name,
+                    service_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                    accession_number=f"ACC-{patient_id}-{seq_str}",
+                )
+                pdf_path = pdf_generator.create_patient_pdf(
+                    patient_id=patient_id,
+                    doc_type=final_base,
+                    content=content_body,
+                    patient_persona=persona_obj,
+                    doc_metadata=doc_meta,
+                    base_output_folder=patient_report_folder,
+                    image_path=None,
+                    version=doc_version,
+                )
+                docs_written.append(os.path.basename(pdf_path))
+                print(f"      ✅ {os.path.basename(pdf_path)}")
+            except Exception as e:
+                import traceback
+                print(f"      ❌ PDF failed for '{doc_info.get('title_hint','?')}': {e}")
+                print(traceback.format_exc())
+
+    # ── Summary PDF ───────────────────────────────────────────────────────────
+    if summarize and generation_mode.get("summary", False) and case_data and persona_obj:
+        try:
+            annotator_summary = ai_engine.generate_annotator_summary(
+                case_details=case_data,
+                patient_persona=persona_obj,
+                generated_documents=None,
+                search_results=None,
+            )
+            sum_path = pdf_generator.create_annotator_summary_pdf(
+                patient_id=patient_id,
+                annotator_summary=annotator_summary,
+                case_details=case_data,
+                patient_persona=persona_obj,
+                output_folder=SUMMARY_DIR,
+                version=doc_version,
+            )
+            if sum_path:
+                docs_written.append(os.path.basename(sum_path))
+                print(f"   📊 Summary → {os.path.basename(sum_path)}")
+        except Exception as e:
+            print(f"   ⚠️  Summary failed: {e}")
+
+    print(f"\n✅ {len(docs_written)} PDF(s) rendered from confirmed content.")
+    return docs_written
 
 
 # ─── CLI ENTRY POINT ───────────────────────────────────────────────────────────

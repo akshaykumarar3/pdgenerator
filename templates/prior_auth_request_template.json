@@ -12,8 +12,7 @@
         "supporting_diagnoses",
         "clinical_timeline",
         "previous_treatments",
-        "expected_outcome",
-        "policy_criteria_summary"
+        "expected_outcome"
     ],
     "patient_information": {
         "name": "patient_state.demographics.name",
@@ -47,6 +46,5 @@
     "supporting_diagnoses": "patient_state.diagnoses",
     "clinical_timeline": "",
     "previous_treatments": "",
-    "expected_outcome": "",
-    "policy_criteria_summary": ""
+    "expected_outcome": ""
 }

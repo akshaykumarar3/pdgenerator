@@ -17,4 +17,5 @@ generated_output/
 
 # Secrets
 core/*.json
-.cursor/
+.continue/
+.search_cache/

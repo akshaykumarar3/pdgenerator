@@ -1,293 +1,504 @@
 # AI Context: Clinical Data Generator
 
-> **Purpose**: This file provides comprehensive context for AI assistants working on this codebase.
+## Purpose
 
-## Product Overview
+This document provides persistent architectural and operational context for AI assistants working on this repository.
 
-The Clinical Data Generator is an AI-powered pipeline that synthesizes realistic healthcare data for testing Prior Authorization (PA) workflows. It generates:
+Agents must read this file before performing reasoning, planning, or code modifications.
 
-- **Clinical PDFs**: Lab reports, consult notes, imaging reports
-- **Patient Personas**: FHIR-compliant patient records
-- **Clinical Summaries**: Aggregate patient overviews
+This system generates **synthetic clinical documentation** for testing **Prior Authorization (PA) workflows** in healthcare systems.
 
-## Core Architecture
+Outputs include:
+
+* Clinical reports (lab, imaging, consult notes)
+* Patient personas (FHIR-aligned records)
+* Clinical summaries for case review
+* Verification summaries for annotators
+* Policy criteria summaries are intentionally excluded from patient-facing reports and persona outputs
+
+---
+
+# System Overview
+
+The Clinical Data Generator is an **AI-driven pipeline** that synthesizes realistic healthcare documentation from structured case inputs.
+
+Primary responsibilities:
+
+1. Generate realistic patient personas
+2. Generate clinical documents aligned with PA workflows
+3. Maintain temporal and clinical consistency
+4. Prevent document duplication
+5. Produce structured outputs for testing automation pipelines
+
+---
+
+# Core Architecture
 
 ```text
-generator.py          → Main orchestrator, REPL loop
-ai_engine.py          → LLM interaction (OpenAI/Vertex AI)
-prompts.py            → Centralized AI prompts & instructions
-state_manager.py      → V3 Core: Patient State deterministic source of truth
-document_planner.py   → V3 Core: Dynamic template planning and schema rendering
-pdf_generator.py      → PDF rendering (ReportLab)
-search_engine.py      → 🔍 Web search for medical codes (Tavily API)
-doc_validator.py      → Document structure validation and JSON formatting
-data_loader.py        → Excel case data loading
+generator.py          → Main orchestrator and REPL workflow
+ai_engine.py          → LLM interaction layer (OpenAI / Vertex)
+prompts.py            → Centralized prompt definitions
+state_manager.py      → Deterministic patient identity and demographic state
+document_planner.py   → Template planning and document schema selection
+pdf_generator.py      → PDF rendering via ReportLab
+doc_validator.py      → Validation and formatting of AI-generated documents
+search_engine.py      → Web search for medical codes (Tavily API)
+data_loader.py        → Excel test case ingestion
 history_manager.py    → Conversation history
-core/patient_db.py    → Patient record persistence
-purge_manager.py      → Data cleanup utilities
-remove_persona.py     → CLI tool to compeltely obliterate all persona data
+core/patient_db.py    → Patient persistence
+purge_manager.py      → Cleanup utilities
+remove_persona.py     → CLI utility to remove personas
 ```
 
-## Key Data Models (ai_engine.py)
+Architecture goal:
 
-- **FacilityDetails**: Healthcare facility information (name, address, city, state, ZIP, department)
-- **PARequestDetails**: Prior Authorization request form (provider, urgency, justification, diagnoses, treatments, outcome)
-- **PatientPersona**: FHIR-compliant patient with:
-  - Demographics, contacts, insurance
-  - **NEW**: `expected_procedure_date` (7-90 days future)
-  - **NEW**: `procedure_requested` (procedure name)
-  - **NEW**: `procedure_facility` (FacilityDetails object)
-  - **NEW**: `pa_request` (PARequestDetails object)
-- **GeneratedDocument**: Clinical document with title_hint, content (structured dictionary), date
-- **ClinicalDataPayload**: Combined persona + documents + summary
-- **AnnotatorSummary**: Verification guide with case explanation, medical details, verification pointers
-
-## Generation Workflow
-
-1. User enters Patient ID
-2. User selects generation mode (default: **Persona + Reports + Summary**)
-3. System scans for existing documents (smart duplicate prevention)
-   - Extracts titles from existing PDFs
-   - Passes list to AI to avoid unnecessary duplicates
-   - Only generates multiple reports when test case requires it
-4. **Web Search** (if enabled and Excel data incomplete):
-   - Checks Excel for procedure/CPT data
-   - Searches Tavily API for official CPT/ICD descriptions
-   - Adds verification notes for data quality issues
-5. AI generates clinical data based on case context + search results
-6. Documents are validated; invalid ones get AI repair
-7. PDFs are rendered and saved
-
-## Temporal Consistency & PA Workflow
-
-### Future Procedure Dates
-
-All personas include `expected_procedure_date` (7-90 days in future) for realistic Prior Authorization workflows.
-
-**Timeline Requirements**:
-
-- Medical history: 6 months to 5 years BEFORE procedure
-- Recent encounters: 1-12 weeks BEFORE procedure
-- Lab results: 1-4 weeks BEFORE procedure
-- Procedure date: 7-90 days in FUTURE
-
-**Date Calculation Functions** (`generator.py`):
-
-```python
-calculate_procedure_date()      # Returns date 7-90 days ahead
-calculate_encounter_date(...)   # Calculates relative dates
-get_today_date()                # Returns current date
+```text
+AI generation
+     ↓
+Validation
+     ↓
+Template rendering
+     ↓
+PDF output
 ```
 
-### Prior Authorization Request Forms
+This separation ensures reliability and deterministic output structure.
 
-Each persona includes a complete PA request section with:
+---
 
-- `requesting_provider`: Physician with credentials
-- `urgency_level`: Routine/Urgent/Emergency
-- `clinical_justification`: Medical necessity (2-3 sentences)
-- `supporting_diagnoses`: ICD-10 codes supporting request
-- `previous_treatments`: Prior treatments attempted
-- `expected_outcome`: Expected clinical benefit
+# Core Data Models
 
-### Facility Location
+Defined in `ai_engine.py`.
 
-Realistic healthcare facilities matching patient locality:
+### FacilityDetails
 
-- `facility_name`: Hospital/clinic name
-- `street_address`, `city`, `state`, `zip_code`: Complete address
-- `department`: Appropriate for procedure type
-- **Constraint**: Facility MUST be in same state as patient
+Represents healthcare facility metadata.
 
-### Document Coherence
+Fields include:
 
-`load_existing_context()` function ensures consistency across generation modes:
+* facility_name
+* street_address
+* city
+* state
+* zip_code
+* department
 
-- Extracts `procedure_date` and `facility` from existing persona
-- Reports/summaries reference same facility and dates
-- No contradictory information across documents
+Constraint:
 
-## Configuration
+Facility must always match the patient's state.
 
-**Environment** (`cred/.env`):
+---
 
-- `LLM_PROVIDER`: `openai` or `vertexai`
-- `TEST_MODE`: `true` for fast/cheap models
-- `OUTPUT_DIR`: Where generated files are saved
-- `ENABLE_WEB_SEARCH`: `true` to enable medical code lookup (default: `false`)
-- `TAVILY_API_KEY`: API key for web search (get free at <https://tavily.com>)
-- `SEARCH_CACHE_TTL`: Cache duration in hours (default: 24)
+### PARequestDetails
 
-**Models**:
+Represents the Prior Authorization request.
 
-- Prod: GPT-4o / Gemini 2.5 Pro
-- Test: GPT-4o-mini / Gemini 2.5 Flash
+Fields include:
 
-## Recent Changes (Feb 2026)
+* requesting_provider
+* urgency_level
+* clinical_justification
+* supporting_diagnoses
+* previous_treatments
+* expected_outcome
 
-### Web Search Integration (NEW - Feb 15, 2026)
+Purpose:
 
-- **Medical Code Lookup**: Retrieves precise CPT/ICD descriptions from authoritative sources (AAPC, CMS)
-- **Verification Notes System**: Automatically adds notes when data quality is uncertain
-- **Conservative Strategy**: Prioritizes Excel data, only searches when data is missing/incomplete
-- **Quality Thresholds**: Rejects poor quality search results (< 20 chars)
-- **Caching**: 24-hour file-based cache to reduce API costs
-- **Data Models**: `CPTCodeInfo`, `ICD10CodeInfo`, `PolicyCriteria`
-- **Configuration**: Optional feature, disabled by default
+Provide structured medical justification for requested procedures.
 
-### Annotator Summary Improvements (NEW - Feb 15, 2026)
+---
 
-- **Simplified PDF Layout**: Removed redundant sections (Target Procedure, Medical Coding Summary table)
-- **Clean Table**: Only shows Expected Outcome and Verification Notes
-- **Bio Narrative Extraction**: Extracts CPT/ICD codes from patient bio instead of non-existent fields
-- **No More N/A**: Removed all "N/A" fallbacks, only shows fields with actual data
-- **Embedded Codes**: All CPT/ICD codes now in narrative text for better context
+### PatientPersona
 
-### Smart Duplicate Detection
+FHIR-aligned patient model including:
 
-- **Intelligent Document Scanning**: Scans existing PDFs before generation
-- **Title Extraction**: Accurately extracts document titles from filenames
-- **Duplicate Prevention**: Prevents creating duplicates like "Doc-221-001 CT scan" and "Doc-221-002 CT scan"
-- **Multiple Reports**: Only generates multiple reports when test case specifically requires it
-- **AI Integration**: Passes existing document list to AI for smart decision-making
+* demographics
+* insurance
+* contact details
+* expected_procedure_date
+* procedure_requested
+* procedure_facility
+* pa_request
 
-### Updated Default Generation Mode
+New workflow requirement:
 
-- **New Default**: "Persona + Reports + Summary" (previously "Summary + Reports")
-- **Reordered Menu**: More intuitive option ordering
-- **Comprehensive Output**: Generates complete patient records by default
+Procedure date must be **7–90 days in the future**.
 
-### Code Cleanup
+---
 
-- Removed `patch_prompts.py` and `patch_prompts_v2.py` (obsolete patching code)
-- Cleaner codebase with better maintainability
+### GeneratedDocument
 
-### Phase 9-11 Updates (March 2026)
+Represents a clinical document.
 
-- **UI Responsive Layout**: Log and Summary panels are alongside each other (side-by-side flex). All UI cards are vertically resizable.
-- **Batch Generation (`/api/generate_all`)**: Processes all patients sequentially via the backend instead of triggering 30 parallel frontend requests.
-- **Purge Management (`/api/purge`)**: Non-blocking modal in the UI to selectively or entirely wipe Generated Documents, Summaries, Personas, or the entire Patient Database.
-- **Save as Template (`/api/template/save`)**: Allows users to save a generated document into the `templates/` folder as a global template, archiving older templates automatically to `templates/archive/`.
-- **API Swagger Documentation**: Added `flasgger` to auto-generate OpenAPI spec pages at `/apidocs`.
+Fields:
 
-### V3 Architecture Core Updates (March 2026)
+* title_hint
+* content (structured dictionary)
+* date
 
-- **Patient State Determinism**: Introduction of `state_manager.py` to freeze Identity/Demographics generation, reusing previously stored inputs cleanly to avoid AI hallucinations.
-- **Document Planner Logic**: Introduction of `document_planner.py` to dynamically assign rendering schemas per CPT code/case type before execution via `templates/document_plan_rules.json`.
-- **JSON Scheme Rendering**: The AI is now instructed to strictly output JSON schema objects. The `GeneratedDocument.content` field is enforced as a Pydantic `Dict` or `Any` to ensure the `instructor` library parses it into structured data before validation.
-- **Validator Support**: `doc_validator.py` supports both structured dictionaries and legacy plain-text as a fallback.
-- **Robust Configuration**: `ai_engine.py` supports `.env` discovery in both the root and `cred/` directories. Note: `generator.py` and `api_server.py` MUST call `load_dotenv` before importing `ai_engine` to ensure keys are available at module initialization.
-- **Document Alias Support**: `ClinicalDataPayload` uses `documents` with an alias `structured_documents` to improve AI understanding and adherence to document generation requirements.
-- **Template Key Synchronization**: The key `document_templates` is used consistently in `document_planner.py` and `prompts.py` to ensure the AI identifies the correct document plan.
+Content must always be structured JSON.
 
-### Intensive PDF Generation (March 2026)
+---
 
-- **Document content intensity**: In `prompts.py`, a "Document content intensity" block requires multi-sentence sections (findings, impression, clinical_justification, HPI, etc.) with specific measurements and clinical detail; includes a minimal vs. intensive example. Each document should be self-contained for PA review.
-- **Template-driven formatting**: `doc_validator.format_clinical_document()` accepts an optional `ordered_sections_override` (from template "sections"); nested dicts are flattened to readable key-value lines instead of raw Python dict repr.
-- **Diagnostic case documents**: Diagnostic case type now includes `consult_note_template.json` so E&M-style cases produce prior_auth + consult note + summary (3 documents).
-- **Sparse-document check**: Generator logs a warning when a report body is under 200 characters, suggesting regeneration with feedback.
-- **Robust Debug Directory**: `document_planner.py` includes robust error handling for `generated_output/debug` directory creation to prevent permission-related crashes.
+### ClinicalDataPayload
 
-### Centralized Prompts
+Combined generation output containing:
 
-- **`prompts.py`**: All AI instructions now in one file with user-friendly comments
-- Helper functions: `get_clinical_data_prompt()`, `get_image_generation_prompt()`, etc.
-- Easy customization without touching core logic
+* persona
+* documents
+* summary
 
-### Removed Standalone Image Generation (Feb 2026)
+---
 
-- Removed AI image generation from document workflow
-- Documents no longer include standalone generated images
-- Simplified generation process focuses on text-based clinical documents
+### AnnotatorSummary
 
-### Windows Compatibility
+Human verification guide containing:
 
-- Added `run.bat` for Windows users
-- Cross-platform documentation in README
-- Example configuration in `core/.env.example`
+* case explanation
+* verification notes
+* clinical reasoning summary
 
-### Bug Fixes
+---
 
-- Fixed http2 hang in OpenAI client
-- Fixed system role error in Vertex AI
-- Fixed sequence number duplication
+# Generation Workflow
 
-## Common Modification Patterns
+1. User selects Patient ID
+2. User selects generation mode
+3. Existing documents are scanned
+4. AI receives existing document list
+5. AI generates persona and reports
+6. Documents are validated
+7. Invalid documents are repaired
+8. PDFs are rendered and saved
 
-### Customize AI Prompts
+Key rule:
 
-1. Open `prompts.py` (all prompts centralized here)
-2. Edit relevant function or constant
-3. Read comments for guidelines
-4. Test changes with `TEST_MODE=true`
+AI must avoid generating duplicate document types when documents already exist.
 
-### Add New Document Type
+---
 
-1. Update `GeneratedDocument` in `ai_engine.py`
-2. Add rendering logic in `pdf_generator.py`
-3. Update AI prompt in `prompts.py`
+# Temporal Consistency Rules
 
-### Add New Patient Field
+Procedure timeline must follow:
 
-1. Update `PatientPersona` model in `ai_engine.py`
-2. Update prompt instructions in `prompts.py`
-3. Update PDF rendering in `create_persona_pdf()`
+```text
+Medical history → 6 months to 5 years before procedure
+Encounters → 1 to 12 weeks before procedure
+Lab results → 1 to 4 weeks before procedure
+Procedure date → 7 to 90 days in the future
+```
 
-### Change AI Provider
+Functions in `generator.py` enforce this:
 
-1. Update `LLM_PROVIDER` in `cred/.env`
-2. Verify `MODEL_NAME` mapping in `ai_engine.py`
+* calculate_procedure_date()
+* calculate_encounter_date()
+* get_today_date()
 
-### Improve Image Quality
+---
 
-1. Edit `get_image_generation_prompt()` in `prompts.py`
-2. Add specific requirements (resolution, style, anatomical details)
-3. Follow comments in prompts.py for guidance
+# Document Coherence
 
-## File Naming Conventions
+The function `load_existing_context()` guarantees that:
 
-- Documents: `DOC-{patient_id}-{seq}-{title}.pdf`
-- Personas: `{patient_id}-{name}-persona.pdf`
-- Summaries: `Clinical_Summary_Patient_{id}.pdf`
-- Images: `{title}_{timestamp}.png`
+* procedure date remains consistent
+* facility remains consistent
+* reports reference the same procedure
 
-## Error Handling
+Contradictory data across documents must never occur.
 
-- **Validation Failure**: AI attempts repair; suffix `-NAF` if repair fails
-- **AI Failure**: Exception caught, error printed, workflow continues
-- **Missing Data**: Graceful fallbacks with default values
+Quality guardrails:
 
-## Testing
+* `bio_narrative` is never blank; if the LLM omits it or returns a too-short narrative, it is backfilled from persona data, encounters, diagnoses, and case details.
+* Report `past_medical_history` sections are never blank; missing history is backfilled from supporting diagnoses or case context.
+* Clinical documents must avoid coverage/appropriateness or sufficiency judgments (e.g., "not indicated", "not medically necessary", "meets criteria", "insufficient evidence"). Notes should remain factual and clinically descriptive.
+* When supporting reports are generated, rejection/denial outcomes are converted to approval for clinical document generation. (Annotator summaries may still reflect original test case outcomes.)
 
-**Windows:**
+---
 
-```cmd
-:: Syntax check
+# Web Search Integration
+
+Optional feature controlled by:
+
+```
+ENABLE_WEB_SEARCH=true
+```
+
+Uses Tavily API to retrieve:
+
+* CPT descriptions
+* ICD-10 descriptions
+* policy criteria
+
+Strategy:
+
+1. Prefer Excel case data
+2. Use web search only when data is missing
+3. Reject poor search results
+
+Cache duration:
+
+```
+SEARCH_CACHE_TTL=24 hours
+```
+
+---
+
+# V3 Architecture Components
+
+## State Manager
+
+Ensures deterministic patient identity generation.
+
+Prevents AI hallucination of demographics.
+
+---
+
+## Document Planner
+
+Maps case types to template schemas using:
+
+```
+templates/document_plan_rules.json
+```
+
+Purpose:
+
+Ensure documents follow correct structure before AI generation.
+
+---
+
+## JSON Schema Enforcement
+
+AI must output structured JSON.
+
+`doc_validator.py` enforces schema compliance.
+
+Legacy plain text is accepted only as fallback.
+
+---
+
+# Document Content Requirements
+
+All generated clinical documents must be **content-rich**.
+
+Requirements:
+
+* multi-sentence findings
+* realistic measurements
+* medically plausible details
+* structured sections
+
+Sparse documents (<200 characters) should trigger regeneration.
+
+---
+
+# Configuration
+
+Environment variables stored in:
+
+```
+cred/.env
+```
+
+Key settings:
+
+```
+LLM_PROVIDER=openai | vertexai
+TEST_MODE=true | false
+ENABLE_WEB_SEARCH=true | false
+OUTPUT_DIR=<path>
+```
+
+> **Switching providers**: Only change `LLM_PROVIDER` in `cred/.env`. All credentials for both
+> providers are always present in the file. No code changes required.
+
+`GOOGLE_APPLICATION_CREDENTIALS` may be a relative path (e.g. `./cred/gcp_auth_key.json`);
+`ai_engine.py` resolves it against `BASE_DIR` automatically.
+
+Models:
+
+Production:
+- GPT-4o (OpenAI)
+- Gemini 2.5 Pro (Vertex AI)
+
+Testing:
+- GPT-4o-mini (OpenAI)
+- Gemini 2.5 Flash (Vertex AI)
+
+---
+
+# Internal Helpers (`ai_engine.py`)
+
+Shared utilities in `ai_engine.py`:
+
+```
+_strip_json_fences(text)
+    → Strips ```json fences from raw model output
+
+_parse_vertex_response(resp, model_class, existing_persona=None)
+    → Full Vertex response parser: list unwrap, key alias fix,
+      Pydantic validation, and persona recovery fallback
+
+_quantize_prompt(prompt, case_details, patient_state, document_plan,
+                 user_feedback, history_context, existing_persona)
+    → 3-pass prompt size reducer activated when prompt > 80,000 chars:
+      Pass 1 — Trim history_context to first 2000 chars
+      Pass 2 — Strip template bodies (keep key names only)
+      Pass 3 — Hard truncate at budget boundary
+```
+
+Vertex AI `generate_content` calls use `max_output_tokens=65536` in `GenerationConfig`
+to prevent JSON truncation on large clinical payloads.
+
+A `vertex_doc_reminder` prefix is prepended to all Vertex AI prompts to force
+the `structured_documents` array in responses.
+
+---
+
+# File Naming Conventions
+
+Documents
+
+```
+DOC-{patient_id}-{seq}-{title}.pdf
+```
+
+Persona
+
+```
+{patient_id}-{name}-persona.pdf
+```
+
+Summary
+
+```
+Clinical_Summary_Patient_{id}.pdf
+```
+
+---
+
+# Modification Guidelines
+
+## Modify AI Prompts
+
+Edit:
+
+```
+prompts.py
+```
+
+Never modify prompts inside `ai_engine.py`.
+
+---
+
+## Add Document Type
+
+Steps:
+
+1. Update `GeneratedDocument` model
+2. Add rendering in `pdf_generator.py`
+3. Update prompt instructions
+
+---
+
+## Add Patient Fields
+
+Steps:
+
+1. Update `PatientPersona`
+2. Update prompts
+3. Update persona PDF rendering
+
+---
+
+# Error Handling
+
+Validation failure:
+
+```
+AI repair attempt
+```
+
+If repair fails:
+
+```
+suffix -NAF
+```
+
+AI errors do not terminate generation.
+
+Workflow continues gracefully.
+
+---
+
+# Testing
+
+Mac/Linux
+
+```
+python3 -m py_compile generator.py ai_engine.py prompts.py
+TEST_MODE=true python3 generator.py
+```
+
+Windows
+
+```
 python -m py_compile generator.py ai_engine.py prompts.py
-
-:: Run with test mode (cheaper/faster)
 set TEST_MODE=true
 python generator.py
 ```
 
-**Mac / Linux:**
+---
 
-```bash
-# Syntax check
-python3 -m py_compile generator.py ai_engine.py prompts.py
+# UI
 
-# Run with test mode
-TEST_MODE=true python3 generator.py
-```
+Two interface files in `ui/` — both implement the **3-silo layout**:
 
-## Important Notes for AI
+| File | Theme | Description |
+|------|-------|-------------|
+| `index.html` | Dark (Material You) | Material dark design |
+| `index2.html` | Light (Command Center) | Clean light design |
 
-1. All dates use YYYY-MM-DD format
-2. Patient IDs are numeric strings (e.g., "210", "237")
-3. Document titles should use underscores, not spaces
-4. **Smart Duplicate Detection**: Existing documents are scanned and passed to AI to prevent unnecessary duplicates
-5. **Multiple Reports**: Only generate multiple reports (e.g., Doc-221-001, Doc-221-002) when test case specifically requires different reports
-6. The `generation_mode` dict controls what gets generated (default: all three - persona, reports, summary)
-7. **Prompts are in `prompts.py`** - edit there, not in ai_engine.py
-8. Default generation mode is now "Persona + Reports + Summary" for comprehensive output
-9. **No Standalone Images**: Image generation has been removed from the document workflow
+**3-Silo Layout:**
+
+| Silo | Content |
+|------|---------|
+| Left (280px) | Patient selector + UAT case info (test case #, dept, CPT, expected outcome) + identity dossier |
+| Center (flex) | 7 inline clinical tabs: Medications / Allergies / Therapy / Procedures / Encounters / Imaging / Labs |
+| Right (300px) | Generation controls (feedback, doc type checkboxes, generate button) + live log stream + doc list |
+
+**Batch Modal:** Header button opens modal with all-patient checklist → `POST /api/generate_all`.
+
+**API endpoints used:**
+
+- `GET /api/patients` — patient ID list for selector
+- `GET /api/patient/<id>` — identity + case_details (UAT info) + clinical history
+- `GET /api/output/<id>` — list of generated documents
+- `GET /api/download/<id>/<type>/<name>` — open PDF inline
+- `POST /api/generate` — spawn single-patient generation job
+- `POST /api/generate_all` — spawn batch generation job
+- `GET /api/job/<job_id>?since=<offset>` — poll job status + incremental logs
+
+**Log Streaming Pattern:**
+- The job poll endpoint returns `{ status, logs: [...], log_total, ... }` — the field is `logs`, NOT `new_logs`
+- The UI tracks a `logOffset` variable (reset to 0 on each new job start)
+- Each poll request includes `?since=${logOffset}` so only new log lines are returned
+- After receiving logs, the UI increments `logOffset += d.logs.length`
+- This prevents duplicate log entries on successive polls
+
+API server runs on `http://localhost:410` by default (`API_PORT` env var).
+
+---
+
+# Key Rules for AI Agents
+
+1. Dates must use `YYYY-MM-DD`
+2. Patient IDs are numeric strings
+3. Document titles must use underscores
+4. Avoid generating duplicate reports
+5. Prompts must only be edited in `prompts.py`
+6. All documents must be internally consistent
+7. Do NOT add parsing logic inline — use `_parse_vertex_response()`
+8. Do NOT call `client.client.start_chat()` — use `generate_content()` directly
+9. All Vertex AI calls must include `max_output_tokens=65536`
+10. Call `_quantize_prompt()` before sending large prompts to Vertex AI

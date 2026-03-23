@@ -201,6 +201,9 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                 extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(proc_lines))
 
             if pa_optimize:
+                # Ensure reports are generated to support higher approval likelihood
+                if generation_mode is not None:
+                    generation_mode["reports"] = True
                 extra_blocks.append(
                     "PA APPROVAL OPTIMIZATION: Even if clinical outcome is expected denial/low-probability, "
                     "generate all clinical documents with the STRONGEST possible medical justification to "
@@ -260,6 +263,7 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
             _jobs[job_id]["logs"].append(f"❌ {err_msg}")
 
 
+
 def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
     """Background worker for batch processing all patients."""
     try:
@@ -276,38 +280,30 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
         for p_id in all_ids:
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
             try:
-                # Capture logs using the existing context manager redirect approach
                 import sys, io
                 original_stdout = sys.stdout
                 sys.stdout = io.StringIO()
-
                 try:
                     current_names = patient_db.get_all_patient_names()
                     result_name = process_patient_workflow(
-                        patient_id=p_id,
-                        feedback=feedback,
-                        excluded_names=current_names,
-                        generation_mode=generation_mode
+                        patient_id=p_id, feedback=feedback,
+                        excluded_names=current_names, generation_mode=generation_mode
                     )
                 finally:
-                    # Flush captured stdouts as logs
                     output = sys.stdout.getvalue()
                     sys.stdout = original_stdout
                     for line in output.splitlines():
                         if line.strip():
                             log_cb(line)
-
                 success_count += 1
                 log_cb(f"✅ {p_id} completed successfully (Result: {result_name})")
-
             except Exception as pe:
                 log_cb(f"❌ Failed processing {p_id}: {pe}")
-                
+
         with _jobs_lock:
             _jobs[job_id]["status"] = "done"
             _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(all_ids)} OK"
-            _jobs[job_id]["logs"].append(f"🏁 Batch run finished.")
-
+            _jobs[job_id]["logs"].append("🏁 Batch run finished.")
     except Exception as e:
         with _jobs_lock:
             _jobs[job_id]["status"] = "error"
@@ -315,9 +311,128 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
             _jobs[job_id]["logs"].append(f"❌ Fatal Batch Exception: {str(e)}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  ROUTES
-# ═══════════════════════════════════════════════════════════════════════════════
+def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
+                             generation_mode: dict, medications: list, allergies: list,
+                             vaccinations: list, therapies: list, behavioral_notes: str,
+                             encounters: list, images: list, reports: list, procedures: list):
+    """Background worker: AI-only generation, stores payload for preview UI (no PDFs)."""
+    with _jobs_lock:
+        _jobs[job_id]["status"] = "running"
+    try:
+        with JobLogger(job_id):
+            import generator as gen
+
+            # Build same combined_feedback as _run_generation
+            extra_blocks = []
+            if medications:
+                med_lines = [
+                    f"  - [{m.get('status','current').upper()}] {m.get('brand','')} ({m.get('generic_name','')}) "
+                    f"{m.get('dosage','')} | By: {m.get('prescribed_by','')} | Reason: {m.get('reason','')}"
+                    for m in medications
+                ]
+                extra_blocks.append("MEDICATIONS (use exactly as provided):\n" + "\n".join(med_lines))
+            if allergies:
+                a_lines = [
+                    f"  - {a.get('allergen','')} | {a.get('allergy_type','')} | {a.get('reaction','')} | {a.get('severity','')}"
+                    for a in allergies
+                ]
+                extra_blocks.append("ALLERGIES (use exactly as provided):\n" + "\n".join(a_lines))
+            if vaccinations:
+                v_lines = [
+                    f"  - {v.get('vaccine_name','')} | {v.get('date_administered','')} | Reason: {v.get('reason','')}"
+                    for v in vaccinations
+                ]
+                extra_blocks.append("VACCINATIONS (use exactly as provided):\n" + "\n".join(v_lines))
+            if therapies:
+                t_lines = [
+                    f"  - [{t.get('status','active').upper()}] {t.get('therapy_type','')} | {t.get('provider','')} | {t.get('frequency','')}"
+                    for t in therapies
+                ]
+                extra_blocks.append("THERAPY HISTORY (use exactly as provided):\n" + "\n".join(t_lines))
+            if behavioral_notes:
+                extra_blocks.append(f"BEHAVIORAL NOTES:\n  {behavioral_notes}")
+            if encounters:
+                e_lines = [
+                    f"  - [{e.get('type','')}] Date: {e.get('date','')} | {e.get('provider','')} | {e.get('reason','')}"
+                    for e in encounters
+                ]
+                extra_blocks.append("CLINICAL ENCOUNTERS (use exactly as provided):\n" + "\n".join(e_lines))
+            if images:
+                i_lines = [
+                    f"  - [{i.get('type','')}] Date: {i.get('date','')} | Findings: {i.get('findings','')}"
+                    for i in images
+                ]
+                extra_blocks.append("IMAGING STUDIES (use exactly as provided):\n" + "\n".join(i_lines))
+            if reports:
+                r_lines = [
+                    f"  - [{r.get('type','')}] Date: {r.get('date','')} | Results: {r.get('results','')}"
+                    for r in reports
+                ]
+                extra_blocks.append("LAB & PATHOLOGY REPORTS (use exactly as provided):\n" + "\n".join(r_lines))
+            if procedures:
+                p_lines = [
+                    f"  - {p.get('name','')} | Date: {p.get('date','')} | {p.get('reason','')}"
+                    for p in procedures
+                ]
+                extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(p_lines))
+
+            combined_feedback = feedback.strip()
+            if extra_blocks:
+                combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
+
+            current_names = patient_db.get_all_patient_names()
+            payload = gen.preview_patient_generation(
+                patient_id=patient_id,
+                feedback=combined_feedback,
+                excluded_names=current_names,
+                generation_mode=generation_mode,
+            )
+
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "done" if payload else "error"
+            _jobs[job_id]["preview_payload"] = payload
+            _jobs[job_id]["result"] = (
+                f"Preview ready: {len((payload or {}).get('documents', []))} documents"
+                if payload else "Preview generation failed"
+            )
+            if not payload:
+                _jobs[job_id]["error"] = "AI generation returned no payload"
+    except Exception as exc:
+        err_msg = f"ERROR: {exc}\n{traceback.format_exc()}"
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "error"
+            _jobs[job_id]["error"] = err_msg
+            _jobs[job_id]["logs"].append(f"❌ {err_msg}")
+
+
+def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: dict,
+                                  documents_content: list, persona_json: dict | None):
+    """Background worker: render PDFs from user-confirmed/edited content."""
+    with _jobs_lock:
+        _jobs[job_id]["status"] = "running"
+    try:
+        with JobLogger(job_id):
+            import generator as gen
+            docs_written = gen.render_patient_pdfs_from_content(
+                patient_id=patient_id,
+                generation_mode=generation_mode,
+                documents_content=documents_content,
+                persona_json=persona_json,
+                summarize=True,
+            )
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "done"
+            _jobs[job_id]["result"] = f"{len(docs_written)} PDF(s) generated"
+    except Exception as exc:
+        err_msg = f"ERROR: {exc}\n{traceback.format_exc()}"
+        with _jobs_lock:
+            _jobs[job_id]["status"] = "error"
+            _jobs[job_id]["error"] = err_msg
+            _jobs[job_id]["logs"].append(f"❌ {err_msg}")
+
+
+
+
 
 @app.route("/api/status")
 def api_status():
@@ -353,11 +468,24 @@ def api_patients():
 
 @app.route("/api/patient/<patient_id>")
 def api_get_patient(patient_id: str):
-    """Return the current DB record for a patient (if it exists)."""
+    """Return the current DB record for a patient plus UAT case details."""
     record = patient_db.load_patient(patient_id)
-    if record:
-        return jsonify({"found": True, "data": record})
-    return jsonify({"found": False, "data": None})
+
+    # Enrich with case/UAT info from the Excel plan so the UI can show
+    # case type, expected outcome, CPT/ICD codes without a separate call.
+    case_details: dict | None = None
+    try:
+        case_details = data_loader.get_case_details(patient_id)
+    except Exception:
+        pass
+
+    if record or case_details:
+        return jsonify({
+            "found": bool(record),
+            "data": record,
+            "case_details": case_details,
+        })
+    return jsonify({"found": False, "data": None, "case_details": None})
 
 
 @app.route("/api/generate", methods=["POST"])
@@ -443,6 +571,82 @@ def api_generate():
     return jsonify({"job_id": job_id, "status": "queued"})
 
 
+@app.route("/api/preview", methods=["POST"])
+def api_preview():
+    """Spawn AI-only generation job and return payload for preview editor (no PDFs written)."""
+    body = request.get_json(force=True) or {}
+    patient_id = str(body.get("patient_id", "")).strip()
+    if not patient_id:
+        return jsonify({"error": "patient_id is required"}), 400
+
+    feedback         = body.get("feedback", "")
+    generation_mode  = body.get("generation_mode", {"persona": True, "reports": True, "summary": False})
+    medications      = body.get("medications", [])
+    allergies        = body.get("allergies", [])
+    vaccinations     = body.get("vaccinations", [])
+    therapies        = body.get("therapies", [])
+    behavioral_notes = body.get("behavioral_notes", "")
+    encounters       = body.get("encounters", [])
+    images           = body.get("images", [])
+    reports          = body.get("reports", [])
+    procedures       = body.get("procedures", [])
+
+    job_id = str(uuid.uuid4())
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "status": "queued",
+            "logs": [f"🔍 Preview job {job_id} queued for patient {patient_id}"],
+            "error": None,
+            "result": None,
+            "preview_payload": None,
+            "patient_id": patient_id,
+            "created_at": datetime.now().isoformat(),
+            "request_context": {"source": "preview"},
+        }
+
+    t = threading.Thread(
+        target=_run_preview_generation,
+        args=(job_id, patient_id, feedback, generation_mode, medications, allergies,
+              vaccinations, therapies, behavioral_notes, encounters, images, reports, procedures),
+        daemon=True,
+    )
+    t.start()
+    return jsonify({"job_id": job_id, "status": "queued"})
+
+
+@app.route("/api/generate_from_content", methods=["POST"])
+def api_generate_from_content():
+    """Generate PDFs from user-confirmed (possibly edited) document content."""
+    body = request.get_json(force=True) or {}
+    patient_id = str(body.get("patient_id", "")).strip()
+    if not patient_id:
+        return jsonify({"error": "patient_id is required"}), 400
+
+    generation_mode   = body.get("generation_mode", {"persona": True, "reports": True, "summary": True})
+    documents_content = body.get("documents", [])   # [{title_hint, content_html}]
+    persona_json      = body.get("persona", None)
+
+    job_id = str(uuid.uuid4())
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "status": "queued",
+            "logs": [f"📄 PDF rendering job {job_id} queued for patient {patient_id}"],
+            "error": None,
+            "result": None,
+            "patient_id": patient_id,
+            "created_at": datetime.now().isoformat(),
+            "request_context": {"source": "generate_from_content"},
+        }
+
+    t = threading.Thread(
+        target=_run_generation_from_content,
+        args=(job_id, patient_id, generation_mode, documents_content, persona_json),
+        daemon=True,
+    )
+    t.start()
+    return jsonify({"job_id": job_id, "status": "queued"})
+
+
 @app.route("/api/generate_all", methods=["POST"])
 def api_generate_all():
     """
@@ -523,7 +727,8 @@ def api_job_status(job_id: str):
         "patient_id": job.get("patient_id"),
         "changes_summary": job.get("changes_summary"),
         "request_context": job.get("request_context", {}),
-        "all_logs": job["logs"],  # Full log for summary panel
+        "all_logs": job["logs"],
+        "preview_payload": job.get("preview_payload"),   # populated by /api/preview jobs
     })
 
 

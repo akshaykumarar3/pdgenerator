@@ -3,6 +3,47 @@ import json
 from datetime import datetime
 from typing import Optional, List, Any
 
+_SKIP_SECTION_KEYS = {
+    "sections",
+    "title",
+    "content",
+    "doc_id",
+    "doc_type",
+    "document_title",
+    "report_title",
+    "service_date",
+    "facility",
+    "provider",
+    "title_hint",
+    "policy_criteria_summary",
+    "policy_criteria",
+    "policy_criteria_checklist",
+    "coverage_limitations",
+    "case_alignment",
+    "required_documentation",
+    "policy_name",
+    "context",
+    "clinical_context",
+    "case_context",
+}
+
+
+def _maybe_parse_json(val: Any) -> Any:
+    """
+    If val is a JSON-encoded string, parse it into native Python types.
+    """
+    if not isinstance(val, str):
+        return val
+    text = val.strip()
+    if not text:
+        return val
+    if text[0] not in "[{":
+        return val
+    try:
+        return json.loads(text)
+    except Exception:
+        return val
+
 
 def _format_value(val: Any, depth: int = 0) -> str:
     """
@@ -11,10 +52,12 @@ def _format_value(val: Any, depth: int = 0) -> str:
     """
     if val is None:
         return ""
+    val = _maybe_parse_json(val)
     if isinstance(val, dict):
         lines = []
         for k, v in val.items():
             key_label = str(k).replace("_", " ").title()
+            v = _maybe_parse_json(v)
             if isinstance(v, (dict, list)):
                 sub = _format_value(v, depth + 1)
                 lines.append(f"{key_label}:\n{sub}")
@@ -24,6 +67,7 @@ def _format_value(val: Any, depth: int = 0) -> str:
     if isinstance(val, list):
         parts = []
         for item in val:
+            item = _maybe_parse_json(item)
             if isinstance(item, (dict, list)):
                 parts.append("- " + _format_value(item, depth + 1).replace("\n", "\n  "))
             else:
@@ -87,6 +131,8 @@ def format_clinical_document(
     body_parts = []
 
     for section_key in ordered_sections_normalized:
+        if section_key in _SKIP_SECTION_KEYS:
+            continue
         if section_key not in structured_content or structured_content[section_key] is None:
             continue
         val = structured_content[section_key]
@@ -99,7 +145,7 @@ def format_clinical_document(
         body_parts.append(f"[{label}]\n{val_str}")
 
     # Remaining keys not in ordered list
-    seen = set(ordered_sections_normalized) | {"narrative"}
+    seen = set(ordered_sections_normalized) | {"narrative"} | _SKIP_SECTION_KEYS
     for k, v in structured_content.items():
         k_lower = k.lower()
         if k_lower in seen or v is None:
@@ -116,8 +162,9 @@ def format_clinical_document(
     if "narrative" in structured_content and structured_content["narrative"]:
         narrative_block = f"\n[CLINICAL_TEXT]\n{structured_content['narrative']}\n"
 
-    final_doc = f"{header}\n{chr(10).join(body_parts)}{narrative_block}\n"
-    return final_doc
+    final_doc = f"{header}\n{chr(10).join(body_parts)}{narrative_block}"
+    # Clean finish: no trailing blank lines
+    return final_doc.rstrip() + "\n"
 
 # CONFIG
 VALIDATION_CONFIG = {

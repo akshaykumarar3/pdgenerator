@@ -9,6 +9,20 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 
+_REPORT_META_SKIP_KEYS = {
+    "sections",
+    "title",
+    "content",
+    "doc_id",
+    "doc_type",
+    "document_title",
+    "report_title",
+    "service_date",
+    "facility",
+    "provider",
+    "title_hint",
+}
+
 def _ensure_folder(path: str):
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
@@ -39,15 +53,31 @@ def format_report_content(content):
         sections = data.get("sections", [])
         # When AI returns JSON without "sections", render all top-level keys so persona PDF is not blank
         if not sections:
-            sections = [k for k in data.keys() if k != "sections"]
+            sections = [
+                k for k in data.keys()
+                if k != "sections" and str(k).lower() not in _REPORT_META_SKIP_KEYS
+            ]
         output = []
+
+        def _maybe_parse_json(val):
+            if not isinstance(val, str):
+                return val
+            text = val.strip()
+            if not text or text[0] not in "[{":
+                return val
+            try:
+                return json.loads(text)
+            except Exception:
+                return val
 
         def _format_value(val, depth=0):
             indent = "&nbsp;" * (depth * 4)
+            val = _maybe_parse_json(val)
             if isinstance(val, dict):
                 parts = []
                 for k, v in val.items():
                     key_title = str(k).replace("_", " ").title()
+                    v = _maybe_parse_json(v)
                     if isinstance(v, (dict, list)):
                         parts.append(f"{indent}<b>{key_title}:</b><br/>{_format_value(v, depth + 1)}")
                     else:
@@ -56,6 +86,7 @@ def format_report_content(content):
             elif isinstance(val, list):
                 parts = []
                 for item in val:
+                    item = _maybe_parse_json(item)
                     if isinstance(item, (dict, list)):
                         parts.append(f"{indent}•<br/>{_format_value(item, depth + 1)}")
                     else:
@@ -65,6 +96,8 @@ def format_report_content(content):
                 return f"{indent}{html.escape(str(val))}"
 
         for sec in sections:
+            if str(sec).lower() in _REPORT_META_SKIP_KEYS:
+                continue
             value = data.get(sec)
             if value is None or value == "":
                 continue
@@ -93,6 +126,71 @@ def _sanitize_filename(name: str) -> str:
     return name
 
 
+def _clean_doc_title(title_hint: str, doc_type_fallback: str = "") -> str:
+    """Clean AI-generated title hints into proper clinical report titles."""
+    raw = title_hint or doc_type_fallback or "Clinical Report"
+    # Strip file-ID prefix e.g. DOC-221-v1-001-
+    raw = re.sub(r'^DOC-\d+-v\d+-\d+-', '', raw)
+    # Replace underscores/dashes with spaces
+    raw = raw.replace('_', ' ').replace('-', ' ')
+    # Remove common AI-residue suffixes
+    raw = re.sub(
+        r'\s+(supporting document|for prior authorization|for PA|with contrast|related to|prepared for|supporting pa|per request).*$',
+        '', raw, flags=re.IGNORECASE
+    )
+    return raw.strip().title()
+
+
+def _parse_formatted_sections(content_str: str) -> list:
+    """
+    Parse content from format_clinical_document() which uses [SECTION_LABEL] markers.
+    Returns list of (label_or_None, body) tuples. Skips REPORT_METADATA block.
+    """
+    import re as _re
+    if '[REPORT_METADATA]' not in content_str and not _re.search(r'\[[A-Z][A-Z_ ]+\]', content_str):
+        return [(None, content_str)]  # plain text, no markers
+
+    sections = []
+    pattern = _re.compile(r'^\[([A-Z][A-Z_ ]*)\]\s*$', _re.MULTILINE)
+    matches = list(pattern.finditer(content_str))
+    for idx, m in enumerate(matches):
+        label = m.group(1).strip()
+        start = m.end()
+        end = matches[idx + 1].start() if idx + 1 < len(matches) else len(content_str)
+        body = content_str[start:end].strip()
+        if label == 'REPORT_METADATA':
+            continue  # skip raw metadata block – already in PDF header
+        if body:
+            sections.append((label, body))
+    return sections if sections else [(None, content_str)]
+
+
+def _extract_report_metadata(content: str) -> dict:
+    """
+    Extract metadata from the [REPORT_METADATA] block produced by format_clinical_document().
+    Returns a dict with lowercase keys.
+    """
+    if not isinstance(content, str):
+        return {}
+    idx = content.find("[REPORT_METADATA]")
+    if idx == -1:
+        return {}
+    lines = content[idx:].splitlines()
+    metadata = {}
+    for line in lines[1:]:
+        if not line.strip():
+            if metadata:
+                break
+            continue
+        if line.startswith("[") and line.endswith("]"):
+            break
+        if ":" not in line:
+            continue
+        key, val = line.split(":", 1)
+        metadata[key.strip().lower()] = val.strip()
+    return metadata
+
+
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
     patient_folder = base_output_folder
     _ensure_folder(patient_folder)
@@ -112,34 +210,66 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
     col_dark_blue = colors.HexColor("#34495e")
     col_gray = colors.gray
     
-    style_tit = ParagraphStyle('cpdf_MainTitle', parent=styles['Heading1'], textColor=col_dark_blue, 
+    style_tit = ParagraphStyle('cpdf_MainTitle', parent=styles['Heading1'], textColor=col_dark_blue,
                                borderPadding=0, borderWidth=0, alignment=1)
     style_sub = ParagraphStyle('cpdf_SubTitle', parent=styles['Normal'], fontSize=9, textColor=col_gray, alignment=0)
     style_sub_right = ParagraphStyle('cpdf_SubTitleRight', parent=styles['Normal'], fontSize=9, textColor=col_dark_blue, alignment=2)
-    style_normal = ParagraphStyle('cpdf_Justify', parent=styles['Normal'], alignment=4, leading=14) 
+    style_normal = ParagraphStyle('cpdf_Justify', parent=styles['Normal'], alignment=4, leading=14)
+    style_sec_h = ParagraphStyle('cpdf_SectionH', parent=styles['Normal'], fontName='Helvetica-Bold',
+                                 fontSize=10, textColor=col_dark_blue, spaceBefore=10, spaceAfter=3, leading=13)
 
     Story = []
-    
-    if patient_persona and doc_metadata:
-        fac_name = getattr(doc_metadata, 'facility_name', 'General Hospital')
-        prov_name = getattr(doc_metadata, 'provider_name', 'Unknown Provider')
-        svc_date = getattr(doc_metadata, 'service_date', datetime.now().strftime("%Y-%m-%d"))
-        acc_num = getattr(doc_metadata, 'accession_number', f"ACC-{patient_id}-000")
-        
+
+    report_meta = _extract_report_metadata(content) if isinstance(content, str) else {}
+
+    if patient_persona:
+        facility_obj = getattr(patient_persona, "procedure_facility", None)
+        provider_obj = getattr(patient_persona, "provider", None)
+        pa_request = getattr(patient_persona, "pa_request", None)
+
+        fac_name = (
+            getattr(facility_obj, "facility_name", None)
+            or report_meta.get("facility")
+            or "General Hospital"
+        )
+        facility_lines = []
+        if facility_obj:
+            facility_lines = [
+                getattr(facility_obj, "department", ""),
+                getattr(facility_obj, "street_address", ""),
+                f"{getattr(facility_obj, 'city', '')}, {getattr(facility_obj, 'state', '')} {getattr(facility_obj, 'zip_code', '')}".strip()
+            ]
+        elif report_meta.get("facility"):
+            facility_lines = [report_meta.get("facility")]
+        facility_lines = [line for line in facility_lines if line]
+
+        prov_name = (
+            getattr(pa_request, "requesting_provider", None)
+            or getattr(provider_obj, "generalPractitioner", None)
+            or report_meta.get("provider")
+            or "Unknown Provider"
+        )
+        prov_npi = getattr(provider_obj, "formatted_npi", "N/A") if provider_obj else "N/A"
+
+        svc_date = (
+            report_meta.get("report_date")
+            or report_meta.get("service_date")
+            or datetime.now().strftime("%Y-%m-%d")
+        )
+        acc_num = report_meta.get("accession_id") or f"ACC-{patient_id}-000"
+
         p_name = f"{patient_persona.first_name} {patient_persona.last_name}"
         p_dob = patient_persona.dob
-        
-        p_mrn = f"MRN-{patient_id}-{svc_date[:4]}"
-        
+        p_mrn = report_meta.get("mrn") or f"MRN-{patient_id}-{svc_date[:4]}"
+
         header_left = [
             Paragraph(f"<b>{fac_name}</b>", styles['Heading3']),
-            Paragraph(f"123 Medical Center Dr, Suite 100", style_sub),
-            Paragraph(f"City, State, 12345", style_sub),
+            *[Paragraph(line, style_sub) for line in facility_lines],
             Spacer(1, 4),
             Paragraph(f"<b>Ordering Provider:</b><br/>{prov_name}", style_sub),
-            Paragraph(f"<b>NPI:</b> {getattr(patient_persona.provider, 'formatted_npi', 'N/A')}", style_sub)
+            Paragraph(f"<b>NPI:</b> {prov_npi}", style_sub)
         ]
-        
+
         header_right = [
             Paragraph(f"<b>PATIENT: {p_name.upper()}</b>", style_sub_right),
             Paragraph(f"MRN: {p_mrn} | DOB: {p_dob}", style_sub_right),
@@ -148,7 +278,7 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
             Paragraph(f"<b>SERVICE DATE: {svc_date}</b>", style_sub_right),
             Paragraph(f"ACCESSION #: {acc_num}", style_sub_right)
         ]
-        
+
         header_table = Table([[header_left, header_right]], colWidths=[3.5*inch, 3.5*inch])
         header_table.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
@@ -157,17 +287,18 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         ]))
         Story.append(header_table)
         Story.append(Spacer(1, 20))
-        
-        clean_title = doc_type.replace('_', ' ').upper()
-        if hasattr(doc_metadata, 'title_hint'):
-            clean_title = doc_metadata.title_hint.replace('_', ' ').upper()
-            
-        Story.append(Paragraph(f"{clean_title}", style_tit))
+
+        raw_hint = getattr(doc_metadata, 'title_hint', '') if doc_metadata else ''
+        if not raw_hint:
+            raw_hint = report_meta.get("doc_type", "")
+        clean_title = _clean_doc_title(raw_hint, doc_type_fallback=doc_type)
+
+        Story.append(Paragraph(clean_title, style_tit))
         Story.append(Spacer(1, 20))
-        
+
     else:
-        title_str = doc_type.replace('_', ' ').upper()
-        Story.append(Paragraph(f"CLINICAL DOCUMENT: {title_str}", styles['Heading1']))
+        clean_title = _clean_doc_title('', doc_type_fallback=doc_type)
+        Story.append(Paragraph(clean_title, styles['Heading1']))
         Story.append(Spacer(1, 20))
     
     if image_path and os.path.exists(image_path):
@@ -177,23 +308,20 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         Story.append(img)
         Story.append(Spacer(1, 15))
 
-    if not patient_persona:
-        Story.append(Paragraph(f"<b>REPORT CONTENT:</b>", styles["Heading3"]))
-        Story.append(Spacer(1, 10))
-    
-    formatted_content = format_clinical_text(content)
-    
-    formatted_content = formatted_content.replace('\n', '<br/>')
-    
-    try:
-        Story.append(Paragraph(formatted_content, style_normal))
-    except ValueError as e:
-        import html
-        safe_content = html.escape(content).replace('\n', '<br/>')
-        Story.append(Paragraph(safe_content, style_normal))
-        print(f"   ⚠️ PDF Format Warning: Used plain text fallback due to: {e}")
-    
-    Story.append(Spacer(1, 12))
+    # Render content body – parse [SECTION_LABEL] markers into styled headings
+    sections = _parse_formatted_sections(content) if isinstance(content, str) else [(None, str(content))]
+    for (label, body) in sections:
+        if label:
+            section_display = label.replace('_', ' ').title()
+            Story.append(Paragraph(section_display, style_sec_h))
+        body_fmt = format_clinical_text(body).replace('\n', '<br/>')
+        try:
+            Story.append(Paragraph(body_fmt, style_normal))
+        except ValueError:
+            Story.append(Paragraph(html.escape(body).replace('\n', '<br/>'), style_normal))
+        Story.append(Spacer(1, 6))
+
+    Story.append(Spacer(1, 6))
             
     doc.build(Story)
     return file_path
@@ -987,14 +1115,6 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             t = Table(th_data, colWidths=[1.4*inch, 1.2*inch, 1.5*inch, 1.0*inch, 1.3*inch])
             t.setStyle(table_style)
             Story.append(t)
-
-            # Behavioral Notes
-            beh_notes = getattr(p, 'behavioral_notes', None)
-            if beh_notes:
-                Story.append(Spacer(1, 5))
-                Story.append(Paragraph("<b>Behavioral Context Notes:</b>", style_normal))
-                Story.append(Spacer(1, 3))
-                Story.append(Paragraph(beh_notes, style_normal))
 
             Story.append(Spacer(1, 10))
 
