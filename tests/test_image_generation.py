@@ -1,7 +1,7 @@
 import os
 import json
-from ai_engine import generate_clinical_image
-from pdf_generator import create_patient_pdf
+from src.ai.client import generate_clinical_image
+from src.doc_generation.pdf_generator import create_patient_pdf
 
 class MockDoc:
     def __init__(self, title, content):

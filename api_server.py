@@ -13,13 +13,15 @@ from flask_cors import CORS
 
 # ─── Bootstrap: ensure the generator package is importable ───────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SRC_DIR = os.path.join(BASE_DIR, "src")
+sys.path.insert(0, SRC_DIR)
 sys.path.insert(0, BASE_DIR)
 
-# ─── Load env early (same as generator.py) ───────────────────────────────────
+# ─── Load env early (same as src/cli.py) ─────────────────────────────────────
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 
-import data_loader
+from data import loader as data_loader
 import core.patient_db as patient_db
 
 # Refresh CPT code mapping from UAT Plan on server startup
@@ -108,7 +110,7 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
     try:
         with JobLogger(job_id):
-            import generator as gen
+            import workflow as wf
 
             # Build enriched feedback block
             extra_blocks = []
@@ -219,7 +221,7 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
             # Fetch exclusion names
             current_names = patient_db.get_all_patient_names()
 
-            result_name = gen.process_patient_workflow(
+            result_name = wf.process_patient_workflow(
                 patient_id=patient_id,
                 feedback=combined_feedback,
                 excluded_names=current_names,
@@ -275,7 +277,7 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
         log_cb(f"🚀 Starting BATCH generation for {len(all_ids)} patients.")
 
         success_count = 0
-        from generator import process_patient_workflow
+        from workflow import process_patient_workflow
 
         for p_id in all_ids:
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
@@ -320,7 +322,7 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
         _jobs[job_id]["status"] = "running"
     try:
         with JobLogger(job_id):
-            import generator as gen
+            import workflow as wf
 
             # Build same combined_feedback as _run_generation
             extra_blocks = []
@@ -381,7 +383,7 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
 
             current_names = patient_db.get_all_patient_names()
-            payload = gen.preview_patient_generation(
+            payload = wf.preview_patient_generation(
                 patient_id=patient_id,
                 feedback=combined_feedback,
                 excluded_names=current_names,
@@ -412,8 +414,8 @@ def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: 
         _jobs[job_id]["status"] = "running"
     try:
         with JobLogger(job_id):
-            import generator as gen
-            docs_written = gen.render_patient_pdfs_from_content(
+            import workflow as wf
+            docs_written = wf.render_patient_pdfs_from_content(
                 patient_id=patient_id,
                 generation_mode=generation_mode,
                 documents_content=documents_content,

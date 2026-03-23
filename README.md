@@ -27,6 +27,7 @@ The Web UI is the recommended way to use the generator.
 
 - **Windows**: Run `run.bat`
 - **macOS / Linux**: Run `chmod +x run.sh && ./run.sh`
+- **Direct** (any OS): `python run.py`
 
 ---
 
@@ -262,10 +263,22 @@ pdgenerator/
 │   ├── .env                    # Configuration
 │   └── examples/.env.example   # Template
 │
-├── core/                       # Reference data & patient database
+├── core/                       # Reference data (Excel plan, code maps)
 │   ├── UAT Plan.xlsx           # Patient test cases
-│   ├── patient_db.py           # Patient database module
-│   └── patients_db.json        # Patient records (auto-generated)
+│   └── cpt_code_map.json       # Derived CPT map
+│
+├── config/                     # Externalized rules & patterns
+│   ├── remediation_rules.json
+│   └── sanitization_patterns.json
+│
+├── src/
+│   ├── ai/                      # LLM client, prompts, models, QA, search
+│   ├── core/                    # Config + patient DB + state (patients_db.json)
+│   ├── data/                    # Loader + history + record writers
+│   ├── doc_generation/          # Planner, validator, PDF generation
+│   ├── utils/                   # File/date/purge utilities
+│   ├── cli.py                   # CLI entrypoint
+│   └── workflow.py              # Orchestration layer
 │
 ├── ui/
 │   ├── index.html              # Dark interactive UI (Material You)
@@ -281,17 +294,7 @@ pdgenerator/
 │   └── logs/                   # Generation history per patient
 │
 ├── api_server.py               # Flask REST API (serves the UI)
-├── generator.py                # Main orchestrator & CLI loop
-├── ai_engine.py                # LLM interaction + Pydantic models
-├── pdf_generator.py            # PDF rendering (ReportLab)
-├── prompts.py                  # AI prompt configuration
-├── state_manager.py            # V3 Core: Patient State deterministic source of truth
-├── document_planner.py         # V3 Core: Dynamic template planning and schema rendering
-├── search_engine.py            # Web search for medical codes (Tavily)
-├── doc_validator.py            # Document structure validation & template-driven formatting
-├── data_loader.py              # Excel case data loading
-├── history_manager.py          # Per-patient generation history
-├── purge_manager.py            # Data cleanup utilities
+├── run.py                      # CLI launcher (recommended)
 ├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
@@ -301,14 +304,17 @@ pdgenerator/
 └── requirements.txt
 ```
 
+**Patient DB:** The active database lives at `src/core/patients_db.json`. If a legacy `core/patients_db.json` exists, it is automatically migrated on first load.
+
 ### Key Files to Customize
 
 | File | Purpose |
 | :--- | :--- |
-| `prompts.py` | Edit AI behaviour and generation instructions |
+| `src/ai/prompts.py` | Edit AI behaviour and generation instructions |
 | `cred/.env` | Configure API keys, output path, port |
 | `core/UAT Plan.xlsx` | Patient test cases |
 | `templates/summary_template.json` | PDF layout structure |
+| `config/*.json` | External rules (remediation, sanitization) |
 
 ---
 

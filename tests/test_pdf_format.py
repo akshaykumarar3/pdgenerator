@@ -1,5 +1,5 @@
 import json
-from pdf_generator import format_report_content
+from src.doc_generation.pdf_generator import format_report_content
 
 def test_recursive_formatting():
     # Simulate a deeply nested payload similar to "Encounters Documentation"

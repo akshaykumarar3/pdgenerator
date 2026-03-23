@@ -10,7 +10,7 @@ IF NOT EXIST venv (
 )
 
 call venv\Scripts\activate
-python generator.py %*
+python run.py %*
 if %ERRORLEVEL% NEQ 0 (
     echo [CRASH] Generator exited with error. Check the logs.
     pause

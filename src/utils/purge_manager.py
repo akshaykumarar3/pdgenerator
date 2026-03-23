@@ -2,8 +2,8 @@ import os
 import shutil
 import glob
 import json
-import core.patient_db as patient_db
-from core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR, PERSONA_DIR
+from ..core import patient_db
+from ..core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR, PERSONA_DIR
 
 # Derived Paths (Mapped from config)
 DOCS_DIR = REPORTS_DIR
@@ -306,4 +306,3 @@ def purge_patient(patient_id: str, force: bool = False):
                 print(f"      ✅ Deleted: records/{os.path.basename(f)}")
 
     print(f"\n   ✨ Patient {patient_id} Purged.")
-

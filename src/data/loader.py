@@ -6,12 +6,13 @@ import pandas as pd
 import glob
 
 # Use absolute paths relative to project root for resource files
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-INPUT_EXCEL = os.path.join(BASE_DIR, "core", "UAT Plan.xlsx")
-SQL_FOLDER = os.path.join(BASE_DIR, "sqls")
-SCHEMA_PATH = os.path.join(BASE_DIR, "core", "mockdata_schema.sql")
-CORE_FOLDER = os.path.join(BASE_DIR, "core")
-CPT_MAP_PATH = os.path.join(BASE_DIR, "core", "cpt_code_map.json")
+DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(DATA_DIR))
+CORE_FOLDER = os.path.join(PROJECT_ROOT, "core")
+INPUT_EXCEL = os.path.join(CORE_FOLDER, "UAT Plan.xlsx")
+SQL_FOLDER = os.path.join(PROJECT_ROOT, "sqls")
+SCHEMA_PATH = os.path.join(CORE_FOLDER, "mockdata_schema.sql")
+CPT_MAP_PATH = os.path.join(CORE_FOLDER, "cpt_code_map.json")
 
 
 def _normalize_text(val) -> str:

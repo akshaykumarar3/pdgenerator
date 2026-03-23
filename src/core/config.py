@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from cred/.env relative to project root
-_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# __file__ is src/core/config.py → project root is three levels up.
+_project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _env_path = os.path.join(_project_root, "cred", ".env")
 load_dotenv(_env_path)
 

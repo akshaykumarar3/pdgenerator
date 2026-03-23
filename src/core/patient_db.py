@@ -3,10 +3,46 @@ import os
 from typing import Optional, Dict
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "patients_db.json")
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LEGACY_DB_PATH = os.path.join(PROJECT_ROOT, "core", "patients_db.json")
+
+
+def _migrate_legacy_db() -> bool:
+    """Migrate legacy patient DB from project_root/core into src/core if present."""
+    if not os.path.exists(LEGACY_DB_PATH):
+        return False
+    try:
+        with open(LEGACY_DB_PATH, "r", encoding="utf-8") as f:
+            legacy_data = json.load(f)
+        if not isinstance(legacy_data, dict) or not legacy_data:
+            return False
+        with open(DB_PATH, "w", encoding="utf-8") as f:
+            json.dump(legacy_data, f, indent=2)
+        print("   🔁 Migrated legacy patient DB to src/core/patients_db.json")
+        return True
+    except Exception:
+        return False
+
 
 def _init_db():
     if not os.path.exists(DB_PATH):
-        with open(DB_PATH, 'w', encoding='utf-8') as f:
+        if _migrate_legacy_db():
+            return
+        with open(DB_PATH, "w", encoding="utf-8") as f:
+            json.dump({}, f)
+        return
+
+    # If DB exists but is empty/invalid, attempt migration
+    try:
+        with open(DB_PATH, "r", encoding="utf-8") as f:
+            current = json.load(f)
+        if isinstance(current, dict) and not current:
+            if _migrate_legacy_db():
+                return
+    except (json.JSONDecodeError, ValueError):
+        if _migrate_legacy_db():
+            return
+        with open(DB_PATH, "w", encoding="utf-8") as f:
             json.dump({}, f)
 
 def load_patient(patient_id: str) -> Optional[Dict]:

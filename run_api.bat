@@ -12,5 +12,5 @@ IF NOT EXIST venv (
 echo [LAUNCH] Starting PD Generator API Server...
 set API_PORT=410
 call venv\Scripts\activate
-python api_server.py
+python -m api_server
 pause
