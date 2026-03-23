@@ -11,4 +11,4 @@ fi
 echo "[LAUNCH] Starting PD Generator API Server..."
 export API_PORT=410
 source venv/bin/activate
-python3 api_server.py
+python3 -m api_server

@@ -25,7 +25,7 @@ Sections:
 import os
 from datetime import datetime
 
-from core.config import RECORDS_DIR
+from ..core.config import RECORDS_DIR
 
 
 def _hr(width: int = 70) -> str:

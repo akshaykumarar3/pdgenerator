@@ -1,6 +1,6 @@
 import asyncio
 import json
-from ai_engine import generate_clinical_data
+from src.ai.client import generate_clinical_data
 
 def test_feedback():
     case_details = {

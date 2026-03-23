@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from cred/.env relative to project root
-_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# __file__ is src/core/config.py → project root is three levels up.
+_project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _env_path = os.path.join(_project_root, "cred", ".env")
 load_dotenv(_env_path)
 
@@ -13,12 +14,11 @@ REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
 SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary")
 LOGS_DIR = os.path.join(OUTPUT_DIR, "logs")
 RECORDS_DIR = os.path.join(OUTPUT_DIR, "records")
-SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
 
 
 def ensure_output_dirs():
     """Create all required output directories if they do not exist."""
-    for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR]:
+    for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR]:
         os.makedirs(d, exist_ok=True)
 
 

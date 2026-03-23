@@ -40,17 +40,17 @@ All generated documents must derive from a single structured patient record call
 ```mermaid
 graph TD
     UI["User Input / UI (ui/index.html, index2.html)"] --> API["API Server (api_server.py)"]
-    API --> Generator["Workflow Orchestrator (generator.py)"]
-    Generator --> DataLoader["Case Loader (data_loader.py)"]
+    API --> Generator["Workflow Orchestrator (src/workflow.py)"]
+    Generator --> DataLoader["Case Loader (src/data/loader.py)"]
     Generator --> PatientState["Patient State Builder"]
-    PatientState --> AIEngine["AI Engine (ai_engine.py)"]
+    PatientState --> AIEngine["AI Engine (src/ai/client.py)"]
     AIEngine --> Documents["Clinical Document Generator"]
-    Documents --> Validator["Document Validator (doc_validator.py)"]
-    Validator --> PDFFactory["PDF Renderer (pdf_generator.py)"]
+    Documents --> Validator["Document Validator (src/doc_generation/validator.py)"]
+    Validator --> PDFFactory["PDF Renderer (src/doc_generation/pdf_generator.py)"]
     PDFFactory --> Output["generated_output/"]
-    Generator --> Search["Search Engine (search_engine.py)"]
-    Generator --> History["History Manager (history_manager.py)"]
-    Generator --> DB["Patient Database (core/patient_db.py)"]
+    Generator --> Search["Search Engine (src/ai/search_engine.py)"]
+    Generator --> History["History Manager (src/data/history.py)"]
+    Generator --> DB["Patient Database (src/core/patient_db.py)"]
 ```
 
 ---
@@ -107,7 +107,7 @@ The Patient State Layer ensures that all documents reference the same patient da
 | 2 | Case Data Loading | Loads context from `core/UAT Plan.xlsx` (diagnoses, procedure requests) |
 | 3 | Patient State Construction | Builds `patient_state` from Excel, DB, and AI persona fields |
 | 4 | AI Generation | Calls LLM to produce `ClinicalDataPayload` (persona + documents) |
-| 5 | Document Validation | `doc_validator.py` checks structural integrity |
+| 5 | Document Validation | `src/doc_generation/validator.py` checks structural integrity |
 | 6 | PDF Rendering | Converts validated JSON to PDFs via template-driven layout |
 | 7 | Output Storage | Saves artifacts to `generated_output/` with IDs and timestamps |
 
@@ -120,7 +120,7 @@ The Patient State Layer ensures that all documents reference the same patient da
 
 ---
 
-## 6. AI Engine (`ai_engine.py`)
+## 6. AI Engine (`src/ai/client.py`)
 
 ### LLM Provider Selection
 
@@ -174,7 +174,7 @@ Medical events follow a realistic clinical timeline relative to the requested pr
 | Lab Tests | 1 – 4 weeks before procedure |
 | Procedure | 7 – 90 days in the future |
 
-Utility functions: `calculate_procedure_date()`, `calculate_encounter_date()` in `generator.py`.
+Utility functions: `calculate_procedure_date()`, `calculate_encounter_date()` in `src/utils/date_utils.py`.
 
 ---
 
@@ -191,20 +191,29 @@ The system performs a pre-generation scan of existing outputs:
 
 ## 9. Modular Components
 
-### AI Prompt Architecture (`prompts.py`)
+### AI Prompt Architecture (`src/ai/prompts.py`)
 
 All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`).
 
-### Search Engine (`search_engine.py`)
+### Search Engine (`src/ai/search_engine.py`)
 
 Retrieves external medical coding (CPT/ICD-10) and policy criteria from AAPC/CMS.
 
 - Cache: `.search_cache/`
 - TTL: 24 hours
 
-### Patient Database (`core/patient_db.py`)
+### Externalized Rules (`config/`)
 
-Persistent storage of generated personas in `core/patients_db.json` to preserve consistency across runs.
+Hardcoded logic is externalized into JSON configs:
+
+- `config/remediation_rules.json`
+- `config/sanitization_patterns.json`
+
+### Patient Database (`src/core/patient_db.py`)
+
+Persistent storage of generated personas in `src/core/patients_db.json` to preserve consistency across runs.
+
+Legacy `core/patients_db.json` is automatically migrated into `src/core/patients_db.json` on first load.
 
 ### UI Layer (`ui/`)
 
@@ -222,7 +231,8 @@ Both UIs wire dynamically to the API server at `http://localhost:410`.
 ```text
 pdgenerator/
 ├── cred/                       # .env and credentials
-├── core/                       # Patient DB, Excel UAT plans
+├── core/                       # Reference data (Excel plan, code maps)
+├── config/                     # Externalized rules & patterns
 ├── templates/                  # PDF and Document templates
 ├── generated_output/           # Final artifacts
 │   ├── persona/
@@ -232,17 +242,17 @@ pdgenerator/
 ├── ui/
 │   ├── index.html              # Dark UI (Material You)
 │   └── index2.html             # Light UI (Command Center)
-├── generator.py                # Main Orchestrator
-├── ai_engine.py                # LLM Interaction Layer
-├── prompts.py                  # Centralized Prompt Library
-├── api_server.py               # Flask REST API (port 410)
-├── pdf_generator.py            # Rendering Engine
-├── search_engine.py            # Web retrieval & Caching
-├── doc_validator.py            # Structural Validation
-├── data_loader.py              # File I/O for Case Data
-├── history_manager.py          # Session tracking
-├── purge_manager.py            # Cleanup utilities
-└── remove_persona.py           # Deep persona removal utility
+├── src/
+│   ├── ai/                      # LLM client, prompts, models, QA, search
+│   ├── core/                    # Config + patient DB + state (patients_db.json)
+│   ├── data/                    # Loader + history + record writers
+│   ├── doc_generation/          # Planner, validator, PDF generation
+│   ├── utils/                   # File/date/purge utilities
+│   ├── cli.py                   # CLI entrypoint
+│   └── workflow.py              # Orchestration layer
+├── api_server.py                # Flask REST API (port 410)
+├── run.py                       # CLI launcher (recommended)
+└── remove_persona.py            # Deep persona removal utility
 ```
 
 ---
@@ -252,7 +262,7 @@ pdgenerator/
 The system supports Windows, macOS, and Linux.
 
 - **Universal Encoding**: All file I/O uses `utf-8`.
-- **Path Abstraction**: `os.path.join` + absolute path resolution relative to each script's `__file__` directory. `GOOGLE_APPLICATION_CREDENTIALS` relative paths are resolved against `BASE_DIR` in `ai_engine.py`.
+- **Path Abstraction**: `os.path.join` + absolute path resolution relative to each script's `__file__` directory. `GOOGLE_APPLICATION_CREDENTIALS` relative paths are resolved against `BASE_DIR` in `src/ai/client.py`.
 - **Environment Isolation**: `python-dotenv` loads from `cred/.env`. No `export` prefixes in `.env` values.
 - **Entry Points**: `.sh` (Mac/Linux) and `.bat` (Windows) scripts change to the script directory before running — CWD-independent invocation.
 

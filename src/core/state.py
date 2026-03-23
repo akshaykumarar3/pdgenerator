@@ -5,7 +5,7 @@ import datetime
 import random
 from typing import Dict, Any
 
-from core import patient_db
+from . import patient_db
 
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")

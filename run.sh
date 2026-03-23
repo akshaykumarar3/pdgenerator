@@ -9,7 +9,7 @@ if [ ! -d "venv" ]; then
 fi
 
 source venv/bin/activate
-python3 generator.py "$@"
+python3 run.py "$@"
 if [ $? -ne 0 ]; then
     echo "[CRASH] Generator exited with error. Check the logs."
 fi

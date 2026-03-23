@@ -1,136 +1,22 @@
 import json
 import os
 import re
-import shutil
-import random
 import datetime
 import html as html_lib
-from datetime import timedelta
-from dotenv import load_dotenv
+import traceback
+import types
 
-# ─── BOOTSTRAP ENVIRONMENT ───────────────────────────────────────────────────
-_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-_env_path = os.path.join(_BASE_DIR, "cred", ".env")
-load_dotenv(_env_path)
-
-import data_loader
-import ai_engine
-import pdf_generator
-import history_manager
-import core.patient_db as patient_db
-import purge_manager
-import patient_record_writer
-import state_manager
-import document_planner
-from doc_validator import validate_structure, format_clinical_document
-
-# ─── CONFIGURATION ────────────────────────────────────────────────────────────
-
-from core.config import OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, ensure_output_dirs, get_patient_report_folder
-
-
-# ─── VERSION HELPERS ───────────────────────────────────────────────────────────
-
-def get_persona_version(patient_id: str) -> int:
-    """
-    Scan the persona directory for existing files for this patient.
-    Returns the *next* version number (e.g. if v2 exists → returns 3).
-    Returns 1 when no prior versions exist.
-    """
-    max_v = 0
-    prefix = f"{patient_id}-"
-    if os.path.isdir(PERSONA_DIR):
-        for fname in os.listdir(PERSONA_DIR):
-            if fname.startswith(prefix) and fname.endswith(".pdf"):
-                m = re.search(r'-v(\d+)', fname)
-                if m:
-                    max_v = max(max_v, int(m.group(1)))
-    return max_v + 1
-
-
-# ─── ARCHIVE HELPERS ───────────────────────────────────────────────────────────
-
-def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = False):
-    """
-    Move PDFs belonging to *patient_id* from *folder* into folder/archive/.
-    If match_all_pdfs is True every .pdf in the folder is archived (used for
-    the patient-specific reports sub-folder which already only contains that
-    patient's files).
-    """
-    if not os.path.isdir(folder):
-        return
-
-    archive_dir = os.path.join(folder, "archive")
-    os.makedirs(archive_dir, exist_ok=True)
-
-    prefix_patterns = [
-        f"{patient_id}-",
-        f"DOC-{patient_id}-",
-        f"Clinical_Summary_Patient_{patient_id}",
-    ]
-
-    moved = 0
-    for fname in os.listdir(folder):
-        if fname == "archive" or not fname.endswith(".pdf"):
-            continue
-        if match_all_pdfs or any(fname.startswith(p) for p in prefix_patterns):
-            src = os.path.join(folder, fname)
-            dst = os.path.join(archive_dir, fname)
-            try:
-                shutil.move(src, dst)
-                moved += 1
-            except Exception as e:
-                print(f"      ⚠️  Archive move failed for {fname}: {e}")
-
-    if moved:
-        print(f"      📦 Archived {moved} file(s) from {os.path.basename(folder)}/")
-
-
-def archive_patient_files(patient_id: str, generation_mode: dict):
-    """
-    Archive existing patient documents for every doc type that will be
-    re-generated in this run.  Only files about to be overwritten are moved.
-
-    Args:
-        patient_id:       Patient ID string.
-        generation_mode:  Dict with boolean flags 'persona', 'reports', 'summary'.
-    """
-    if generation_mode.get("persona", False):
-        _archive_files_in_dir(PERSONA_DIR, patient_id)
-
-    if generation_mode.get("summary", False):
-        _archive_files_in_dir(SUMMARY_DIR, patient_id)
-
-    if generation_mode.get("reports", False):
-        # Reports live in a patient-specific sub-folder; archive everything there
-        rpt_folder = get_patient_report_folder(patient_id)
-        _archive_files_in_dir(rpt_folder, patient_id, match_all_pdfs=True)
-
-
-# ─── DATE CALCULATION HELPERS ──────────────────────────────────────────────────
-
-def calculate_procedure_date() -> str:
-    """Return a future procedure date 7–90 days from today (ISO format)."""
-    days_ahead = random.randint(7, 90)
-    return (datetime.datetime.now() + timedelta(days=days_ahead)).strftime("%Y-%m-%d")
-
-
-def calculate_encounter_date(procedure_date_str: str, days_before: int) -> str:
-    """
-    Return an encounter date *days_before* days before *procedure_date_str*.
-
-    Args:
-        procedure_date_str: ISO date string (YYYY-MM-DD).
-        days_before:        Positive integer.
-    """
-    procedure_date = datetime.datetime.strptime(procedure_date_str, "%Y-%m-%d")
-    return (procedure_date - timedelta(days=days_before)).strftime("%Y-%m-%d")
-
-
-def get_today_date() -> str:
-    """Return today's date in ISO format (YYYY-MM-DD)."""
-    return datetime.datetime.now().strftime("%Y-%m-%d")
-
+from .data import loader as data_loader
+from .ai import client as ai_engine
+from .doc_generation import pdf_generator
+from .data import history as history_manager
+from .core import patient_db
+from .data import patient_record_writer
+from .core import state as state_manager
+from .doc_generation import planner as document_planner
+from .doc_generation.validator import validate_structure, format_clinical_document
+from .core.config import get_patient_report_folder, SUMMARY_DIR, PERSONA_DIR
+from .utils.file_utils import get_persona_version, archive_patient_files, sanitize_filename_component
 
 def _is_policy_criteria_doc(doc) -> bool:
     """
@@ -151,7 +37,6 @@ def _is_policy_criteria_doc(doc) -> bool:
         pass
     return False
 
-
 def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
     """
     For clinical document generation, convert rejection/denial cases to approval
@@ -167,19 +52,6 @@ def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
         updated["outcome"] = "PA Approval"
         return updated
     return case_details
-
-
-# ─── FILENAME HELPERS ─────────────────────────────────────────────────────────
-
-def _sanitize_filename_component(name: str) -> str:
-    """Make a safe filename segment across OSes."""
-    if not name:
-        return "document"
-    name = name.replace(os.sep, "-").replace("/", "-").replace("\\", "-")
-    name = re.sub(r'[<>:"|?*]+', "-", name)
-    name = re.sub(r"\s+", " ", name).strip()
-    return name
-
 
 def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | None = None) -> str:
     """
@@ -245,9 +117,6 @@ def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | N
         return feedback
     return f"{feedback}\n\n{remediation_block}"
 
-
-# ─── DOCUMENT COHERENCE HELPERS ────────────────────────────────────────────────
-
 def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
     """
     Load existing documents so the AI can maintain coherence across runs.
@@ -293,9 +162,6 @@ def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
             context["summary"] = summary_file
 
     return context
-
-
-# ─── SYNC / VERIFICATION ───────────────────────────────────────────────────────
 
 def check_patient_sync_status(patient_id: str, generation_mode: dict) -> bool:
     """
@@ -347,9 +213,6 @@ def check_patient_sync_status(patient_id: str, generation_mode: dict) -> bool:
         print(f"   ⚠️  Missing requested documents for patient {patient_id}: {', '.join(missing)}")
         
     return exists
-
-
-# ─── MAIN WORKFLOW ─────────────────────────────────────────────────────────────
 
 def process_patient_workflow(
     patient_id: str,
@@ -480,7 +343,7 @@ def process_patient_workflow(
     # ── 8b. REPORTS ────────────────────────────────────────────────────────────
     if generation_mode["reports"] and filtered_documents:
         # Load template sections for template-driven PDF ordering (intensive PDF fix)
-        templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+        templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
         loaded_template_sections = []
         for tmpl_file in document_plan.get("document_templates", []):
             tmpl_path = os.path.join(templates_dir, tmpl_file)
@@ -498,7 +361,7 @@ def process_patient_workflow(
             try:
                 seq_str            = f"{seq:03d}"
                 doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
-                safe_title_hint = _sanitize_filename_component(getattr(doc, "title_hint", "document"))
+                safe_title_hint = sanitize_filename_component(getattr(doc, "title_hint", "document"))
                 final_filename_base = f"{doc_identifier}-{safe_title_hint}"
 
                 is_valid, errors = validate_structure(doc.content)
@@ -580,14 +443,13 @@ def process_patient_workflow(
                     img_filename = f"{final_filename_base}_img.png"
                     temp_image_path = os.path.join(patient_report_folder, img_filename)
                     
-                    from ai_engine import generate_clinical_image
                     # Pass a slice of the document description to guide DALL-E
                     if isinstance(doc.content, dict):
                         content_preview = json.dumps(doc.content)[:500]
                     else:
                         content_preview = str(doc.content)[:500]
                     image_context = f"Visual supporting document {doc.title_hint}: {content_preview}"
-                    generated_path = generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                    generated_path = ai_engine.generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
                     
                     if generated_path:
                         image_path = generated_path
@@ -607,7 +469,7 @@ def process_patient_workflow(
                 docs_written.append(rf)
                 print(f"      ✅ {rf}")
             except Exception as e:
-                import traceback
+                
                 print(f"      ❌ Report generation failed for '{getattr(doc, 'title_hint', 'Unknown')}'. Error: {e}")
                 print(traceback.format_exc())
                 continue
@@ -632,7 +494,7 @@ def process_patient_workflow(
                 )
 
             try:
-                from search_engine import MedicalSearchEngine
+                from src.ai.search_engine import MedicalSearchEngine
                 search_engine = MedicalSearchEngine()
                 if search_engine.enabled and not has_excel_procedure:
                     details_text = case_data.get("details", "")
@@ -698,9 +560,6 @@ def process_patient_workflow(
 
     print(f"\n✅ Workflow complete for patient {patient_id}. {len(docs_written)} document(s) written.")
     return p_full_name
-
-
-# ─── PREVIEW GENERATION (AI only, no PDF write) ────────────────────────────────
 
 def preview_patient_generation(
     patient_id: str,
@@ -769,12 +628,8 @@ def preview_patient_generation(
     print(f"✅ Preview ready: {len(docs_serialised)} document(s)")
     return payload
 
-
-# ─── RENDER PDFs FROM CONFIRMED CONTENT ────────────────────────────────────────
-
 def _strip_html_tags(text: str) -> str:
     return re.sub(r"<[^>]+>", "", text or "")
-
 
 def _html_to_sectioned_text(content_html: str) -> str:
     """
@@ -801,7 +656,7 @@ def _html_to_sectioned_text(content_html: str) -> str:
 
     # Lists and line breaks
     text = re.sub(r"</p\s*>", "\n", text, flags=re.IGNORECASE)
-    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.IGNORECASE)
+    text = re.sub(r"<br\s*/>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"<li[^>]*>", "- ", text, flags=re.IGNORECASE)
     text = re.sub(r"</li\s*>", "\n", text, flags=re.IGNORECASE)
     text = re.sub(r"</(ul|ol)\s*>", "\n", text, flags=re.IGNORECASE)
@@ -815,7 +670,6 @@ def _html_to_sectioned_text(content_html: str) -> str:
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
 
-
 def render_patient_pdfs_from_content(
     patient_id: str,
     generation_mode: dict,
@@ -828,7 +682,7 @@ def render_patient_pdfs_from_content(
     Skips AI re-generation — content is rendered directly.
     Returns list of written filenames.
     """
-    import types
+    
 
     docs_written: list[str] = []
     current_year = datetime.datetime.now().year
@@ -840,7 +694,7 @@ def render_patient_pdfs_from_content(
     source = persona_json or patient_db.load_patient(patient_id)
     if source:
         try:
-            from ai_engine import PatientPersona
+            from src.ai.models import PatientPersona
             persona_obj = PatientPersona(**source)
         except Exception as e:
             print(f"   ⚠️  Persona reconstruction failed: {e}")
@@ -885,7 +739,7 @@ def render_patient_pdfs_from_content(
                     content_body = _strip_html_tags(content_html).strip()
                 seq_str = f"{seq:03d}"
                 doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
-                safe_title = _sanitize_filename_component(title_hint)
+                safe_title = sanitize_filename_component(title_hint)
                 final_base = f"{doc_identifier}-{safe_title}"
 
                 fac_name = "Medical Center"
@@ -918,7 +772,7 @@ def render_patient_pdfs_from_content(
                 docs_written.append(os.path.basename(pdf_path))
                 print(f"      ✅ {os.path.basename(pdf_path)}")
             except Exception as e:
-                import traceback
+                
                 print(f"      ❌ PDF failed for '{doc_info.get('title_hint','?')}': {e}")
                 print(traceback.format_exc())
 
@@ -947,133 +801,3 @@ def render_patient_pdfs_from_content(
 
     print(f"\n✅ {len(docs_written)} PDF(s) rendered from confirmed content.")
     return docs_written
-
-
-# ─── CLI ENTRY POINT ───────────────────────────────────────────────────────────
-
-_MODE_MAP = {
-    "1": {"persona": True,  "reports": True,  "summary": True},
-    "2": {"persona": False, "reports": True,  "summary": True},
-    "3": {"persona": False, "reports": False, "summary": True},
-    "4": {"persona": False, "reports": True,  "summary": False},
-    "5": {"persona": True,  "reports": False, "summary": False},
-    "":  {"persona": True,  "reports": True,  "summary": True},
-}
-
-_MODE_LABELS = {
-    "1": "Persona + Reports + Summary (default)",
-    "2": "Reports + Summary",
-    "3": "Summary only",
-    "4": "Reports only",
-    "5": "Persona only",
-}
-
-
-def _prompt_generation_mode() -> dict:
-    """Ask the user which document types to generate and return a mode dict."""
-    print("\n📋 What to generate?")
-    for k, label in _MODE_LABELS.items():
-        marker = " (default)" if k == "1" else ""
-        print(f"   [{k}] {label}{marker}")
-    choice = input("   Choice [1]: ").strip()
-    return _MODE_MAP.get(choice, _MODE_MAP[""])
-
-
-def main():
-    print("\n🚀 Clinical Data Generator — Modular & Interactive")
-
-    if not ai_engine.check_connection():
-        print("\n❌ AI connection failed. Check credentials/internet.")
-        return
-
-    while True:
-        print("\n" + "=" * 60)
-        print("🎯 Enter Patient ID  (or '*' for batch, 'q' to quit)")
-        print("   💡 '225-fix CPT code'  → patient 225 with feedback")
-        print("   💡 '221,222,223'       → comma-separated batch")
-        target_input = input("   ID: ").strip()
-
-        if not target_input:
-            continue
-
-        # ── QUIT ──────────────────────────────────────────────────────────────
-        if target_input.lower() in {"q", "quit", "exit"}:
-            print("\n👋 Goodbye!\n")
-            break
-
-        # ── PARSE FEEDBACK SUFFIX ──────────────────────────────────────────────
-        feedback   = ""
-        base_input = target_input
-        if "-" in target_input and not target_input.startswith("--"):
-            parts      = target_input.split("-", 1)
-            base_input = parts[0].strip()
-            feedback   = parts[1].strip()
-
-        # ── BATCH: ALL PATIENTS ────────────────────────────────────────────────
-        if base_input == "*":
-            print("\n🔄 Batch mode: all patients…")
-            all_ids       = data_loader.get_all_patient_ids()
-            generation_mode = _prompt_generation_mode()
-            current_names = patient_db.get_all_patient_names()
-            processed = 0
-
-            for p_id in all_ids:
-                if check_patient_sync_status(p_id, generation_mode):
-                    print(f"   ⏭️  Skipping {p_id} (already complete)")
-                    continue
-                print(f"\n▶️  Processing {p_id}…")
-                new_name = process_patient_workflow(
-                    p_id,
-                    feedback=feedback,
-                    excluded_names=current_names,
-                    generation_mode=generation_mode,
-                )
-                if new_name:
-                    current_names.append(new_name)
-                processed += 1
-
-            print(f"\n✅ Batch complete. Processed {processed} patient(s).")
-            continue
-
-        # ── BATCH: COMMA-SEPARATED ────────────────────────────────────────────
-        if "," in base_input:
-            patient_ids     = [pid.strip() for pid in base_input.split(",") if pid.strip()]
-            generation_mode = _prompt_generation_mode()
-            current_names   = patient_db.get_all_patient_names()
-
-            for idx, p_id in enumerate(patient_ids, 1):
-                print(f"\n▶️  [{idx}/{len(patient_ids)}] Patient {p_id}…")
-                new_name = process_patient_workflow(
-                    p_id,
-                    feedback,
-                    excluded_names=current_names,
-                    generation_mode=generation_mode,
-                )
-                if new_name:
-                    current_names.append(new_name)
-
-            print(f"\n✅ Batch complete. {len(patient_ids)} patient(s) processed.")
-            continue
-
-        # ── SINGLE PATIENT ────────────────────────────────────────────────────
-        p_id = base_input
-        generation_mode = _prompt_generation_mode()
-
-        if not feedback:
-            print("\n💡 Feedback / Instructions (optional — press Enter to skip)")
-            feedback = input("   > ").strip()
-
-        current_names = patient_db.get_all_patient_names()
-        process_patient_workflow(
-            p_id,
-            feedback,
-            excluded_names=current_names,
-            generation_mode=generation_mode,
-        )
-
-        if check_patient_sync_status(p_id, generation_mode):
-            print("   ✅ Verification: documents present in output directories.")
-
-
-if __name__ == "__main__":
-    main()

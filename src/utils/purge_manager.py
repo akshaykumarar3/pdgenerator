@@ -2,8 +2,9 @@ import os
 import shutil
 import glob
 import json
-import core.patient_db as patient_db
-from core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR, PERSONA_DIR
+import datetime
+from ..core import patient_db
+from ..core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, PERSONA_DIR
 
 # Derived Paths (Mapped from config)
 DOCS_DIR = REPORTS_DIR
@@ -17,6 +18,139 @@ def confirm_action(message: str, force: bool = False) -> bool:
     response = input("   Are you sure? This cannot be undone. (y/n): ").strip().lower()
     return response == 'y'
 
+
+def _archive_dir(base_dir: str) -> str:
+    archive_dir = os.path.join(base_dir, "archive")
+    os.makedirs(archive_dir, exist_ok=True)
+    return archive_dir
+
+
+def _archive_files(files: list[str], base_dir: str):
+    archive_dir = _archive_dir(base_dir)
+    for f in files:
+        if not os.path.isfile(f):
+            continue
+        dst = os.path.join(archive_dir, os.path.basename(f))
+        shutil.move(f, dst)
+
+
+def _archive_folder(folder_path: str, base_dir: str, label: str):
+    if not os.path.exists(folder_path):
+        return
+    archive_dir = _archive_dir(base_dir)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    dst = os.path.join(archive_dir, f"{label}_{timestamp}")
+    shutil.move(folder_path, dst)
+
+
+def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "delete", force: bool = False):
+    """
+    Clears data for a SPECIFIC patient based on targets.
+    targets: persona, reports, summary, logs, db, records, debug
+    mode: delete | archive
+    """
+    if mode not in {"delete", "archive"}:
+        raise ValueError("Invalid purge mode. Use 'delete' or 'archive'.")
+    if not targets:
+        return
+    targets = [t.lower() for t in targets]
+
+    msg = f"This will {mode} data for Patient ID '{patient_id}' -> {', '.join(targets)}."
+    if not confirm_action(msg, force=force):
+        print("   ❌ Operation Cancelled.")
+        return
+
+    print(f"\n   🗑️  Purging Patient {patient_id} ({mode})...")
+
+    # Reports (patient-reports/<id>/)
+    if "reports" in targets:
+        p_doc_dir = os.path.join(DOCS_DIR, str(patient_id))
+        if mode == "archive":
+            _archive_folder(p_doc_dir, DOCS_DIR, f"{patient_id}_reports")
+        else:
+            if os.path.exists(p_doc_dir):
+                shutil.rmtree(p_doc_dir)
+                print(f"      ✅ Deleted: {p_doc_dir}/")
+
+    # Personas
+    if "persona" in targets:
+        persona_files = glob.glob(os.path.join(PERSONAS_DIR, f"*{patient_id}*"))
+        if mode == "archive":
+            _archive_files(persona_files, PERSONAS_DIR)
+        else:
+            for f in persona_files:
+                if os.path.isfile(f):
+                    os.remove(f)
+                    print(f"      ✅ Deleted: personas/{os.path.basename(f)}")
+
+    # Summaries
+    if "summary" in targets:
+        summary_files = glob.glob(os.path.join(SUMMARY_DIR, f"*{patient_id}*"))
+        if mode == "archive":
+            _archive_files(summary_files, SUMMARY_DIR)
+        else:
+            for f in summary_files:
+                if os.path.isfile(f):
+                    os.remove(f)
+                    print(f"      ✅ Deleted: summary/{os.path.basename(f)}")
+
+    # Logs
+    if "logs" in targets:
+        log_file = os.path.join(LOGS_DIR, f"{patient_id}.txt")
+        if os.path.exists(log_file):
+            if mode == "archive":
+                _archive_files([log_file], LOGS_DIR)
+            else:
+                os.remove(log_file)
+                print(f"      ✅ Deleted: {os.path.basename(log_file)}")
+
+    # Debug state
+    if "debug" in targets:
+        debug_state = os.path.join(OUTPUT_DIR, "debug", f"patient_state_{patient_id}.json")
+        if os.path.exists(debug_state):
+            if mode == "archive":
+                _archive_files([debug_state], os.path.join(OUTPUT_DIR, "debug"))
+            else:
+                os.remove(debug_state)
+                print(f"      ✅ Deleted: {os.path.basename(debug_state)}")
+
+    # Records
+    if "records" in targets:
+        if os.path.exists(RECORDS_DIR):
+            record_files = glob.glob(os.path.join(RECORDS_DIR, f"*{patient_id}*"))
+            if mode == "archive":
+                _archive_files(record_files, RECORDS_DIR)
+            else:
+                for f in record_files:
+                    if os.path.isfile(f):
+                        os.remove(f)
+                        print(f"      ✅ Deleted: records/{os.path.basename(f)}")
+
+    # DB entry
+    if "db" in targets:
+        data = {}
+        if os.path.exists(DB_PATH):
+            try:
+                with open(DB_PATH, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+            except (json.JSONDecodeError, IOError):
+                data = {}
+        if str(patient_id) in data:
+            if mode == "archive":
+                archive_dir = _archive_dir(RECORDS_DIR)
+                archive_path = os.path.join(archive_dir, f"patient_{patient_id}_db.json")
+                with open(archive_path, "w", encoding="utf-8") as f:
+                    json.dump(data[str(patient_id)], f, indent=2)
+                print(f"      ✅ Archived DB entry: {os.path.basename(archive_path)}")
+            del data[str(patient_id)]
+            with open(DB_PATH, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2)
+            print(f"      ✅ Removed from DB: {patient_id}")
+        else:
+            print(f"      ℹ️  ID {patient_id} not found in DB.")
+
+    print(f"\n   ✨ Patient {patient_id} Purge Complete.")
+
 def purge_all(force: bool = False):
     """
     Clears ALL generated data:
@@ -24,11 +158,10 @@ def purge_all(force: bool = False):
     2. Summaries
     3. Personas
     4. Logs
-    5. SQLs
-    6. Patient DB
-    7. Records
+    5. Patient DB
+    6. Records
     """
-    if not confirm_action("This will WIPEOUT ALL logs, documents, summaries, personas, SQLs, and the Patient Database.", force=force):
+    if not confirm_action("This will WIPEOUT ALL logs, documents, summaries, personas, records, and the Patient Database.", force=force):
         print("   ❌ Operation Cancelled.")
         return
 
@@ -58,14 +191,7 @@ def purge_all(force: bool = False):
         os.makedirs(LOGS_DIR)
         print(f"      ✅ Deleted: {LOGS_DIR}/")
 
-    # 5. SQLs
-    if os.path.exists(SQLS_DIR):
-        files = glob.glob(os.path.join(SQLS_DIR, "*.sql"))
-        for f in files:
-            os.remove(f)
-        print(f"      ✅ Deleted {len(files)} SQL files.")
-
-    # 6. Patient DB
+    # 5. Patient DB
     try:
         with open(DB_PATH, 'w', encoding='utf-8') as f:
             json.dump({}, f)
@@ -73,7 +199,7 @@ def purge_all(force: bool = False):
     except IOError:
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
-    # 7. Records
+    # 6. Records
     if os.path.exists(RECORDS_DIR):
         shutil.rmtree(RECORDS_DIR)
         os.makedirs(RECORDS_DIR)
@@ -218,92 +344,7 @@ def purge_reports_and_summaries(force: bool = False):
 def purge_patient(patient_id: str, force: bool = False):
     """
     Clears data for a SPECIFIC patient:
-    1. Documents/Images (folder)
-    2. SQL file
-    3. Log entry (file)
-    4. DB Entry
+    Default: persona, reports, summary, logs, db, records, debug
     """
-    if not confirm_action(f"This will delete ALL data for Patient ID '{patient_id}'.", force=force):
-        print("   ❌ Operation Cancelled.")
-        return
-
-    print(f"\n   🗑️  Purging Patient {patient_id}...")
-
-    # 1. Documents Folder
-    p_doc_dir = os.path.join(DOCS_DIR, patient_id)
-    if os.path.exists(p_doc_dir):
-        shutil.rmtree(p_doc_dir)
-        print(f"      ✅ Deleted: {p_doc_dir}/")
-    
-    # 2. Generated Files in Root Documents? (e.g. DOC-ID-*.pdf if they are not in folder?)
-    # Currently generator puts them in `documents/{id}`. 
-    # But check for any stray files with ID in name in documents root/
-    files = glob.glob(os.path.join(DOCS_DIR, f"*{patient_id}*"))
-    for f in files:
-        if os.path.isfile(f) and "personas" not in f: # Safety check
-            os.remove(f)
-            print(f"      ✅ Deleted: {os.path.basename(f)}")
-
-    # 3. SQL File
-    # Pattern: *{id}*.sql in sqls/
-    sql_files = glob.glob(os.path.join(SQLS_DIR, f"*{patient_id}*.sql"))
-    for f in sql_files:
-        os.remove(f)
-        print(f"      ✅ Deleted: {os.path.basename(f)}")
-
-    # 4. Log File
-    log_file = os.path.join(LOGS_DIR, f"{patient_id}.txt")
-    if os.path.exists(log_file):
-        os.remove(log_file)
-        print(f"      ✅ Deleted: {os.path.basename(log_file)}")
-
-    # 5. Debug State, Summaries, and Personas
-    debug_state = os.path.join(OUTPUT_DIR, "debug", f"patient_state_{patient_id}.json")
-    if os.path.exists(debug_state):
-        os.remove(debug_state)
-        print(f"      ✅ Deleted: {os.path.basename(debug_state)}")
-
-    if os.path.exists(SUMMARY_DIR):
-        summary_files = glob.glob(os.path.join(SUMMARY_DIR, f"*{patient_id}*"))
-        for f in summary_files:
-            if os.path.isfile(f):
-                os.remove(f)
-                print(f"      ✅ Deleted: summary/{os.path.basename(f)}")
-
-    if os.path.exists(PERSONAS_DIR):
-        persona_files = glob.glob(os.path.join(PERSONAS_DIR, f"*{patient_id}*"))
-        for f in persona_files:
-            if os.path.isfile(f):
-                os.remove(f)
-                print(f"      ✅ Deleted: personas/{os.path.basename(f)}")
-
-    # 6. DB Entry
-    data = {}
-    if os.path.exists(DB_PATH):
-        try:
-            with open(DB_PATH, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-        except (json.JSONDecodeError, IOError):
-            pass
-    
-    if str(patient_id) in data:
-        del data[str(patient_id)]
-        try:
-            with open(DB_PATH, 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=2)
-            print(f"      ✅ Removed from DB: {patient_id}")
-        except IOError:
-            print(f"      ⚠️  Removed from memory but failed to save DB: {patient_id}")
-    else:
-        print(f"      ℹ️  ID {patient_id} not found in DB.")
-
-    # 7. Records files matching patient id
-    if os.path.exists(RECORDS_DIR):
-        record_files = glob.glob(os.path.join(RECORDS_DIR, f"*{patient_id}*"))
-        for f in record_files:
-            if os.path.isfile(f):
-                os.remove(f)
-                print(f"      ✅ Deleted: records/{os.path.basename(f)}")
-
-    print(f"\n   ✨ Patient {patient_id} Purged.")
-
+    default_targets = ["persona", "reports", "summary", "logs", "db", "records", "debug"]
+    purge_patient_selective(patient_id, default_targets, mode="delete", force=force)

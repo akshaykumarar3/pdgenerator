@@ -35,19 +35,22 @@ Primary responsibilities:
 # Core Architecture
 
 ```text
-generator.py          → Main orchestrator and REPL workflow
-ai_engine.py          → LLM interaction layer (OpenAI / Vertex)
-prompts.py            → Centralized prompt definitions
-state_manager.py      → Deterministic patient identity and demographic state
-document_planner.py   → Template planning and document schema selection
-pdf_generator.py      → PDF rendering via ReportLab
-doc_validator.py      → Validation and formatting of AI-generated documents
-search_engine.py      → Web search for medical codes (Tavily API)
-data_loader.py        → Excel test case ingestion
-history_manager.py    → Conversation history
-core/patient_db.py    → Patient persistence
-purge_manager.py      → Cleanup utilities
-remove_persona.py     → CLI utility to remove personas
+src/workflow.py              → Main orchestrator and workflow
+src/cli.py                   → CLI entrypoint
+src/ai/client.py             → LLM interaction layer (OpenAI / Vertex)
+src/ai/models.py             → Pydantic data models
+src/ai/prompts.py            → Centralized prompt definitions
+src/core/state.py            → Deterministic patient identity and demographic state
+src/doc_generation/planner.py→ Template planning and document schema selection
+src/doc_generation/pdf_generator.py → PDF rendering via ReportLab
+src/doc_generation/validator.py     → Validation and formatting of AI-generated documents
+src/ai/search_engine.py      → Web search for medical codes (Tavily API)
+src/data/loader.py           → Excel test case ingestion
+src/data/history.py          → Conversation history
+src/core/patient_db.py       → Patient persistence (data: src/core/patients_db.json; auto-migrates legacy core/patients_db.json)
+src/utils/purge_manager.py   → Cleanup utilities
+remove_persona.py            → CLI utility to remove personas
+
 ```
 
 Architecture goal:
@@ -68,7 +71,7 @@ This separation ensures reliability and deterministic output structure.
 
 # Core Data Models
 
-Defined in `ai_engine.py`.
+Defined in `src/ai/models.py`.
 
 ### FacilityDetails
 
@@ -188,7 +191,7 @@ Lab results → 1 to 4 weeks before procedure
 Procedure date → 7 to 90 days in the future
 ```
 
-Functions in `generator.py` enforce this:
+Functions in `src/utils/date_utils.py` enforce this:
 
 * calculate_procedure_date()
 * calculate_encounter_date()
@@ -271,7 +274,7 @@ Ensure documents follow correct structure before AI generation.
 
 AI must output structured JSON.
 
-`doc_validator.py` enforces schema compliance.
+`src/doc_generation/validator.py` enforces schema compliance.
 
 Legacy plain text is accepted only as fallback.
 
@@ -300,6 +303,12 @@ Environment variables stored in:
 cred/.env
 ```
 
+Externalized rules live in:
+
+```
+config/
+```
+
 Key settings:
 
 ```
@@ -313,7 +322,7 @@ OUTPUT_DIR=<path>
 > providers are always present in the file. No code changes required.
 
 `GOOGLE_APPLICATION_CREDENTIALS` may be a relative path (e.g. `./cred/gcp_auth_key.json`);
-`ai_engine.py` resolves it against `BASE_DIR` automatically.
+`src/ai/client.py` resolves it against `BASE_DIR` automatically.
 
 Models:
 
@@ -327,9 +336,9 @@ Testing:
 
 ---
 
-# Internal Helpers (`ai_engine.py`)
+# Internal Helpers (`src/ai/client.py`)
 
-Shared utilities in `ai_engine.py`:
+Shared utilities in `src/ai/client.py`:
 
 ```
 _strip_json_fences(text)
@@ -384,10 +393,10 @@ Clinical_Summary_Patient_{id}.pdf
 Edit:
 
 ```
-prompts.py
+src/ai/prompts.py
 ```
 
-Never modify prompts inside `ai_engine.py`.
+Never modify prompts inside `src/ai/client.py`.
 
 ---
 
@@ -395,9 +404,9 @@ Never modify prompts inside `ai_engine.py`.
 
 Steps:
 
-1. Update `GeneratedDocument` model
-2. Add rendering in `pdf_generator.py`
-3. Update prompt instructions
+1. Update `GeneratedDocument` model in `src/ai/models.py`
+2. Add rendering in `src/doc_generation/pdf_generator.py`
+3. Update prompt instructions in `src/ai/prompts.py`
 
 ---
 
@@ -436,16 +445,16 @@ Workflow continues gracefully.
 Mac/Linux
 
 ```
-python3 -m py_compile generator.py ai_engine.py prompts.py
-TEST_MODE=true python3 generator.py
+python3 -m py_compile src/ai/client.py src/ai/prompts.py src/cli.py
+TEST_MODE=true python3 run.py
 ```
 
 Windows
 
 ```
-python -m py_compile generator.py ai_engine.py prompts.py
+python -m py_compile src/ai/client.py src/ai/prompts.py src/cli.py
 set TEST_MODE=true
-python generator.py
+python run.py
 ```
 
 ---
@@ -496,7 +505,7 @@ API server runs on `http://localhost:410` by default (`API_PORT` env var).
 2. Patient IDs are numeric strings
 3. Document titles must use underscores
 4. Avoid generating duplicate reports
-5. Prompts must only be edited in `prompts.py`
+5. Prompts must only be edited in `src/ai/prompts.py`
 6. All documents must be internally consistent
 7. Do NOT add parsing logic inline — use `_parse_vertex_response()`
 8. Do NOT call `client.client.start_chat()` — use `generate_content()` directly
