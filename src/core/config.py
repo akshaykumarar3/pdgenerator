@@ -14,12 +14,11 @@ REPORTS_DIR = os.path.join(OUTPUT_DIR, "patient-reports")
 SUMMARY_DIR = os.path.join(OUTPUT_DIR, "summary")
 LOGS_DIR = os.path.join(OUTPUT_DIR, "logs")
 RECORDS_DIR = os.path.join(OUTPUT_DIR, "records")
-SQLS_DIR = os.path.join(OUTPUT_DIR, "sqls")
 
 
 def ensure_output_dirs():
     """Create all required output directories if they do not exist."""
-    for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, SQLS_DIR]:
+    for d in [OUTPUT_DIR, PERSONA_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR]:
         os.makedirs(d, exist_ok=True)
 
 

@@ -303,7 +303,7 @@ class StructuredClinicalDoc(BaseModel):
     Layer 1: Raw Structured Content (AI Generation).
     The AI fills these fields. Python Helper formats them.
     """
-    doc_id: str = Field(..., description="ID matching the SQL insert (e.g. 'DOC-101').")
+    doc_id: str = Field(..., description="Document ID (e.g. 'DOC-101').")
     doc_type: str = Field(..., description="Type: 'CONSULT', 'IMAGING', 'LAB', 'DISCHARGE', 'ER_VISIT'.")
     title: str = Field(..., description="Descriptive title e.g. 'Cardiology_Consult'.")
     service_date: str = Field(..., description="YYYY-MM-DD")
@@ -345,13 +345,6 @@ class GeneratedDocument(BaseModel):
     title_hint: str = Field(..., description="Short descriptive title e.g. 'Cardiology_Consult', 'MRI_Knee'")
     content: Any = Field(..., description="The clinical document sections as a structured dictionary matching the provided template.")
 
-
-class ModifiedSQLRaw(BaseModel):
-    """Internal model for AI generation (Structured Data)."""
-    updated_sql: str = Field(..., description="The fully rewritten, valid SQL code.")
-    changes_summary: str = Field(..., description="A short bulleted list of the changes made to the SQL.")
-    structured_documents: List[StructuredClinicalDoc] = Field(..., description="List of structured clinical documents.")
-    patient_persona: PatientPersona = Field(..., description="The detailed, structured patient identity.")
 
 class ClinicalDataPayload(BaseModel):
     """Public model for consumption (Pure Clinical Data)."""

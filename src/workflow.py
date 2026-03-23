@@ -15,7 +15,7 @@ from .data import patient_record_writer
 from .core import state as state_manager
 from .doc_generation import planner as document_planner
 from .doc_generation.validator import validate_structure, format_clinical_document
-from .core.config import get_patient_report_folder, SUMMARY_DIR
+from .core.config import get_patient_report_folder, SUMMARY_DIR, PERSONA_DIR
 from .utils.file_utils import get_persona_version, archive_patient_files, sanitize_filename_component
 
 def _is_policy_criteria_doc(doc) -> bool:
@@ -443,7 +443,6 @@ def process_patient_workflow(
                     img_filename = f"{final_filename_base}_img.png"
                     temp_image_path = os.path.join(patient_report_folder, img_filename)
                     
-                    from src.ai import client as ai_engine
                     # Pass a slice of the document description to guide DALL-E
                     if isinstance(doc.content, dict):
                         content_preview = json.dumps(doc.content)[:500]

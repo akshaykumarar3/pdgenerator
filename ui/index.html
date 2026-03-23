@@ -102,12 +102,21 @@
                 </select>
                 <span class="material-symbols-outlined absolute right-2 top-3 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
             </div>
+            <button id="btn-purge" onclick="openPurgeModal()"
+                class="mt-3 w-full py-2 bg-error/15 text-error rounded-lg text-[10px] font-bold uppercase tracking-widest border border-error/30 hover:bg-error/25">
+                Purge Selected Patient
+            </button>
         </div>
 
         <!-- Patient identity -->
         <div class="p-4 border-b border-outline-variant/10 shrink-0">
             <div class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Identity</div>
             <div class="grid grid-cols-2 gap-2">
+                <div class="col-span-2 bg-surface-container rounded-lg p-2">
+                    <div class="text-[9px] text-on-surface-variant/60 uppercase">Patient</div>
+                    <div id="info-name" class="text-xs font-semibold mt-0.5">—</div>
+                    <div id="info-mrn" class="text-[10px] font-mono text-on-surface-variant/80 mt-0.5">—</div>
+                </div>
                 <div class="bg-surface-container rounded-lg p-2">
                     <div class="text-[9px] text-on-surface-variant/60 uppercase">DOB</div>
                     <div id="info-dob" class="font-mono text-xs mt-0.5">—</div>
@@ -155,6 +164,11 @@
             <div class="bg-surface-container rounded-lg p-3">
                 <div class="text-[9px] text-on-surface-variant/60 uppercase mb-1">Primary Diagnosis</div>
                 <div id="info-dx" class="text-xs">—</div>
+            </div>
+
+            <div class="bg-surface-container rounded-lg p-3">
+                <div class="text-[9px] text-on-surface-variant/60 uppercase mb-1">Clinical Summary</div>
+                <div id="info-summary" class="text-[11px] text-on-surface-variant leading-relaxed">—</div>
             </div>
         </div>
     </aside>
@@ -276,6 +290,41 @@
     </div>
 </div>
 
+<!-- ═══ PURGE MODAL ══════════════════════════════════════════════════════ -->
+<div id="purge-modal" class="fixed inset-0 bg-background/80 backdrop-blur-md z-[100] hidden items-center justify-center">
+    <div class="w-[420px] bg-surface rounded-2xl shadow-2xl border border-outline-variant/20 overflow-hidden">
+        <div class="px-5 py-3 border-b border-outline-variant/10 flex items-center justify-between">
+            <div>
+                <div class="text-sm font-black uppercase tracking-widest text-on-surface">Purge Patient Data</div>
+                <div class="text-[10px] text-on-surface-variant mt-1">Select what to remove or archive</div>
+            </div>
+            <button onclick="closePurgeModal()" class="p-2 rounded-full hover:bg-surface-variant transition-colors">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+        <div class="px-5 py-4 space-y-4">
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-persona" checked class="accent-primary"> Persona PDFs</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-reports" checked class="accent-primary"> Reports</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-summary" checked class="accent-primary"> Summary</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-logs" checked class="accent-primary"> Logs</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-db" checked class="accent-primary"> Patient DB</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-records" class="accent-primary"> Records</label>
+                <label class="flex items-center gap-2"><input type="checkbox" id="purge-debug" class="accent-primary"> Debug State</label>
+            </div>
+            <div class="bg-surface-container rounded-lg p-3 text-xs">
+                <div class="text-[9px] uppercase tracking-widest text-on-surface-variant mb-2">Action</div>
+                <label class="flex items-center gap-2"><input type="radio" name="purge-mode" value="delete" checked class="accent-primary"> Delete</label>
+                <label class="flex items-center gap-2 mt-1"><input type="radio" name="purge-mode" value="archive" class="accent-primary"> Archive (move to /archive)</label>
+            </div>
+        </div>
+        <div class="px-5 py-4 border-t border-outline-variant/10 flex gap-2">
+            <button onclick="closePurgeModal()" class="flex-1 py-2 rounded-xl border border-outline-variant/30 text-xs font-bold hover:bg-surface-variant transition-colors">Cancel</button>
+            <button onclick="confirmPurge()" class="flex-1 py-2 rounded-xl bg-error text-white text-xs font-bold uppercase tracking-widest hover:bg-error/90">Purge</button>
+        </div>
+    </div>
+</div>
+
 <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════ -->
 <script>
 const API = 'http://localhost:410';
@@ -296,6 +345,7 @@ window.addEventListener('DOMContentLoaded', () => {
     loadPatients();
     document.getElementById('patient-select').addEventListener('change', onPatientChange);
     document.getElementById('batch-modal').addEventListener('click', function(e){ if(e.target===this)closeBatchModal(); });
+    document.getElementById('purge-modal').addEventListener('click', function(e){ if(e.target===this)closePurgeModal(); });
 });
 
 // ── Server ────────────────────────────────────────────────────────────────
@@ -333,7 +383,7 @@ async function onPatientChange() {
         const d = await r.json();
         currentPatientData = d.data;
         currentCaseDetails = d.case_details;
-        populateIdentity(d.data);
+        populateIdentity(d.data, d.case_details);
         populateCaseInfo(d.case_details);
     } catch(e){ console.error(e); clearDossier(); }
     switchClinicalTab(activeClinicalTab);
@@ -342,14 +392,31 @@ async function onPatientChange() {
 
 function get(obj, ...keys){ return keys.reduce((o,k)=>(o&&o[k]!==undefined?o[k]:null),obj); }
 
-function populateIdentity(p) {
+function buildClinicalSummary(p, c){
+    if(!p && !c) return '—';
+    return (
+        p?.bio_narrative ||
+        p?.pa_request?.clinical_justification ||
+        p?.procedure_requested ||
+        c?.details ||
+        '—'
+    );
+}
+
+function populateIdentity(p, c) {
     if(!p){ clearDossier(); return; }
+    const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || p.name || '—';
+    const year = new Date().getFullYear();
+    const mrn = p.mrn || (p.identifiers && p.identifiers.mrn) || (currentPatientId ? `MRN-${currentPatientId}-${year}` : '—');
+    document.getElementById('info-name').textContent = fullName;
+    document.getElementById('info-mrn').textContent = mrn;
     document.getElementById('info-dob').textContent = get(p,'dob')||get(p,'demographics','dob')||'—';
     document.getElementById('info-gender').textContent = p.gender||'—';
     document.getElementById('info-provider').textContent =
         get(p,'provider','managingOrganization')||(p.providers&&p.providers[0]&&p.providers[0].name)||'—';
     document.getElementById('info-dx').textContent =
         (p.diagnoses&&p.diagnoses[0]&&(p.diagnoses[0].condition||p.diagnoses[0].code))||'—';
+    document.getElementById('info-summary').textContent = buildClinicalSummary(p, c);
 }
 
 function populateCaseInfo(c) {
@@ -371,9 +438,69 @@ function populateCaseInfo(c) {
 }
 
 function clearDossier() {
-    ['info-dob','info-gender','info-provider','info-dx','case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>{
+    ['info-name','info-mrn','info-dob','info-gender','info-provider','info-dx','info-summary','case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>{
         if(document.getElementById(id)) document.getElementById(id).textContent='—';
     });
+}
+
+function clearIdentityOnly(){
+    ['info-name','info-mrn','info-dob','info-gender','info-provider','info-dx','info-summary'].forEach(id=>{
+        if(document.getElementById(id)) document.getElementById(id).textContent='—';
+    });
+}
+
+function openPurgeModal(){
+    if(!currentPatientId){
+        alert('Select a patient first.');
+        return;
+    }
+    const modal=document.getElementById('purge-modal');
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+}
+
+function closePurgeModal(){
+    const modal=document.getElementById('purge-modal');
+    modal.classList.add('hidden'); modal.classList.remove('flex');
+}
+
+async function confirmPurge(){
+    if(!currentPatientId){ alert('Select a patient first.'); return; }
+    const targets=[];
+    if(document.getElementById('purge-persona').checked) targets.push('persona');
+    if(document.getElementById('purge-reports').checked) targets.push('reports');
+    if(document.getElementById('purge-summary').checked) targets.push('summary');
+    if(document.getElementById('purge-logs').checked) targets.push('logs');
+    if(document.getElementById('purge-db').checked) targets.push('db');
+    if(document.getElementById('purge-records').checked) targets.push('records');
+    if(document.getElementById('purge-debug').checked) targets.push('debug');
+    if(!targets.length){ alert('Select at least one item to purge.'); return; }
+    const mode = document.querySelector('input[name="purge-mode"]:checked')?.value || 'delete';
+    const ok = confirm(`Permanently ${mode} selected data for Patient ${currentPatientId}? The test case remains.`);
+    if(!ok) return;
+
+    try{
+        appendLog(`🗑️ Purging patient ${currentPatientId} (${mode})…`);
+        const r = await fetch(`${API}/api/purge`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({target:'patient', patient_id: currentPatientId, mode, targets})
+        });
+        const d = await r.json();
+        if(!r.ok) throw new Error(d.error || 'Purge failed');
+        appendLog(`✅ ${d.message || 'Patient data updated.'}`);
+        closePurgeModal();
+        clearIdentityOnly();
+        setDocList([]);
+        loadDocuments(currentPatientId);
+        try{
+            const r2 = await fetch(`${API}/api/patient/${currentPatientId}`);
+            const d2 = await r2.json();
+            currentCaseDetails = d2.case_details;
+            populateCaseInfo(d2.case_details);
+        }catch(e){}
+    }catch(e){
+        appendLog('❌ Purge failed: '+e.message);
+    }
 }
 
 // ── Clinical Detail Tabs ──────────────────────────────────────────────────

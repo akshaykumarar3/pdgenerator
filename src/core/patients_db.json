@@ -2271,8 +2271,8 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Leonard Hofstadter",
-      "telecom": "555-555-0199",
-      "address": "245 E Green Street, Pasadena, TX 77502",
+      "telecom": "555-555-0202",
+      "address": "2311 North Los Robles Avenue, Pasadena, TX 77502",
       "gender": "male",
       "organization": "N/A",
       "period_start": "2020-01-01",
@@ -2282,15 +2282,15 @@
       "generalPractitioner": "Dr. Rajesh Koothrappali, MD",
       "formatted_npi": "1234567890",
       "managingOrganization": "Houston Methodist Hospital",
-      "address": "6565 Fannin St, Houston, TX 77030",
-      "phone": "832-555-0103"
+      "address": "6565 Fannin Street, Houston, TX 77030",
+      "phone": "555-012-3456"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
@@ -2305,7 +2305,7 @@
     "procedure_requested": "Therapeutic Exercise (Post-injury Physiotherapy)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin St",
+      "street_address": "6565 Fannin Street",
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
@@ -2314,14 +2314,14 @@
     "pa_request": {
       "requesting_provider": "Dr. Rajesh Koothrappali, MD",
       "urgency_level": "Routine",
-      "clinical_justification": "The patient experiences persistent pain and limited mobility in the right ankle following a basketball injury. Therapeutic exercise is medically necessary to enhance recovery and restore function.",
+      "clinical_justification": "Mr. Cooper continues to experience persistent right ankle pain and limited mobility following an injury. Therapeutic exercise is medically necessary to enhance function, improve mobility, and reduce pain.",
       "supporting_diagnoses": [
-        "S93.401A - Sprain of unspecified ligament of right ankle"
+        "M25.572 - Pain in left ankle and joints of left foot"
       ],
-      "previous_treatments": "Ibuprofen and initial rest were tried; however, the patient\u2019s symptoms persisted.",
-      "expected_outcome": "Significant pain relief and improved range of motion in the right ankle."
+      "previous_treatments": "Initial NSAID therapy with Naprosyn and ongoing pain management with Advil.",
+      "expected_outcome": "Improved joint function and pain relief."
     },
-    "bio_narrative": "Sheldon Cooper is a 35-year-old male from 2311 North Los Robles Avenue, Pasadena, TX 77502 presenting for evaluation related to Therapeutic Exercise (Post-injury Physiotherapy). The referral is tied to the requested CPT with an anticipated procedure date of 2026-04-15. Key diagnoses include S93.401A - Sprain of unspecified ligament of right ankle. On 2026-02-01 office visit visit for Right ankle pain after sporting event.. On 2026-03-02 follow-up visit for Persistent right ankle pain limiting mobility.. Symptoms have progressed over months with measurable impact on daily function and work capacity. Complete documentation package with referral, imaging, and PT treatment plan \u2014 high approval likelihood Past medical history is notable for S93.401A - Sprain of unspecified ligament of right ankle. Prior procedures and interventions include no prior operative history of note. Current and recent medications include Advil (Ibuprofen 400mg) 1 tablet every 6-8 hours as needed, Allegra (Fexofenadine 180mg) 1 tablet daily, Naprosyn (Naproxen 500mg) 1 tablet twice daily. Therapy history includes Physical for Rehabilitation post right ankle injury, Medication Management (Psychiatry) for Anxiety management. Social history: None; Moderate. Family history: Family history of rheumatoid arthritis. The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly. Additional documentation across encounters includes objective findings and response patterns to prior conservative management. Imaging and lab results in the chart align with the above diagnoses. The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment.\n\nThe chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.\n\nPrior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.\n\nRelevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
+    "bio_narrative": "Sheldon Cooper is a 35-year-old male from 2311 North Los Robles Avenue, Pasadena, TX 77502 presenting for evaluation related to Therapeutic Exercise (Post-injury Physiotherapy). The referral is tied to the requested CPT with an anticipated procedure date of 2026-04-15. Key diagnoses include M25.572 - Pain in left ankle and joints of left foot. Recent clinical encounters document persistent symptoms and functional impact. Symptoms have progressed over months with measurable impact on daily function and work capacity. Complete documentation package with referral, imaging, and PT treatment plan \u2014 high approval likelihood Past medical history is notable for M25.572 - Pain in left ankle and joints of left foot. Prior procedures and interventions include no prior operative history of note. Current and recent medications include Advil (Ibuprofen 400mg) 1 tablet every 6-8 hours as needed, Allegra (Fexofenadine 180mg) 1 tablet daily, Naprosyn (Naproxen 500mg) 1 tablet twice daily. Therapy history includes Physical for Post-injury physiotherapy for right ankle sprain, Medication Management (Psychiatry) for Anxiety management. Social history: Never; Moderate - 2 drinks/week. Family history: No significant family history. The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly. Additional documentation across encounters includes objective findings and response patterns to prior conservative management. Imaging and lab results in the chart align with the above diagnoses. The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment.\n\nThe chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.\n\nPrior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.\n\nRelevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
     "medications": [
       {
         "brand": "Advil",
@@ -2330,7 +2330,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Rajesh Koothrappali, MD",
         "status": "current",
-        "start_date": "2026-02-01",
+        "start_date": "2026-01-25",
         "end_date": "ongoing",
         "reason": "Pain management for right ankle sprain"
       },
@@ -2341,7 +2341,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Rajesh Koothrappali, MD",
         "status": "ongoing",
-        "start_date": "2025-06-01",
+        "start_date": "2024-11-01",
         "end_date": "ongoing",
         "reason": "Allergic rhinitis management"
       },
@@ -2349,11 +2349,11 @@
         "brand": "Naprosyn",
         "generic_name": "Naproxen 500mg",
         "dosage": "1 tablet twice daily",
-        "qty": "30 tablets",
+        "qty": "14 tablets",
         "prescribed_by": "Dr. Rajesh Koothrappali, MD",
         "status": "past",
-        "start_date": "2026-01-01",
-        "end_date": "2026-02-01",
+        "start_date": "2026-01-20",
+        "end_date": "2026-02-15",
         "reason": "Initial pain management for ankle injury"
       }
     ],
@@ -2371,15 +2371,15 @@
         "vaccine_name": "COVID-19 mRNA",
         "vaccine_type": "mRNA",
         "date_administered": "2023-04-10",
-        "administered_by": "Dr. Rajesh Koothrappali, MD",
-        "dose_number": "Booster",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-16",
-        "administered_by": "Walgreens Pharmacy",
+        "administered_by": "Walgreens",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -2387,7 +2387,7 @@
         "vaccine_name": "Tetanus",
         "vaccine_type": "Toxoid",
         "date_administered": "2023-07-12",
-        "administered_by": "CVS Pharmacy",
+        "administered_by": "Houston Methodist",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -2395,8 +2395,8 @@
         "vaccine_name": "Hepatitis B",
         "vaccine_type": "Subunit",
         "date_administered": "2024-02-20",
-        "administered_by": "Pasadena Health Clinic",
-        "dose_number": "Full series",
+        "administered_by": "Houston Clinic",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       }
     ],
@@ -2406,476 +2406,58 @@
         "cpt_code": "97110",
         "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
         "icd10_codes": [
-          "S93.401A"
+          "M25.572"
         ],
         "provider": "Dr. Leonard Hofstadter, PT",
         "provider_npi": "2345678901",
-        "facility": "Houston Methodist Hospital",
-        "start_date": "2026-03-01",
+        "facility": "Houston Methodist Physical Therapy",
+        "start_date": "2026-03-05",
         "end_date": "ongoing",
         "frequency": "2x/week",
         "status": "Active",
-        "reason": "Rehabilitation post right ankle injury",
-        "notes": "Patient exhibits consistent progress in improving ankle flexibility and strength."
+        "reason": "Post-injury physiotherapy for right ankle sprain",
+        "notes": ""
       },
       {
         "therapy_type": "Medication Management (Psychiatry)",
-        "cpt_code": "90862",
-        "cpt_description": "Medication management visit",
+        "cpt_code": "G0463",
+        "cpt_description": "Hospital outpatient clinic facility visit",
         "icd10_codes": [],
         "provider": "Dr. Amy Farrah Fowler, MD",
         "provider_npi": "3456789012",
-        "facility": "Houston Methodist Behavioral Health",
-        "start_date": "2025-06-01",
-        "end_date": "2026-02-01",
+        "facility": "Houston Psychiatric Services",
+        "start_date": "2024-01-10",
+        "end_date": "2025-01-10",
         "frequency": "Monthly",
         "status": "Completed",
         "reason": "Anxiety management",
-        "notes": "Situational anxiety managed with cognitive behavioral approaches."
+        "notes": ""
       }
     ],
     "behavioral_notes": "The patient exhibits a high level of medication adherence, following prescribed regimens diligently. He maintains a balanced diet and exercises regularly, although current injury has impacted his routine. Sheldon avoids tobacco and illicit drugs, and consumes alcohol moderately during social events. His mental health history indicates past anxiety, managed through cognitive behavioral strategies, and occasional medication as required.",
-    "encounters": [
-      {
-        "encounter_date": "2026-02-01",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Severe pain in the right ankle following basketball game.",
-        "provider": "Dr. Rajesh Koothrappali, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-02-01",
-          "blood_pressure": "120/80 mmHg",
-          "heart_rate": "72 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "21.8 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Right ankle pain after sporting event.",
-        "doctor_note": "Sheldon presented with acute severe right ankle pain, following a basketball injury. On examination, notable swelling and lateral malleolus tenderness without fractures. Advised rest, application of heat, and NSAIDs. Plan to monitor and follow-up.",
-        "observations": [
-          "Swelling noted at the lateral side.",
-          "Implemented initial rest and NSAIDs."
-        ],
-        "procedures_performed": [
-          "CPT 99213 - Office Visit"
-        ],
-        "diagnoses": [
-          "S93.401A - Sprain of unspecified ligament of right ankle"
-        ],
-        "medications_prescribed": [
-          "Advil"
-        ],
-        "care_team": [
-          "Dr. Rajesh Koothrappali, MD"
-        ],
-        "progress_notes": "Patient displays signs of acute inflammation and will require follow-up to assess progress.",
-        "follow_up_instructions": "Schedule follow-up if symptoms persist or worsen."
-      },
-      {
-        "encounter_date": "2026-03-02",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Continued pain in ankle, worsening mobility.",
-        "provider": "Dr. Rajesh Koothrappali, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-03-02",
-          "blood_pressure": "125/85 mmHg",
-          "heart_rate": "75 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "21.8 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Persistent right ankle pain limiting mobility.",
-        "doctor_note": "On follow-up visit, Sheldon reports persistent pain and difficulty in ankle mobility. Despite rest and NSAIDs, symptoms persist. Exam shows ongoing swelling and limited range of motion. MRI advised to assess internal damage.",
-        "observations": [
-          "Persistent swelling and tenderness.",
-          "Advised MRI to rule out major tears."
-        ],
-        "procedures_performed": [
-          "CPT 99213 - Office Visit"
-        ],
-        "diagnoses": [
-          "S93.401A - Sprain of unspecified ligament of right ankle"
-        ],
-        "medications_prescribed": [
-          "Advil"
-        ],
-        "care_team": [
-          "Dr. Rajesh Koothrappali, MD"
-        ],
-        "progress_notes": "Patient continues to exhibit lack of progress in mobility. Further imaging will help tailor the rehabilitation strategy.",
-        "follow_up_instructions": "Arrange MRI imaging to confirm diagnosis."
-      },
-      {
-        "encounter_date": "2026-03-15",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Preoperative assessment for physiotherapy.",
-        "provider": "Dr. Rajesh Koothrappali, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": {
-          "recorded_date": "2026-03-15",
-          "blood_pressure": "123/82 mmHg",
-          "heart_rate": "74 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "21.8 kg/m\u00b2",
-          "oxygen_saturation": "99%",
-          "temperature": null,
-          "respiratory_rate": null
-        },
-        "chief_complaint": "Preparation for therapeutic physiotherapy initiation.",
-        "doctor_note": "Patient presents for a pre-physiotherapy evaluation. Recent MRI confirms strain with no fracture, appropriate for initiating therapeutic exercises. Discussion on therapy goals including pain management and functional strength improvement. Currently experiencing stable symptoms with controlled pain on NSAIDs.",
-        "observations": [
-          "MRI supports favourable prognosis for therapy.",
-          "Patient mentally ready for exercise plan."
-        ],
-        "procedures_performed": [
-          "CPT 99213 - Pre-op Evaluation"
-        ],
-        "diagnoses": [
-          "S93.401A - Sprain of unspecified ligament of right ankle"
-        ],
-        "medications_prescribed": [
-          "Advil"
-        ],
-        "care_team": [
-          "Dr. Rajesh Koothrappali, MD",
-          "Dr. Leonard Hofstadter, PT"
-        ],
-        "progress_notes": "Clear for starting physiotherapy. Discussed expected outcomes and risks.",
-        "follow_up_instructions": "Proceed with scheduled therapeutic sessions starting 2026-04-01."
-      }
-    ],
-    "images": [
-      {
-        "type": "MRI Ankle",
-        "date": "2026-02-05",
-        "provider": "Dr. Rajesh Koothrappali, MD",
-        "facility": "Houston Methodist Hospital",
-        "findings": "MRI evaluation shows evidence of ligament strain with swelling; no fractures or dislocations noted. Imaging supports physiotherapy focus."
-      }
-    ],
-    "reports": [
-      {
-        "type": "CBC",
-        "date": "2026-02-05",
-        "provider": "Dr. Rajesh Koothrappali, MD",
-        "results": "All parameters within normal limits except for slight elevation in inflammatory markers.",
-        "notes": "Elevated markers possibly secondary to acute injury response."
-      }
-    ],
-    "procedures": [],
-    "social_history": {
-      "tobacco_use": "None",
-      "tobacco_frequency": null,
-      "alcohol_use": "Moderate",
-      "alcohol_frequency": "Social events only",
-      "illicit_drug_use": "None",
-      "substance_history": "None",
-      "last_medical_visit": "2026-03-02",
-      "last_visit_reason": "Follow-up for ankle injury management",
-      "missed_appointment": false,
-      "missed_appointment_reason": null,
-      "early_visit_reason": null,
-      "mental_health_history": "Past anxiety, managed with therapy and minimal medication.",
-      "mental_health_current": "No current issues reported",
-      "exercise_habits": "Regularly until recent injury",
-      "diet_notes": "Balanced diet",
-      "family_history_relevant": "Family history of rheumatoid arthritis"
-    },
-    "vital_signs_current": {
-      "recorded_date": "2026-03-15",
-      "blood_pressure": "123/82 mmHg",
-      "heart_rate": "74 bpm",
-      "blood_sugar_fasting": null,
-      "blood_sugar_postprandial": null,
-      "bmi": "21.8 kg/m\u00b2",
-      "oxygen_saturation": "99%",
-      "temperature": null,
-      "respiratory_rate": null
-    },
-    "gender_specific_history": null
-  },
-  "270": {
-    "first_name": "Leonard",
-    "last_name": "Hofstadter",
-    "gender": "male",
-    "dob": "1985-01-16",
-    "address": "105 Broad St, Houston, TX, 77002",
-    "telecom": "281-555-0113",
-    "race": "Caucasian",
-    "height": "5 ft 8 in",
-    "weight": "165 lbs",
-    "maritalStatus": "Single",
-    "multipleBirthBoolean": false,
-    "multipleBirthInteger": 1,
-    "photo": "placeholder_patient_photo.png",
-    "communication": {
-      "language": "English",
-      "preferred": true
-    },
-    "contact": {
-      "relationship": "Emergency Contact",
-      "name": "Penny Hofstadter",
-      "telecom": "281-555-0114",
-      "address": "105 Broad St, Houston, TX, 77002",
-      "gender": "female",
-      "organization": "N/A",
-      "period_start": "2020-01-01",
-      "period_end": "ongoing"
-    },
-    "provider": {
-      "generalPractitioner": "Dr. Rajiv Nayyar, MD",
-      "formatted_npi": "1234567890",
-      "managingOrganization": "Houston Methodist Hospital",
-      "address": "6565 Fannin Street, Houston, TX 77030",
-      "phone": "713-790-3311"
-    },
-    "link": {
-      "other_patient": "N/A",
-      "link_type": "N/A"
-    },
-    "payer": {
-      "payer_id": "J1113",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare",
-      "member_id": "MBR-835856",
-      "policy_number": "POL-2026-9360",
-      "effective_date": "2024-01-01",
-      "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
-    },
-    "expected_procedure_date": "2026-04-07",
-    "procedure_requested": "Therapeutic Exercise (Post-injury Physiotherapy)",
-    "procedure_facility": {
-      "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin Street",
-      "city": "Houston",
-      "state": "TX",
-      "zip_code": "77030",
-      "department": "Physical Therapy Department"
-    },
-    "pa_request": {
-      "requesting_provider": "Dr. Rajiv Nayyar, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient has a documented ACL tear with functional impairment, requiring structured physiotherapy to restore mobility and function.",
-      "supporting_diagnoses": [
-        "M23.50 - Chronic instability of knee",
-        "S83.511A - Sprain of anterior cruciate ligament of right knee"
-      ],
-      "previous_treatments": "Initial use of pain management and knee brace.",
-      "expected_outcome": "Improved knee function and reduced pain enabling return to regular activities."
-    },
-    "bio_narrative": "Leonard Hofstadter is a 41-year-old male from 105 Broad St, Houston, TX, 77002 presenting for evaluation related to Therapeutic Exercise (Post-injury Physiotherapy). The referral is tied to the requested CPT with an anticipated procedure date of 2026-04-07. Key diagnoses include M23.50 - Chronic instability of knee, S83.511A - Sprain of anterior cruciate ligament of right knee. On 2026-03-01 er visit visit for Severe knee pain post sports injury.. On 2026-03-08 specialist consult visit for Concern over ligament damage and knee instability.. Symptoms have progressed over months with measurable impact on daily function and work capacity. Acute sports injury documented with imaging; orthopedic referral with PT order specifying diagnosis, frequency, and duration; functional impairment noted Past medical history is notable for M23.50 - Chronic instability of knee, S83.511A - Sprain of anterior cruciate ligament of right knee. Prior procedures and interventions include no prior operative history of note. Current and recent medications include Advil (Ibuprofen 200mg) 400 mg as needed, Flexeril (Cyclobenzaprine 5mg) 5 mg at bedtime, Aleve (Naproxen 250mg) 250 mg twice daily. Therapy history includes Physical for Recovery from ACL injury.. Social history: denies tobacco use; reports minimal alcohol use. Family history: family history reviewed with no major hereditary risk noted. The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly. Additional documentation across encounters includes objective findings and response patterns to prior conservative management. Imaging and lab results in the chart align with the above diagnoses. The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment.\n\nThe chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.\n\nPrior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.\n\nRelevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
-    "medications": [
-      {
-        "brand": "Advil",
-        "generic_name": "Ibuprofen 200mg",
-        "dosage": "400 mg as needed",
-        "qty": "30 tablets",
-        "prescribed_by": "Dr. Rajiv Nayyar, MD",
-        "status": "current",
-        "start_date": "2026-02-29",
-        "end_date": "ongoing",
-        "reason": "Pain relief from knee injury."
-      },
-      {
-        "brand": "Flexeril",
-        "generic_name": "Cyclobenzaprine 5mg",
-        "dosage": "5 mg at bedtime",
-        "qty": "90 tablets",
-        "prescribed_by": "Dr. Rajiv Nayyar, MD",
-        "status": "past",
-        "start_date": "2026-02-10",
-        "end_date": "2026-03-01",
-        "reason": "Muscle relaxation post-injury."
-      },
-      {
-        "brand": "Aleve",
-        "generic_name": "Naproxen 250mg",
-        "dosage": "250 mg twice daily",
-        "qty": "60 tablets",
-        "prescribed_by": "Dr. Rajiv Nayyar, MD",
-        "status": "past",
-        "start_date": "2026-02-01",
-        "end_date": "2026-02-29",
-        "reason": "Initial pain management post-injury."
-      }
-    ],
-    "allergies": [
-      {
-        "allergen": "Penicillin",
-        "allergy_type": "Drug",
-        "reaction": "Rash",
-        "severity": "Moderate",
-        "onset_date": "Unknown"
-      }
-    ],
-    "vaccinations": [
-      {
-        "vaccine_name": "Influenza",
-        "vaccine_type": "Inactivated",
-        "date_administered": "2025-10-01",
-        "administered_by": "CVS Pharmacy",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "COVID-19 Moderna",
-        "vaccine_type": "mRNA",
-        "date_administered": "2026-01-15",
-        "administered_by": "Walgreens Pharmacy",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Tdap",
-        "vaccine_type": "Toxoid",
-        "date_administered": "2022-03-25",
-        "administered_by": "Primary Care Physician",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      },
-      {
-        "vaccine_name": "Hepatitis B",
-        "vaccine_type": "Subunit",
-        "date_administered": "2025-06-20",
-        "administered_by": "Dr. Rajiv Nayyar, MD",
-        "dose_number": "1",
-        "reason": "Routine Immunization"
-      }
-    ],
-    "therapies": [
-      {
-        "therapy_type": "Physical",
-        "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
-        "icd10_codes": [
-          "M23.50 - Chronic instability of knee",
-          "S83.511A - Sprain of anterior cruciate ligament of right knee"
-        ],
-        "provider": "Dr. Rajiv Nayyar, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "start_date": "2026-03-08",
-        "end_date": "ongoing",
-        "frequency": "2x/week",
-        "status": "Active",
-        "reason": "Recovery from ACL injury.",
-        "notes": "Ongoing therapy focusing on stability and strength of the right knee."
-      }
-    ],
-    "behavioral_notes": "Leonard adheres to medication schedules meticulously and follows healthcare directives strictly. He leads an active lifestyle, reflected in his regular participation in sports. Although he has no history of smoking, Leonard occasionally consumes alcohol socially, favoring red wine for its purported health benefits. Mentally, he is focused and determined, qualities that are evident in his approach to injury recovery. Although managing his physical health diligently, he occasionally experiences frustration due to immobility from the injury.",
-    "encounters": [
-      {
-        "encounter_date": "2026-03-01",
-        "encounter_type": "ER Visit",
-        "purpose_of_visit": "Severe pain and swelling in the right knee following a basketball injury.",
-        "provider": "Dr. Rajiv Nayyar, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": null,
-        "chief_complaint": "Severe knee pain post sports injury.",
-        "doctor_note": "Leonard presented with acute knee pain following a trauma during a basketball game. Examination showed swelling and limited range of motion in the right knee. An initial assessment suggested an ACL tear, confirmed subsequently by imaging.",
-        "observations": [
-          "Severe swelling and limited range of motion in right knee",
-          "Suspected ACL tear from mechanism"
-        ],
-        "procedures_performed": [
-          "CPT 99213 - E&M Office Visit Level 3"
-        ],
-        "diagnoses": [
-          "S83.511A - Sprain of anterior cruciate ligament of right knee"
-        ],
-        "medications_prescribed": [
-          "Ibuprofen 400mg"
-        ],
-        "care_team": [
-          "Dr. Rajiv Nayyar, MD"
-        ],
-        "progress_notes": "Referred to an orthopedic specialist for further assessment. Prescribed Ibuprofen for pain.",
-        "follow_up_instructions": "Follow-up with orthopedics."
-      },
-      {
-        "encounter_date": "2026-03-08",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Concerns about the extent of ligament injury and long-term mobility issues.",
-        "provider": "Dr. Rajiv Nayyar, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": null,
-        "chief_complaint": "Concern over ligament damage and knee instability.",
-        "doctor_note": "Orthopedic consultation confirmed the diagnosis of an ACL tear. The patient expressed concern over potential long-term implications on his active lifestyle. Discussed available treatment options, emphasizing physical therapy to restore knee function.",
-        "observations": [
-          "Positive Lachman test indicating ACL deficiency"
-        ],
-        "procedures_performed": [
-          "CPT 99243 - Office Consultation for New or Established Patient"
-        ],
-        "diagnoses": [
-          "M23.50 - Chronic instability of knee"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Rajiv Nayyar, MD"
-        ],
-        "progress_notes": "Post evaluation, physiotherapy was deemed necessary for functional recovery.",
-        "follow_up_instructions": "Initiate physiotherapy regimen as planned."
-      },
-      {
-        "encounter_date": "2026-03-15",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Preparation for physiotherapy post ACL injury diagnosis.",
-        "provider": "Dr. Rajiv Nayyar, MD",
-        "provider_npi": "1234567890",
-        "facility": "Houston Methodist Hospital",
-        "vital_signs": null,
-        "chief_complaint": "Need for physiotherapy following confirmed ACL tear diagnosis.",
-        "doctor_note": "Pre-therapy evaluation conducted to establish baseline knee function and develop a treatment plan. Physical examination revalidated the need for physiotherapy commencing immediately to prevent deterioration.",
-        "observations": [
-          "Ongoing knee instability",
-          "Confirmed need for rehabilitation exercises"
-        ],
-        "procedures_performed": [
-          "CPT 97110 - Therapeutic Exercises"
-        ],
-        "diagnoses": [
-          "M23.50 - Chronic instability of knee"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Rajiv Nayyar, MD"
-        ],
-        "progress_notes": "Patient is suited for physiotherapy; therapy sessions scheduled to commence the following week.",
-        "follow_up_instructions": "Begin scheduled therapy next week."
-      }
-    ],
+    "encounters": [],
     "images": [],
     "reports": [],
     "procedures": [],
-    "social_history": null,
-    "vital_signs_current": {
-      "recorded_date": "2026-03-20",
-      "blood_pressure": "130/85 mmHg",
-      "heart_rate": "78 bpm",
-      "blood_sugar_fasting": null,
-      "blood_sugar_postprandial": null,
-      "bmi": null,
-      "oxygen_saturation": "98%",
-      "temperature": "98.6\u00b0F",
-      "respiratory_rate": "16 breaths/min"
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Moderate - 2 drinks/week",
+      "alcohol_frequency": "2-3 drinks during social gatherings",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-03-02",
+      "last_visit_reason": "Follow-up for ankle sprain",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": "Increased pain severity",
+      "mental_health_history": "Anxiety (2024-2025)",
+      "mental_health_current": "Stable with occasional anxiety symptoms - managed without medication",
+      "exercise_habits": "Limited currently due to injury, previously jogged 5x/week",
+      "diet_notes": "Balanced diet with emphasis on protein and vegetables",
+      "family_history_relevant": "No significant family history"
     },
+    "vital_signs_current": null,
     "gender_specific_history": null
   },
   "212": {
@@ -11871,5 +11453,208 @@
       "respiratory_rate": "16 breaths/min"
     },
     "gender_specific_history": "Walter has no relevant urologic history, prostate screening not indicated given current age."
+  },
+  "270": {
+    "first_name": "Gregor",
+    "last_name": "House",
+    "gender": "male",
+    "dob": "1980-12-15",
+    "address": "123 Elm Street, Houston, TX 77002",
+    "telecom": "555-016-9870",
+    "race": "Caucasian",
+    "height": "6 ft",
+    "weight": "180 lbs",
+    "maritalStatus": "Single",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Next of Kin",
+      "name": "Stacy Warner",
+      "telecom": "555-234-5678",
+      "address": "456 Pine Avenue, Houston, TX 77004",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2015-01-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Gregory Wilson, MD",
+      "formatted_npi": "1234567890",
+      "managingOrganization": "Houston Methodist Hospital",
+      "address": "123 Medical Center Blvd, Suite 100, Houston, TX 77030",
+      "phone": "555-019-8273"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare",
+      "member_id": "MBR-180856",
+      "policy_number": "POL-2026-7556",
+      "effective_date": "2026-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$25",
+      "deductible_amount": "$500"
+    },
+    "expected_procedure_date": "2026-04-15",
+    "procedure_requested": "Therapeutic Exercise (Post-injury Physiotherapy)",
+    "procedure_facility": {
+      "facility_name": "Houston Methodist Hospital",
+      "street_address": "123 Medical Center Blvd",
+      "city": "Houston",
+      "state": "TX",
+      "zip_code": "77030",
+      "department": "Physical Therapy Department"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Gregory Wilson, MD",
+      "urgency_level": "Routine",
+      "clinical_justification": "Imaging and clinical evaluation reveal a sprain of the anterior cruciate ligament. Therapeutic exercise is vital for functional recovery and pain management.",
+      "supporting_diagnoses": [
+        "S83.511A - Sprain of anterior cruciate ligament of right knee, initial encounter"
+      ],
+      "previous_treatments": "Analgesics and rest",
+      "expected_outcome": "Restoration of joint function and reduction of pain."
+    },
+    "bio_narrative": "Gregor House is a 45-year-old male from 123 Elm Street, Houston, TX 77002 presenting for evaluation related to Therapeutic Exercise (Post-injury Physiotherapy). The referral is tied to the requested CPT with an anticipated procedure date of 2026-04-15. Key diagnoses include S83.511A - Sprain of anterior cruciate ligament of right knee, initial encounter. Recent clinical encounters document persistent symptoms and functional impact. Symptoms have progressed over months with measurable impact on daily function and work capacity. Acute sports injury documented with imaging; orthopedic referral with PT order specifying diagnosis, frequency, and duration; functional impairment noted Past medical history is notable for S83.511A - Sprain of anterior cruciate ligament of right knee, initial encounter. Prior procedures and interventions include no prior operative history of note. Current and recent medications include Advil (Ibuprofen 800mg) 800mg TID, Toradol (Ketorolac 10mg) 10mg BID, Protonix (Pantoprazole 40mg) 40mg daily. Therapy history includes Physical for Rehabilitation of right knee post injury. Social history: Never; Moderate - 2-3 drinks/week. Family history: family history reviewed with no major hereditary risk noted. The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly. Additional documentation across encounters includes objective findings and response patterns to prior conservative management. Imaging and lab results in the chart align with the above diagnoses. The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment.\n\nThe chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.\n\nPrior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.\n\nRelevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
+    "medications": [
+      {
+        "brand": "Advil",
+        "generic_name": "Ibuprofen 800mg",
+        "dosage": "800mg TID",
+        "qty": "90 tablets",
+        "prescribed_by": "Dr. Gregory Wilson, MD",
+        "status": "current",
+        "start_date": "2026-02-15",
+        "end_date": "ongoing",
+        "reason": "Pain management post-injury"
+      },
+      {
+        "brand": "Toradol",
+        "generic_name": "Ketorolac 10mg",
+        "dosage": "10mg BID",
+        "qty": "20 tablets",
+        "prescribed_by": "Dr. Gregory Wilson, MD",
+        "status": "past",
+        "start_date": "2026-02-15",
+        "end_date": "2026-02-22",
+        "reason": "Acute pain relief"
+      },
+      {
+        "brand": "Protonix",
+        "generic_name": "Pantoprazole 40mg",
+        "dosage": "40mg daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Gregory Wilson, MD",
+        "status": "current",
+        "start_date": "2026-02-15",
+        "end_date": "ongoing",
+        "reason": "Prevention of NSAID-induced gastric ulcers"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Hives",
+        "severity": "Moderate",
+        "onset_date": "2000-05-15"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-10",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 BNT162b2",
+        "vaccine_type": "mRNA",
+        "date_administered": "2024-12-05",
+        "administered_by": "CVS Pharmacy",
+        "dose_number": "3",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tetanus",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2025-03-20",
+        "administered_by": "Dr. Gregory Wilson, MD",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis A",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2024-06-15",
+        "administered_by": "Houston Methodist Hospital",
+        "dose_number": "2",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Physical",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercise to develop strength, endurance, range of motion, and flexibility",
+        "icd10_codes": [],
+        "provider": "Dr. Jordan Chase, PT",
+        "provider_npi": "2345678901",
+        "facility": "Texas Physical Therapy Specialists",
+        "start_date": "2026-03-01",
+        "end_date": "ongoing",
+        "frequency": "2x/week",
+        "status": "Active",
+        "reason": "Rehabilitation of right knee post injury",
+        "notes": "Patient recommended for therapeutic exercise to improve mobility and reduce pain. Initial session showed positive response, with slight improvement in joint stability."
+      }
+    ],
+    "behavioral_notes": "Gregor is a compliant patient with a strong commitment to rehabilitation and a disciplined approach to medication adherence. He follows a balanced diet rich in lean proteins and vegetables, walks his dog daily, and avoids smoking and excessive alcohol consumption. He is mentally resilient, having overcome personal obstacles and maintained a positive outlook despite his current physical limitations.",
+    "encounters": [],
+    "images": [],
+    "reports": [],
+    "procedures": [],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Moderate - 2-3 drinks/week",
+      "alcohol_frequency": null,
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-02-15",
+      "last_visit_reason": "Knee injury assessment",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": "Persistent knee pain",
+      "mental_health_history": null,
+      "mental_health_current": null,
+      "exercise_habits": "Light daily walking",
+      "diet_notes": "Balanced diet with focus on lean proteins and vegetables",
+      "family_history_relevant": null
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-03-01",
+      "blood_pressure": "122/80 mmHg",
+      "heart_rate": "72 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "24.4 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": "98.6\u00b0F",
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": null
   }
 }

@@ -370,7 +370,7 @@ We have integrated full **Swagger OpenAPI documentation**. To explore the intera
 | GET | `/api/patient/<id>` | Fetch stored patient record |
 | POST | `/api/generate` | Trigger single patient generation |
 | POST | `/api/generate_all` | 🔁 Trigger batch generation for all patients |
-| POST | `/api/purge` | 🗑️ Purge specific databases or generated files |
+| POST | `/api/purge` | 🗑️ Purge specific databases or generated files (patient mode supports `targets[]` and `mode=delete|archive`) |
 | POST | `/api/template/save` | 💾 Save a generated document as a global template |
 | GET | `/api/job/<job_id>?since=N` | Poll job status + incremental logs |
 | GET | `/api/output/<patient_id>` | List all generated PDFs for a patient |

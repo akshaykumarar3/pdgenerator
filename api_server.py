@@ -21,8 +21,8 @@ sys.path.insert(0, BASE_DIR)
 from dotenv import load_dotenv
 load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 
-from data import loader as data_loader
-import core.patient_db as patient_db
+from src.data import loader as data_loader
+from src.core import patient_db
 
 # Refresh CPT code mapping from UAT Plan on server startup
 try:
@@ -66,7 +66,7 @@ swagger = Swagger(app, config=swagger_config, template=template)
 _jobs: dict = {}
 _jobs_lock = threading.Lock()
 
-from core.config import OUTPUT_DIR, REPORTS_DIR, PERSONA_DIR, SUMMARY_DIR
+from src.core.config import OUTPUT_DIR, REPORTS_DIR, PERSONA_DIR, SUMMARY_DIR
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -110,7 +110,7 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
     try:
         with JobLogger(job_id):
-            import workflow as wf
+            from src import workflow as wf
 
             # Build enriched feedback block
             extra_blocks = []
@@ -277,7 +277,7 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
         log_cb(f"🚀 Starting BATCH generation for {len(all_ids)} patients.")
 
         success_count = 0
-        from workflow import process_patient_workflow
+        from src.workflow import process_patient_workflow
 
         for p_id in all_ids:
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
@@ -322,7 +322,7 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
         _jobs[job_id]["status"] = "running"
     try:
         with JobLogger(job_id):
-            import workflow as wf
+            from src import workflow as wf
 
             # Build same combined_feedback as _run_generation
             extra_blocks = []
@@ -414,7 +414,7 @@ def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: 
         _jobs[job_id]["status"] = "running"
     try:
         with JobLogger(job_id):
-            import workflow as wf
+            from src import workflow as wf
             docs_written = wf.render_patient_pdfs_from_content(
                 patient_id=patient_id,
                 generation_mode=generation_mode,
@@ -781,7 +781,7 @@ def api_output(patient_id: str):
 @app.route("/api/record/<patient_id>")
 def api_get_patient_record(patient_id: str):
     """Return the human-readable patient text record."""
-    from core.config import RECORDS_DIR
+    from src.core.config import RECORDS_DIR
     record_path = os.path.join(RECORDS_DIR, f"{patient_id}-record.txt")
     if not os.path.exists(record_path):
         return jsonify({"error": "Record not found", "patient_id": patient_id}), 404
@@ -825,11 +825,19 @@ def api_purge():
               enum: [all, personas, documents, summaries_only, reports_only, patient]
             patient_id:
               type: string
+            mode:
+              type: string
+              enum: [delete, archive]
+            targets:
+              type: array
+              items:
+                type: string
+              description: "For target=patient: persona, reports, summary, logs, db, records, debug"
     responses:
       200:
         description: Purge successful
     """
-    import purge_manager
+    from src.utils import purge_manager
     body = request.get_json(force=True) or {}
     target = body.get("target")
 
@@ -848,7 +856,12 @@ def api_purge():
             p_id = body.get("patient_id")
             if not p_id:
                 return jsonify({"error": "patient_id required"}), 400
-            purge_manager.purge_patient(p_id, force=True)
+            mode = body.get("mode", "delete")
+            targets = body.get("targets")
+            if targets:
+                purge_manager.purge_patient_selective(p_id, targets, mode=mode, force=True)
+            else:
+                purge_manager.purge_patient(p_id, force=True)
         else:
             return jsonify({"error": "Invalid target"}), 400
             
