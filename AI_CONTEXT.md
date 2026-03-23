@@ -47,7 +47,7 @@ src/doc_generation/validator.py     → Validation and formatting of AI-generate
 src/ai/search_engine.py      → Web search for medical codes (Tavily API)
 src/data/loader.py           → Excel test case ingestion
 src/data/history.py          → Conversation history
-src/core/patient_db.py       → Patient persistence (data: src/core/patients_db.json)
+src/core/patient_db.py       → Patient persistence (data: src/core/patients_db.json; auto-migrates legacy core/patients_db.json)
 src/utils/purge_manager.py   → Cleanup utilities
 remove_persona.py            → CLI utility to remove personas
 

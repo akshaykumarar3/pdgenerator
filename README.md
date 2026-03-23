@@ -305,6 +305,7 @@ pdgenerator/
 ```
 
 **Patient DB:** The active database lives at `src/core/patients_db.json`. If a legacy `core/patients_db.json` exists, it is automatically migrated on first load.
+**Feedback history:** Per-patient feedback/history is stored in `generated_output/logs` and reused across runs (legacy logs from the old output path are auto-migrated when read).
 
 ### Key Files to Customize
 
@@ -327,11 +328,11 @@ The Web UI requires the Flask backend server (`api_server.py`) to be running.
 ```bash
 # Mac/Linux
 source venv/bin/activate
-python api_server.py
+python -m api_server
 
 # Windows
 venv\Scripts\activate
-python api_server.py
+python -m api_server
 ```
 
 *The server runs on port 410 by default. Access the UI by opening `ui/index.html` in your browser.*

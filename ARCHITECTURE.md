@@ -211,7 +211,9 @@ Hardcoded logic is externalized into JSON configs:
 
 ### Patient Database (`src/core/patient_db.py`)
 
-Persistent storage of generated personas in `core/patients_db.json` to preserve consistency across runs.
+Persistent storage of generated personas in `src/core/patients_db.json` to preserve consistency across runs.
+
+Legacy `core/patients_db.json` is automatically migrated into `src/core/patients_db.json` on first load.
 
 ### UI Layer (`ui/`)
 

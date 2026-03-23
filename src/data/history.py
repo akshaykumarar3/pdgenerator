@@ -13,9 +13,6 @@ def get_history(patient_id: str) -> str:
     Reads the history log for a patient.
     Returns the content string or empty string if no log exists.
     """
-    if not os.path.exists(LOGS_DIR):
-        return ""
-
     log_path = os.path.join(LOGS_DIR, f"{patient_id}.txt")
     if os.path.exists(log_path):
         with open(log_path, 'r', encoding='utf-8') as f:
