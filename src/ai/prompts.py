@@ -227,6 +227,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - **Medical Necessity**: ICD-10 codes must be medically appropriate and commonly used to justify the CPT procedure.
        - **Code Format**: ICD-10 codes should follow the format (e.g., "I25.10" for atherosclerotic heart disease, "R07.9" for chest pain).
        - **STRICT ALIGNMENT**: ALL reports MUST reference ONLY the codes defined in the persona. NO new codes may be introduced in reports.
+       - **CONSISTENCY RULE**: Any ICD-10 code referenced in the body of a clinical document or PA request MUST identically match a code listed in the `supporting_diagnoses` array and persona's diagnosis list.
+       - **FACILITY CONSISTENCY**: The `procedure_facility.facility_name` MUST be populated identically across ALL document headers, procedure plans, and PA location fields without variation.
     5. **Data Density (DYNAMIC - Based on Clinical Complexity)**:
        - **DO NOT default to a fixed number of documents.**
        - Assess the clinical complexity and generate an APPROPRIATE number:
@@ -253,6 +255,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           - **Example — MINIMAL (bad)**: findings: "No acute findings."
           - **Example — INTENSIVE (good)**: findings: "Cardiac CT angiography was performed with contrast. The left main, LAD, circumflex, and right coronary arteries are patent. There is non-obstructive plaque in the mid-LAD (approximately 20% stenosis). Left ventricular size and function are normal. No pericardial effusion. Incidental note: small hepatic cyst in segment VII, stable from prior."
           - For each section in the DOCUMENT PLAN (findings, impression, clinical_history, procedure_description, etc.), provide at least 2-4 sentences with specific clinical detail; avoid one-line answers.
+          - **PRE-OP EVALUATION RULE**: If the patient has ANY active therapies listed in their persona, any Pre-Op Evaluation document MUST include a "Concurrent Care Reference" field explicitly noting the active therapy.
+          - **LAB/ENCOUNTER MAPPING RULE**: Any lab result events referenced in clinical timelines must either map directly to an existing encounter or be created as a distinct encounter entry.
          - **DOCUMENT OUTPUT FORMAT**:
           For each document template specified in the DOCUMENT PLAN, create a entry in the `documents` list.
           The `content` field MUST contain the fully populated JSON object matching the template structure.
@@ -321,6 +325,10 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
          * Supporting Diagnoses: ["I25.10 - Atherosclerotic heart disease", "R07.9 - Chest pain, unspecified"]
          * Previous Treatments: "Conservative management with beta-blockers and lifestyle modifications"
          * Expected Outcome: "Definitive diagnosis of coronary perfusion status to guide revascularization decision"
+       - **STANDARD LABELS & COMORBIDITIES**:
+         * The `urgency_level` MUST use standard labels: "Pre-Service Routine", "Expedited/Urgent", or "Concurrent Review" based on procedure category.
+         * The PA `clinical_justification` and risk-benefit analysis MUST explicitly reference at least one relevant comorbidity from the patient's medical history (if present) to justify the clinical pathway.
+         * Set `units_requested`: Use "1" for surgical procedures, and calculated session counts (e.g., "12 sessions") for therapies.
     11. **Persona Generation (COMPLETE FHIR-COMPLIANT DATA)**:
        - You MUST populate the `patient_persona` object with ALL fields. **NO NULL VALUES ALLOWED**.
        - **CRITICAL IMPERATIVE**: You MUST rely ONLY on `patient_state` for identifiers, MRN, naming, and demographics. DO NOT CREATE NEW IDENTIFIERS.
@@ -330,7 +338,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
-         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`: Format "XXXXXXXXXX" (10 digits)
+         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`. Format "XXXXXXXXXX" (10 digits). **STRICT RULE**: Every NPI must be assigned ONCE per provider. The same provider across all encounters, therapies, and documents MUST reuse the EXACT SAME NPI. No provider can have two different NPIs; no two providers can share the same NPI.
          - **Clinical Coding (MANDATORY - Must be filled for report alignment)**:
            - `target_cpt_code`: CPT code for the requested procedure
            - `target_cpt_description`: Full procedure description
@@ -354,7 +362,8 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
      12. **MEDICATIONS (MANDATORY — min 3 entries)**:
         - ALL medications MUST be realistic and clinically appropriate for the ICD-10 diagnoses.
         - Mix statuses: some 'current', some 'past', some 'ongoing'.
-        - Each MUST have: brand, generic_name (with strength), dosage, qty, prescribed_by (realistic physician), status, start_date, end_date, reason.
+        - **PAST STATUS RULE**: When a medication status is set to "past" with an end date, any narrative reference to that medication in PA or clinical docs must use PAST TENSE and appear under "Previous Treatments" only, never as active or PRN.
+        - **HOLD INSTRUCTION RULE**: If a medication requires a pre-procedure hold, dynamically calculate and output specific dates based on the procedure date (e.g., if procedure is Nov 10 and hold is 5 days, explicit text must say "Hold starting Nov 5") rather than generic durations.
         - If user provided medications → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
      13. **ALLERGIES (MANDATORY — min 1 entry)**:
         - Each MUST have: allergen, allergy_type (Drug/Food/Environmental/Latex/Other), reaction, severity, onset_date.
@@ -373,6 +382,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           cpt_code (CPT/HCPCS/CDT code e.g. '97110', '90834', 'H0035', 'G0463'),
           cpt_description (full code description),
           icd10_codes (list of supporting ICD-10 codes).
+        - **THERAPY PLAN MATCHING**: Any CPT codes listed in therapy plans (e.g., PT/OT sessions) within clinical notes MUST strictly correspond to the codes populated in the patient persona's `therapies` section.
         - If user provided therapies → use EXACTLY as given. If patient is EXISTING → reproduce from locked constraint.
      16. **BEHAVIORAL NOTES (MANDATORY)**:
         - A concise paragraph: medication adherence, lifestyle habits (diet, exercise, smoking, alcohol), mental health flags, substance use history.
@@ -409,6 +419,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           * progress_notes: clinical progress relative to prior visits
           * follow_up_instructions: instructions given to patient
         - LAST encounter should be the most recent pre-procedure evaluation.
+        - **CONSISTENCY**: The encounter list in the clinical summary MUST be generated from the exact same source array as the persona master record; no encounter should exist in one document that doesn't exist in the other.
         - If patient is EXISTING → reproduce prior encounters exactly, and APPEND new ones as needed.
      20. **IMAGES (0-4 chronological imaging studies)**:
         - Generate images list. Each MUST have: type, date, provider, facility, findings.
@@ -420,9 +431,10 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
      22. **PROCEDURES (0-4 chronological prior clinical procedures)**:
         - Generate procedures list. Each MUST have: name, date, provider, facility, reason, notes.
         - If patient is EXISTING → reproduce prior procedures exactly, and APPEND new ones as needed.
-     23. **GENDER-SPECIFIC HISTORY (gender_specific_history)**:
+      23. **GENDER-SPECIFIC HISTORY & FLAGS**:
         - Female patients: Include OB/GYN history (gravida/para), last Pap smear date, mammogram date.
         - Male patients: Include PSA level (if age-appropriate), prostate screening history, urologic history.
+        - **GI CASES**: For GI procedures, set `has_fit_fobt_result` explicitly to True/False. The FIT/FOBT result flag must be consistently reflected as either positive or negative across all GI-related consults, lab reports, and PA forms.
         - If not clinically applicable: set to null.
       24. **DOCUMENT JSON STRUCTURE (MANDATORY)**:
         - Each document's `content` must be a valid JSON object.

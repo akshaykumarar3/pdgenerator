@@ -1,4 +1,4 @@
-# Clinical Data Generator (v5.0)
+# Clinical Data Generator (v5.2)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -132,6 +132,11 @@ After each run, a 2×2 summary panel is shown:
 ---
 
 ## ✨ Key Features
+
+### Generation Control & Batching
+
+- **Batch Generation**: Support for processing multiple patients simultaneously. The system builds a queue and processes records sequentially while maintaining strict isolation.
+- **Cancel/Abort with Auto-Rollback**: Safely halt any long-running generation (single or batch) at any time. If a job is aborted mid-flight, the system automatically triggers a rollback to restore the previous state of the patient's documents and persona database, preventing corrupted or partial outputs.
 
 ### Prior Authorization Workflow Support
 
@@ -370,7 +375,8 @@ We have integrated full **Swagger OpenAPI documentation**. To explore the intera
 | GET | `/api/patient/<id>` | Fetch stored patient record |
 | POST | `/api/generate` | Trigger single patient generation |
 | POST | `/api/generate_all` | 🔁 Trigger batch generation for all patients |
-| POST | `/api/purge` | 🗑️ Purge specific databases or generated files (patient mode supports `targets[]` and `mode=delete|archive`) |
+| POST | `/api/cancel/<job_id>` | ⛔ Cancel an active generation job with auto-rollback |
+| POST | `/api/purge` | 🗑️ Purge specific databases or generated files (patient mode supports `targets[]` and `mode=delete/archive`) |
 | POST | `/api/template/save` | 💾 Save a generated document as a global template |
 | GET | `/api/job/<job_id>?since=N` | Poll job status + incremental logs |
 | GET | `/api/output/<patient_id>` | List all generated PDFs for a patient |

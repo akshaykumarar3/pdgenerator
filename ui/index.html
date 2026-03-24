@@ -1,969 +1,1163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Command Center | PD Generator</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<style>
-  *{box-sizing:border-box;}
-  body{background:#F8F9FA;color:#1A1A1A;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
-  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 20;}
-  .custom-scrollbar::-webkit-scrollbar{width:3px;}
-  .custom-scrollbar::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:2px;}
-  .tab-active{color:#1A1A1A;border-bottom:2px solid #1A1A1A;font-weight:800;}
-  .tab-inactive{color:#6B7280;border-bottom:2px solid transparent;font-weight:600;}
-  .card{background:#fff;border:1px solid #E5E7EB;}
-  .log-entry{font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;}
-  input[type="checkbox"].lg-chk{accent-color:#1A1A1A;}
-  
-  /* Preview Modal */
-  #preview-modal{display:none;}
-  #preview-modal.open{display:flex;}
-  .preview-doc-item{cursor:pointer;padding:8px 12px;border-radius:8px;font-size:11px;transition:background 0.15s;}
-  .preview-doc-item:hover{background:#f3f4f6;}
-  .preview-doc-item.active{background:#e5e7eb;color:#111827;font-weight:600;}
-  .ql-toolbar.ql-snow{background:#f9fafb;border-color:#e5e7eb !important;border-radius:8px 8px 0 0;}
-  .ql-container.ql-snow{background:transparent;border-color:#e5e7eb !important;border-radius:0 0 8px 8px;color:#111;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;height:100%;}
-  .ql-editor{height:100%;overflow-y:auto;color:#111;}
-  .preview-page-wrap{overflow:auto;padding:16px;background:radial-gradient(circle at 20% 20%, rgba(0,0,0,0.04), transparent 45%);}
-  .a4-page{width:min(100%,760px);min-height:520px;background:#fff;color:#111;border:1px dashed rgba(120,120,120,0.35);box-shadow:0 12px 32px rgba(0,0,0,0.1);border-radius:6px;position:relative;margin:0 auto 24px auto;padding:22px;}
-  .a4-page::after{content:"A4";position:absolute;top:8px;right:10px;font-size:10px;letter-spacing:2px;color:rgba(0,0,0,0.35);}
-</style>
-<!-- Quill.js 1.3.7 -->
-<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Command Center | PD Generator <V5 class="2"></V5>
+  </title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #F8F9FA;
+      color: #1A1A1A;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #D1D5DB;
+      border-radius: 2px;
+    }
+
+    .tab-active {
+      color: #1A1A1A;
+      border-bottom: 2px solid #1A1A1A;
+      font-weight: 800;
+    }
+
+    .tab-inactive {
+      color: #6B7280;
+      border-bottom: 2px solid transparent;
+      font-weight: 600;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #E5E7EB;
+    }
+
+    .log-entry {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    input[type="checkbox"].lg-chk {
+      accent-color: #1A1A1A;
+    }
+
+    /* Preview Modal */
+    #preview-modal {
+      display: none;
+    }
+
+    #preview-modal.open {
+      display: flex;
+    }
+
+    .preview-doc-item {
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      transition: background 0.15s;
+    }
+
+    .preview-doc-item:hover {
+      background: #f3f4f6;
+    }
+
+    .preview-doc-item.active {
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .ql-toolbar.ql-snow {
+      background: #f9fafb;
+      border-color: #e5e7eb !important;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .ql-container.ql-snow {
+      background: transparent;
+      border-color: #e5e7eb !important;
+      border-radius: 0 0 8px 8px;
+      color: #111;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      line-height: 1.6;
+      height: 100%;
+    }
+
+    .ql-editor {
+      height: 100%;
+      overflow-y: auto;
+      color: #111;
+    }
+
+    .preview-page-wrap {
+      overflow: auto;
+      padding: 16px;
+      background: radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.04), transparent 45%);
+    }
+
+    .a4-page {
+      width: min(100%, 760px);
+      min-height: 520px;
+      background: #fff;
+      color: #111;
+      border: 1px dashed rgba(120, 120, 120, 0.35);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      position: relative;
+      margin: 0 auto 24px auto;
+      padding: 22px;
+    }
+
+    .a4-page::after {
+      content: "A4";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(0, 0, 0, 0.35);
+    }
+  </style>
+  <!-- Quill.js 1.3.7 -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 </head>
+
 <body>
 
-<!-- ═══ OFFLINE BANNER ═══════════════════════════════════════════════════════ -->
-<div id="offline-banner" class="hidden absolute inset-x-0 top-0 h-10 bg-red-600 text-white text-xs font-bold items-center justify-center gap-4 z-[999]">
+  <!-- ═══ OFFLINE BANNER ═══════════════════════════════════════════════════════ -->
+  <div id="offline-banner"
+    class="hidden absolute inset-x-0 top-0 h-10 bg-red-600 text-white text-xs font-bold items-center justify-center gap-4 z-[999]">
     <span class="material-symbols-outlined text-sm">wifi_off</span> API Offline - Cannot connect to server
-    <button onclick="checkServer()" class="px-3 py-1 bg-white/20 rounded shadow-sm hover:bg-white/40 transition-colors">Refresh Connection</button>
-</div>
+    <button onclick="checkServer()"
+      class="px-3 py-1 bg-white/20 rounded shadow-sm hover:bg-white/40 transition-colors">Refresh Connection</button>
+  </div>
 
-<!-- ═══ HEADER ════════════════════════════════════════════════════════ -->
-<header class="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0 z-50">
-  <div class="flex items-center gap-5">
-    <div class="flex items-center gap-2">
-      <span class="material-symbols-outlined text-charcoal font-black" style="font-variation-settings:'FILL' 1,'wght' 700;">clinical_notes</span>
-      <span class="font-black text-xs uppercase tracking-widest">Command Center</span>
+  <!-- ═══ HEADER ════════════════════════════════════════════════════════ -->
+  <header class="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-6 shrink-0 z-50">
+    <div class="flex items-center gap-5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-charcoal font-black"
+          style="font-variation-settings:'FILL' 1,'wght' 700;">clinical_notes</span>
+        <span class="font-black text-xs uppercase tracking-widest">Command Center</span>
+      </div>
+      <div class="w-px h-5 bg-gray-200"></div>
+      <div id="server-dot" class="w-2 h-2 rounded-full bg-gray-300" title="API status"></div>
+      <span id="server-label" class="text-[10px] font-mono text-gray-400 uppercase">Checking…</span>
     </div>
-    <div class="w-px h-5 bg-gray-200"></div>
-    <div id="server-dot" class="w-2 h-2 rounded-full bg-gray-300" title="API status"></div>
-    <span id="server-label" class="text-[10px] font-mono text-gray-400 uppercase">Checking…</span>
-  </div>
-  <div class="flex items-center gap-3">
-    <button onclick="openBatchModal()" class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-900 text-[10px] font-black uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
-      <span class="material-symbols-outlined text-sm">batch_prediction</span> Batch Run
-    </button>
-    <img alt="User" class="w-7 h-7 rounded-full border border-gray-200 grayscale"
-      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTDu4MOuMOs0W6jTWPV71zpxHjMy44pi5CSqXnvyMi0CthsHHHGye33MnLt-4CABhybyhfOv5AfJZrfS-7__iytpf2mV6buuCUcSEtZgFFrFjJIQL-OBSJLlKWPDN_tuM9ULtNJ1UoDgIlE8tPtApQs_sTUfPKjKHa1J409OwjQSJT5zxsfiLnztGjib9og5dWmAAH6tANmnkuLdbaUO4n6IF_qD3KPp6b3AeFJzchNg-XKLW5S_DtSoNK1nWiZMxn62-mdnM1kTY"/>
-  </div>
-</header>
-
-<!-- ═══ 3-SILO BODY ══════════════════════════════════════════════════ -->
-<main class="flex-1 flex overflow-hidden">
-
-  <!-- ─── SILO 1: Patient + Case Info ─────────────────────────── -->
-  <aside class="w-[280px] flex flex-col border-r border-gray-200 bg-white overflow-hidden shrink-0">
-
-    <!-- Patient selector -->
-    <div class="p-4 border-b border-gray-200 shrink-0">
-      <label class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2">Active Patient</label>
-      <select id="patient-select" class="w-full border border-gray-200 rounded text-sm px-3 py-2 bg-white focus:ring-1 focus:ring-gray-900 focus:outline-none cursor-pointer appearance-none">
-        <option value="">Loading…</option>
-      </select>
-      <button id="btn-purge" onclick="openPurgeModal()"
-        class="mt-3 w-full py-2 bg-red-50 text-red-700 border border-red-200 rounded text-[10px] font-black uppercase tracking-widest hover:bg-red-100">
-        Purge Selected Patient
+    <div class="flex items-center gap-3">
+      <button onclick="openBatchModal()"
+        class="flex items-center gap-1.5 px-3 py-1.5 border border-gray-900 text-[10px] font-black uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
+        <span class="material-symbols-outlined text-sm">batch_prediction</span> Batch Run
       </button>
+      <img alt="User" class="w-7 h-7 rounded-full border border-gray-200 grayscale"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTDu4MOuMOs0W6jTWPV71zpxHjMy44pi5CSqXnvyMi0CthsHHHGye33MnLt-4CABhybyhfOv5AfJZrfS-7__iytpf2mV6buuCUcSEtZgFFrFjJIQL-OBSJLlKWPDN_tuM9ULtNJ1UoDgIlE8tPtApQs_sTUfPKjKHa1J409OwjQSJT5zxsfiLnztGjib9og5dWmAAH6tANmnkuLdbaUO4n6IF_qD3KPp6b3AeFJzchNg-XKLW5S_DtSoNK1nWiZMxn62-mdnM1kTY" />
     </div>
+  </header>
 
-    <!-- Identity -->
-    <div class="p-4 border-b border-gray-200 shrink-0">
-      <div class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-3">Identity</div>
-      <div class="grid grid-cols-2 gap-2">
-        <div class="col-span-2 bg-gray-50 p-2 rounded">
-          <div class="text-[9px] text-gray-400 uppercase">Patient</div>
-          <div id="info-name" class="text-xs font-semibold mt-0.5">—</div>
-          <div id="info-mrn" class="text-[10px] font-mono text-gray-500 mt-0.5">—</div>
-        </div>
-        <div class="bg-gray-50 p-2 rounded">
-          <div class="text-[9px] text-gray-400 uppercase">DOB</div>
-          <div id="info-dob" class="font-mono text-xs mt-0.5">—</div>
-        </div>
-        <div class="bg-gray-50 p-2 rounded">
-          <div class="text-[9px] text-gray-400 uppercase">Gender</div>
-          <div id="info-gender" class="text-xs mt-0.5">—</div>
-        </div>
-        <div class="col-span-2 bg-gray-50 p-2 rounded">
-          <div class="text-[9px] text-gray-400 uppercase">Provider</div>
-          <div id="info-provider" class="text-xs mt-0.5 truncate">—</div>
-        </div>
-      </div>
-    </div>
+  <!-- ═══ 3-SILO BODY ══════════════════════════════════════════════════ -->
+  <main class="flex-1 flex overflow-hidden">
 
-    <!-- Case Info -->
-    <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
-      <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">UAT Case Details</div>
+    <!-- ─── SILO 1: Patient + Case Info ─────────────────────────── -->
+    <aside class="w-[280px] flex flex-col border-r border-gray-200 bg-white overflow-hidden shrink-0">
 
-      <div class="card p-3 space-y-2.5 rounded">
-        <div><div class="text-[9px] text-gray-400 uppercase">Test Case #</div><div id="case-num" class="text-xs font-mono mt-0.5">—</div></div>
-        <div><div class="text-[9px] text-gray-400 uppercase">Department</div><div id="case-dept" class="text-xs mt-0.5">—</div></div>
-        <div><div class="text-[9px] text-gray-400 uppercase">Procedure / CPT</div><div id="case-cpt" class="text-xs font-mono mt-0.5">—</div></div>
-      </div>
-
-      <div id="case-outcome-card" class="p-3 rounded border">
-        <div class="text-[9px] text-gray-400 uppercase mb-1">Expected Outcome</div>
-        <div id="case-outcome" class="text-xs font-black">—</div>
-      </div>
-
-      <div class="card p-3 rounded">
-        <div class="text-[9px] text-gray-400 uppercase mb-1">Case Details</div>
-        <div id="case-details-text" class="text-[11px] text-gray-600 leading-relaxed">—</div>
-      </div>
-
-      <div class="card p-3 rounded">
-        <div class="text-[9px] text-gray-400 uppercase mb-1">Primary Diagnosis</div>
-        <div id="info-dx" class="text-xs">—</div>
-      </div>
-
-      <div class="card p-3 rounded">
-        <div class="text-[9px] text-gray-400 uppercase mb-1">Clinical Summary</div>
-        <div id="info-summary" class="text-[11px] text-gray-600 leading-relaxed">—</div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ─── SILO 2: Clinical Detail Tabs ─────────────────────────── -->
-  <section class="flex-1 flex flex-col overflow-hidden border-r border-gray-200 bg-gray-50">
-    <!-- Tabs -->
-    <div class="flex bg-white border-b border-gray-200 shrink-0 overflow-x-auto">
-      <button onclick="switchClinicalTab('meds')" id="ctab-meds" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-active">Medications</button>
-      <button onclick="switchClinicalTab('allergies')" id="ctab-allergies" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Allergies</button>
-      <button onclick="switchClinicalTab('therapy')" id="ctab-therapy" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Therapy</button>
-      <button onclick="switchClinicalTab('procedures')" id="ctab-procedures" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Procedures</button>
-      <button onclick="switchClinicalTab('encounters')" id="ctab-encounters" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Encounters</button>
-      <button onclick="switchClinicalTab('imaging')" id="ctab-imaging" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Imaging</button>
-      <button onclick="switchClinicalTab('labs')" id="ctab-labs" class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Labs</button>
-    </div>
-    <!-- Content -->
-    <div id="clinical-content" class="flex-1 overflow-y-auto custom-scrollbar p-5">
-      <p class="text-gray-400 italic text-sm">Select a patient to load clinical data…</p>
-    </div>
-  </section>
-
-  <!-- ─── SILO 3: Generate + Logs + Docs ───────────────────────── -->
-  <aside class="w-[300px] flex flex-col bg-white overflow-hidden shrink-0">
-
-    <!-- Generation Controls -->
-    <div class="p-4 border-b border-gray-200 shrink-0 space-y-3">
-      <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">Generate Documents</div>
-      <textarea id="feedback-input" rows="3" placeholder="Optional feedback / instructions…"
-        class="w-full border border-gray-200 rounded text-xs px-3 py-2 font-mono resize-none focus:ring-1 focus:ring-gray-900 focus:outline-none leading-relaxed placeholder-gray-300"></textarea>
-      <div class="flex gap-4">
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-persona" checked class="lg-chk"> Persona</label>
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-reports" checked class="lg-chk"> Reports</label>
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-summary" checked class="lg-chk"> Summary</label>
-      </div>
-      <button id="btn-generate" onclick="onGenerateClick()"
-        class="w-full py-2.5 bg-gray-900 text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-700 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed rounded">
-        <span id="gen-icon" class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">play_arrow</span>
-        <span id="gen-label">Generate</span>
-      </button>
-      <div class="text-center mt-2 flex items-center justify-center">
-        <label class="flex items-center gap-1.5 text-[10px] text-gray-500 cursor-pointer select-none border border-gray-200 px-3 py-1 rounded bg-gray-50">
-            <input type="checkbox" id="chk-preview-flow" class="w-2.5 h-2.5 rounded lg-chk"> Preview before generating
-        </label>
-      </div>
-    </div>
-
-    <!-- Logs -->
-    <div class="flex flex-col border-b border-gray-200 shrink-0" style="height:190px;">
-      <div class="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-100 shrink-0">
-        <div class="flex items-center gap-2">
-          <span id="log-dot" class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-          <span class="text-[9px] font-mono uppercase text-gray-400">Generation Logs</span>
-        </div>
-        <button onclick="clearLogs()" class="text-[9px] text-gray-400 hover:text-gray-700">Clear</button>
-      </div>
-      <div id="log-panel" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-0.5 bg-gray-50">
-        <div class="log-entry text-gray-400">— Awaiting generation —</div>
-      </div>
-    </div>
-
-    <!-- Docs -->
-    <div class="flex flex-col flex-1 overflow-hidden">
-      <div class="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 shrink-0">
-        <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">Documents</div>
-        <div class="flex gap-1">
-          <button onclick="switchDocTab('all')" id="dtab-all" class="px-2 py-0.5 text-[9px] font-black uppercase bg-gray-900 text-white rounded">All</button>
-          <button onclick="switchDocTab('persona')" id="dtab-persona" class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">P</button>
-          <button onclick="switchDocTab('reports')" id="dtab-reports" class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">R</button>
-          <button onclick="switchDocTab('summary')" id="dtab-summary" class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">S</button>
-        </div>
-      </div>
-      <div id="doc-list" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
-        <p class="text-[11px] text-gray-400 italic">Select a patient…</p>
-      </div>
-    </div>
-  </aside>
-</main>
-
-<!-- ═══ BATCH MODAL ══════════════════════════════════════════════════ -->
-<div id="batch-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center">
-  <div class="bg-white border border-gray-200 w-[460px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
-    <div class="p-5 border-b border-gray-200 flex justify-between items-center shrink-0">
-      <div>
-        <h2 class="font-black text-sm">Batch Generation</h2>
-        <p class="text-xs text-gray-500 mt-0.5">Select patients to generate documents for</p>
-      </div>
-      <button onclick="closeBatchModal()"><span class="material-symbols-outlined text-gray-500">close</span></button>
-    </div>
-    <div class="p-4 border-b border-gray-100 shrink-0">
-      <div class="flex gap-4">
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-persona" checked class="lg-chk"> Persona</label>
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-reports" checked class="lg-chk"> Reports</label>
-        <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-summary" checked class="lg-chk"> Summary</label>
-        <button onclick="toggleSelectAll()" class="ml-auto text-[10px] text-gray-500 underline">Select All</button>
-      </div>
-    </div>
-    <div id="batch-patient-list" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1">
-      <p class="text-xs text-gray-400">Loading…</p>
-    </div>
-    <div class="p-4 border-t border-gray-200 flex gap-3 shrink-0">
-      <button onclick="closeBatchModal()" class="flex-1 py-2 border border-gray-300 text-xs font-bold hover:bg-gray-50 transition-colors">Cancel</button>
-      <button onclick="startBatch()" class="flex-1 py-2 bg-gray-900 text-white text-xs font-black hover:bg-gray-700 transition-colors">Run Batch</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ PURGE MODAL ══════════════════════════════════════════════════ -->
-<div id="purge-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center">
-  <div class="bg-white border border-gray-200 w-[420px] flex flex-col overflow-hidden shadow-2xl">
-    <div class="p-5 border-b border-gray-200 flex justify-between items-center shrink-0">
-      <div>
-        <h2 class="font-black text-sm">Purge Patient Data</h2>
-        <p class="text-xs text-gray-500 mt-0.5">Select what to delete or archive</p>
-      </div>
-      <button onclick="closePurgeModal()"><span class="material-symbols-outlined text-gray-500">close</span></button>
-    </div>
-    <div class="p-4 space-y-4">
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-persona" checked class="lg-chk"> Persona PDFs</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-reports" checked class="lg-chk"> Reports</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-summary" checked class="lg-chk"> Summary</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-logs" checked class="lg-chk"> Logs</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-db" checked class="lg-chk"> Patient DB</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-records" class="lg-chk"> Records</label>
-        <label class="flex items-center gap-2"><input type="checkbox" id="purge-debug" class="lg-chk"> Debug State</label>
-      </div>
-      <div class="bg-gray-50 border border-gray-200 p-3 rounded text-xs">
-        <div class="text-[9px] uppercase tracking-widest text-gray-400 mb-2">Action</div>
-        <label class="flex items-center gap-2"><input type="radio" name="purge-mode" value="delete" checked class="lg-chk"> Delete</label>
-        <label class="flex items-center gap-2 mt-1"><input type="radio" name="purge-mode" value="archive" class="lg-chk"> Archive</label>
-      </div>
-    </div>
-    <div class="p-4 border-t border-gray-200 flex gap-3 shrink-0">
-      <button onclick="closePurgeModal()" class="flex-1 py-2 border border-gray-300 text-xs font-bold hover:bg-gray-50 transition-colors">Cancel</button>
-      <button onclick="confirmPurge()" class="flex-1 py-2 bg-red-600 text-white text-xs font-black hover:bg-red-500 transition-colors">Purge</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ PREVIEW MODAL ══════════════════════════════════════════════════════ -->
-<div id="preview-modal" class="fixed inset-0 z-50 items-stretch bg-gray-900/60 backdrop-blur-sm flex-col">
-    <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shrink-0">
-        <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-gray-900" style="font-variation-settings:'FILL'1;">preview</span>
-            <div>
-                <div class="text-sm font-black text-gray-900">Document Preview &amp; Editor</div>
-                <div class="text-[10px] text-gray-500">Review and edit AI-generated content before rendering PDFs</div>
-            </div>
-        </div>
-        <button onclick="closePreviewModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
-            <span class="material-symbols-outlined text-gray-500">close</span>
+      <!-- Patient selector -->
+      <div class="p-4 border-b border-gray-200 shrink-0">
+        <label class="block text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2">Active Patient</label>
+        <select id="patient-select"
+          class="w-full border border-gray-200 rounded text-sm px-3 py-2 bg-white focus:ring-1 focus:ring-gray-900 focus:outline-none cursor-pointer appearance-none">
+          <option value="">Loading…</option>
+        </select>
+        <button id="btn-purge" onclick="openPurgeModal()"
+          class="mt-3 w-full py-2 bg-red-50 text-red-700 border border-red-200 rounded text-[10px] font-black uppercase tracking-widest hover:bg-red-100">
+          Purge Selected Patient
         </button>
+      </div>
+
+      <!-- Identity -->
+      <div class="p-4 border-b border-gray-200 shrink-0">
+        <div class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-3">Identity</div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="col-span-2 bg-gray-50 p-2 rounded">
+            <div class="text-[9px] text-gray-400 uppercase">Patient</div>
+            <div id="info-name" class="text-xs font-semibold mt-0.5">—</div>
+            <div id="info-mrn" class="text-[10px] font-mono text-gray-500 mt-0.5">—</div>
+          </div>
+          <div class="bg-gray-50 p-2 rounded">
+            <div class="text-[9px] text-gray-400 uppercase">DOB</div>
+            <div id="info-dob" class="font-mono text-xs mt-0.5">—</div>
+          </div>
+          <div class="bg-gray-50 p-2 rounded">
+            <div class="text-[9px] text-gray-400 uppercase">Gender</div>
+            <div id="info-gender" class="text-xs mt-0.5">—</div>
+          </div>
+          <div class="col-span-2 bg-gray-50 p-2 rounded">
+            <div class="text-[9px] text-gray-400 uppercase">Provider</div>
+            <div id="info-provider" class="text-xs mt-0.5 truncate">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Info -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+        <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">UAT Case Details</div>
+
+        <div class="card p-3 space-y-2.5 rounded">
+          <div>
+            <div class="text-[9px] text-gray-400 uppercase">Test Case #</div>
+            <div id="case-num" class="text-xs font-mono mt-0.5">—</div>
+          </div>
+          <div>
+            <div class="text-[9px] text-gray-400 uppercase">Department</div>
+            <div id="case-dept" class="text-xs mt-0.5">—</div>
+          </div>
+          <div>
+            <div class="text-[9px] text-gray-400 uppercase">Procedure / CPT</div>
+            <div id="case-cpt" class="text-xs font-mono mt-0.5">—</div>
+          </div>
+        </div>
+
+        <div id="case-outcome-card" class="p-3 rounded border">
+          <div class="text-[9px] text-gray-400 uppercase mb-1">Expected Outcome</div>
+          <div id="case-outcome" class="text-xs font-black">—</div>
+        </div>
+
+        <div class="card p-3 rounded">
+          <div class="text-[9px] text-gray-400 uppercase mb-1">Case Details</div>
+          <div id="case-details-text" class="text-[11px] text-gray-600 leading-relaxed">—</div>
+        </div>
+
+        <div class="card p-3 rounded">
+          <div class="text-[9px] text-gray-400 uppercase mb-1">Primary Diagnosis</div>
+          <div id="info-dx" class="text-xs">—</div>
+        </div>
+
+        <div class="card p-3 rounded">
+          <div class="text-[9px] text-gray-400 uppercase mb-1">Clinical Summary</div>
+          <div id="info-summary" class="text-[11px] text-gray-600 leading-relaxed">—</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── SILO 2: Clinical Detail Tabs ─────────────────────────── -->
+    <section class="flex-1 flex flex-col overflow-hidden border-r border-gray-200 bg-gray-50">
+      <!-- Tabs -->
+      <div class="flex bg-white border-b border-gray-200 shrink-0 overflow-x-auto">
+        <button onclick="switchClinicalTab('meds')" id="ctab-meds"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-active">Medications</button>
+        <button onclick="switchClinicalTab('allergies')" id="ctab-allergies"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Allergies</button>
+        <button onclick="switchClinicalTab('therapy')" id="ctab-therapy"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Therapy</button>
+        <button onclick="switchClinicalTab('procedures')" id="ctab-procedures"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Procedures</button>
+        <button onclick="switchClinicalTab('encounters')" id="ctab-encounters"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Encounters</button>
+        <button onclick="switchClinicalTab('imaging')" id="ctab-imaging"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Imaging</button>
+        <button onclick="switchClinicalTab('labs')" id="ctab-labs"
+          class="clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap tab-inactive">Labs</button>
+      </div>
+      <!-- Content -->
+      <div id="clinical-content" class="flex-1 overflow-y-auto custom-scrollbar p-5">
+        <p class="text-gray-400 italic text-sm">Select a patient to load clinical data…</p>
+      </div>
+    </section>
+
+    <!-- ─── SILO 3: Generate + Logs + Docs ───────────────────────── -->
+    <aside class="w-[300px] flex flex-col bg-white overflow-hidden shrink-0">
+
+      <!-- Generation Controls -->
+      <div class="p-4 border-b border-gray-200 shrink-0 space-y-3">
+        <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">Generate Documents</div>
+        <textarea id="feedback-input" rows="3" placeholder="Optional feedback / instructions…"
+          class="w-full border border-gray-200 rounded text-xs px-3 py-2 font-mono resize-none focus:ring-1 focus:ring-gray-900 focus:outline-none leading-relaxed placeholder-gray-300"></textarea>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-persona"
+              checked class="lg-chk"> Persona</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-reports"
+              checked class="lg-chk"> Reports</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-summary"
+              checked class="lg-chk"> Summary</label>
+        </div>
+        <button id="btn-generate" onclick="onGenerateClick()"
+          class="w-full py-2.5 bg-gray-900 text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-700 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed rounded">
+          <span id="gen-icon" class="material-symbols-outlined text-sm"
+            style="font-variation-settings:'FILL' 1;">play_arrow</span>
+          <span id="gen-label">Generate</span>
+        </button>
+        <div class="text-center mt-2 flex items-center justify-center">
+          <label
+            class="flex items-center gap-1.5 text-[10px] text-gray-500 cursor-pointer select-none border border-gray-200 px-3 py-1 rounded bg-gray-50">
+            <input type="checkbox" id="chk-preview-flow" class="w-2.5 h-2.5 rounded lg-chk"> Preview before generating
+          </label>
+        </div>
+      </div>
+
+      <!-- Logs -->
+      <div class="flex flex-col border-b border-gray-200 shrink-0" style="height:190px;">
+        <div class="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-100 shrink-0">
+          <div class="flex items-center gap-2">
+            <span id="log-dot" class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+            <span class="text-[9px] font-mono uppercase text-gray-400">Generation Logs</span>
+          </div>
+          <button onclick="clearLogs()" class="text-[9px] text-gray-400 hover:text-gray-700">Clear</button>
+        </div>
+        <div id="log-panel" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-0.5 bg-gray-50">
+          <div class="log-entry text-gray-400">— Awaiting generation —</div>
+        </div>
+      </div>
+
+      <!-- Docs -->
+      <div class="flex flex-col flex-1 overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 shrink-0">
+          <div class="text-[9px] font-black uppercase tracking-widest text-gray-400">Documents</div>
+          <div class="flex gap-1">
+            <button onclick="switchDocTab('all')" id="dtab-all"
+              class="px-2 py-0.5 text-[9px] font-black uppercase bg-gray-900 text-white rounded">All</button>
+            <button onclick="switchDocTab('persona')" id="dtab-persona"
+              class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">P</button>
+            <button onclick="switchDocTab('reports')" id="dtab-reports"
+              class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">R</button>
+            <button onclick="switchDocTab('summary')" id="dtab-summary"
+              class="px-2 py-0.5 text-[9px] font-bold uppercase text-gray-500 hover:bg-gray-100 rounded">S</button>
+          </div>
+        </div>
+        <div id="doc-list" class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
+          <p class="text-[11px] text-gray-400 italic">Select a patient…</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ═══ BATCH MODAL ══════════════════════════════════════════════════ -->
+  <div id="batch-modal"
+    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center">
+    <div class="bg-white border border-gray-200 w-[460px] max-h-[80vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-gray-200 flex justify-between items-center shrink-0">
+        <div>
+          <h2 class="font-black text-sm">Batch Generation</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Select patients to generate documents for</p>
+        </div>
+        <button onclick="closeBatchModal()"><span class="material-symbols-outlined text-gray-500">close</span></button>
+      </div>
+      <div class="p-4 border-b border-gray-100 shrink-0">
+        <div class="flex gap-4">
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-persona"
+              checked class="lg-chk"> Persona</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-reports"
+              checked class="lg-chk"> Reports</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-batch-summary"
+              checked class="lg-chk"> Summary</label>
+          <button onclick="toggleSelectAll()" class="ml-auto text-[10px] text-gray-500 underline">Select All</button>
+        </div>
+      </div>
+      <div id="batch-patient-list" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1">
+        <p class="text-xs text-gray-400">Loading…</p>
+      </div>
+      <div class="p-4 border-t border-gray-200 flex gap-3 shrink-0">
+        <button onclick="closeBatchModal()"
+          class="flex-1 py-2 border border-gray-300 text-xs font-bold hover:bg-gray-50 transition-colors">Cancel</button>
+        <button onclick="startBatch()"
+          class="flex-1 py-2 bg-gray-900 text-white text-xs font-black hover:bg-gray-700 transition-colors">Run
+          Batch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PURGE MODAL ══════════════════════════════════════════════════ -->
+  <div id="purge-modal"
+    class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center">
+    <div class="bg-white border border-gray-200 w-[420px] flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-gray-200 flex justify-between items-center shrink-0">
+        <div>
+          <h2 class="font-black text-sm">Purge Patient Data</h2>
+          <p class="text-xs text-gray-500 mt-0.5">Select what to delete or archive</p>
+        </div>
+        <button onclick="closePurgeModal()"><span class="material-symbols-outlined text-gray-500">close</span></button>
+      </div>
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-persona" checked class="lg-chk">
+            Persona PDFs</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-reports" checked class="lg-chk">
+            Reports</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-summary" checked class="lg-chk">
+            Summary</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-logs" checked class="lg-chk">
+            Logs</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-db" checked class="lg-chk"> Patient
+            DB</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-records" class="lg-chk">
+            Records</label>
+          <label class="flex items-center gap-2"><input type="checkbox" id="purge-debug" class="lg-chk"> Debug
+            State</label>
+        </div>
+        <div class="bg-gray-50 border border-gray-200 p-3 rounded text-xs">
+          <div class="text-[9px] uppercase tracking-widest text-gray-400 mb-2">Action</div>
+          <label class="flex items-center gap-2"><input type="radio" name="purge-mode" value="delete" checked
+              class="lg-chk"> Delete</label>
+          <label class="flex items-center gap-2 mt-1"><input type="radio" name="purge-mode" value="archive"
+              class="lg-chk"> Archive</label>
+        </div>
+      </div>
+      <div class="p-4 border-t border-gray-200 flex gap-3 shrink-0">
+        <button onclick="closePurgeModal()"
+          class="flex-1 py-2 border border-gray-300 text-xs font-bold hover:bg-gray-50 transition-colors">Cancel</button>
+        <button onclick="confirmPurge()"
+          class="flex-1 py-2 bg-red-600 text-white text-xs font-black hover:bg-red-500 transition-colors">Purge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PREVIEW MODAL ══════════════════════════════════════════════════════ -->
+  <div id="preview-modal" class="fixed inset-0 z-50 items-stretch bg-gray-900/60 backdrop-blur-sm flex-col">
+    <div class="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shrink-0">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-gray-900" style="font-variation-settings:'FILL'1;">preview</span>
+        <div>
+          <div class="text-sm font-black text-gray-900">Document Preview &amp; Editor</div>
+          <div class="text-[10px] text-gray-500">Review and edit AI-generated content before rendering PDFs</div>
+        </div>
+      </div>
+      <button onclick="closePreviewModal()"
+        class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+        <span class="material-symbols-outlined text-gray-500">close</span>
+      </button>
     </div>
 
     <!-- Patient banner -->
     <div class="flex items-center gap-6 px-6 py-2.5 bg-gray-50 border-b border-gray-200 shrink-0">
-        <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-gray-400 text-base" style="font-variation-settings:'FILL'1;">person</span>
-            <span id="pvw-name" class="text-sm font-bold text-gray-900">—</span>
-        </div>
-        <div class="flex items-center gap-4 text-[11px] text-gray-500">
-            <span><span class="text-gray-400 mr-1">DOB</span><span id="pvw-dob">—</span></span>
-            <span><span class="text-gray-400 mr-1">Gender</span><span id="pvw-gender">—</span></span>
-            <span><span class="text-gray-400 mr-1">MRN</span><span id="pvw-mrn">—</span></span>
-            <span><span class="text-gray-400 mr-1">Docs</span><span id="preview-doc-total" class="text-gray-900 font-bold">0</span></span>
-        </div>
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-gray-400 text-base"
+          style="font-variation-settings:'FILL'1;">person</span>
+        <span id="pvw-name" class="text-sm font-bold text-gray-900">—</span>
+      </div>
+      <div class="flex items-center gap-4 text-[11px] text-gray-500">
+        <span><span class="text-gray-400 mr-1">DOB</span><span id="pvw-dob">—</span></span>
+        <span><span class="text-gray-400 mr-1">Gender</span><span id="pvw-gender">—</span></span>
+        <span><span class="text-gray-400 mr-1">MRN</span><span id="pvw-mrn">—</span></span>
+        <span><span class="text-gray-400 mr-1">Docs</span><span id="preview-doc-total"
+            class="text-gray-900 font-bold">0</span></span>
+      </div>
     </div>
 
     <div class="flex flex-1 overflow-hidden bg-gray-100">
-        <!-- Sidebar -->
-        <div class="flex flex-col bg-white border-r border-gray-200 overflow-hidden w-[240px] shrink-0">
-            <div class="px-4 py-2.5 text-[9px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 shrink-0">Documents</div>
-            <div id="preview-sidebar" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-0.5"></div>
+      <!-- Sidebar -->
+      <div class="flex flex-col bg-white border-r border-gray-200 overflow-hidden w-[240px] shrink-0">
+        <div
+          class="px-4 py-2.5 text-[9px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100 shrink-0">
+          Documents</div>
+        <div id="preview-sidebar" class="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-0.5"></div>
+      </div>
+
+      <!-- Right Content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex items-center gap-3 px-5 py-2.5 bg-white border-b border-gray-200 shrink-0">
+          <button id="btn-prev-doc" onclick="navigateDoc(-1)" disabled
+            class="w-7 h-7 flex items-center justify-center rounded bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-30">
+            <span class="material-symbols-outlined text-sm">chevron_left</span>
+          </button>
+          <div class="flex-1 text-sm font-semibold text-gray-900 truncate" id="preview-doc-title">—</div>
+          <div class="text-[10px] font-mono text-gray-500"><span id="preview-doc-current">1</span> / <span
+              id="preview-doc-total-nav">—</span></div>
+          <button id="btn-next-doc" onclick="navigateDoc(1)" disabled
+            class="w-7 h-7 flex items-center justify-center rounded bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-30">
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+          </button>
         </div>
 
-        <!-- Right Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div class="flex items-center gap-3 px-5 py-2.5 bg-white border-b border-gray-200 shrink-0">
-                <button id="btn-prev-doc" onclick="navigateDoc(-1)" disabled class="w-7 h-7 flex items-center justify-center rounded bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-30">
-                    <span class="material-symbols-outlined text-sm">chevron_left</span>
-                </button>
-                <div class="flex-1 text-sm font-semibold text-gray-900 truncate" id="preview-doc-title">—</div>
-                <div class="text-[10px] font-mono text-gray-500"><span id="preview-doc-current">1</span> / <span id="preview-doc-total-nav">—</span></div>
-                <button id="btn-next-doc" onclick="navigateDoc(1)" disabled class="w-7 h-7 flex items-center justify-center rounded bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-30">
-                    <span class="material-symbols-outlined text-sm">chevron_right</span>
-                </button>
-            </div>
-
-            <!-- Editor Split -->
-            <div class="flex-1 flex overflow-hidden">
-                <div class="flex-1 flex flex-col bg-white border-r border-gray-200" style="min-width: 300px;">
-                    <div class="text-[9px] font-black uppercase tracking-widest text-gray-400 p-2.5 bg-gray-50 border-b border-gray-100 text-center">Edit Content</div>
-                    <div id="quill-editor" class="flex-1"></div>
-                </div>
-                <div class="flex-1 overflow-auto preview-page-wrap flex flex-col items-center">
-                    <div class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-4 text-center">Print Preview (Paginated)</div>
-                    <div id="preview-pages" class="w-full flex flex-col items-center"></div>
-                </div>
-            </div>
+        <!-- Editor Split -->
+        <div class="flex-1 flex overflow-hidden">
+          <div class="flex-1 flex flex-col bg-white border-r border-gray-200" style="min-width: 300px;">
+            <div
+              class="text-[9px] font-black uppercase tracking-widest text-gray-400 p-2.5 bg-gray-50 border-b border-gray-100 text-center">
+              Edit Content</div>
+            <div id="quill-editor" class="flex-1"></div>
+          </div>
+          <div class="flex-1 overflow-auto preview-page-wrap flex flex-col items-center">
+            <div class="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-4 text-center">Print Preview
+              (Paginated)</div>
+            <div id="preview-pages" class="w-full flex flex-col items-center"></div>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="flex items-center justify-between px-6 py-3 bg-white border-t border-gray-200 shrink-0">
-        <button onclick="closePreviewModal()" class="px-5 py-2 rounded text-xs font-bold text-gray-600 border border-gray-300 hover:bg-gray-50 transition-colors">← Cancel</button>
-        <button onclick="confirmAndGeneratePDFs()" class="px-6 py-2 rounded text-xs font-black bg-gray-900 text-white hover:bg-gray-700 transition-all flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL'1;">picture_as_pdf</span>
-            Confirm &amp; Generate PDFs
-        </button>
+      <button onclick="closePreviewModal()"
+        class="px-5 py-2 rounded text-xs font-bold text-gray-600 border border-gray-300 hover:bg-gray-50 transition-colors">←
+        Cancel</button>
+      <button onclick="confirmAndGeneratePDFs()"
+        class="px-6 py-2 rounded text-xs font-black bg-gray-900 text-white hover:bg-gray-700 transition-all flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL'1;">picture_as_pdf</span>
+        Confirm &amp; Generate PDFs
+      </button>
     </div>
-</div>
+  </div>
 
-<!-- ═══ JAVASCRIPT ═══════════════════════════════════════════════════ -->
-<script>
-const API='http://localhost:410';
-let currentPatientId=null,currentPatientData=null,allFiles=[],activeDocTab='all',activeClinicalTab='meds';
-let currentJobId=null,pollTimer=null,logOffset=0,allPatientIds=[],batchSelectAll=true;
+  <!-- ═══ JAVASCRIPT ═══════════════════════════════════════════════════ -->
+  <script>
+    const API = 'http://localhost:410';
+    let currentPatientId = null, currentPatientData = null, allFiles = [], activeDocTab = 'all', activeClinicalTab = 'meds';
+    let currentJobId = null, pollTimer = null, logOffset = 0, allPatientIds = [], batchSelectAll = true;
 
-window.addEventListener('DOMContentLoaded',()=>{
-    checkServer(); loadPatients();
-    document.getElementById('patient-select').addEventListener('change',onPatientChange);
-    document.getElementById('batch-modal').addEventListener('click',function(e){if(e.target===this)closeBatchModal();});
-    document.getElementById('purge-modal').addEventListener('click',function(e){if(e.target===this)closePurgeModal();});
-});
+    window.addEventListener('DOMContentLoaded', () => {
+      checkServer(); loadPatients();
+      document.getElementById('patient-select').addEventListener('change', onPatientChange);
+      document.getElementById('batch-modal').addEventListener('click', function (e) { if (e.target === this) closeBatchModal(); });
+      document.getElementById('purge-modal').addEventListener('click', function (e) { if (e.target === this) closePurgeModal(); });
+    });
 
-function setOnlineState(isOnline) {
-    const banner = document.getElementById('offline-banner');
-    const controls = document.querySelectorAll('button:not(#offline-banner button), select, input, textarea');
-    if(!isOnline) {
+    function setOnlineState(isOnline) {
+      const banner = document.getElementById('offline-banner');
+      const controls = document.querySelectorAll('button:not(#offline-banner button), select, input, textarea');
+      if (!isOnline) {
         banner.classList.remove('hidden'); banner.classList.add('flex');
         controls.forEach(c => { c.disabled = true; c.classList.add('opacity-50', 'pointer-events-none'); });
-    } else {
+      } else {
         banner.classList.add('hidden'); banner.classList.remove('flex');
         controls.forEach(c => { c.disabled = false; c.classList.remove('opacity-50', 'pointer-events-none'); });
-        if(currentJobId && pollTimer) document.getElementById('btn-generate').disabled = true;
+        if (currentJobId && pollTimer) document.getElementById('btn-generate').disabled = true;
+      }
     }
-}
 
-async function checkServer(){
-    const dot=document.getElementById('server-dot'),lbl=document.getElementById('server-label');
-    try{const r=await fetch(`${API}/api/status`);
-        if(r.ok){
-            dot.style.background='#16a34a';lbl.textContent='API Online';
-            setOnlineState(true);
-        }else throw new Error();
-    }catch(_){
-        dot.style.background='#ef4444';lbl.textContent='API Offline';
+    async function checkServer() {
+      const dot = document.getElementById('server-dot'), lbl = document.getElementById('server-label');
+      try {
+        const r = await fetch(`${API}/api/status`);
+        if (r.ok) {
+          dot.style.background = '#16a34a'; lbl.textContent = 'API Online';
+          setOnlineState(true);
+        } else throw new Error();
+      } catch (_) {
+        dot.style.background = '#ef4444'; lbl.textContent = 'API Offline';
         setOnlineState(false);
+      }
     }
-}
 
-async function loadPatients(){
-    try{const r=await fetch(`${API}/api/patients`);const d=await r.json();
-        allPatientIds=d.patients||[];const sel=document.getElementById('patient-select');
-        sel.innerHTML='<option value="">— Select patient —</option>';
-        allPatientIds.forEach(id=>{const o=document.createElement('option');o.value=id;o.textContent='Patient '+id;sel.appendChild(o);});
-    }catch(e){console.error(e);}
-}
+    async function loadPatients() {
+      try {
+        const r = await fetch(`${API}/api/patients`); const d = await r.json();
+        allPatientIds = d.patients || []; const sel = document.getElementById('patient-select');
+        sel.innerHTML = '<option value="">— Select patient —</option>';
+        allPatientIds.forEach(id => { const o = document.createElement('option'); o.value = id; o.textContent = 'Patient ' + id; sel.appendChild(o); });
+      } catch (e) { console.error(e); }
+    }
 
-async function onPatientChange(){
-    currentPatientId=document.getElementById('patient-select').value;
-    currentPatientData=null;
-    if(!currentPatientId){clearDossier();setDocList([]);return;}
-    try{const r=await fetch(`${API}/api/patient/${currentPatientId}`);const d=await r.json();
-        currentPatientData=d.data;populateIdentity(d.data,d.case_details);populateCaseInfo(d.case_details);}
-    catch(e){console.error(e);clearDossier();}
-    switchClinicalTab(activeClinicalTab);
-    loadDocuments(currentPatientId);
-}
+    async function onPatientChange() {
+      currentPatientId = document.getElementById('patient-select').value;
+      currentPatientData = null;
+      if (!currentPatientId) { clearDossier(); setDocList([]); return; }
+      try {
+        const r = await fetch(`${API}/api/patient/${currentPatientId}`); const d = await r.json();
+        currentPatientData = d.data; populateIdentity(d.data, d.case_details); populateCaseInfo(d.case_details);
+      }
+      catch (e) { console.error(e); clearDossier(); }
+      switchClinicalTab(activeClinicalTab);
+      loadDocuments(currentPatientId);
+    }
 
-function get(obj,...keys){return keys.reduce((o,k)=>(o&&o[k]!==undefined?o[k]:null),obj);}
+    function get(obj, ...keys) { return keys.reduce((o, k) => (o && o[k] !== undefined ? o[k] : null), obj); }
 
-function buildClinicalSummary(p,c){
-    if(!p && !c) return '—';
-    return (p?.bio_narrative || p?.pa_request?.clinical_justification || p?.procedure_requested || c?.details || '—');
-}
+    function buildClinicalSummary(p, c) {
+      if (!p && !c) return '—';
+      return (p?.bio_narrative || p?.pa_request?.clinical_justification || p?.procedure_requested || c?.details || '—');
+    }
 
-function populateIdentity(p,c){
-    if(!p){clearDossier();return;}
-    const fullName=[p.first_name,p.last_name].filter(Boolean).join(' ')||p.name||'—';
-    const year=new Date().getFullYear();
-    const mrn=p.mrn||(p.identifiers&&p.identifiers.mrn)||(currentPatientId?`MRN-${currentPatientId}-${year}`:'—');
-    document.getElementById('info-name').textContent=fullName;
-    document.getElementById('info-mrn').textContent=mrn;
-    document.getElementById('info-dob').textContent=get(p,'dob')||get(p,'demographics','dob')||'—';
-    document.getElementById('info-gender').textContent=p.gender||'—';
-    document.getElementById('info-provider').textContent=get(p,'provider','managingOrganization')||(p.providers&&p.providers[0]&&p.providers[0].name)||'—';
-    document.getElementById('info-dx').textContent=(p.diagnoses&&p.diagnoses[0]&&(p.diagnoses[0].condition||p.diagnoses[0].code))||'—';
-    document.getElementById('info-summary').textContent=buildClinicalSummary(p,c);
-}
+    function populateIdentity(p, c) {
+      if (!p) { clearDossier(); return; }
+      const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || p.name || '—';
+      const year = new Date().getFullYear();
+      const mrn = p.mrn || (p.identifiers && p.identifiers.mrn) || (currentPatientId ? `MRN-${currentPatientId}-${year}` : '—');
+      document.getElementById('info-name').textContent = fullName;
+      document.getElementById('info-mrn').textContent = mrn;
+      document.getElementById('info-dob').textContent = get(p, 'dob') || get(p, 'demographics', 'dob') || '—';
+      document.getElementById('info-gender').textContent = p.gender || '—';
+      document.getElementById('info-provider').textContent = get(p, 'provider', 'managingOrganization') || (p.providers && p.providers[0] && p.providers[0].name) || '—';
+      document.getElementById('info-dx').textContent = (p.diagnoses && p.diagnoses[0] && (p.diagnoses[0].condition || p.diagnoses[0].code)) || '—';
+      document.getElementById('info-summary').textContent = buildClinicalSummary(p, c);
+    }
 
-function populateCaseInfo(c){
-    if(!c){['case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>document.getElementById(id).textContent='—');return;}
-    document.getElementById('case-num').textContent=c.test_case_number||'—';
-    document.getElementById('case-dept').textContent=c.department||'—';
-    document.getElementById('case-cpt').textContent=(c.procedure||'—')+(c.cpt_code?' | CPT '+c.cpt_code:'');
-    const outEl=document.getElementById('case-outcome'),outCard=document.getElementById('case-outcome-card');
-    outEl.textContent=c.outcome||'—';
-    const isApproval=(c.outcome||'').toLowerCase().includes('approval');
-    const isDenial=(c.outcome||'').toLowerCase().includes('denial');
-    outCard.style.cssText=isApproval?'background:#f0fdf4;border-color:#86efac;':isDenial?'background:#fef2f2;border-color:#fca5a5;':'background:#f9fafb;border-color:#e5e7eb;';
-    outEl.style.color=isApproval?'#15803d':isDenial?'#dc2626':'#1a1a1a';
-    document.getElementById('case-details-text').textContent=c.details||'—';
-}
+    function populateCaseInfo(c) {
+      if (!c) { ['case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => document.getElementById(id).textContent = '—'); return; }
+      document.getElementById('case-num').textContent = c.test_case_number || '—';
+      document.getElementById('case-dept').textContent = c.department || '—';
+      document.getElementById('case-cpt').textContent = (c.procedure || '—') + (c.cpt_code ? ' | CPT ' + c.cpt_code : '');
+      const outEl = document.getElementById('case-outcome'), outCard = document.getElementById('case-outcome-card');
+      outEl.textContent = c.outcome || '—';
+      const isApproval = (c.outcome || '').toLowerCase().includes('approval');
+      const isDenial = (c.outcome || '').toLowerCase().includes('denial');
+      outCard.style.cssText = isApproval ? 'background:#f0fdf4;border-color:#86efac;' : isDenial ? 'background:#fef2f2;border-color:#fca5a5;' : 'background:#f9fafb;border-color:#e5e7eb;';
+      outEl.style.color = isApproval ? '#15803d' : isDenial ? '#dc2626' : '#1a1a1a';
+      document.getElementById('case-details-text').textContent = c.details || '—';
+    }
 
-function clearDossier(){
-    ['info-name','info-mrn','info-dob','info-gender','info-provider','info-dx','info-summary','case-num','case-dept','case-cpt','case-outcome','case-details-text'].forEach(id=>{
-        if(document.getElementById(id))document.getElementById(id).textContent='—';
-    });
-}
+    function clearDossier() {
+      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-dx', 'info-summary', 'case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => {
+        if (document.getElementById(id)) document.getElementById(id).textContent = '—';
+      });
+    }
 
-function clearIdentityOnly(){
-    ['info-name','info-mrn','info-dob','info-gender','info-provider','info-dx','info-summary'].forEach(id=>{
-        if(document.getElementById(id))document.getElementById(id).textContent='—';
-    });
-}
+    function clearIdentityOnly() {
+      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-dx', 'info-summary'].forEach(id => {
+        if (document.getElementById(id)) document.getElementById(id).textContent = '—';
+      });
+    }
 
-function openPurgeModal(){
-    if(!currentPatientId){alert('Select a patient first.');return;}
-    const modal=document.getElementById('purge-modal');
-    modal.classList.remove('hidden'); modal.classList.add('flex');
-}
+    function openPurgeModal() {
+      if (!currentPatientId) { alert('Select a patient first.'); return; }
+      const modal = document.getElementById('purge-modal');
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+    }
 
-function closePurgeModal(){
-    const modal=document.getElementById('purge-modal');
-    modal.classList.add('hidden'); modal.classList.remove('flex');
-}
+    function closePurgeModal() {
+      const modal = document.getElementById('purge-modal');
+      modal.classList.add('hidden'); modal.classList.remove('flex');
+    }
 
-async function confirmPurge(){
-    if(!currentPatientId){alert('Select a patient first.');return;}
-    const targets=[];
-    if(document.getElementById('purge-persona').checked) targets.push('persona');
-    if(document.getElementById('purge-reports').checked) targets.push('reports');
-    if(document.getElementById('purge-summary').checked) targets.push('summary');
-    if(document.getElementById('purge-logs').checked) targets.push('logs');
-    if(document.getElementById('purge-db').checked) targets.push('db');
-    if(document.getElementById('purge-records').checked) targets.push('records');
-    if(document.getElementById('purge-debug').checked) targets.push('debug');
-    if(!targets.length){alert('Select at least one item to purge.');return;}
-    const mode=document.querySelector('input[name=\"purge-mode\"]:checked')?.value||'delete';
-    const ok=confirm(`Permanently ${mode} selected data for Patient ${currentPatientId}? The test case remains.`);
-    if(!ok) return;
-    try{
+    async function confirmPurge() {
+      if (!currentPatientId) { alert('Select a patient first.'); return; }
+      const targets = [];
+      if (document.getElementById('purge-persona').checked) targets.push('persona');
+      if (document.getElementById('purge-reports').checked) targets.push('reports');
+      if (document.getElementById('purge-summary').checked) targets.push('summary');
+      if (document.getElementById('purge-logs').checked) targets.push('logs');
+      if (document.getElementById('purge-db').checked) targets.push('db');
+      if (document.getElementById('purge-records').checked) targets.push('records');
+      if (document.getElementById('purge-debug').checked) targets.push('debug');
+      if (!targets.length) { alert('Select at least one item to purge.'); return; }
+      const mode = document.querySelector('input[name=\"purge-mode\"]:checked')?.value || 'delete';
+      const ok = confirm(`Permanently ${mode} selected data for Patient ${currentPatientId}? The test case remains.`);
+      if (!ok) return;
+      try {
         appendLog(`🗑️ Purging patient ${currentPatientId} (${mode})…`);
-        const r=await fetch(`${API}/api/purge`,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({target:'patient', patient_id: currentPatientId, mode, targets})
+        const r = await fetch(`${API}/api/purge`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ target: 'patient', patient_id: currentPatientId, mode, targets })
         });
-        const d=await r.json();
-        if(!r.ok) throw new Error(d.error||'Purge failed');
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Purge failed');
         appendLog(`✅ ${d.message || 'Patient data updated.'}`);
         closePurgeModal();
         clearIdentityOnly();
         setDocList([]);
         loadDocuments(currentPatientId);
-        try{
-            const r2=await fetch(`${API}/api/patient/${currentPatientId}`);
-            const d2=await r2.json();
-            currentCaseDetails=d2.case_details;
-            populateCaseInfo(d2.case_details);
-        }catch(e){}
-    }catch(e){
-        appendLog('❌ Purge failed: '+e.message);
+        try {
+          const r2 = await fetch(`${API}/api/patient/${currentPatientId}`);
+          const d2 = await r2.json();
+          currentCaseDetails = d2.case_details;
+          populateCaseInfo(d2.case_details);
+        } catch (e) { }
+      } catch (e) {
+        appendLog('❌ Purge failed: ' + e.message);
+      }
     }
-}
 
-// ── Clinical Tabs ──────────────────────────────────────────────────────
-function switchClinicalTab(tab){
-    activeClinicalTab=tab;
-    document.querySelectorAll('.clinical-tab').forEach(b=>{
-        b.className=`clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap ${b.id==='ctab-'+tab?'tab-active':'tab-inactive'}`;
-    });
-    renderClinicalTab(tab);
-}
+    // ── Clinical Tabs ──────────────────────────────────────────────────────
+    function switchClinicalTab(tab) {
+      activeClinicalTab = tab;
+      document.querySelectorAll('.clinical-tab').forEach(b => {
+        b.className = `clinical-tab px-4 py-3 text-[10px] uppercase tracking-widest whitespace-nowrap ${b.id === 'ctab-' + tab ? 'tab-active' : 'tab-inactive'}`;
+      });
+      renderClinicalTab(tab);
+    }
 
-function renderClinicalTab(tab){
-    const el=document.getElementById('clinical-content');
-    const p=currentPatientData;
-    if(!p){el.innerHTML='<p class="text-gray-400 italic text-sm">Select a patient…</p>';return;}
+    function renderClinicalTab(tab) {
+      const el = document.getElementById('clinical-content');
+      const p = currentPatientData;
+      if (!p) { el.innerHTML = '<p class="text-gray-400 italic text-sm">Select a patient…</p>'; return; }
 
-    const card=(inner)=>`<div class="card rounded mb-2 p-4">${inner}</div>`;
-    const pill=(txt,green)=>`<span class="text-[9px] font-bold px-2 py-0.5 rounded border ${green?'border-green-200 bg-green-50 text-green-700':'border-gray-200 bg-gray-50 text-gray-600'}">${txt}</span>`;
+      const card = (inner) => `<div class="card rounded mb-2 p-4">${inner}</div>`;
+      const pill = (txt, green) => `<span class="text-[9px] font-bold px-2 py-0.5 rounded border ${green ? 'border-green-200 bg-green-50 text-green-700' : 'border-gray-200 bg-gray-50 text-gray-600'}">${txt}</span>`;
 
-    const renderers={
-        meds:()=>{
-            const meds=p.medications||[];
-            if(!meds.length)return '<p class="text-gray-400 italic text-sm">No medications on record.</p>';
-            return `<table class="w-full text-xs border-collapse"><thead><tr class="text-[9px] text-gray-400 uppercase tracking-wider border-b border-gray-200">
+      const renderers = {
+        meds: () => {
+          const meds = p.medications || [];
+          if (!meds.length) return '<p class="text-gray-400 italic text-sm">No medications on record.</p>';
+          return `<table class="w-full text-xs border-collapse"><thead><tr class="text-[9px] text-gray-400 uppercase tracking-wider border-b border-gray-200">
                 <th class="pb-2 text-left font-bold">Medication</th><th class="pb-2 text-left font-bold">Dosage</th><th class="pb-2 text-left font-bold">Status</th><th class="pb-2 text-left font-bold">Prescribed By</th></tr></thead>
-                <tbody class="divide-y divide-gray-100">${meds.map(m=>`<tr class="hover:bg-white">
-                <td class="py-2.5 pr-4"><div class="font-bold">${m.brand||'—'}</div><div class="text-[10px] text-gray-500">${m.generic_name||''}</div></td>
-                <td class="py-2.5 pr-4 font-mono text-[10px]">${m.dosage||'—'}</td>
-                <td class="py-2.5 pr-4">${pill(m.status||'—',m.status==='current'||m.status==='ongoing')}</td>
-                <td class="py-2.5 text-[10px] text-gray-500">${m.prescribed_by||'—'}</td></tr>`).join('')}</tbody></table>`;
+                <tbody class="divide-y divide-gray-100">${meds.map(m => `<tr class="hover:bg-white">
+                <td class="py-2.5 pr-4"><div class="font-bold">${m.brand || '—'}</div><div class="text-[10px] text-gray-500">${m.generic_name || ''}</div></td>
+                <td class="py-2.5 pr-4 font-mono text-[10px]">${m.dosage || '—'}</td>
+                <td class="py-2.5 pr-4">${pill(m.status || '—', m.status === 'current' || m.status === 'ongoing')}</td>
+                <td class="py-2.5 text-[10px] text-gray-500">${m.prescribed_by || '—'}</td></tr>`).join('')}</tbody></table>`;
         },
-        allergies:()=>{
-            const alg=p.allergies||[];
-            if(!alg.length)return '<p class="text-gray-400 italic text-sm">NKDA — No known drug allergies.</p>';
-            return alg.map(a=>card(`<div class="flex justify-between items-start">
-                <div><div class="font-bold text-xs">${a.allergen||a}</div>
-                <div class="text-[10px] text-gray-500 mt-1">${a.reaction||''} ${a.severity?'· '+a.severity:''}</div></div>
-                ${a.severity==='Severe'||a.severity==='Life-threatening'?`<span class="text-red-600 font-black text-[10px]">⚠ ${a.severity}</span>`:''}</div>`)).join('');
+        allergies: () => {
+          const alg = p.allergies || [];
+          if (!alg.length) return '<p class="text-gray-400 italic text-sm">NKDA — No known drug allergies.</p>';
+          return alg.map(a => card(`<div class="flex justify-between items-start">
+                <div><div class="font-bold text-xs">${a.allergen || a}</div>
+                <div class="text-[10px] text-gray-500 mt-1">${a.reaction || ''} ${a.severity ? '· ' + a.severity : ''}</div></div>
+                ${a.severity === 'Severe' || a.severity === 'Life-threatening' ? `<span class="text-red-600 font-black text-[10px]">⚠ ${a.severity}</span>` : ''}</div>`)).join('');
         },
-        therapy:()=>{
-            const th=p.therapies||[];
-            if(!th.length)return '<p class="text-gray-400 italic text-sm">No therapy records.</p>';
-            return th.map(t=>card(`<div class="flex justify-between mb-1.5"><span class="font-bold text-xs">${t.therapy_type||'—'}</span>${pill(t.status||'—',t.status==='Active')}</div>
-                <div class="text-[10px] font-mono text-gray-700">${t.cpt_code||''} ${t.cpt_description?'— '+t.cpt_description:''}</div>
-                <div class="text-[10px] text-gray-500 mt-1">${t.provider||'—'} @ ${t.facility||'—'} · ${t.frequency||'—'}</div>
-                <div class="text-[10px] text-gray-400 mt-0.5">${t.reason||''}</div>`)).join('');
+        therapy: () => {
+          const th = p.therapies || [];
+          if (!th.length) return '<p class="text-gray-400 italic text-sm">No therapy records.</p>';
+          return th.map(t => card(`<div class="flex justify-between mb-1.5"><span class="font-bold text-xs">${t.therapy_type || '—'}</span>${pill(t.status || '—', t.status === 'Active')}</div>
+                <div class="text-[10px] font-mono text-gray-700">${t.cpt_code || ''} ${t.cpt_description ? '— ' + t.cpt_description : ''}</div>
+                <div class="text-[10px] text-gray-500 mt-1">${t.provider || '—'} @ ${t.facility || '—'} · ${t.frequency || '—'}</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">${t.reason || ''}</div>`)).join('');
         },
-        procedures:()=>{
-            const pr=p.procedures||[];
-            if(!pr.length)return '<p class="text-gray-400 italic text-sm">No procedures on record.</p>';
-            return pr.map(r=>card(`<div class="font-bold text-xs">${r.name||'—'}</div>
-                <div class="text-[10px] text-gray-500 mt-1">${r.date||'—'} · ${r.provider||'—'} @ ${r.facility||'—'}</div>
-                <div class="text-[10px] text-gray-400 mt-0.5">${r.reason||''}</div>`)).join('');
+        procedures: () => {
+          const pr = p.procedures || [];
+          if (!pr.length) return '<p class="text-gray-400 italic text-sm">No procedures on record.</p>';
+          return pr.map(r => card(`<div class="font-bold text-xs">${r.name || '—'}</div>
+                <div class="text-[10px] text-gray-500 mt-1">${r.date || '—'} · ${r.provider || '—'} @ ${r.facility || '—'}</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">${r.reason || ''}</div>`)).join('');
         },
-        encounters:()=>{
-            const en=p.encounters||[];
-            if(!en.length)return '<p class="text-gray-400 italic text-sm">No encounters on record.</p>';
-            return en.map(e=>card(`<div class="flex justify-between mb-1"><span class="font-bold text-xs">${e.encounter_type||'Encounter'}</span>
-                <span class="text-[10px] font-mono text-gray-500">${e.encounter_date||'—'}</span></div>
-                <div class="text-[10px] text-gray-500">${e.provider||'—'} @ ${e.facility||'—'}</div>
-                <div class="text-[10px] text-gray-400 mt-0.5">${e.chief_complaint||e.purpose_of_visit||''}</div>`)).join('');
+        encounters: () => {
+          const en = p.encounters || [];
+          if (!en.length) return '<p class="text-gray-400 italic text-sm">No encounters on record.</p>';
+          return en.map(e => card(`<div class="flex justify-between mb-1"><span class="font-bold text-xs">${e.encounter_type || 'Encounter'}</span>
+                <span class="text-[10px] font-mono text-gray-500">${e.encounter_date || '—'}</span></div>
+                <div class="text-[10px] text-gray-500">${e.provider || '—'} @ ${e.facility || '—'}</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">${e.chief_complaint || e.purpose_of_visit || ''}</div>`)).join('');
         },
-        imaging:()=>{
-            const im=p.images||[];
-            if(!im.length)return '<p class="text-gray-400 italic text-sm">No imaging studies on record.</p>';
-            return im.map(i=>card(`<div class="font-bold text-xs">${i.type||'—'}</div>
-                <div class="text-[10px] text-gray-500 mt-1">${i.date||'—'} · ${i.facility||'—'}</div>
-                <div class="text-[10px] text-gray-400 mt-1 leading-relaxed">${i.findings||'—'}</div>`)).join('');
+        imaging: () => {
+          const im = p.images || [];
+          if (!im.length) return '<p class="text-gray-400 italic text-sm">No imaging studies on record.</p>';
+          return im.map(i => card(`<div class="font-bold text-xs">${i.type || '—'}</div>
+                <div class="text-[10px] text-gray-500 mt-1">${i.date || '—'} · ${i.facility || '—'}</div>
+                <div class="text-[10px] text-gray-400 mt-1 leading-relaxed">${i.findings || '—'}</div>`)).join('');
         },
-        labs:()=>{
-            const lb=p.reports||[];
-            if(!lb.length)return '<p class="text-gray-400 italic text-sm">No lab reports on record.</p>';
-            return lb.map(r=>card(`<div class="font-bold text-xs">${r.type||'—'}</div>
-                <div class="text-[10px] text-gray-500 mt-1">${r.date||'—'} · ${r.provider||'—'}</div>
-                <div class="text-[10px] text-gray-400 mt-1 leading-relaxed">${r.results||'—'}</div>`)).join('');
+        labs: () => {
+          const lb = p.reports || [];
+          if (!lb.length) return '<p class="text-gray-400 italic text-sm">No lab reports on record.</p>';
+          return lb.map(r => card(`<div class="font-bold text-xs">${r.type || '—'}</div>
+                <div class="text-[10px] text-gray-500 mt-1">${r.date || '—'} · ${r.provider || '—'}</div>
+                <div class="text-[10px] text-gray-400 mt-1 leading-relaxed">${r.results || '—'}</div>`)).join('');
         },
-    };
-    el.innerHTML=(renderers[tab]||(() => ''))();
-}
-
-// ── Generation ─────────────────────────────────────────────────────────
-function onGenerateClick() {
-    if (document.getElementById('chk-preview-flow').checked) {
-        startPreview();
-    } else {
-        startGeneration();
+      };
+      el.innerHTML = (renderers[tab] || (() => ''))();
     }
-}
 
-async function cancelJob() {
-    if (!currentJobId) return;
-    try {
+    // ── Generation ─────────────────────────────────────────────────────────
+    function onGenerateClick() {
+      if (document.getElementById('chk-preview-flow').checked) {
+        startPreview();
+      } else {
+        startGeneration();
+      }
+    }
+
+    async function cancelJob() {
+      if (!currentJobId) return;
+      try {
         await fetch(`${API}/api/cancel/${currentJobId}`, { method: 'POST' });
         appendLog(`⛔ Cancellation requested. Rolling back...`);
-        if(pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+        if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
         resetGenerateBtn();
-    } catch(e) {
+      } catch (e) {
         appendLog(`❌ Cancel failed: ${e.message}`);
+      }
     }
-}
 
-async function startGeneration(){
-    if(!currentPatientId){appendLog('⚠ Select a patient first.');return;}
-    if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
-    const btn=document.getElementById('btn-generate');
-    
-    btn.onclick = cancelJob;
-    btn.classList.replace('bg-gray-900', 'bg-red-600');
-    // btn.classList.add('hover:bg-red-700'); // Note: For simplicity, replacing tailwind statically works broadly
-    document.getElementById('gen-icon').textContent='close';
-    document.getElementById('gen-label').textContent='Cancel Task';
-    
-    clearLogs();appendLog('🚀 Dispatching generation job…');
-    document.getElementById('log-dot').style.background='#3b82f6';
+    async function startGeneration() {
+      if (!currentPatientId) { appendLog('⚠ Select a patient first.'); return; }
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+      const btn = document.getElementById('btn-generate');
 
-    try{
-        const body={patient_id:currentPatientId,feedback:document.getElementById('feedback-input').value,
-            generation_mode:{persona:document.getElementById('chk-persona').checked,reports:document.getElementById('chk-reports').checked,summary:document.getElementById('chk-summary').checked}};
-        const r=await fetch(`${API}/api/generate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        const d=await r.json();currentJobId=d.job_id;logOffset=0;
-        appendLog('📋 Job: '+currentJobId);
-        pollTimer=setInterval(()=>pollJob(currentJobId),2000);
-    }catch(e){appendLog('❌ '+e.message);resetGenerateBtn();}
-}
+      btn.onclick = cancelJob;
+      btn.classList.replace('bg-gray-900', 'bg-red-600');
+      // btn.classList.add('hover:bg-red-700'); // Note: For simplicity, replacing tailwind statically works broadly
+      document.getElementById('gen-icon').textContent = 'close';
+      document.getElementById('gen-label').textContent = 'Cancel Task';
 
-async function pollJob(jobId){
-    try{const r=await fetch(`${API}/api/job/${jobId}?since=${logOffset}`);const d=await r.json();
-        const newLogs=d.logs||[];newLogs.forEach(l=>appendLog(l));logOffset+=newLogs.length;
-        if(d.status==='done'||d.status==='error'||d.status==='cancelled'){
-            clearInterval(pollTimer);pollTimer=null;resetGenerateBtn();
-            document.getElementById('log-dot').style.background=d.status==='done'?'#16a34a':'#ef4444';
-            if(d.status==='done')loadDocuments(currentPatientId);}
-    }catch(_){}
-}
+      clearLogs(); appendLog('🚀 Dispatching generation job…');
+      document.getElementById('log-dot').style.background = '#3b82f6';
 
-function resetGenerateBtn(){
-    const btn=document.getElementById('btn-generate');
-    btn.disabled=false;
-    btn.onclick = onGenerateClick;
-    btn.classList.replace('bg-red-600', 'bg-gray-900');
-    document.getElementById('gen-icon').textContent='play_arrow';
-    document.getElementById('gen-label').textContent='Generate';
-}
+      try {
+        const body = {
+          patient_id: currentPatientId, feedback: document.getElementById('feedback-input').value,
+          generation_mode: { persona: document.getElementById('chk-persona').checked, reports: document.getElementById('chk-reports').checked, summary: document.getElementById('chk-summary').checked }
+        };
+        const r = await fetch(`${API}/api/generate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const d = await r.json(); currentJobId = d.job_id; logOffset = 0;
+        appendLog('📋 Job: ' + currentJobId);
+        pollTimer = setInterval(() => pollJob(currentJobId), 2000);
+      } catch (e) { appendLog('❌ ' + e.message); resetGenerateBtn(); }
+    }
 
-function appendLog(msg){
-    const panel=document.getElementById('log-panel');
-    const empty=panel.querySelector('.text-gray-400');if(empty)empty.remove();
-    const div=document.createElement('div');div.className='log-entry text-gray-600';div.textContent=msg;
-    panel.appendChild(div);panel.scrollTop=panel.scrollHeight;
-}
+    async function pollJob(jobId) {
+      try {
+        const r = await fetch(`${API}/api/job/${jobId}?since=${logOffset}`); const d = await r.json();
+        const newLogs = d.logs || []; newLogs.forEach(l => appendLog(l)); logOffset += newLogs.length;
+        if (d.status === 'done' || d.status === 'error' || d.status === 'cancelled') {
+          clearInterval(pollTimer); pollTimer = null; resetGenerateBtn();
+          document.getElementById('log-dot').style.background = d.status === 'done' ? '#16a34a' : '#ef4444';
+          if (d.status === 'done') loadDocuments(currentPatientId);
+        }
+      } catch (_) { }
+    }
 
-function clearLogs(){document.getElementById('log-panel').innerHTML='<div class="log-entry text-gray-400">— Cleared —</div>';}
+    function resetGenerateBtn() {
+      const btn = document.getElementById('btn-generate');
+      btn.disabled = false;
+      btn.onclick = onGenerateClick;
+      btn.classList.replace('bg-red-600', 'bg-gray-900');
+      document.getElementById('gen-icon').textContent = 'play_arrow';
+      document.getElementById('gen-label').textContent = 'Generate';
+    }
 
-// ── Documents ──────────────────────────────────────────────────────────
-async function loadDocuments(pid){
-    setDocList(null);
-    try{const r=await fetch(`${API}/api/output/${pid}`);const d=await r.json();allFiles=d.files||[];renderDocTab(activeDocTab);}
-    catch(_){setDocList([]);}
-}
+    function appendLog(msg) {
+      const panel = document.getElementById('log-panel');
+      const empty = panel.querySelector('.text-gray-400'); if (empty) empty.remove();
+      const div = document.createElement('div'); div.className = 'log-entry text-gray-600'; div.textContent = msg;
+      panel.appendChild(div); panel.scrollTop = panel.scrollHeight;
+    }
 
-function switchDocTab(tab){
-    activeDocTab=tab;
-    document.querySelectorAll('[id^="dtab-"]').forEach(b=>{
-        b.className=`px-2 py-0.5 text-[9px] font-${b.id===`dtab-${tab}`?'black':'bold'} uppercase rounded transition-colors `+
-            (b.id===`dtab-${tab}`?'bg-gray-900 text-white':'text-gray-500 hover:bg-gray-100');
-    });
-    renderDocTab(tab);
-}
+    function clearLogs() { document.getElementById('log-panel').innerHTML = '<div class="log-entry text-gray-400">— Cleared —</div>'; }
 
-function renderDocTab(tab){setDocList(tab==='all'?allFiles:allFiles.filter(f=>f.type===tab));}
+    // ── Documents ──────────────────────────────────────────────────────────
+    async function loadDocuments(pid) {
+      setDocList(null);
+      try { const r = await fetch(`${API}/api/output/${pid}`); const d = await r.json(); allFiles = d.files || []; renderDocTab(activeDocTab); }
+      catch (_) { setDocList([]); }
+    }
 
-function setDocList(files){
-    const list=document.getElementById('doc-list');
-    if(files===null){list.innerHTML='<p class="text-[11px] text-gray-400 italic animate-pulse">Loading…</p>';return;}
-    if(!files.length){list.innerHTML='<p class="text-[11px] text-gray-400 italic">No documents found</p>';return;}
-    const icons={persona:'person',reports:'article',summary:'summarize'};
-    list.innerHTML=files.map(f=>`
+    function switchDocTab(tab) {
+      activeDocTab = tab;
+      document.querySelectorAll('[id^="dtab-"]').forEach(b => {
+        b.className = `px-2 py-0.5 text-[9px] font-${b.id === `dtab-${tab}` ? 'black' : 'bold'} uppercase rounded transition-colors ` +
+          (b.id === `dtab-${tab}` ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-100');
+      });
+      renderDocTab(tab);
+    }
+
+    function renderDocTab(tab) { setDocList(tab === 'all' ? allFiles : allFiles.filter(f => f.type === tab)); }
+
+    function setDocList(files) {
+      const list = document.getElementById('doc-list');
+      if (files === null) { list.innerHTML = '<p class="text-[11px] text-gray-400 italic animate-pulse">Loading…</p>'; return; }
+      if (!files.length) { list.innerHTML = '<p class="text-[11px] text-gray-400 italic">No documents found</p>'; return; }
+      const icons = { persona: 'person', reports: 'article', summary: 'summarize' };
+      list.innerHTML = files.map(f => `
         <a href="${API}/api/download/${currentPatientId}/${f.type}/${encodeURIComponent(f.name)}" target="_blank" rel="noopener"
            class="group flex items-center gap-2 p-2 hover:bg-gray-50 rounded transition-colors cursor-pointer">
-            <span class="material-symbols-outlined text-gray-400 text-sm shrink-0" style="font-variation-settings:'FILL' 1;">${icons[f.type]||'description'}</span>
+            <span class="material-symbols-outlined text-gray-400 text-sm shrink-0" style="font-variation-settings:'FILL' 1;">${icons[f.type] || 'description'}</span>
             <div class="flex-1 min-w-0">
-                <div class="text-[11px] font-medium truncate">${f.name.replace(/\.pdf$/i,'').replace(/_/g,' ')}</div>
+                <div class="text-[11px] font-medium truncate">${f.name.replace(/\.pdf$/i, '').replace(/_/g, ' ')}</div>
                 <div class="text-[9px] text-gray-400 font-mono uppercase">${f.type}</div>
             </div>
             <span class="material-symbols-outlined text-[13px] text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
         </a>`).join('');
-}
+    }
 
-// ── Preview Flow ───────────────────────────────────────────────────────────────
-let previewPayload = null, previewDocContents = [], previewDocIndex = 0;
-let previewJobId = null, quill = null, previewGenerationMode = {}, previewDocMap = [];
+    // ── Preview Flow ───────────────────────────────────────────────────────────────
+    let previewPayload = null, previewDocContents = [], previewDocIndex = 0;
+    let previewJobId = null, quill = null, previewGenerationMode = {}, previewDocMap = [];
 
-function _buildRequestBody() {
-    return {
+    function _buildRequestBody() {
+      return {
         patient_id: currentPatientId,
         feedback: document.getElementById('feedback-input').value,
         generation_mode: {
-            persona: document.getElementById('chk-persona').checked,
-            reports: document.getElementById('chk-reports').checked,
-            summary: document.getElementById('chk-summary').checked,
+          persona: document.getElementById('chk-persona').checked,
+          reports: document.getElementById('chk-reports').checked,
+          summary: document.getElementById('chk-summary').checked,
         },
-        medications:      get(currentPatientData, 'medications') || [],
-        allergies:        get(currentPatientData, 'allergies') || [],
-        vaccinations:     get(currentPatientData, 'vaccinations') || [],
-        therapies:        get(currentPatientData, 'therapies') || [],
+        medications: get(currentPatientData, 'medications') || [],
+        allergies: get(currentPatientData, 'allergies') || [],
+        vaccinations: get(currentPatientData, 'vaccinations') || [],
+        therapies: get(currentPatientData, 'therapies') || [],
         behavioral_notes: get(currentPatientData, 'behavioral_notes') || '',
-        encounters:       get(currentPatientData, 'encounters') || [],
-        images:           get(currentPatientData, 'images') || [],
-        reports:          get(currentPatientData, 'reports') || [],
-        procedures:       get(currentPatientData, 'procedures') || [],
-    };
-}
+        encounters: get(currentPatientData, 'encounters') || [],
+        images: get(currentPatientData, 'images') || [],
+        reports: get(currentPatientData, 'reports') || [],
+        procedures: get(currentPatientData, 'procedures') || [],
+      };
+    }
 
-async function startPreview() {
-    if(!currentPatientId){ appendLog('⚠ Select a patient first.'); return; }
-    const btn=document.getElementById('btn-generate');
-    // Change to Cancel mode
-    btn.onclick = cancelJob;
-    btn.classList.replace('bg-gray-900', 'bg-red-600');
-    document.getElementById('gen-icon').textContent='close';
-    document.getElementById('gen-label').textContent='Cancel Task';
+    async function startPreview() {
+      if (!currentPatientId) { appendLog('⚠ Select a patient first.'); return; }
+      const btn = document.getElementById('btn-generate');
+      // Change to Cancel mode
+      btn.onclick = cancelJob;
+      btn.classList.replace('bg-gray-900', 'bg-red-600');
+      document.getElementById('gen-icon').textContent = 'close';
+      document.getElementById('gen-label').textContent = 'Cancel Task';
 
-    clearLogs(); appendLog('🔍 Queuing AI preview (no PDFs yet)…');
-    document.getElementById('log-dot').style.background='#3b82f6';
+      clearLogs(); appendLog('🔍 Queuing AI preview (no PDFs yet)…');
+      document.getElementById('log-dot').style.background = '#3b82f6';
 
-    previewGenerationMode = {
+      previewGenerationMode = {
         persona: document.getElementById('chk-persona').checked,
         reports: document.getElementById('chk-reports').checked,
         summary: document.getElementById('chk-summary').checked,
-    };
+      };
 
-    try {
+      try {
         const body = _buildRequestBody();
         body.generation_mode = { ...previewGenerationMode, summary: false };
-        const r = await fetch(`${API}/api/preview`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+        const r = await fetch(`${API}/api/preview`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const d = await r.json();
         previewJobId = d.job_id;
         logOffset = 0;
         appendLog(`📋 Preview job: ${previewJobId}`);
-        pollTimer = setInterval(()=>pollPreviewJob(previewJobId), 2000);
-    } catch(e) { appendLog('❌ Preview failed: '+e.message); resetGenerateBtn(); }
-}
+        pollTimer = setInterval(() => pollPreviewJob(previewJobId), 2000);
+      } catch (e) { appendLog('❌ Preview failed: ' + e.message); resetGenerateBtn(); }
+    }
 
-async function pollPreviewJob(jobId) {
-    try {
+    async function pollPreviewJob(jobId) {
+      try {
         const r = await fetch(`${API}/api/job/${jobId}?since=${logOffset}`);
         const d = await r.json();
-        (d.logs||[]).forEach(l=>appendLog(l));
-        logOffset += (d.logs||[]).length;
-        if(d.status==='done'||d.status==='error'||d.status==='cancelled'){
-            clearInterval(pollTimer); pollTimer=null;
-            document.getElementById('log-dot').style.background=d.status==='done'?'#16a34a':'#ef4444';
-            resetGenerateBtn();
-            if(d.status==='done' && d.preview_payload) { openPreviewModal(d.preview_payload); }
-            else if(d.status!=='cancelled') { appendLog('❌ Preview generation failed — check logs.'); }
+        (d.logs || []).forEach(l => appendLog(l));
+        logOffset += (d.logs || []).length;
+        if (d.status === 'done' || d.status === 'error' || d.status === 'cancelled') {
+          clearInterval(pollTimer); pollTimer = null;
+          document.getElementById('log-dot').style.background = d.status === 'done' ? '#16a34a' : '#ef4444';
+          resetGenerateBtn();
+          if (d.status === 'done' && d.preview_payload) { openPreviewModal(d.preview_payload); }
+          else if (d.status !== 'cancelled') { appendLog('❌ Preview generation failed — check logs.'); }
         }
-    } catch(_){}
-}
+      } catch (_) { }
+    }
 
-function _formatValueToHtml(val) {
-    if(!val) return '';
-    if(Array.isArray(val)) return `<ul>${val.map(item=>`<li>${String(item).replace(/</g,'&lt;')}</li>`).join('')}</ul>`;
-    if(typeof val === 'object') {
+    function _formatValueToHtml(val) {
+      if (!val) return '';
+      if (Array.isArray(val)) return `<ul>${val.map(item => `<li>${String(item).replace(/</g, '&lt;')}</li>`).join('')}</ul>`;
+      if (typeof val === 'object') {
         let out = '';
-        for(const [k, v] of Object.entries(val)) {
-            if(!v) continue;
-            out += `<p><strong>${k.replace(/_/g,' ')}:</strong> ${Array.isArray(v) ? _formatValueToHtml(v) : String(v).replace(/</g,'&lt;')}</p>`;
+        for (const [k, v] of Object.entries(val)) {
+          if (!v) continue;
+          out += `<p><strong>${k.replace(/_/g, ' ')}:</strong> ${Array.isArray(v) ? _formatValueToHtml(v) : String(v).replace(/</g, '&lt;')}</p>`;
         }
         return out;
+      }
+      return `<p>${String(val).replace(/</g, '&lt;')}</p>`;
     }
-    return `<p>${String(val).replace(/</g,'&lt;')}</p>`;
-}
 
-function docContentToHtml(doc) {
-    if(!doc.content) return '<p>(No content)</p>';
-    if(typeof doc.content === 'string') return `<p>${doc.content.replace(/\n/g,'<br/>').replace(/</g,'&lt;')}</p>`;
-    let html = '';
-    for(const [k, v] of Object.entries(doc.content)) {
-        if(!v) continue;
-        html += `<h3>${k.replace(/_/g,' ').replace(/\\b\\w/g,c=>c.toUpperCase())}</h3>${_formatValueToHtml(v)}`;
+    function docContentToHtml(doc) {
+      if (!doc.content) return '<p>(No content)</p>';
+      if (typeof doc.content === 'string') return `<p>${doc.content.replace(/\n/g, '<br/>').replace(/</g, '&lt;')}</p>`;
+      let html = '';
+      for (const [k, v] of Object.entries(doc.content)) {
+        if (!v) continue;
+        html += `<h3>${k.replace(/_/g, ' ').replace(/\\b\\w/g, c => c.toUpperCase())}</h3>${_formatValueToHtml(v)}`;
+      }
+      return html;
     }
-    return html;
-}
 
-function personaToHtml(p) {
-    if(!p) return '<p>(No data)</p>';
-    const fields = ['first_name','last_name','dob','gender','address','telecom'];
-    let html = '<h2>Patient Identity</h2>';
-    fields.forEach(f=>{ if(p[f]) html += `<p><strong>${f.replace(/_/g,' ').replace(/\\b\\w/g,c=>c.toUpperCase())}:</strong> ${p[f]}</p>`; });
-    if(p.bio_narrative) { html += '<h2>Medical Biography</h2>'; p.bio_narrative.split('\\n').filter(l=>l.trim()).forEach(line=>{ html += `<p>${line}</p>`; }); }
-    return html;
-}
+    function personaToHtml(p) {
+      if (!p) return '<p>(No data)</p>';
+      const fields = ['first_name', 'last_name', 'dob', 'gender', 'address', 'telecom'];
+      let html = '<h2>Patient Identity</h2>';
+      fields.forEach(f => { if (p[f]) html += `<p><strong>${f.replace(/_/g, ' ').replace(/\\b\\w/g, c => c.toUpperCase())}:</strong> ${p[f]}</p>`; });
+      if (p.bio_narrative) { html += '<h2>Medical Biography</h2>'; p.bio_narrative.split('\\n').filter(l => l.trim()).forEach(line => { html += `<p>${line}</p>`; }); }
+      return html;
+    }
 
-function openPreviewModal(payload) {
-    previewPayload = payload; previewDocIndex = -1;
-    const p = payload.patient_persona || {};
-    const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || '—';
-    document.getElementById('pvw-name').textContent = fullName;
-    document.getElementById('pvw-dob').textContent = p.dob || '—';
-    document.getElementById('pvw-gender').textContent = p.gender || '—';
-    document.getElementById('pvw-mrn').textContent = currentPatientId ? `MRN-${currentPatientId}` : '—';
+    function openPreviewModal(payload) {
+      previewPayload = payload; previewDocIndex = -1;
+      const p = payload.patient_persona || {};
+      const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || '—';
+      document.getElementById('pvw-name').textContent = fullName;
+      document.getElementById('pvw-dob').textContent = p.dob || '—';
+      document.getElementById('pvw-gender').textContent = p.gender || '—';
+      document.getElementById('pvw-mrn').textContent = currentPatientId ? `MRN-${currentPatientId}` : '—';
 
-    const incPer = previewGenerationMode?.persona !== false;
-    const incRep = previewGenerationMode?.reports !== false;
-    const reports = incRep ? (payload.documents||[]) : [];
+      const incPer = previewGenerationMode?.persona !== false;
+      const incRep = previewGenerationMode?.reports !== false;
+      const reports = incRep ? (payload.documents || []) : [];
 
-    previewDocMap = [];
-    if(incPer) previewDocMap.push({type:'persona'});
-    reports.forEach((_, i)=> previewDocMap.push({type:'report', docIndex:i}));
-    if(!previewDocMap.length) previewDocMap.push({type:'empty'});
+      previewDocMap = [];
+      if (incPer) previewDocMap.push({ type: 'persona' });
+      reports.forEach((_, i) => previewDocMap.push({ type: 'report', docIndex: i }));
+      if (!previewDocMap.length) previewDocMap.push({ type: 'empty' });
 
-    previewDocContents = previewDocMap.map(m=>{
-        if(m.type === 'persona') return personaToHtml(payload.patient_persona);
-        if(m.type === 'report') return docContentToHtml(reports[m.docIndex]);
+      previewDocContents = previewDocMap.map(m => {
+        if (m.type === 'persona') return personaToHtml(payload.patient_persona);
+        if (m.type === 'report') return docContentToHtml(reports[m.docIndex]);
         return '<p>(No previewable docs)</p>';
-    });
+      });
 
-    const sidebar = document.getElementById('preview-sidebar');
-    const allDocs = previewDocMap.map((m, idx)=>{
-        if(m.type === 'persona') return {icon:'person', label: fullName, sub:'Persona'};
-        if(m.type === 'report') return {icon:'description', label: (reports[m.docIndex].title_hint||`Doc ${m.docIndex+1}`).replace(/_/g,' '), sub: `Report ${m.docIndex+1}`};
-        return {icon:'info', label:'None', sub:''};
-    });
-    sidebar.innerHTML = allDocs.map((d,i)=>`
-        <div class="preview-doc-item ${i===0?'active':''}" id="pdoc-${i}" onclick="selectPreviewDoc(${i})">
+      const sidebar = document.getElementById('preview-sidebar');
+      const allDocs = previewDocMap.map((m, idx) => {
+        if (m.type === 'persona') return { icon: 'person', label: fullName, sub: 'Persona' };
+        if (m.type === 'report') return { icon: 'description', label: (reports[m.docIndex].title_hint || `Doc ${m.docIndex + 1}`).replace(/_/g, ' '), sub: `Report ${m.docIndex + 1}` };
+        return { icon: 'info', label: 'None', sub: '' };
+      });
+      sidebar.innerHTML = allDocs.map((d, i) => `
+        <div class="preview-doc-item ${i === 0 ? 'active' : ''}" id="pdoc-${i}" onclick="selectPreviewDoc(${i})">
             <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">${d.icon}</span>
             <div><div class="font-bold truncate" style="max-width:160px;">${d.label}</div><div style="font-size:10px;color:#6b7280;">${d.sub}</div></div></div>
         </div>`).join('');
-    document.getElementById('preview-doc-total').textContent = allDocs.length;
+      document.getElementById('preview-doc-total').textContent = allDocs.length;
 
-    document.getElementById('quill-editor').innerHTML = '';
-    quill = new Quill('#quill-editor', { theme: 'snow', modules: { toolbar: [ [{header:[2,3,false]}], ['bold','italic','underline'], [{list:'ordered'},{list:'bullet'}], ['clean'] ] } });
-    quill.on('text-change', renderPaginatedPreview);
+      document.getElementById('quill-editor').innerHTML = '';
+      quill = new Quill('#quill-editor', { theme: 'snow', modules: { toolbar: [[{ header: [2, 3, false] }], ['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['clean']] } });
+      quill.on('text-change', renderPaginatedPreview);
 
-    selectPreviewDoc(0);
-    document.getElementById('preview-modal').classList.add('open');
-}
+      selectPreviewDoc(0);
+      document.getElementById('preview-modal').classList.add('open');
+    }
 
-function renderPaginatedPreview() {
-    const pagesContainer = document.getElementById('preview-pages');
-    pagesContainer.innerHTML = '';
-    const measureContainer = document.createElement('div');
-    measureContainer.className = 'a4-page measure-page fixed top-[-9999px] left-[-9999px] invisible';
-    document.body.appendChild(measureContainer);
-    
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = quill.root.innerHTML;
-    const A4_MAX_HEIGHT = 700;
-    
-    let currentPage = document.createElement('div');
-    currentPage.className = 'a4-page shadow-xl bg-white border border-gray-200';
-    let currentContent = document.createElement('div');
-    currentContent.className = 'h-full ql-editor px-6 py-6';
-    
-    measureContainer.appendChild(currentContent);
-    currentPage.appendChild(currentContent.cloneNode(false));
-    pagesContainer.appendChild(currentPage);
-    
-    Array.from(tempDiv.childNodes).forEach(node => {
+    function renderPaginatedPreview() {
+      const pagesContainer = document.getElementById('preview-pages');
+      pagesContainer.innerHTML = '';
+      const measureContainer = document.createElement('div');
+      measureContainer.className = 'a4-page measure-page fixed top-[-9999px] left-[-9999px] invisible';
+      document.body.appendChild(measureContainer);
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = quill.root.innerHTML;
+      const A4_MAX_HEIGHT = 700;
+
+      let currentPage = document.createElement('div');
+      currentPage.className = 'a4-page shadow-xl bg-white border border-gray-200';
+      let currentContent = document.createElement('div');
+      currentContent.className = 'h-full ql-editor px-6 py-6';
+
+      measureContainer.appendChild(currentContent);
+      currentPage.appendChild(currentContent.cloneNode(false));
+      pagesContainer.appendChild(currentPage);
+
+      Array.from(tempDiv.childNodes).forEach(node => {
         const clone = node.cloneNode(true);
         currentContent.appendChild(clone);
         if (currentContent.offsetHeight > A4_MAX_HEIGHT) {
-            currentContent.removeChild(clone);
-            currentPage = document.createElement('div');
-            currentPage.className = 'a4-page shadow-xl bg-white border border-gray-200';
-            currentContent = document.createElement('div');
-            currentContent.className = 'h-full ql-editor px-6 py-6';
-            currentContent.appendChild(clone);
-            measureContainer.innerHTML = '';
-            measureContainer.appendChild(currentContent);
-            currentPage.appendChild(currentContent.cloneNode(true));
-            pagesContainer.appendChild(currentPage);
+          currentContent.removeChild(clone);
+          currentPage = document.createElement('div');
+          currentPage.className = 'a4-page shadow-xl bg-white border border-gray-200';
+          currentContent = document.createElement('div');
+          currentContent.className = 'h-full ql-editor px-6 py-6';
+          currentContent.appendChild(clone);
+          measureContainer.innerHTML = '';
+          measureContainer.appendChild(currentContent);
+          currentPage.appendChild(currentContent.cloneNode(true));
+          pagesContainer.appendChild(currentPage);
         } else {
-            pagesContainer.lastChild.lastChild.appendChild(clone.cloneNode(true));
+          pagesContainer.lastChild.lastChild.appendChild(clone.cloneNode(true));
         }
-    });
-    document.body.removeChild(measureContainer);
-}
+      });
+      document.body.removeChild(measureContainer);
+    }
 
-function selectPreviewDoc(idx) {
-    if(idx<0 || idx>=previewDocContents.length) return;
-    if(quill && previewDocIndex >= 0 && previewDocIndex < previewDocContents.length) { previewDocContents[previewDocIndex] = quill.root.innerHTML; }
-    previewDocIndex = idx;
-    quill.setContents([]);
-    quill.clipboard.dangerouslyPasteHTML(previewDocContents[idx] || '<p></p>');
-    renderPaginatedPreview();
-    
-    document.querySelectorAll('.preview-doc-item').forEach((el,i)=>el.classList.toggle('active', i===idx));
-    document.getElementById('preview-doc-current').textContent = idx+1;
-    document.getElementById('preview-doc-total-nav').textContent = previewDocContents.length;
-    const item = document.getElementById(`pdoc-${idx}`);
-    if(item) item.scrollIntoView({block:'nearest',behavior:'smooth'});
-    document.getElementById('btn-prev-doc').disabled = (idx===0);
-    document.getElementById('btn-next-doc').disabled = (idx===previewDocContents.length-1);
-    
-    const allDocs = previewDocMap.map(m=>m.type==='persona'?{label:'Patient Persona'}:(m.type==='report'?{label: (previewPayload.documents[m.docIndex].title_hint||`Doc ${m.docIndex+1}`).replace(/_/g,' ')}:{label:'None'}));
-    document.getElementById('preview-doc-title').textContent = allDocs[idx]?.label || '';
-}
+    function selectPreviewDoc(idx) {
+      if (idx < 0 || idx >= previewDocContents.length) return;
+      if (quill && previewDocIndex >= 0 && previewDocIndex < previewDocContents.length) { previewDocContents[previewDocIndex] = quill.root.innerHTML; }
+      previewDocIndex = idx;
+      quill.setContents([]);
+      quill.clipboard.dangerouslyPasteHTML(previewDocContents[idx] || '<p></p>');
+      renderPaginatedPreview();
 
-function navigateDoc(delta) { selectPreviewDoc(previewDocIndex + delta); }
-function closePreviewModal() { document.getElementById('preview-modal').classList.remove('open'); quill = null; }
+      document.querySelectorAll('.preview-doc-item').forEach((el, i) => el.classList.toggle('active', i === idx));
+      document.getElementById('preview-doc-current').textContent = idx + 1;
+      document.getElementById('preview-doc-total-nav').textContent = previewDocContents.length;
+      const item = document.getElementById(`pdoc-${idx}`);
+      if (item) item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      document.getElementById('btn-prev-doc').disabled = (idx === 0);
+      document.getElementById('btn-next-doc').disabled = (idx === previewDocContents.length - 1);
 
-async function confirmAndGeneratePDFs() {
-    if(quill && previewDocIndex < previewDocContents.length) previewDocContents[previewDocIndex] = quill.root.innerHTML;
-    const documents = previewDocMap.map((m, i)=>{
-        if(m.type !== 'report') return null;
-        return { title_hint: (previewPayload.documents[m.docIndex]||{}).title_hint || `Document_${m.docIndex+1}`, content_html: previewDocContents[i] || '' };
-    }).filter(Boolean);
-    
-    closePreviewModal(); clearLogs(); appendLog('📄 Sending confirmed content for PDF rendering…');
-    const btn = document.getElementById('btn-generate');
-    
-    btn.onclick = cancelJob;
-    btn.classList.replace('bg-gray-900', 'bg-red-600');
-    document.getElementById('gen-icon').textContent='close';
-    document.getElementById('gen-label').textContent='Cancel Task';
+      const allDocs = previewDocMap.map(m => m.type === 'persona' ? { label: 'Patient Persona' } : (m.type === 'report' ? { label: (previewPayload.documents[m.docIndex].title_hint || `Doc ${m.docIndex + 1}`).replace(/_/g, ' ') } : { label: 'None' }));
+      document.getElementById('preview-doc-title').textContent = allDocs[idx]?.label || '';
+    }
 
-    document.getElementById('log-dot').style.background='#3b82f6';
-    try {
+    function navigateDoc(delta) { selectPreviewDoc(previewDocIndex + delta); }
+    function closePreviewModal() { document.getElementById('preview-modal').classList.remove('open'); quill = null; }
+
+    async function confirmAndGeneratePDFs() {
+      if (quill && previewDocIndex < previewDocContents.length) previewDocContents[previewDocIndex] = quill.root.innerHTML;
+      const documents = previewDocMap.map((m, i) => {
+        if (m.type !== 'report') return null;
+        return { title_hint: (previewPayload.documents[m.docIndex] || {}).title_hint || `Document_${m.docIndex + 1}`, content_html: previewDocContents[i] || '' };
+      }).filter(Boolean);
+
+      closePreviewModal(); clearLogs(); appendLog('📄 Sending confirmed content for PDF rendering…');
+      const btn = document.getElementById('btn-generate');
+
+      btn.onclick = cancelJob;
+      btn.classList.replace('bg-gray-900', 'bg-red-600');
+      document.getElementById('gen-icon').textContent = 'close';
+      document.getElementById('gen-label').textContent = 'Cancel Task';
+
+      document.getElementById('log-dot').style.background = '#3b82f6';
+      try {
         const body = { patient_id: currentPatientId, generation_mode: previewGenerationMode, documents: documents, persona: previewPayload?.patient_persona || null };
-        const r = await fetch(`${API}/api/generate_from_content`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+        const r = await fetch(`${API}/api/generate_from_content`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const d = await r.json(); currentJobId = d.job_id; logOffset = 0; appendLog(`📋 Render job: ${currentJobId}`);
-        pollTimer = setInterval(()=>pollJob(currentJobId), 2000);
-    } catch(e) { appendLog('❌ PDF rendering failed: '+e.message); resetGenerateBtn(); }
-}
+        pollTimer = setInterval(() => pollJob(currentJobId), 2000);
+      } catch (e) { appendLog('❌ PDF rendering failed: ' + e.message); resetGenerateBtn(); }
+    }
 
-// ── Batch ──────────────────────────────────────────────────────────────
-function openBatchModal(){
-    const modal=document.getElementById('batch-modal');modal.classList.remove('hidden');modal.classList.add('flex');
-    document.getElementById('batch-patient-list').innerHTML=allPatientIds.map(id=>`
+    // ── Batch ──────────────────────────────────────────────────────────────
+    function openBatchModal() {
+      const modal = document.getElementById('batch-modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.getElementById('batch-patient-list').innerHTML = allPatientIds.map(id => `
         <label class="flex items-center gap-3 px-2 py-1.5 hover:bg-gray-50 rounded cursor-pointer">
             <input type="checkbox" class="batch-chk lg-chk" value="${id}" checked>
             <span class="text-sm">Patient ${id}</span>
         </label>`).join('');
-    batchSelectAll=true;
-}
+      batchSelectAll = true;
+    }
 
-function closeBatchModal(){const m=document.getElementById('batch-modal');m.classList.add('hidden');m.classList.remove('flex');}
+    function closeBatchModal() { const m = document.getElementById('batch-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
 
-function toggleSelectAll(){
-    batchSelectAll=!batchSelectAll;
-    document.querySelectorAll('.batch-chk').forEach(c=>c.checked=batchSelectAll);
-    document.querySelector('[onclick="toggleSelectAll()"]').textContent=batchSelectAll?'Deselect All':'Select All';
-}
+    function toggleSelectAll() {
+      batchSelectAll = !batchSelectAll;
+      document.querySelectorAll('.batch-chk').forEach(c => c.checked = batchSelectAll);
+      document.querySelector('[onclick="toggleSelectAll()"]').textContent = batchSelectAll ? 'Deselect All' : 'Select All';
+    }
 
-async function startBatch(){
-    const sel=[...document.querySelectorAll('.batch-chk:checked')].map(c=>c.value);
-    if(!sel.length){alert('Select at least one patient.');return;}
-    closeBatchModal();clearLogs();appendLog(`🚀 Batch: ${sel.length} patients…`);
-    document.getElementById('log-dot').style.background='#3b82f6';
-    
-    // Set Cancel state on main button
-    const btn=document.getElementById('btn-generate');
-    btn.onclick = cancelJob;
-    btn.classList.replace('bg-gray-900', 'bg-red-600');
-    document.getElementById('gen-icon').textContent='close';
-    document.getElementById('gen-label').textContent='Cancel Batch';
-    const body={patient_ids:sel,feedback:document.getElementById('feedback-input').value,
-        generation_mode:{persona:document.getElementById('chk-batch-persona').checked,
-            reports:document.getElementById('chk-batch-reports').checked,summary:document.getElementById('chk-batch-summary').checked}};
-    try{const r=await fetch(`${API}/api/generate_all`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-        const d=await r.json();currentJobId=d.job_id;logOffset=0;appendLog('📋 Batch Job: '+d.job_id);
-        pollTimer=setInterval(()=>pollJob(d.job_id),2000);}
-    catch(e){appendLog('❌ Batch failed: '+e.message);}
-}
-</script>
+    async function startBatch() {
+      const sel = [...document.querySelectorAll('.batch-chk:checked')].map(c => c.value);
+      if (!sel.length) { alert('Select at least one patient.'); return; }
+      closeBatchModal(); clearLogs(); appendLog(`🚀 Batch: ${sel.length} patients…`);
+      document.getElementById('log-dot').style.background = '#3b82f6';
+
+      // Set Cancel state on main button
+      const btn = document.getElementById('btn-generate');
+      btn.onclick = cancelJob;
+      btn.classList.replace('bg-gray-900', 'bg-red-600');
+      document.getElementById('gen-icon').textContent = 'close';
+      document.getElementById('gen-label').textContent = 'Cancel Batch';
+      const body = {
+        patient_ids: sel, feedback: document.getElementById('feedback-input').value,
+        generation_mode: {
+          persona: document.getElementById('chk-batch-persona').checked,
+          reports: document.getElementById('chk-batch-reports').checked, summary: document.getElementById('chk-batch-summary').checked
+        }
+      };
+      try {
+        const r = await fetch(`${API}/api/generate_all`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        const d = await r.json(); currentJobId = d.job_id; logOffset = 0; appendLog('📋 Batch Job: ' + d.job_id);
+        pollTimer = setInterval(() => pollJob(d.job_id), 2000);
+      }
+      catch (e) { appendLog('❌ Batch failed: ' + e.message); }
+    }
+  </script>
 </body>
+
 </html>

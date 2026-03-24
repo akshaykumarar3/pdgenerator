@@ -118,6 +118,11 @@ The Patient State Layer ensures that all documents reference the same patient da
 - **`ClinicalDataPayload`**: Combined persona + documents + changes summary. The `documents` field uses the alias `structured_documents` for AI fidelity; both keys are normalised by `_parse_vertex_response()`.
 - **`AnnotatorSummary`**: Post-generation quality summary used for PA optimization scoring.
 
+### Batch Processing & Job Cancellation
+
+- **Batch Execution (`/api/generate_all`)**: Processes multiple target patient IDs sequentially. Builds an in-memory queue to maintain generation state.
+- **Cancel/Abort Checks (`cancel_check`)**: Passed into internal orchestration loops (`process_patient_workflow`). Checks a flag per `job_id`. If `True`, the worker halts AI generation/PDF rendering immediately and triggers a rollback of the patient record.
+
 ---
 
 ## 6. AI Engine (`src/ai/client.py`)

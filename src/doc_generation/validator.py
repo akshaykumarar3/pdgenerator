@@ -229,3 +229,63 @@ def sanitize_narrative(text: str, identity_map: dict) -> str:
         # simple check - in real prod use NER
         pass 
     return text
+
+def validate_npi_consistency(payload: Any) -> tuple[bool, list[str]]:
+    """
+    Checks every NPI string across all documents in a case.
+    Throws an error if the same NPI resolves to more than one provider name,
+    or the same provider name has more than one NPI.
+    """
+    errors = []
+    npi_to_provider = {}
+    provider_to_npi = {}
+    
+    def _record_npi(npi: str, provider: str):
+        if not npi or not provider or npi == "N/A" or provider == "N/A" or provider == "Unknown Provider":
+            return
+        n = str(npi).strip()
+        p = str(provider).strip().upper()
+        if not n or not p or len(n) < 10: return
+
+        if n in npi_to_provider and npi_to_provider[n] != p:
+            errors.append(f"NPI {n} resolves to both '{npi_to_provider[n]}' and '{p}'")
+        if p in provider_to_npi and provider_to_npi[p] != n:
+            errors.append(f"Provider '{p}' has both NPI {provider_to_npi[p]} and {n}")
+        
+        npi_to_provider[n] = p
+        provider_to_npi[p] = n
+
+    def _extract_from_dict(d: dict):
+        # Look for keys containing "npi" and nearby "provider" keys
+        npi_val = d.get('formatted_npi') or d.get('provider_npi') or d.get('npi')
+        prov_val = d.get('provider') or d.get('generalPractitioner') or d.get('ordering_provider') or d.get('performing_provider')
+        if npi_val and prov_val:
+            _record_npi(npi_val, prov_val)
+        
+        for k, v in d.items():
+            if isinstance(v, dict):
+                _extract_from_dict(v)
+            elif isinstance(v, list):
+                for item in v:
+                    if isinstance(item, dict):
+                        _extract_from_dict(item)
+
+    if getattr(payload, 'patient_persona', None):
+        _extract_from_dict(payload.patient_persona.model_dump())
+
+    for doc in getattr(payload, 'documents', []) or []:
+        try:
+            content = doc.content
+            if isinstance(content, str):
+                try:
+                    content = json.loads(content)
+                except Exception:
+                    pass
+            if isinstance(content, dict):
+                _extract_from_dict(content)
+        except Exception:
+            pass
+
+    if errors:
+        return False, list(set(errors))
+    return True, []

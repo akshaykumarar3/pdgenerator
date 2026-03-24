@@ -209,6 +209,14 @@ The function `load_existing_context()` guarantees that:
 
 Contradictory data across documents must never occur.
 
+**Strict Data Consistency Rules (v5)**:
+* **NPI Consistency**: Every provider has EXACTLY one NPI across all encounters, therapies, and documents. No two providers share an NPI.
+* **Encounter/Lab Matching**: Encounter lists in summaries perfectly match the persona. Lab events strictly map to existing encounters or create distinct ones.
+* **Clinical Coding**: Referenced ICD-10 and CPT codes must identically match codes in the persona profile.
+* **Medications**: "Past" medications use past tense and appear strictly under "Previous Treatments" in PA forms. Hold instructions calculate explicit calendar dates.
+* **Conditionals**: Pre-Op Eval docs must include Concurrent Care references if active therapies exist. GI cases explicitly flag FIT/FOBT results consistently.
+* **PA Fields**: Risk/Benefit justifications explicitly cite comorbidities. Authorization types use standard labels. Units are defaulted or calculated.
+
 Quality guardrails:
 
 * `bio_narrative` is never blank; if the LLM omits it or returns a too-short narrative, it is backfilled from persona data, encounters, diagnoses, and case details.

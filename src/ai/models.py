@@ -38,6 +38,7 @@ class PARequestDetails(BaseModel):
     supporting_diagnoses: List[str] = Field(..., description="ICD-10 codes with descriptions supporting the request (e.g., ['I25.10 - Atherosclerotic heart disease'])")
     previous_treatments: str = Field(default="None", description="Prior treatments attempted, if any")
     expected_outcome: str = Field(..., description="Expected clinical outcome (e.g., 'Improved cardiac function', 'Pain relief')")
+    units_requested: str = Field(default="1", description="Number of units/sessions/procedures requested. E.g. '1', '12 sessions'")
 
 class PatientCommunication(BaseModel):
     """Patient communication preferences."""
@@ -245,6 +246,8 @@ class PatientPersona(BaseModel):
     
     # Narrative
     bio_narrative: Optional[str] = Field(default="", description="Comprehensive biography/history (HPI, Social, Family). Use plain text, avoid markdown.")
+
+    has_fit_fobt_result: Optional[bool] = Field(None, description="True if positive FIT/FOBT result exists (typically for GI procedures)")
 
     # ── Clinical Arrays ─────────────────────────────────────────────────────
     medications: List[MedicationEntry] = Field(

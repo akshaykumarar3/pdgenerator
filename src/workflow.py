@@ -294,6 +294,12 @@ def process_patient_workflow(
             history_context=history_txt,
             existing_persona=existing_patient,
         )
+        
+        from .doc_generation.validator import validate_npi_consistency
+        npi_valid, npi_errors = validate_npi_consistency(result)
+        if not npi_valid:
+            raise ValueError(f"NPI Consistency Error: {'; '.join(npi_errors)}")
+            
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
         return None

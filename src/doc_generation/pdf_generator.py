@@ -456,6 +456,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
         ('TOPPADDING', (0,0), (-1,-1), 8),
         ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('WORDWRAP', (0,0), (-1,-1), True),
     ]))
     Story.append(case_table)
     Story.append(Spacer(1, 15))
@@ -489,6 +490,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
             ('RIGHTPADDING', (0,0), (-1,-1), 10),
             ('TOPPADDING', (0,0), (-1,-1), 10),
             ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+            ('WORDWRAP', (0,0), (-1,-1), True),
         ]))
         Story.append(proc_table)
         Story.append(Spacer(1, 15))
@@ -950,6 +952,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
         ('BACKGROUND', (0,0), (-1,0), col_bg),
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('WORDWRAP', (0,0), (-1,-1), True),
     ])
     
     for data_block, title in [
@@ -998,6 +1001,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ('RIGHTPADDING', (0,0), (-1,-1), 10),
             ('TOPPADDING', (0,0), (-1,-1), 10),
             ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+            ('WORDWRAP', (0,0), (-1,-1), True),
         ]))
         Story.append(proc_table)
         Story.append(Spacer(1, 15))
@@ -1019,6 +1023,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ('GRID', (0,0), (-1,-1), 1, colors.grey),
             ('VALIGN', (0,0), (-1,-1), 'TOP'),
             ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+            ('WORDWRAP', (0,0), (-1,-1), True),
         ]))
         Story.append(pa_table)
         Story.append(Spacer(1, 20))
@@ -1152,6 +1157,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                 ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
                 ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f4f8')),
                 ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('WORDWRAP', (0,0), (-1,-1), True),
             ]))
             Story.append(t)
             Story.append(Spacer(1, 10))
@@ -1179,6 +1185,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                 ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
                 ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e8f5e9')),
                 ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('WORDWRAP', (0,0), (-1,-1), True),
             ]))
             Story.append(t)
             Story.append(Spacer(1, 10))
