@@ -221,12 +221,28 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
             # Fetch exclusion names
             current_names = patient_db.get_all_patient_names()
 
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             result_name = wf.process_patient_workflow(
                 patient_id=patient_id,
                 feedback=combined_feedback,
                 excluded_names=current_names,
-                generation_mode=generation_mode
+                generation_mode=generation_mode,
+                cancel_check=cancel_check,
+                archive_token=job_id
             )
+
+            if cancel_check():
+                with _jobs_lock:
+                    _jobs[job_id]["logs"].append("⛔ Worker stopped due to cancellation. Performing rollback...")
+                from src.utils.file_utils import restore_patient_files
+                restore_patient_files(patient_id, generation_mode, archive_token=job_id)
+                with _jobs_lock:
+                    _jobs[job_id]["status"] = "cancelled"
+                    _jobs[job_id]["result"] = "Cancelled by user"
+                return
 
         # Capture changes_summary from AI result if accessible via history
         changes_summary = None
@@ -266,20 +282,28 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
 
 
-def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
-    """Background worker for batch processing all patients."""
+def _run_batch_generation(job_id, patient_ids, feedback, generation_mode, pa_optimize):
+    """Background worker for batch processing specific patients."""
     try:
         def log_cb(msg):
             with _jobs_lock:
                 _jobs[job_id]["logs"].append(msg)
 
-        all_ids = data_loader.get_all_patient_ids()
-        log_cb(f"🚀 Starting BATCH generation for {len(all_ids)} patients.")
+        log_cb(f"🚀 Starting BATCH generation for {len(patient_ids)} patients.")
 
         success_count = 0
         from src.workflow import process_patient_workflow
 
-        for p_id in all_ids:
+        for p_id in patient_ids:
+            with _jobs_lock:
+                if _jobs[job_id].get("cancelled"):
+                    log_cb("⛔ Batch cancelled. Stopping.")
+                    break
+            
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
             try:
                 import sys, io
@@ -287,9 +311,11 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
                 sys.stdout = io.StringIO()
                 try:
                     current_names = patient_db.get_all_patient_names()
+                    tok = f"{job_id}_{p_id}"
                     result_name = process_patient_workflow(
                         patient_id=p_id, feedback=feedback,
-                        excluded_names=current_names, generation_mode=generation_mode
+                        excluded_names=current_names, generation_mode=generation_mode,
+                        cancel_check=cancel_check, archive_token=tok
                     )
                 finally:
                     output = sys.stdout.getvalue()
@@ -297,15 +323,25 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
                     for line in output.splitlines():
                         if line.strip():
                             log_cb(line)
+                            
+                if cancel_check():
+                    from src.utils.file_utils import restore_patient_files
+                    restore_patient_files(p_id, generation_mode, archive_token=tok)
+                    break
+                    
                 success_count += 1
                 log_cb(f"✅ {p_id} completed successfully (Result: {result_name})")
             except Exception as pe:
                 log_cb(f"❌ Failed processing {p_id}: {pe}")
 
         with _jobs_lock:
-            _jobs[job_id]["status"] = "done"
-            _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(all_ids)} OK"
-            _jobs[job_id]["logs"].append("🏁 Batch run finished.")
+            if _jobs[job_id].get("cancelled"):
+                _jobs[job_id]["status"] = "cancelled"
+                _jobs[job_id]["result"] = f"Batch Cancelled: {success_count}/{len(patient_ids)} OK"
+            else:
+                _jobs[job_id]["status"] = "done"
+                _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(patient_ids)} OK"
+                _jobs[job_id]["logs"].append("🏁 Batch run finished.")
     except Exception as e:
         with _jobs_lock:
             _jobs[job_id]["status"] = "error"
@@ -382,15 +418,26 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
             if extra_blocks:
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
 
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             current_names = patient_db.get_all_patient_names()
             payload = wf.preview_patient_generation(
                 patient_id=patient_id,
                 feedback=combined_feedback,
                 excluded_names=current_names,
                 generation_mode=generation_mode,
+                cancel_check=cancel_check,
             )
 
         with _jobs_lock:
+            if _jobs[job_id].get("cancelled"):
+                _jobs[job_id]["status"] = "cancelled"
+                _jobs[job_id]["result"] = "Preview cancelled by user"
+                _jobs[job_id]["logs"].append("⛔ Preview generation stopped.")
+                return
+            
             _jobs[job_id]["status"] = "done" if payload else "error"
             _jobs[job_id]["preview_payload"] = payload
             _jobs[job_id]["result"] = (
@@ -415,13 +462,30 @@ def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: 
     try:
         with JobLogger(job_id):
             from src import workflow as wf
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             docs_written = wf.render_patient_pdfs_from_content(
                 patient_id=patient_id,
                 generation_mode=generation_mode,
                 documents_content=documents_content,
                 persona_json=persona_json,
                 summarize=True,
+                cancel_check=cancel_check,
+                archive_token=job_id
             )
+            
+            if cancel_check():
+                with _jobs_lock:
+                    _jobs[job_id]["logs"].append("⛔ Worker stopped due to cancellation. Performing rollback...")
+                from src.utils.file_utils import restore_patient_files
+                restore_patient_files(patient_id, generation_mode, archive_token=job_id)
+                with _jobs_lock:
+                    _jobs[job_id]["status"] = "cancelled"
+                    _jobs[job_id]["result"] = "Cancelled by user"
+                return
+            
         with _jobs_lock:
             _jobs[job_id]["status"] = "done"
             _jobs[job_id]["result"] = f"{len(docs_written)} PDF(s) generated"
@@ -661,6 +725,10 @@ def api_generate_all():
         description: Batch Job queued
     """
     body = request.get_json(force=True) or {}
+    patient_ids    = body.get("patient_ids", [])
+    if not patient_ids:
+        return jsonify({"error": "patient_ids is required and cannot be empty"}), 400
+    
     feedback       = body.get("feedback", "")
     generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
     pa_optimize    = bool(body.get("pa_optimize", False))
@@ -669,7 +737,7 @@ def api_generate_all():
     with _jobs_lock:
         _jobs[job_id] = {
             "status": "queued",
-            "logs": [f"🚀 BATCH Job {job_id} queued"],
+            "logs": [f"🚀 BATCH Job {job_id} queued for {len(patient_ids)} patients"],
             "error": None,
             "result": None,
             "changes_summary": None,
@@ -685,7 +753,7 @@ def api_generate_all():
 
     t = threading.Thread(
         target=_run_batch_generation,
-        args=(job_id, feedback, generation_mode, pa_optimize),
+        args=(job_id, patient_ids, feedback, generation_mode, pa_optimize),
         daemon=True
     )
     t.start()
@@ -732,6 +800,27 @@ def api_job_status(job_id: str):
         "all_logs": job["logs"],
         "preview_payload": job.get("preview_payload"),   # populated by /api/preview jobs
     })
+
+@app.route("/api/cancel/<job_id>", methods=["POST"])
+def api_cancel_job(job_id: str):
+    """
+    Cancel an active job and trigger rollback of generated outputs.
+    """
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+
+    if not job:
+        return jsonify({"error": "Job not found"}), 404
+
+    with _jobs_lock:
+        if job["status"] in ["done", "error", "cancelled"]:
+            return jsonify({"job_id": job_id, "status": job["status"]}) # Already finished
+        
+        job["cancelled"] = True
+        job["status"] = "cancelled"
+        job["logs"].append("⛔ Cancellation requested by user.")
+
+    return jsonify({"job_id": job_id, "status": "cancelled"})
 
 
 @app.route("/api/output/<patient_id>")

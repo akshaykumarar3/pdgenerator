@@ -32,7 +32,7 @@ ALLOWED_PROVIDERS = ["vertexai", "openai"]
 # Model Configuration (Prod vs Test)
 MODEL_MAP = {
     "vertexai": {"prod": "gemini-2.5-pro", "test": "gemini-2.5-flash"},
-    "openai":   {"prod": "gpt-4o",         "test": "gpt-4o-mini"}
+    "openai":   {"prod": "gpt-5.2",         "test": "gpt-4o-mini"}
 }
 
 # Select Model

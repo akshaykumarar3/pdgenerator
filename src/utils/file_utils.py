@@ -21,7 +21,7 @@ def get_persona_version(patient_id: str) -> int:
     return max_v + 1
 
 
-def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = False):
+def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = False, archive_token: str = None):
     """
     Move PDFs belonging to *patient_id* from *folder* into folder/archive/.
     If match_all_pdfs is True every .pdf in the folder is archived (used for
@@ -31,7 +31,10 @@ def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = F
     if not os.path.isdir(folder):
         return
 
-    archive_dir = os.path.join(folder, "archive")
+    if archive_token:
+        archive_dir = os.path.join(folder, "archive", archive_token)
+    else:
+        archive_dir = os.path.join(folder, "archive")
     os.makedirs(archive_dir, exist_ok=True)
 
     prefix_patterns = [
@@ -57,7 +60,7 @@ def _archive_files_in_dir(folder: str, patient_id: str, match_all_pdfs: bool = F
         print(f"      📦 Archived {moved} file(s) from {os.path.basename(folder)}/")
 
 
-def archive_patient_files(patient_id: str, generation_mode: dict):
+def archive_patient_files(patient_id: str, generation_mode: dict, archive_token: str = None):
     """
     Archive existing patient documents for every doc type that will be
     re-generated in this run.  Only files about to be overwritten are moved.
@@ -67,16 +70,61 @@ def archive_patient_files(patient_id: str, generation_mode: dict):
         generation_mode:  Dict with boolean flags 'persona', 'reports', 'summary'.
     """
     if generation_mode.get("persona", False):
-        _archive_files_in_dir(PERSONA_DIR, patient_id)
+        _archive_files_in_dir(PERSONA_DIR, patient_id, archive_token=archive_token)
 
     if generation_mode.get("summary", False):
-        _archive_files_in_dir(SUMMARY_DIR, patient_id)
+        _archive_files_in_dir(SUMMARY_DIR, patient_id, archive_token=archive_token)
 
     if generation_mode.get("reports", False):
         # Reports live in a patient-specific sub-folder; archive everything there
         rpt_folder = get_patient_report_folder(patient_id)
-        _archive_files_in_dir(rpt_folder, patient_id, match_all_pdfs=True)
+        _archive_files_in_dir(rpt_folder, patient_id, match_all_pdfs=True, archive_token=archive_token)
 
+def restore_patient_files(patient_id: str, generation_mode: dict, archive_token: str):
+    """Restore files from archive/<archive_token> and delete current outputs."""
+    if not archive_token:
+        return
+
+    def _restore_dir(folder: str, match_all_pdfs: bool = False):
+        if not os.path.isdir(folder):
+            return
+        archive_dir = os.path.join(folder, "archive", archive_token)
+        
+        # 1. Delete current outputs for this patient
+        prefix_patterns = [
+            f"{patient_id}-",
+            f"DOC-{patient_id}-",
+            f"Clinical_Summary_Patient_{patient_id}"
+        ]
+        for fname in os.listdir(folder):
+            if fname == "archive" or not fname.endswith(".pdf"):
+                continue
+            if match_all_pdfs or any(fname.startswith(p) for p in prefix_patterns):
+                try:
+                    os.remove(os.path.join(folder, fname))
+                except Exception:
+                    pass
+        
+        # 2. Move archived files back
+        if os.path.isdir(archive_dir):
+            for fname in os.listdir(archive_dir):
+                if fname.endswith(".pdf"):
+                    try:
+                        shutil.move(os.path.join(archive_dir, fname), os.path.join(folder, fname))
+                    except Exception:
+                        pass
+            # Remove the archive_token directory if empty
+            try:
+                os.rmdir(archive_dir)
+            except Exception:
+                pass
+
+    if generation_mode.get("persona", False):
+        _restore_dir(PERSONA_DIR)
+    if generation_mode.get("summary", False):
+        _restore_dir(SUMMARY_DIR)
+    if generation_mode.get("reports", False):
+        _restore_dir(get_patient_report_folder(patient_id), match_all_pdfs=True)
 
 def sanitize_filename_component(name: str) -> str:
     """Make a safe filename segment across OSes."""

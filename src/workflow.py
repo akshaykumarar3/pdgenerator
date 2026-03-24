@@ -219,6 +219,8 @@ def process_patient_workflow(
     feedback: str = "",
     excluded_names: list[str] = None,
     generation_mode: dict = None,
+    cancel_check: callable = None,
+    archive_token: str = None,
 ) -> str:
     """
     Main orchestration for a single patient.
@@ -278,6 +280,11 @@ def process_patient_workflow(
     else:
         print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
+    
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before AI generation.")
+        return None
+
     try:
         result, usage = ai_engine.generate_clinical_data(
             case_details=case_details_for_generation,
@@ -313,8 +320,12 @@ def process_patient_workflow(
     doc_version = get_persona_version(patient_id)
     print(f"   🔖 Document version: v{doc_version}")
 
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before PDF archiving.")
+        return None
+
     # Archive ONLY documents that are about to be overwritten
-    archive_patient_files(patient_id, generation_mode)
+    archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
 
     # ── 8. WRITE DOCUMENTS ─────────────────────────────────────────────────────
     current_year = datetime.datetime.now().year
@@ -358,6 +369,9 @@ def process_patient_workflow(
 
         print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
         for seq, doc in enumerate(filtered_documents, start=1):
+            if cancel_check and cancel_check():
+                print("   ⛔ Cancellation requested during PDF generation loop.")
+                return None
             try:
                 seq_str            = f"{seq:03d}"
                 doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
@@ -476,6 +490,9 @@ def process_patient_workflow(
 
     # ── 8c. SUMMARY ────────────────────────────────────────────────────────────
     if generation_mode["summary"]:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before summary generation.")
+            return None
         try:
             print(f"   📋 Generating annotator summary at v{doc_version}…")
 
@@ -546,6 +563,9 @@ def process_patient_workflow(
 
     # ── 9. PATIENT TEXT RECORD ─────────────────────────────────────────────────
     if result.patient_persona:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before writing patient record.")
+            return None
         try:
             rec_path = patient_record_writer.write_patient_record(
                 patient_id=patient_id,
@@ -566,6 +586,7 @@ def preview_patient_generation(
     feedback: str = "",
     excluded_names: list[str] = None,
     generation_mode: dict = None,
+    cancel_check: callable = None,
 ) -> dict | None:
     """
     Run AI generation for a patient WITHOUT writing any PDFs.
@@ -592,6 +613,10 @@ def preview_patient_generation(
     existing_patient = patient_db.load_patient(patient_id)
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
+
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before AI preview generation.")
+        return None
 
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     try:
@@ -676,6 +701,8 @@ def render_patient_pdfs_from_content(
     documents_content: list,   # [{title_hint, content_html}]
     persona_json: dict | None = None,
     summarize: bool = True,
+    cancel_check: callable = None,
+    archive_token: str = None,
 ) -> list[str]:
     """
     Write PDFs from user-confirmed (possibly edited) content.
@@ -710,7 +737,11 @@ def render_patient_pdfs_from_content(
         else f"Patient_{patient_id}"
     )
 
-    archive_patient_files(patient_id, generation_mode)
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before archiving files.")
+        return []
+
+    archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
     patient_report_folder = get_patient_report_folder(patient_id)
     os.makedirs(patient_report_folder, exist_ok=True)
 
@@ -730,6 +761,9 @@ def render_patient_pdfs_from_content(
     # ── Report PDFs from edited content ──────────────────────────────────────
     if generation_mode.get("reports", False) and documents_content:
         for seq, doc_info in enumerate(documents_content, start=1):
+            if cancel_check and cancel_check():
+                print("   ⛔ Cancellation requested during PDF creation.")
+                return []
             try:
                 title_hint = doc_info.get("title_hint", f"Document_{seq}")
                 content_html = doc_info.get("content_html", "")
@@ -778,6 +812,9 @@ def render_patient_pdfs_from_content(
 
     # ── Summary PDF ───────────────────────────────────────────────────────────
     if summarize and generation_mode.get("summary", False) and case_data and persona_obj:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before generating summary.")
+            return []
         try:
             annotator_summary = ai_engine.generate_annotator_summary(
                 case_details=case_data,
