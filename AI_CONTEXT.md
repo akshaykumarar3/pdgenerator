@@ -25,7 +25,7 @@ The Clinical Data Generator is an **AI-driven pipeline** that synthesizes realis
 Primary responsibilities:
 
 1. Generate realistic patient personas
-2. Generate clinical documents aligned with PA workflows
+2. Generate clinical documents aligned with PA workflows (supporting both Approval conditions and Rejection/Denial deficiency cases via `generate_rejection_docs`)
 3. Maintain temporal and clinical consistency
 4. Prevent document duplication
 5. Produce structured outputs for testing automation pipelines

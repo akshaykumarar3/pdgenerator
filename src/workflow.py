@@ -221,6 +221,7 @@ def process_patient_workflow(
     generation_mode: dict = None,
     cancel_check: callable = None,
     archive_token: str = None,
+    generate_rejection_docs: bool = False,
 ) -> str:
     """
     Main orchestration for a single patient.
@@ -274,7 +275,11 @@ def process_patient_workflow(
     
     patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
-    case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    if generate_rejection_docs:
+        case_details_for_generation = dict(case_data or {})
+    else:
+        case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    
     if case_details_for_generation.get("outcome") != (case_data or {}).get("outcome"):
         print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')} → {case_details_for_generation.get('outcome', '?')})")
     else:
@@ -593,6 +598,7 @@ def preview_patient_generation(
     excluded_names: list[str] = None,
     generation_mode: dict = None,
     cancel_check: callable = None,
+    generate_rejection_docs: bool = False,
 ) -> dict | None:
     """
     Run AI generation for a patient WITHOUT writing any PDFs.

@@ -302,12 +302,19 @@
         <textarea id="feedback-input" rows="3" placeholder="Optional feedback / instructions…"
           class="w-full border border-gray-200 rounded text-xs px-3 py-2 font-mono resize-none focus:ring-1 focus:ring-gray-900 focus:outline-none leading-relaxed placeholder-gray-300"></textarea>
         <div class="flex gap-4">
-          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-persona"
-              checked class="lg-chk"> Persona</label>
-          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-reports"
-              checked class="lg-chk"> Reports</label>
-          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-summary"
-              checked class="lg-chk"> Summary</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-persona" checked class="lg-chk"> Persona</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-reports" checked class="lg-chk"> Reports</label>
+          <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" id="chk-summary" checked class="lg-chk"> Summary</label>
+        </div>
+        <div class="mt-2 text-xs">
+          <label class="flex items-center gap-1.5 cursor-pointer text-gray-700 font-semibold selection:bg-none">
+            <input type="checkbox" id="chk-rejection-docs" class="lg-chk" onchange="document.getElementById('rejection-gaps-container').classList.toggle('hidden', !this.checked)"> 
+            Generate Rejection / Denial Gaps
+          </label>
+          <div id="rejection-gaps-container" class="mt-2 hidden">
+            <textarea id="rejection-gaps-input" rows="2" placeholder="Specific missing criteria / gaps (leave blank for defaults)…"
+              class="w-full border border-gray-200 rounded text-xs px-3 py-2 font-mono resize-none focus:ring-1 focus:ring-gray-900 focus:outline-none leading-relaxed placeholder-gray-400 bg-red-50"></textarea>
+          </div>
         </div>
         <button id="btn-generate" onclick="onGenerateClick()"
           class="w-full py-2.5 bg-gray-900 text-white text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-700 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed rounded">
@@ -620,6 +627,11 @@
       outCard.style.cssText = isApproval ? 'background:#f0fdf4;border-color:#86efac;' : isDenial ? 'background:#fef2f2;border-color:#fca5a5;' : 'background:#f9fafb;border-color:#e5e7eb;';
       outEl.style.color = isApproval ? '#15803d' : isDenial ? '#dc2626' : '#1a1a1a';
       document.getElementById('case-details-text').textContent = c.details || '—';
+      const chkRejection = document.getElementById('chk-rejection-docs');
+      if (chkRejection) {
+        chkRejection.checked = isDenial || (c.outcome || '').toLowerCase().includes('rejection');
+        document.getElementById('rejection-gaps-container').classList.toggle('hidden', !chkRejection.checked);
+      }
     }
 
     function clearDossier() {
@@ -800,7 +812,9 @@
       try {
         const body = {
           patient_id: currentPatientId, feedback: document.getElementById('feedback-input').value,
-          generation_mode: { persona: document.getElementById('chk-persona').checked, reports: document.getElementById('chk-reports').checked, summary: document.getElementById('chk-summary').checked }
+          generation_mode: { persona: document.getElementById('chk-persona').checked, reports: document.getElementById('chk-reports').checked, summary: document.getElementById('chk-summary').checked },
+          generate_rejection_docs: document.getElementById('chk-rejection-docs')?.checked || false,
+          rejection_gaps: document.getElementById('rejection-gaps-input')?.value || '',
         };
         const r = await fetch(`${API}/api/generate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
         const d = await r.json(); currentJobId = d.job_id; logOffset = 0;
@@ -882,6 +896,8 @@
       return {
         patient_id: currentPatientId,
         feedback: document.getElementById('feedback-input').value,
+        generate_rejection_docs: document.getElementById('chk-rejection-docs')?.checked || false,
+        rejection_gaps: document.getElementById('rejection-gaps-input')?.value || '',
         generation_mode: {
           persona: document.getElementById('chk-persona').checked,
           reports: document.getElementById('chk-reports').checked,

@@ -141,6 +141,7 @@ After each run, a 2×2 summary panel is shown:
 ### Prior Authorization Workflow Support
 
 - **PA Optimization**: Toggle to automatically strengthen clinical justifications for likely-rejected cases
+- **PA Rejection Documents**: Generate intentionally deficient clinical documents (missing tests, failed criteria) to test denial workflows. Controlled via UI toggle and custom gap instructions.
 - **Complete PA Request Forms**: Requesting provider, urgency level, clinical justification, ICD-10 diagnoses, previous treatments, expected outcome
 - **Future Procedure Dates**: Procedure dates set 7–90 days in the future for realistic PA workflows
 

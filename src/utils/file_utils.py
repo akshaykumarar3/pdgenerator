@@ -6,18 +6,30 @@ from ..core.config import PERSONA_DIR, SUMMARY_DIR, get_patient_report_folder
 
 def get_persona_version(patient_id: str) -> int:
     """
-    Scan the persona directory for existing files for this patient.
+    Scan the document directories for existing files for this patient.
+    Uses os.walk to check active AND archived folders to find the absolute max version.
     Returns the *next* version number (e.g. if v2 exists → returns 3).
     Returns 1 when no prior versions exist.
     """
     max_v = 0
-    prefix = f"{patient_id}-"
-    if os.path.isdir(PERSONA_DIR):
-        for fname in os.listdir(PERSONA_DIR):
-            if fname.startswith(prefix) and fname.endswith(".pdf"):
-                m = re.search(r"-v(\\d+)", fname)
-                if m:
-                    max_v = max(max_v, int(m.group(1)))
+    
+    prefix_patterns = [
+        f"{patient_id}-",
+        f"DOC-{patient_id}-",
+        f"Clinical_Summary_Patient_{patient_id}",
+    ]
+    
+    dirs_to_check = [PERSONA_DIR, SUMMARY_DIR, get_patient_report_folder(patient_id)]
+    
+    for d in dirs_to_check:
+        if os.path.isdir(d):
+            for root, _, files in os.walk(d):
+                for fname in files:
+                    if fname.endswith(".pdf") and any(fname.startswith(p) for p in prefix_patterns):
+                        m = re.search(r"-v(\d+)", fname)
+                        if m:
+                            max_v = max(max_v, int(m.group(1)))
+                            
     return max_v + 1
 
 

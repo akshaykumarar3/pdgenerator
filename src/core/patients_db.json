@@ -2240,37 +2240,37 @@
     "contact": {
       "relationship": "Spouse",
       "name": "Monica Geller",
-      "telecom": "713-555-0196",
-      "address": "4550 Montrose Blvd, Houston, TX 77006",
+      "telecom": "713-555-0198",
+      "address": "4870 Montrose Blvd, Houston, TX 77006",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2018-06-09",
+      "period_start": "2016-06-11",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Glenn Sturgis, MD, FACC",
-      "formatted_npi": "2357184069",
+      "formatted_npi": "2037459811",
       "managingOrganization": "Houston Methodist Hospital",
-      "address": "6565 Fannin St, Houston, TX 77030",
-      "phone": "713-555-0148"
+      "address": "Houston Methodist DeBakey Heart & Vascular Center, 6565 Fannin St, Houston, TX 77030",
+      "phone": "713-555-2840"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "J1113",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
       "member_id": "MBR-336557",
       "policy_number": "POL-2026-2470",
-      "effective_date": "2026-01-01",
+      "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$40",
+      "copay_amount": "$35",
       "deductible_amount": "$750"
     },
-    "expected_procedure_date": "2026-04-22",
+    "expected_procedure_date": "2026-05-06",
     "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -2282,20 +2282,23 @@
     },
     "pa_request": {
       "requesting_provider": "Dr. Glenn Sturgis, MD, FACC",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient has recurrent exertional chest discomfort and dyspnea with cardiovascular risk factors and an abnormal resting SPECT that was nondiagnostic without a stress component.",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Patient has recurrent exertional precordial chest pressure with intermittent palpitations and dyspnea in the setting of hypertension and hyperlipidemia, with abnormal rest-only SPECT suggesting possible ischemia. The requested stress/rest SPECT MPI (CPT 78452) is needed to quantify inducible ischemia and guide risk stratification and medical therapy planning when prior ECG or stress testing is not available in the record. Pharmacologic stress is planned in a monitored setting to complete the functional assessment recommended after the abnormal resting study.",
       "supporting_diagnoses": [
-        "R07.89 - Other chest pain",
+        "R07.2 - Precordial pain",
+        "R00.2 - Palpitations",
         "R06.02 - Shortness of breath",
         "I10 - Essential (primary) hypertension",
         "E78.5 - Hyperlipidemia, unspecified",
-        "R00.2 - Palpitations",
-        "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+        "R93.1 - Abnormal findings on diagnostic imaging of heart and coronary circulation",
+        "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system",
+        "F41.1 - Generalized anxiety disorder"
       ],
-      "previous_treatments": "Conservative management with beta-blocker therapy and lifestyle modifications; ongoing aspirin and statin therapy.",
-      "expected_outcome": "Objective confirmation and quantification of myocardial ischemia risk to guide medical therapy adjustments and next diagnostic steps."
+      "previous_treatments": "Medical therapy with metoprolol for blood pressure/symptom modulation, atorvastatin for hyperlipidemia, and daily aspirin for cardiovascular prevention; lifestyle modifications. Past symptom-directed trials included acetaminophen for suspected chest wall discomfort and famotidine for possible reflux contribution.",
+      "expected_outcome": "Quantification of inducible ischemia/perfusion deficits to guide cardiac risk stratification and inform subsequent management decisions.",
+      "units_requested": "1"
     },
-    "bio_narrative": "Jonah Simms is a 35-year-old male living in Houston, Texas, who has been followed for cardiovascular risk reduction in the setting of essential hypertension and hyperlipidemia. He has been consistent with clinic follow-ups and takes metoprolol (Lopressor) and atorvastatin (Lipitor) daily, along with low-dose aspirin for cardiovascular prevention. He works a predominantly desk-based job and has maintained regular exercise (walking and light resistance training) but has noticed that his exertional tolerance fluctuates when chest symptoms occur. Over the last year, Jonah has experienced intermittent substernal chest pressure and tightness that is most notable with exertion such as climbing stairs or brisk walking and sometimes during heightened anxiety. Episodes typically last several minutes and improve with rest, and he also reports dyspnea on exertion and intermittent palpitations during these events. Because symptoms persisted despite medication adherence and lifestyle modifications, he was evaluated by cardiology. A resting-only SPECT study was completed on 2026-02-20 and showed an inferior to inferolateral perfusion defect that raised concern for ischemia versus attenuation artifact; the study explicitly recommended stress imaging for diagnostic completion. A CMP obtained on 2026-03-01 demonstrated normal electrolytes, renal function, and liver enzymes, supporting readiness for monitored pharmacologic stress testing. Jonah\u2019s family history is notable for ischemic heart disease in first-degree relatives, which increases his overall risk profile. Socially, he does not smoke, limits alcohol to social settings, and is motivated to follow dietary guidance, including reduced saturated fats and mindful sodium intake. He receives monthly medication management for generalized anxiety disorder, which he reports helps with symptom coping, but his exertional chest symptoms continue and require objective cardiac evaluation. Given ongoing chest pain and shortness of breath with exertion, cardiovascular risk factors, and a prior resting perfusion abnormality that cannot be fully interpreted without a stress component, cardiology has requested a stress/rest myocardial perfusion SPECT study (CPT 78452). The goal is to quantify inducible ischemia and support informed decisions regarding ongoing medical therapy and any additional cardiac diagnostic evaluation.",
+    "bio_narrative": "Jonah Simms is a 35-year-old male living in Houston, Texas, who works in a mostly sedentary office role and has been actively trying to improve his cardiovascular health through diet and consistent exercise. He has a history of essential hypertension (I10) and hyperlipidemia (E78.5), managed with metoprolol and atorvastatin, and he takes daily aspirin for cardiovascular prevention. He does not smoke, drinks alcohol only socially, and reports a long-standing tendency toward anxiety (F41.1), for which he intermittently uses hydroxyzine and attends monthly supportive physical therapy sessions focused on anxiety-related somatic tension and sleep hygiene. Over the last several months, Jonah developed recurrent episodes of exertional precordial chest pressure (R07.2), sometimes accompanied by palpitations (R00.2) and mild shortness of breath (R06.02). The episodes occur predictably with increased activity such as climbing stairs or brisk walking and typically improve after several minutes of rest. He initially explored non-cardiac explanations with his primary care clinician, including a brief past trial of acetaminophen for possible chest wall discomfort and famotidine for reflux contribution; the exertional pattern persisted, and he was referred to cardiology. Family history is notable for premature coronary artery disease in a first-degree relative (Z82.49), which increased concern that the symptoms could reflect an ischemic process rather than anxiety alone. At his cardiology consultation on 2026-01-15 with Dr. Glenn Sturgis, Jonah\u2019s symptoms were reviewed in detail, and an ischemic evaluation plan was set in motion. A resting SPECT myocardial perfusion study was completed on 2026-02-20 (completed procedure) and demonstrated an inferior/inferolateral perfusion abnormality with limited ability to distinguish artifact from ischemia without stress imaging, prompting the recommendation to complete a full stress/rest myocardial perfusion assessment. In early March, a CMP (2026-03-01) showed stable renal and hepatic function suitable for nuclear imaging preparation, and additional baseline testing (CBC, lipid panel, thyroid studies, chest X-ray, and echocardiogram) was obtained to document physiologic status and rule out alternative contributors while preparing for the requested test. Jonah continues to report exertional chest pressure and intermittent racing heart sensations despite adherence to prescribed medical therapy and lifestyle measures.",
     "medications": [
       {
         "brand": "Lopressor",
@@ -2337,8 +2340,8 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Priya Nandakumar, MD",
         "status": "past",
-        "start_date": "2024-11-05",
-        "end_date": "2024-12-05",
+        "start_date": "2025-12-05",
+        "end_date": "2026-01-05",
         "reason": "Intermittent musculoskeletal chest wall discomfort during initial symptom evaluation"
       },
       {
@@ -2348,7 +2351,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Sandra West, MD",
         "status": "ongoing",
-        "start_date": "2025-08-10",
+        "start_date": "2025-09-01",
         "end_date": "ongoing",
         "reason": "Anxiety-related somatic symptoms and situational insomnia"
       },
@@ -2359,8 +2362,8 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Priya Nandakumar, MD",
         "status": "past",
-        "start_date": "2025-01-12",
-        "end_date": "2025-03-12",
+        "start_date": "2025-12-10",
+        "end_date": "2026-01-10",
         "reason": "Trial for possible reflux contribution to chest discomfort"
       }
     ],
@@ -2409,21 +2412,21 @@
     ],
     "therapies": [
       {
-        "therapy_type": "Physical Therapy",
-        "cpt_code": "90863",
-        "cpt_description": "Pharmacologic management, including prescription and review of medication, when performed with psychotherapy services",
+        "therapy_type": "Physical",
+        "cpt_code": "97140",
+        "cpt_description": "Manual therapy techniques (e.g., mobilization/manipulation, manual lymphatic drainage, manual traction), 1 or more regions, each 15 minutes",
         "icd10_codes": [
           "F41.1 - Generalized anxiety disorder"
         ],
         "provider": "Dr. Sandra West, MD",
-        "provider_npi": "1972638450",
+        "provider_npi": "2540917732",
         "facility": "Houston Behavioral Health Center",
         "start_date": "2025-08-10",
         "end_date": "ongoing",
         "frequency": "Monthly",
         "status": "Active",
         "reason": "Management of anxiety symptoms",
-        "notes": "Patient reports moderate improvement in anxiety levels with current regimen; anxiety acknowledged as symptom amplifier while ongoing cardiology workup continues."
+        "notes": "Patient reports moderate improvement in anxiety levels with current regimen."
       }
     ],
     "behavioral_notes": "Jonah is very diligent with his medication adherence and actively engages in lifestyle modifications as advised by his healthcare provider. He limits his alcohol intake to social occasions and abstains from smoking. His regular exercise regimen and balanced diet reflect a commitment to maintaining his health which, combined with his mental health history of anxiety, highlight a strong awareness of his condition.",
@@ -2431,14 +2434,58 @@
       {
         "encounter_date": "2025-08-10",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Routine follow-up.",
+        "purpose_of_visit": "Here for routine blood pressure and cholesterol follow-up.",
         "provider": "Dr. Priya Nandakumar, MD",
-        "provider_npi": "1427085391",
+        "provider_npi": "1891046621",
         "facility": "Houston Methodist Primary Care Group - Downtown",
         "vital_signs": {
           "recorded_date": "2025-08-10",
-          "blood_pressure": "132/84 mmHg",
+          "blood_pressure": "132/82 mmHg",
           "heart_rate": "74 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "26.3 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I'm here for my usual blood pressure and cholesterol check.",
+        "doctor_note": "HPI: 35-year-old male with known hypertension and hyperlipidemia presents for routine follow-up. He reports good adherence to metoprolol and atorvastatin, and he has been working on diet (reduced fried foods) and walking several days per week. Denies current chest pain at rest, dizziness, or syncope. He does note occasional stress-related sleep disruption.\n\nReview of Systems: Negative for fever, cough, orthopnea, edema, or exertional syncope. Cardiovascular: denies chest pain today, denies sustained palpitations. GI: no persistent reflux symptoms.\n\nPhysical Exam: Well appearing. Heart regular rate/rhythm without murmurs. Lungs clear bilaterally. No lower extremity edema.\n\nAssessment: (1) Essential hypertension (I10) controlled on current regimen. (2) Hyperlipidemia (E78.5) on statin therapy. (3) Anxiety symptoms (F41.1) intermittently affecting sleep.\n\nPlan: Continue metoprolol and atorvastatin. Reinforce DASH-style diet and exercise. Discussed sleep hygiene and stress management; patient considering therapy support. Follow up in 6 months or sooner if symptoms develop.",
+        "observations": [
+          "BP controlled and stable on metoprolol.",
+          "No chest pain or dyspnea reported at this visit.",
+          "Lifestyle modification efforts ongoing."
+        ],
+        "procedures_performed": [
+          "CPT 99213 - Office or other outpatient visit for the evaluation and management of an established patient, level 3"
+        ],
+        "diagnoses": [
+          "I10 - Essential (primary) hypertension",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "F41.1 - Generalized anxiety disorder"
+        ],
+        "medications_prescribed": [
+          "Continue Lopressor (Metoprolol 50mg) 1 tablet BID",
+          "Continue Lipitor (Atorvastatin 20mg) 1 tablet daily"
+        ],
+        "care_team": [
+          "Dr. Priya Nandakumar, MD",
+          "Dr. Glenn Sturgis, MD, FACC (cardiology - consulting, as needed)"
+        ],
+        "progress_notes": "Chronic conditions stable; patient engaged in diet/exercise changes. No cardiopulmonary symptoms requiring additional workup at this time.",
+        "follow_up_instructions": "Return in 6 months for routine monitoring; seek care sooner for new chest pain, exertional symptoms, or significant palpitations."
+      },
+      {
+        "encounter_date": "2026-01-15",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "I keep getting chest pressure when I exert myself.",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "provider_npi": "2037459811",
+        "facility": "Houston Methodist Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-01-15",
+          "blood_pressure": "138/86 mmHg",
+          "heart_rate": "82 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "26.5 kg/m\u00b2",
@@ -2446,186 +2493,152 @@
           "temperature": "98.4\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "Here for routine blood pressure and cholesterol follow-up.",
-        "doctor_note": "HPI: Patient presents for routine follow-up for hypertension and hyperlipidemia. Reports good adherence to metoprolol and atorvastatin, and continues aspirin daily for cardiovascular prevention per cardiology. Denies current chest pain at rest but notes occasional brief chest tightness with heavy exertion that resolves with rest.\n\nReview of Systems: Negative for syncope, leg swelling, or persistent shortness of breath. Occasional palpitations during anxiety episodes. No fever, cough, or GI complaints today.\n\nPhysical Exam: Well-appearing male, no acute distress. Cardiovascular: regular rate and rhythm; no murmurs. Lungs clear. No peripheral edema.\n\nAssessment: Essential hypertension and hyperlipidemia; intermittent exertional chest tightness discussed with plan for cardiology follow-up if progression.\n\nPlan: Continue current regimen, reinforce diet/exercise, provide return precautions for chest pain that is prolonged, occurs at rest, or associated with dyspnea or diaphoresis. Follow up in 6 months or sooner if symptoms change.",
-        "observations": [
-          "Medication adherence reported as excellent",
-          "No edema; lungs clear",
-          "Lifestyle modifications ongoing"
-        ],
-        "procedures_performed": [
-          "CPT 99213 - Office or other outpatient visit for the evaluation and management of an established patient, low complexity"
-        ],
-        "diagnoses": [
-          "I10 - Essential (primary) hypertension",
-          "E78.5 - Hyperlipidemia, unspecified",
-          "R00.2 - Palpitations"
-        ],
-        "medications_prescribed": [
-          "Continue Lopressor (metoprolol) 50 mg BID",
-          "Continue Lipitor (atorvastatin) 20 mg daily",
-          "Continue aspirin 81 mg daily"
-        ],
-        "care_team": [
-          "Dr. Priya Nandakumar, MD",
-          "Dr. Glenn Sturgis, MD, FACC"
-        ],
-        "progress_notes": "BP and lipid management stable; intermittent exertional symptoms noted but not escalating at this time.",
-        "follow_up_instructions": "Continue medications and lifestyle changes; seek urgent evaluation for new or worsening chest pain, chest pain at rest, syncope, or shortness of breath."
-      },
-      {
-        "encounter_date": "2026-01-15",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Chest pain.",
-        "provider": "Dr. Glenn Sturgis, MD, FACC",
-        "provider_npi": "2357184069",
-        "facility": "Houston Methodist Hospital - Cardiology Clinic",
-        "vital_signs": {
-          "recorded_date": "2026-01-15",
-          "blood_pressure": "146/92 mmHg",
-          "heart_rate": "82 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "26.6 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.2\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
         "chief_complaint": "I keep getting chest pressure when I exert myself.",
-        "doctor_note": "HPI: 35-year-old male with HTN and HLD presents for cardiology evaluation of recurrent chest pressure. Symptoms occur with exertion (stairs/brisk walking) and occasionally with stress; last 5\u201310 minutes and resolve with rest. Associated with dyspnea on exertion; intermittent palpitations reported. No syncope.\n\nReview of Systems: Positive for exertional chest pressure and shortness of breath. Negative for leg swelling, orthopnea, fever, cough.\n\nPhysical Exam: No acute distress. Cardiovascular exam with regular rhythm; no murmurs. Lungs clear to auscultation. Extremities without edema.\n\nAssessment: Chest pain and dyspnea on exertion in setting of HTN/HLD and family history; needs objective ischemia assessment.\n\nPlan: Continue metoprolol, aspirin, statin; order resting SPECT due to inability to complete exercise testing at that time; counsel on emergency precautions and activity pacing; follow up after testing.",
+        "doctor_note": "HPI: Patient reports months of episodic precordial chest pressure with exertion (stairs/brisk walking) resolving with rest in 5\u201310 minutes, sometimes with palpitations and mild shortness of breath. Denies syncope. He is adherent to metoprolol, atorvastatin, and aspirin. He acknowledges baseline anxiety but notes exertion is the consistent trigger.\n\nReview of Systems: Cardiovascular positive for exertional chest pressure and intermittent palpitations; negative for edema and syncope. Respiratory positive for mild exertional dyspnea; negative for wheeze. GI negative for persistent reflux.\n\nPhysical Exam: Regular rhythm, no murmur; lungs clear; no edema; chest wall discomfort not clearly reproducible.\n\nAssessment: Exertional precordial pain (R07.2) with palpitations (R00.2) in patient with HTN (I10), HLD (E78.5), and family history (Z82.49). Anxiety (F41.1) may contribute but does not explain exertional pattern.\n\nPlan: Pursue functional ischemia evaluation with myocardial perfusion SPECT MPI pathway. Continue current medications and risk factor modification. Provide ER precautions for prolonged or rest symptoms.",
         "observations": [
-          "Risk factors reviewed including family history",
-          "Symptoms reproducible with exertion",
-          "No signs of heart failure on exam"
+          "Exertional symptom pattern documented.",
+          "Family history contributes to cardiovascular risk profile.",
+          "No prior ECG or stress test results available in chart at consult."
         ],
         "procedures_performed": [
-          "CPT 99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate complexity"
+          "CPT 99204 - Office or other outpatient visit for the evaluation and management of a new patient, level 4"
         ],
         "diagnoses": [
-          "R07.89 - Other chest pain",
+          "R07.2 - Precordial pain",
+          "R00.2 - Palpitations",
           "R06.02 - Shortness of breath",
           "I10 - Essential (primary) hypertension",
           "E78.5 - Hyperlipidemia, unspecified",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system",
+          "F41.1 - Generalized anxiety disorder"
         ],
         "medications_prescribed": [
-          "Continue Lopressor (metoprolol) 50 mg BID",
-          "Continue Lipitor (atorvastatin) 20 mg daily",
-          "Continue aspirin 81 mg daily"
+          "Continue Lopressor (Metoprolol 50mg) 1 tablet BID",
+          "Continue Lipitor (Atorvastatin 20mg) 1 tablet daily",
+          "Continue Aspirin 81mg daily"
         ],
         "care_team": [
-          "Dr. Glenn Sturgis, MD, FACC"
+          "Dr. Glenn Sturgis, MD, FACC",
+          "Houston Methodist Nuclear Cardiology Scheduling Team"
         ],
-        "progress_notes": "Initial cardiology workup initiated; planned perfusion imaging due to persistent exertional symptoms.",
-        "follow_up_instructions": "Complete ordered imaging; return in 3\u20134 weeks; go to ER for chest pain >10 minutes, rest pain, syncope, or severe dyspnea."
+        "progress_notes": "New cardiology evaluation initiated due to exertional symptoms; diagnostic pathway started with plan to obtain perfusion imaging data.",
+        "follow_up_instructions": "Follow up in 4\u20136 weeks; seek emergency care for chest pain at rest, symptoms lasting >15 minutes, syncope, or severe shortness of breath."
       },
       {
         "encounter_date": "2026-03-07",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Cleared for upcoming imaging.",
-        "provider": "Aisha Patel, PA-C",
-        "provider_npi": "1649832750",
-        "facility": "Houston Methodist Hospital - Nuclear Cardiology Pre-Procedure Clinic",
+        "purpose_of_visit": "Pre-procedure visit for my heart imaging.",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "provider_npi": "2037459811",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-07",
-          "blood_pressure": "142/88 mmHg",
-          "heart_rate": "79 bpm",
+          "blood_pressure": "134/84 mmHg",
+          "heart_rate": "76 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "26.5 kg/m\u00b2",
-          "oxygen_saturation": "99%",
-          "temperature": "98.3\u00b0F",
+          "oxygen_saturation": "98%",
+          "temperature": "98.2\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "Pre-procedure visit for my heart imaging.",
-        "doctor_note": "HPI: Patient presents for pre-procedure evaluation prior to nuclear cardiology testing. Reports continued intermittent exertional chest pressure and dyspnea on exertion. Adherent to metoprolol, atorvastatin, and aspirin. Resting SPECT completed 02/20/2026 showed suspected perfusion defect with recommendation for stress imaging.\n\nReview of Systems: Positive for exertional dyspnea. Negative for fever, cough, edema, syncope.\n\nPhysical Exam: Well-appearing. Cardiovascular and respiratory exams without acute findings at rest. No edema.\n\nAssessment: Ongoing chest symptoms with risk factors; preparation for further perfusion evaluation.\n\nPlan: Review pre-test instructions (avoid caffeine, medication guidance), confirm allergy history, review recent CMP, proceed with scheduled nuclear cardiology study under monitored conditions.",
+        "doctor_note": "HPI: Patient presents for pre-procedure evaluation prior to planned myocardial perfusion imaging. He continues to have exertional precordial pressure several times weekly with brief palpitations and mild dyspnea, improving with rest. He is adherent to metoprolol, atorvastatin, and aspirin. Past trials of acetaminophen and famotidine were used earlier without meaningful impact on exertional symptom pattern. No prior ECG or formal stress test results are available in the record.\n\nReview of Systems: Cardiovascular positive for exertional chest pressure and palpitations; denies syncope or edema. Respiratory positive for mild exertional dyspnea; denies cough. Psych: anxiety present; uses hydroxyzine PRN.\n\nPhysical Exam: Well appearing; heart regular, no murmurs; lungs clear; no edema.\n\nAssessment: Ongoing exertional chest pressure (R07.2) with palpitations (R00.2) and dyspnea (R06.02) in patient with HTN (I10), HLD (E78.5), and abnormal prior cardiac imaging finding (R93.1).\n\nPlan: Proceed with scheduling for stress/rest SPECT MPI (CPT 78452) with pharmacologic stress protocol anticipated. Reviewed pre-test instructions including caffeine avoidance and arrival logistics. Reviewed CMP; acceptable for planning.",
         "observations": [
-          "Reviewed caffeine restriction and medication instructions",
-          "No respiratory contraindications reported",
-          "CMP reviewed as normal"
+          "Persistent exertional symptoms documented.",
+          "Medication reconciliation completed.",
+          "Active monthly therapy for anxiety noted in care coordination."
         ],
         "procedures_performed": [
-          "CPT 99213 - Office or other outpatient visit for the evaluation and management of an established patient, low complexity"
+          "CPT 99214 - Office or other outpatient visit for the evaluation and management of an established patient, level 4"
         ],
         "diagnoses": [
-          "R07.89 - Other chest pain",
+          "R07.2 - Precordial pain",
+          "R00.2 - Palpitations",
           "R06.02 - Shortness of breath",
           "I10 - Essential (primary) hypertension",
           "E78.5 - Hyperlipidemia, unspecified",
-          "R00.2 - Palpitations"
+          "R93.1 - Abnormal findings on diagnostic imaging of heart and coronary circulation",
+          "F41.1 - Generalized anxiety disorder"
         ],
         "medications_prescribed": [
-          "No new medications; continue current regimen"
+          "Continue Lopressor (Metoprolol 50mg) 1 tablet BID",
+          "Continue Lipitor (Atorvastatin 20mg) 1 tablet daily",
+          "Continue Aspirin 81mg daily",
+          "Continue Atarax (Hydroxyzine 25mg) PRN as previously prescribed"
         ],
         "care_team": [
-          "Aisha Patel, PA-C",
-          "Dr. Glenn Sturgis, MD, FACC"
+          "Dr. Glenn Sturgis, MD, FACC",
+          "Houston Methodist Nuclear Cardiology Technologists",
+          "Dr. Sandra West, MD (therapy provider - coordinate scheduling)"
         ],
-        "progress_notes": "Pre-procedure readiness confirmed; patient continues to report exertional symptoms prompting completion of perfusion workup.",
-        "follow_up_instructions": "Follow nuclear cardiology instructions; seek urgent care for prolonged or rest chest pain, syncope, or worsening shortness of breath."
+        "progress_notes": "Pre-procedure planning completed; patient remains symptomatic. Baseline labs reviewed; coordinating additional baseline testing to support safe outpatient stress imaging.",
+        "follow_up_instructions": "Follow nuclear cardiology prep instructions; avoid caffeine 24 hours before test; seek urgent care for worsening symptoms or chest pain at rest."
       },
       {
         "encounter_date": "2026-03-18",
         "encounter_type": "Follow-up",
-        "purpose_of_visit": "Cardiology follow-up to document ongoing symptoms and finalize testing plan for requested stress/rest SPECT MPI.",
+        "purpose_of_visit": "Reassessment of persistent exertional chest pressure and palpitations; review interim testing in preparation for requested SPECT MPI.",
         "provider": "Dr. Glenn Sturgis, MD, FACC",
-        "provider_npi": "2357184069",
-        "facility": "Houston Methodist Hospital - Cardiology Clinic",
+        "provider_npi": "2037459811",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-18",
-          "blood_pressure": "148/90 mmHg",
-          "heart_rate": "84 bpm",
+          "blood_pressure": "136/88 mmHg",
+          "heart_rate": "80 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "26.7 kg/m\u00b2",
-          "oxygen_saturation": "98%",
+          "bmi": "26.6 kg/m\u00b2",
+          "oxygen_saturation": "97%",
           "temperature": "98.5\u00b0F",
-          "respiratory_rate": "18 breaths/min"
+          "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "Still having chest pressure when I exert myself; my heart feels like it races sometimes.",
-        "doctor_note": "HPI: Patient returns after resting-only SPECT on 02/20/2026 showing suspected inferior/inferolateral perfusion defect; recommendation was to complete stress imaging. Patient continues to have exertional chest pressure 2\u20133 times weekly with shortness of breath, relieved by rest. Reports intermittent palpitations and has not had an ECG captured during symptoms; no formal treadmill stress test results available.\n\nReview of Systems: Positive for exertional chest pain, dyspnea, and palpitations. Negative for syncope and edema.\n\nPhysical Exam: No acute distress. Heart regular rhythm on exam; lungs clear; no edema.\n\nAssessment: Persistent exertional chest pain and dyspnea with risk factors and abnormal resting perfusion study requiring completion with stress imaging.\n\nPlan: Request pharmacologic stress/rest SPECT MPI (CPT 78452) to quantify inducible ischemia and guide management; continue current medications; reinforce return precautions; coordinate scheduling at Houston Methodist Nuclear Cardiology.",
+        "doctor_note": "HPI: Patient returns with continued exertional precordial chest pressure occurring 2\u20133 times weekly with palpitations and mild dyspnea, consistently triggered by activity and improving with rest. He remains adherent to metoprolol, atorvastatin, and daily aspirin. He continues monthly therapy for anxiety and uses hydroxyzine PRN for situational insomnia. No prior ECG or formal stress test report is available in the record.\n\nReview of Systems: Cardiovascular positive for exertional chest pressure and intermittent palpitations; denies syncope. Respiratory positive for exertional dyspnea; denies cough. GI negative for ongoing reflux symptoms.\n\nPhysical Exam: No acute distress; heart regular rhythm without murmurs; lungs clear; no edema.\n\nAssessment: Persistent exertional chest pressure (R07.2) with palpitations (R00.2) and dyspnea (R06.02) in setting of risk factors (I10, E78.5, Z82.49) and abnormal prior rest-only imaging (R93.1).\n\nPlan: Proceed with PA submission for myocardial perfusion SPECT MPI (CPT 78452) to quantify inducible ischemia. Continue current cardiovascular medications and risk-factor modification; reinforce activity moderation until completion of diagnostic evaluation. Review interim baseline testing results and incorporate into nuclear cardiology planning.",
         "observations": [
-          "Symptoms persist despite medical therapy and lifestyle modifications",
-          "Prior resting perfusion study abnormal/nondiagnostic without stress component",
-          "No ECG or prior stress test results available in current record"
+          "Symptoms persist despite adherence to medications.",
+          "Interim baseline tests support proceeding with outpatient diagnostic pathway.",
+          "Family history and risk profile reviewed."
         ],
         "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity"
+          "CPT 99214 - Office or other outpatient visit for the evaluation and management of an established patient, level 4"
         ],
         "diagnoses": [
-          "R07.89 - Other chest pain",
-          "R06.02 - Shortness of breath",
+          "R07.2 - Precordial pain",
           "R00.2 - Palpitations",
+          "R06.02 - Shortness of breath",
           "I10 - Essential (primary) hypertension",
           "E78.5 - Hyperlipidemia, unspecified",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "R93.1 - Abnormal findings on diagnostic imaging of heart and coronary circulation",
+          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system",
+          "F41.1 - Generalized anxiety disorder"
         ],
         "medications_prescribed": [
-          "Continue Lopressor (metoprolol) 50 mg BID",
-          "Continue Lipitor (atorvastatin) 20 mg daily",
-          "Continue aspirin 81 mg daily"
+          "No new medications prescribed; continue current regimen per cardiology"
         ],
         "care_team": [
-          "Dr. Glenn Sturgis, MD, FACC"
+          "Dr. Glenn Sturgis, MD, FACC",
+          "Prior Authorization Team - Houston Methodist",
+          "Houston Methodist Nuclear Cardiology Department"
         ],
-        "progress_notes": "Ongoing exertional symptoms with prior resting study abnormal; documentation updated to support completion of stress/rest MPI using pharmacologic stress approach given lack of available ECG/stress testing results.",
-        "follow_up_instructions": "Schedule MPI for 04/22/2026; avoid caffeine for 24 hours prior; discuss beta-blocker instructions with clinic; go to ER for chest pain at rest or lasting >10 minutes, syncope, or severe dyspnea."
+        "progress_notes": "Ongoing exertional symptoms and prior abnormal rest-only perfusion findings continue to drive need for complete functional ischemia evaluation. PA submission prepared with updated supporting documentation.",
+        "follow_up_instructions": "Await scheduling once authorized; continue medications as directed; ER precautions for rest pain, prolonged symptoms, or syncope."
       }
     ],
     "images": [
       {
-        "type": "SPECT Myocardial Perfusion Imaging",
-        "date": "2026-03-07",
-        "provider": "Aisha Patel, PA-C",
-        "facility": "Houston Methodist Hospital - Nuclear Cardiology Pre-Procedure Clinic",
-        "findings": "Pre-procedure documentation references prior resting-only SPECT abnormality and ongoing exertional symptoms; plan for stress/rest SPECT MPI (CPT 78452) under monitored conditions."
-      },
-      {
         "type": "Resting SPECT Myocardial Perfusion Imaging",
         "date": "2026-02-20",
         "provider": "Dr. Glenn Sturgis, MD, FACC",
-        "facility": "Houston Methodist Hospital - Nuclear Cardiology",
-        "findings": "Resting images show small-to-moderate inferior/inferolateral perfusion defect suspicious for ischemia versus attenuation artifact; preserved LV systolic function at rest (LVEF ~58%); stress imaging recommended for definitive assessment."
+        "facility": "Houston Methodist Hospital",
+        "findings": "Rest-only myocardial perfusion SPECT demonstrated an inferior/inferolateral perfusion abnormality suspicious for ischemia versus attenuation artifact. Gated images showed preserved LV systolic function (estimated LVEF ~56%) without clear resting regional wall motion abnormality. Stress imaging was recommended to complete evaluation and quantify inducible ischemia."
+      },
+      {
+        "type": "SPECT Myocardial Perfusion Imaging",
+        "date": "2026-03-07",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "facility": "Houston Methodist Hospital",
+        "findings": "Pre-procedure documentation notes planned completion of stress/rest SPECT myocardial perfusion imaging; patient remained symptomatic with exertional chest pressure and palpitations. Prior rest-only perfusion abnormality and stable metabolic profile were reviewed in preparation for the requested full MPI study (CPT 78452)."
       }
     ],
     "reports": [
@@ -2633,50 +2646,72 @@
         "type": "Comprehensive Metabolic Panel",
         "date": "2026-03-01",
         "provider": "Dr. Glenn Sturgis, MD, FACC",
-        "results": "Electrolytes, renal function, and liver enzymes within reference ranges (Cr 0.93 mg/dL, eGFR 110 mL/min/1.73m2, AST 22 U/L, ALT 26 U/L).",
-        "notes": "Obtained as part of pre-procedure workup prior to requested stress/rest SPECT MPI (CPT 78452) to support safe pharmacologic stress planning."
+        "results": "Electrolytes and kidney/liver function within expected limits (Cr 0.96 mg/dL, eGFR 102 mL/min/1.73m\u00b2, AST 21 U/L, ALT 26 U/L).",
+        "notes": "Obtained as part of preparation for requested stress/rest SPECT MPI (CPT 78452); no abnormalities that would preclude outpatient nuclear imaging preparation."
+      },
+      {
+        "type": "CBC",
+        "date": "2026-03-13",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "results": "Hgb 14.7 g/dL, WBC 6.8, platelets 248; indices within reference range.",
+        "notes": "Supports outpatient diagnostic pathway; anemia unlikely contributor to dyspnea while preparing for SPECT MPI."
+      },
+      {
+        "type": "Lipid Panel",
+        "date": "2026-03-13",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "results": "TC 172, LDL 96, HDL 43, TG 164 mg/dL.",
+        "notes": "Residual dyslipidemia risk; used for risk stratification alongside planned perfusion imaging."
+      },
+      {
+        "type": "TSH",
+        "date": "2026-03-13",
+        "provider": "Dr. Glenn Sturgis, MD, FACC",
+        "results": "TSH 1.72 \u00b5IU/mL within reference range.",
+        "notes": "Thyroid dysfunction less likely contributor to palpitations; symptoms continue to warrant perfusion evaluation with requested SPECT MPI."
       }
     ],
     "procedures": [
       {
         "name": "Resting SPECT",
         "date": "2026-02-20",
-        "provider": "Martha L. Nguyen, MD",
-        "facility": "Houston Methodist Hospital - Nuclear Cardiology",
-        "reason": "Workup of exertional chest pain and dyspnea in patient with hypertension/hyperlipidemia and family history; resting-only study performed due to inability to complete exercise testing at the time.",
-        "notes": "Abnormal resting perfusion defect; recommended completion with stress imaging."
+        "provider": "Houston Methodist Nuclear Cardiology Team",
+        "facility": "Houston Methodist Hospital",
+        "reason": "Evaluation of exertional precordial pain and palpitations with cardiovascular risk factors as part of ischemic workup prior to requested complete stress/rest SPECT MPI (CPT 78452).",
+        "notes": "Rest-only study abnormal with inferior/inferolateral perfusion defect; stress imaging recommended for completion."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "1-2 drinks on weekends",
+      "alcohol_frequency": "1\u20132 drinks on weekends, not every weekend",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-03-18",
-      "last_visit_reason": "Cardiology follow-up for exertional chest pain and review of prior resting SPECT; planning for requested stress/rest SPECT MPI.",
+      "last_visit_reason": "Cardiology follow-up for persistent exertional chest pressure and palpitations; PA submission planning for requested SPECT MPI.",
       "missed_appointment": false,
       "missed_appointment_reason": null,
-      "early_visit_reason": "Requested earlier follow-up due to persistent exertional symptoms and need to document testing plan prior to scheduling MPI.",
-      "mental_health_history": "Generalized anxiety disorder treated with monthly medication management since 2025.",
-      "mental_health_current": "GAD-7 score 8 (mild to moderate anxiety) on 2026-03-18; denies suicidal ideation.",
-      "exercise_habits": "Walks 30 minutes 4-5x/week; avoids high-intensity exertion due to chest symptoms; light resistance training 2x/week.",
-      "diet_notes": "Balanced diet with reduced saturated fats and sodium; limits fast food; increased vegetables and lean protein.",
-      "family_history_relevant": "Father with coronary artery disease and myocardial infarction in early 50s; maternal grandfather with coronary artery disease."
+      "early_visit_reason": null,
+      "mental_health_history": "Generalized anxiety disorder managed with coping strategies and therapy support; no psychiatric hospitalizations reported.",
+      "mental_health_current": "GAD-7 score 9 (mild-moderate anxiety) on 2026-03-07; uses hydroxyzine PRN; engaged in monthly therapy.",
+      "exercise_habits": "Walks 3\u20134x/week; currently limiting intensity due to exertional chest pressure episodes.",
+      "diet_notes": "Working on reduced sodium and lower saturated fat intake; increased vegetables/lean protein per counseling.",
+      "family_history_relevant": "Father with myocardial infarction in early 50s; maternal uncle with coronary artery disease requiring stent (Z82.49)."
     },
     "vital_signs_current": {
       "recorded_date": "2026-03-18",
-      "blood_pressure": "148/90 mmHg",
-      "heart_rate": "84 bpm",
+      "blood_pressure": "136/88 mmHg",
+      "heart_rate": "80 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "26.7 kg/m\u00b2",
-      "oxygen_saturation": "98%",
+      "bmi": "26.6 kg/m\u00b2",
+      "oxygen_saturation": "97%",
       "temperature": "98.5\u00b0F",
-      "respiratory_rate": "18 breaths/min"
+      "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "No prior urologic history. No urinary obstructive symptoms. PSA screening not previously performed; patient counseled that routine discussions typically begin later depending on risk factors."
+    "gender_specific_history": "PSA screening not yet performed due to age; no urinary obstructive symptoms, hematuria, or known urologic history. No prior prostate imaging or procedures reported.",
+    "has_fit_fobt_result": false
   },
   "271": {
     "first_name": "Sheldon",
@@ -13155,27 +13190,27 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Andromeda Black",
-      "telecom": "713-555-0144",
-      "address": "1207 W 43rd St, Houston, TX 77018",
+      "name": "Minerva Black",
+      "telecom": "713-555-0133",
+      "address": "9823 Greenwillow St, Houston, TX 77096",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2016-06-01",
+      "period_start": "2005-06-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Elena Ramirez, MD",
-      "formatted_npi": "3124567891",
+      "formatted_npi": "1679043218",
       "managingOrganization": "UT Physicians Primary Care - Houston",
-      "address": "6410 Fannin St, Suite 1100, Houston, TX 77030",
-      "phone": "713-555-1100"
+      "address": "6400 Fannin St, Suite 1400, Houston, TX 77030",
+      "phone": "713-555-0198"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-001",
+      "payer_id": "CIG-004",
       "payer_name": "UnitedHealthcare",
       "plan_name": "Medicare Advantage",
       "plan_type": "Medicare Advantage",
@@ -13183,10 +13218,10 @@
       "policy_number": "POL-2026-2788",
       "effective_date": "2026-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$35",
-      "deductible_amount": "$750"
+      "copay_amount": "$20",
+      "deductible_amount": "$0"
     },
-    "expected_procedure_date": "2026-04-22",
+    "expected_procedure_date": "2026-04-28",
     "procedure_requested": "Colonoscopy with Biopsy, Single or Multiple",
     "procedure_facility": {
       "facility_name": "Houston Methodist Hospital",
@@ -13194,22 +13229,26 @@
       "city": "Houston",
       "state": "TX",
       "zip_code": "77030",
-      "department": "Digestive Disease Center - Endoscopy"
+      "department": "Endoscopy Unit"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Priya Nair, MD, FACG",
-      "urgency_level": "Routine",
-      "clinical_justification": "New GI patient with persistent hematochezia and change in bowel habits for 6\u20138 months plus laboratory-confirmed iron deficiency anemia pattern. Colonoscopy with biopsy is requested to identify the source of chronic lower GI blood loss and evaluate for mucosal disease requiring histologic diagnosis.",
+      "requesting_provider": "Dr. Anjali Patel, MD",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "67-year-old male with persistent rectal bleeding (K62.5), change in bowel habits with constipation (R19.4, K59.00), and laboratory-confirmed iron deficiency anemia on serial testing (D50.9). Colonoscopy with biopsy (CPT 45380) is requested to evaluate for a colonic source of bleeding/anemia and to obtain tissue diagnosis if lesions are identified; comorbid hypertension (I10) and GERD (K21.9) are noted for sedation planning.",
       "supporting_diagnoses": [
         "D50.9 - Iron deficiency anemia, unspecified",
         "K62.5 - Hemorrhage of anus and rectum",
         "R19.4 - Change in bowel habit",
-        "K59.00 - Constipation, unspecified"
+        "K59.00 - Constipation, unspecified",
+        "I10 - Essential (primary) hypertension",
+        "K21.9 - Gastro-esophageal reflux disease without esophagitis",
+        "E78.5 - Hyperlipidemia, unspecified"
       ],
-      "previous_treatments": "Conservative constipation regimen (polyethylene glycol and dietary fiber), hydration, avoidance of straining; topical hemorrhoid therapy PRN; oral iron supplementation initiated after labs.",
-      "expected_outcome": "Identify etiology of bleeding/anemia and obtain tissue diagnosis if indicated to guide management and follow-up surveillance."
+      "previous_treatments": "Polyethylene glycol (MiraLAX) PRN, increased fiber/hydration; prior topical hydrocortisone rectal cream during hemorrhoidal flares; oral ferrous sulfate supplementation; avoidance of NSAIDs.",
+      "expected_outcome": "Identify and localize source of lower GI bleeding and iron deficiency anemia and obtain biopsy specimens if abnormalities are encountered to guide subsequent management.",
+      "units_requested": "1"
     },
-    "bio_narrative": "Severus Black is a 69-year-old divorced man living alone in Houston, Texas, who presents as a new gastroenterology patient for evaluation prior to a requested colonoscopy with biopsy (CPT 45380). Over the past 6\u20138 months he has experienced a gradual change in bowel habits (R19.4), describing fewer spontaneous bowel movements with intermittent episodes of loose stools after several days of constipation (K59.00). He reports a persistent sensation of incomplete evacuation and has noted intermittent bright red blood on toilet paper and streaking on stool (K62.5), initially sporadic but occurring about 1\u20132 times weekly by early 2026. He also describes increasing fatigue and reduced exercise tolerance during routine walks. He works part-time as a museum archives assistant, preferring structured routines and quiet environments. He typically prepares meals at home and has recently reduced red meat intake while trying to increase fiber and fluids. He denies illicit drug use and drinks alcohol occasionally. He is a former smoker, quitting over a decade ago. His support system includes a close family member who assists with appointments and transportation when needed. Family history is notable for colorectal cancer in a maternal uncle diagnosed in his early 60s and colon polyps in his father in later life, which heightened the patient\u2019s concern when bleeding persisted. He has not undergone prior colonoscopy or stool-based colorectal screening. In March 2026, he established care with primary care for rectal bleeding and bowel habit changes. Conservative treatment was initiated, including polyethylene glycol and dietary fiber strategies, along with topical therapy for suspected hemorrhoidal irritation. Despite these measures, symptoms continued. Laboratory testing showed an iron deficiency anemia pattern (D50.9) with low hemoglobin and low ferritin/iron saturation, raising concern for chronic gastrointestinal blood loss. He was started on oral iron supplementation. Given the persistent hematochezia, change in bowel habits, and objective anemia pattern without a prior colonoscopy, gastroenterology consultation recommended diagnostic colonoscopy with biopsy to evaluate for mucosal disease and structural lesions, and to obtain histology as needed to guide further management and follow-up planning.",
+    "bio_narrative": "Severus Black is a 67-year-old man living in Houston, Texas, who follows a structured daily routine for his chronic medications and generally prepares meals at home. He is a former smoker and currently drinks alcohol socially (about 1\u20132 drinks per week). He prefers walking for exercise and uses it to manage stress; he describes a reserved temperament with a tendency to ruminate when health concerns arise, and he previously completed a brief course of psychotherapy focused on stress management and sleep hygiene. Over the past several months, he developed intermittent constipation (K59.00) with harder stools and straining, followed by a noticeable change in bowel habits (R19.4). In early March 2026 he began seeing bright red blood when wiping and occasional streaking on stool (K62.5). He presented to his primary care physician, Dr. Elena Ramirez, on 2026-03-05 because the bleeding had become recurrent and he was concerned about the persistence of symptoms. Conservative measures were reviewed, including polyethylene glycol 3350 as needed, increased hydration, and dietary fiber. Because bleeding persisted and he also endorsed fatigue, laboratory evaluation was pursued. Objective testing supported an anemia evaluation: CBC with differential and iron studies on 2026-03-10 showed iron deficiency anemia (D50.9) with low hemoglobin, low ferritin, low transferrin saturation, and elevated TIBC. An abdominal X-ray (KUB) on 2026-03-08 demonstrated a moderate stool burden without obstruction, consistent with constipation but not explaining the anemia. He began/continued daily oral ferrous sulfate and avoided NSAIDs, using acetaminophen instead. Repeat CBC and ferritin on 2026-04-07 showed persistently low iron stores and ongoing anemia despite reported adherence to iron therapy. Given his ongoing rectal bleeding (K62.5), bowel habit change (R19.4), and objective iron deficiency anemia (D50.9) with no prior colonoscopy, he was referred to gastroenterology and evaluated on 2026-03-17. The plan is for a diagnostic colonoscopy with biopsy (CPT 45380) to evaluate for a colonic source of bleeding and anemia and to obtain tissue samples if mucosal lesions or polyps are identified. His medical history also includes essential hypertension (I10), hyperlipidemia (E78.5), and GERD (K21.9), which are stable but relevant to peri-procedural planning and sedation precautions. Family history is notable for a father with colon polyps in later adulthood and a mother with hypertension; he has close contact with a sibling who assists with transportation for appointments, including the planned endoscopy.",
     "medications": [
       {
         "brand": "MiraLAX",
@@ -13226,10 +13265,10 @@
         "brand": "Fer-In-Sol",
         "generic_name": "Ferrous sulfate 325 mg (65 mg elemental iron)",
         "dosage": "1 tablet PO daily with food",
-        "qty": "90 tablets",
+        "qty": "30 tablets",
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "current",
-        "start_date": "2026-03-12",
+        "start_date": "2026-03-10",
         "end_date": "ongoing",
         "reason": "Iron deficiency anemia (D50.9)"
       },
@@ -13240,7 +13279,7 @@
         "qty": "90 capsules",
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "ongoing",
-        "start_date": "2024-09-18",
+        "start_date": "2019-06-15",
         "end_date": "ongoing",
         "reason": "GERD (K21.9)"
       },
@@ -13251,7 +13290,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "ongoing",
-        "start_date": "2023-05-10",
+        "start_date": "2020-02-01",
         "end_date": "ongoing",
         "reason": "Hyperlipidemia (E78.5)"
       },
@@ -13262,7 +13301,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "ongoing",
-        "start_date": "2022-11-02",
+        "start_date": "2021-01-12",
         "end_date": "ongoing",
         "reason": "Essential hypertension (I10)"
       },
@@ -13274,7 +13313,7 @@
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "past",
         "start_date": "2026-03-05",
-        "end_date": "2026-03-20",
+        "end_date": "2026-03-12",
         "reason": "Symptomatic hemorrhoidal irritation associated with rectal bleeding (K62.5)"
       },
       {
@@ -13284,7 +13323,7 @@
         "qty": "60 tablets",
         "prescribed_by": "Dr. Elena Ramirez, MD",
         "status": "current",
-        "start_date": "2025-10-01",
+        "start_date": "2025-08-01",
         "end_date": "ongoing",
         "reason": "Intermittent musculoskeletal aches; avoid NSAIDs due to anemia evaluation (D50.9)"
       }
@@ -13295,14 +13334,14 @@
         "allergy_type": "Drug",
         "reaction": "Pruritic rash and hives within 24 hours",
         "severity": "Moderate",
-        "onset_date": "1978-06-01"
+        "onset_date": "1998-05-01"
       },
       {
         "allergen": "Shellfish (shrimp)",
         "allergy_type": "Food",
         "reaction": "Lip tingling and urticaria",
         "severity": "Moderate",
-        "onset_date": "1999-08-15"
+        "onset_date": "2009-07-15"
       }
     ],
     "vaccinations": [
@@ -13310,7 +13349,7 @@
         "vaccine_name": "Influenza (quadrivalent)",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-08",
-        "administered_by": "CVS Pharmacy - Houston",
+        "administered_by": "UT Physicians Primary Care - Houston",
         "dose_number": "Annual",
         "reason": "Routine Immunization"
       },
@@ -13318,7 +13357,7 @@
         "vaccine_name": "COVID-19 mRNA (Moderna)",
         "vaccine_type": "mRNA",
         "date_administered": "2024-10-02",
-        "administered_by": "H-E-B Pharmacy - Houston",
+        "administered_by": "CVS Pharmacy - Houston",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -13353,18 +13392,17 @@
         "cpt_code": "90834",
         "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
-          "R19.4 - Change in bowel habit",
-          "K21.9 - Gastro-esophageal reflux disease without esophagitis"
+          "Z63.79 - Other stressful life events affecting family and household"
         ],
         "provider": "Dr. Marisol Chen, PhD",
-        "provider_npi": "1987654321",
-        "facility": "The Menninger Clinic - Outpatient Services",
-        "start_date": "2025-06-03",
-        "end_date": "2025-12-16",
+        "provider_npi": "3124567091",
+        "facility": "Mindful Houston Behavioral Health",
+        "start_date": "2025-05-01",
+        "end_date": "2025-10-15",
         "frequency": "Biweekly",
         "status": "Completed",
-        "reason": "Stress-related insomnia and somatic anxiety impacting GI symptoms; focused on sleep hygiene and coping skills during medical evaluation.",
-        "notes": "Patient engaged consistently; practiced structured routines and relaxation exercises; no safety concerns reported."
+        "reason": "Stress management and sleep hygiene support during increased health-related worry",
+        "notes": "Patient engaged in CBT-informed coping strategies and structured sleep routine; discharged after goals met."
       }
     ],
     "behavioral_notes": "Patient reports taking chronic medications consistently and keeps a written routine for dosing; occasionally forgets PRN polyethylene glycol when busy. Diet is generally home-cooked with recent effort to increase fiber and hydration; he avoids NSAIDs and limits spicy foods due to reflux. Former smoker; drinks alcohol socially (1\u20132 drinks/week) and denies illicit drug use. Describes a reserved affect with tendency toward rumination when health concerns arise; completed short-term psychotherapy for stress management and sleep hygiene and uses walking as a coping strategy.",
@@ -13372,77 +13410,76 @@
       {
         "encounter_date": "2026-03-05",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Establish primary care and evaluate months of rectal bleeding and change in bowel habits.",
+        "purpose_of_visit": "Evaluation of intermittent constipation and new-onset bright red blood when wiping; establish plan and initiate workup.",
         "provider": "Dr. Elena Ramirez, MD",
-        "provider_npi": "3124567891",
+        "provider_npi": "1679043218",
         "facility": "UT Physicians Primary Care - Houston",
         "vital_signs": {
           "recorded_date": "2026-03-05",
           "blood_pressure": "138/82 mmHg",
-          "heart_rate": "76 bpm",
+          "heart_rate": "78 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "25.2 kg/m\u00b2",
+          "bmi": "25.3 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.1\u00b0F",
+          "temperature": "98.4\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I've been constipated on and off and seeing bright red blood when I wipe.",
-        "doctor_note": "HPI: 69-year-old male new to clinic with 6\u20138 months of altered bowel habits characterized by constipation (BM every 2\u20133 days) alternating with looser stools after straining. Reports intermittent bright red blood on toilet paper and streaks on stool, occurring about weekly, without melena. Endorses fatigue and decreased stamina on walks. Denies unintentional weight loss, fevers, nocturnal diarrhea, or known prior GI bleeding. No prior colonoscopy or stool-based colorectal screening.\n\nReview of Systems: GI positive for constipation, intermittent hematochezia, bloating; negative for persistent abdominal pain, vomiting. Constitutional positive for fatigue; negative for fever/chills. Cardiopulmonary negative for chest pain, dyspnea. GU negative for hematuria.\n\nPhysical Exam: Well-appearing, no acute distress. Abdomen soft, non-distended, mild LLQ tenderness to deep palpation without rebound/guarding. Rectal exam: small external hemorrhoid; no fissure appreciated; brown stool in vault; no mass palpated.\n\nAssessment: (1) Hemorrhage of anus and rectum (K62.5) with change in bowel habits (R19.4) and constipation (K59.00). (2) Fatigue\u2014evaluate for anemia. (3) Hypertension (I10), stable; (4) Hyperlipidemia (E78.5); (5) GERD (K21.9).\n\nPlan: Order CBC with indices and iron studies due to bleeding history and fatigue. Start polyethylene glycol daily PRN constipation; increase dietary fiber gradually and hydration; avoid straining. Short course hydrocortisone rectal cream PRN irritation. Discussed need for diagnostic colonoscopy if bleeding persists or if labs abnormal; place GI referral. Continue amlodipine, atorvastatin, omeprazole. Return precautions reviewed (worsening bleeding, dizziness, black stools).",
+        "doctor_note": "HPI: 67-year-old male with several months of intermittent constipation with harder stools and straining. Over the past few weeks he has noticed bright red blood on toilet paper with wiping and occasional streaking on stool. No prior colonoscopy. Denies melena, significant abdominal pain, fever, or weight loss. Reports mild fatigue. He avoids NSAIDs and has used acetaminophen for aches.\n\nReview of Systems: GI positive for constipation and rectal bleeding; negative for persistent abdominal pain, vomiting, or black stools. Constitutional: mild fatigue; no fevers. CV/Resp: no chest pain or shortness of breath.\n\nPhysical Exam: Well-appearing male. Abdomen soft, non-tender, non-distended. Perianal area with mild irritation; no active bleeding observed. No pallor noted but patient reports fatigue.\n\nAssessment: Rectal bleeding (K62.5) with constipation (K59.00) and change in bowel habits (R19.4). Concern for ongoing blood loss; will evaluate for anemia.\n\nPlan: Start/continue polyethylene glycol 3350 (MiraLAX) PRN, increase fiber and fluids, avoid straining. Past topical hydrocortisone rectal cream may be used short-term during irritation flares. Order CBC with differential and iron studies; order KUB to assess stool burden. Counsel to avoid NSAIDs during evaluation; acetaminophen OK. Refer to GI if bleeding persists or anemia present.",
         "observations": [
-          "Intermittent bright red rectal bleeding reported, increasing frequency over months.",
-          "Constipation with incomplete evacuation; alternating stool consistency.",
-          "External hemorrhoid noted on exam; no palpable rectal mass."
+          "Bright red blood with wiping reported",
+          "Hard stools and straining",
+          "No melena reported",
+          "No acute abdominal tenderness on exam"
         ],
         "procedures_performed": [
-          "CPT 99204 - Office or other outpatient visit for evaluation and management of a new patient, moderate level"
+          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
         ],
         "diagnoses": [
           "K62.5 - Hemorrhage of anus and rectum",
-          "R19.4 - Change in bowel habit",
           "K59.00 - Constipation, unspecified",
-          "I10 - Essential (primary) hypertension",
-          "E78.5 - Hyperlipidemia, unspecified",
-          "K21.9 - Gastro-esophageal reflux disease without esophagitis"
+          "R19.4 - Change in bowel habit"
         ],
         "medications_prescribed": [
-          "MiraLAX (polyethylene glycol 3350) 17 g daily PRN",
-          "Anusol-HC (hydrocortisone 2.5% rectal cream) BID PRN up to 7 days"
+          "MiraLAX (polyethylene glycol 3350) PRN",
+          "Anusol-HC (hydrocortisone 2.5% rectal cream) short course PRN irritation",
+          "Tylenol (acetaminophen) PRN pain"
         ],
         "care_team": [
-          "Dr. Elena Ramirez, MD (PCP)",
-          "UT Physicians Lab Services"
+          "Dr. Elena Ramirez, MD"
         ],
-        "progress_notes": "Initial visit establishing care. Symptoms present for months without prior colorectal evaluation. Labs ordered to objectively assess for anemia given fatigue and bleeding; GI referral initiated.",
-        "follow_up_instructions": "Complete labs within 1 week. Increase fluids and fiber slowly; use MiraLAX as directed. Seek urgent care for heavy bleeding, lightheadedness, syncope, or black/tarry stools. Follow up in 2\u20133 weeks or sooner if symptoms worsen."
+        "progress_notes": "Initial visit for new rectal bleeding symptoms; diagnostic workup initiated with labs and imaging and conservative constipation management.",
+        "follow_up_instructions": "Return in 2 weeks or sooner for worsening bleeding, dizziness, black stools, or severe abdominal pain. Complete ordered labs and KUB; maintain hydration and fiber."
       },
       {
         "encounter_date": "2026-03-17",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Gastroenterology consultation for hematochezia, change in bowel habits, and iron deficiency anemia pattern.",
-        "provider": "Dr. Priya Nair, MD, FACG",
-        "provider_npi": "2468135790",
-        "facility": "Houston Methodist Gastroenterology Associates",
+        "purpose_of_visit": "Gastroenterology evaluation for ongoing rectal bleeding and iron deficiency anemia with plan for diagnostic colonoscopy with biopsy.",
+        "provider": "Dr. Anjali Patel, MD",
+        "provider_npi": "2158493027",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-17",
-          "blood_pressure": "132/78 mmHg",
-          "heart_rate": "72 bpm",
+          "blood_pressure": "134/80 mmHg",
+          "heart_rate": "76 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "25.0 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.4\u00b0F",
-          "respiratory_rate": "15 breaths/min"
+          "bmi": "25.3 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "The bleeding hasn't stopped and my primary doctor said my iron is low.",
-        "doctor_note": "HPI: 69-year-old male referred for evaluation of intermittent hematochezia and bowel habit change. Reports 6\u20138 months of constipation alternating with loose stools and intermittent bright red blood per rectum, now 1\u20132 times weekly. Denies melena. Fatigue has progressed. PCP labs show iron deficiency pattern (low hemoglobin with low ferritin and low iron saturation), and patient started oral iron. No prior colonoscopy. Family history includes colorectal cancer in a maternal uncle and colon polyps in father. Meds reviewed: not on anticoagulants/antiplatelets; uses acetaminophen for aches.\n\nReview of Systems: Positive for fatigue and constipation; negative for persistent severe abdominal pain, fevers, night sweats, or unintentional weight loss. No dysphagia; GERD controlled on omeprazole.\n\nPhysical Exam: Alert, cooperative. Abdomen soft with mild lower abdominal fullness, no mass. Rectal exam deferred today given recent PCP exam; discussed differential including hemorrhoids, polyps, colorectal malignancy, and inflammatory/microscopic colitis.\n\nAssessment: (1) Iron deficiency anemia, unspecified (D50.9) with suspected chronic GI blood loss. (2) Hemorrhage of anus and rectum (K62.5). (3) Change in bowel habit (R19.4) and constipation (K59.00).\n\nPlan: Recommend diagnostic colonoscopy with biopsy (CPT 45380) given persistent bleeding symptoms, objective iron deficiency pattern, lack of prior colonoscopy, and family history. Discussed bowel prep, sedation, and need for biopsies even if mucosa appears subtle to evaluate for microscopic/inflammatory processes. Continue oral iron; continue constipation regimen to optimize prep effectiveness. Order pre-procedure labs (repeat CBC, ferritin/iron studies) to document anemia status near procedure date. Provide education on red flag symptoms and arrange procedure at Houston Methodist Hospital Endoscopy.",
+        "doctor_note": "HPI: 67-year-old male referred for persistent bright red blood per rectum with wiping and occasional streaking on stool. Reports constipation with harder stools, straining, and a change in bowel habits over several months. No prior colonoscopy. Labs show iron deficiency anemia; patient on oral iron and avoiding NSAIDs.\n\nReview of Systems: GI positive for constipation, rectal bleeding; negative for melena. Constitutional: mild fatigue. CV/Resp negative for chest pain or dyspnea.\n\nPhysical Exam: Abdomen soft, non-tender, mild lower abdominal fullness. Rectal exam: mild perianal irritation, no palpable mass; brown stool. Cardiopulmonary normal.\n\nAssessment: Iron deficiency anemia (D50.9) with rectal bleeding (K62.5) and bowel habit change (R19.4) with constipation (K59.00).\n\nPlan: Schedule colonoscopy with biopsy (CPT 45380) at Houston Methodist Hospital Endoscopy Unit. Review split-dose bowel prep, hydration, escort, and medication plan including holding oral iron on prep day/day of procedure. Order repeat CBC and ferritin prior to procedure and coordinate with PCP.",
         "observations": [
-          "Iron deficiency anemia pattern discussed as objective indicator of chronic blood loss.",
-          "No prior colonoscopy; diagnostic endoscopic evaluation planned.",
-          "Family history of CRC/polyps increases concern in setting of symptoms."
+          "Ongoing BRBPR despite conservative care",
+          "Iron deficiency anemia documented",
+          "No prior colonoscopy",
+          "KUB showed moderate stool burden without obstruction"
         ],
         "procedures_performed": [
-          "CPT 99204 - Office or other outpatient visit for evaluation and management of a new patient, moderate level"
+          "CPT 99204 - Office or other outpatient visit for the evaluation and management of a new patient, 45-59 minutes"
         ],
         "diagnoses": [
           "D50.9 - Iron deficiency anemia, unspecified",
@@ -13451,44 +13488,45 @@
           "K59.00 - Constipation, unspecified"
         ],
         "medications_prescribed": [
-          "Continue ferrous sulfate 325 mg daily",
-          "Continue MiraLAX 17 g daily PRN; emphasize daily use during week prior to prep if constipated"
+          "Continue Fer-In-Sol (ferrous sulfate) daily with food (hold on prep day/day of procedure)",
+          "Continue MiraLAX PRN constipation",
+          "Continue omeprazole, amlodipine, atorvastatin"
         ],
         "care_team": [
-          "Dr. Priya Nair, MD, FACG (Gastroenterology)",
-          "Dr. Elena Ramirez, MD (PCP)",
-          "Houston Methodist Hospital Endoscopy Scheduling"
+          "Dr. Anjali Patel, MD",
+          "Dr. Elena Ramirez, MD"
         ],
-        "progress_notes": "Specialist evaluation confirms persistent hematochezia and bowel habit changes with objective iron deficiency pattern. Colonoscopy with biopsy requested as next diagnostic step to identify source and obtain histology.",
-        "follow_up_instructions": "Schedule colonoscopy with biopsy (CPT 45380). Complete ordered labs 2\u20133 weeks before procedure. Continue iron; hold iron 5 days before procedure per prep instructions. Call clinic for worsening bleeding, dizziness, or severe abdominal pain."
+        "progress_notes": "Specialist evaluation completed; colonoscopy with biopsy requested due to persistent bleeding and objective iron deficiency anemia.",
+        "follow_up_instructions": "Complete repeat CBC/ferritin 1-2 weeks prior to procedure. Follow bowel prep instructions; arrange driver. Seek urgent care for heavy bleeding, syncope, or severe abdominal pain."
       },
       {
         "encounter_date": "2026-04-15",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-procedure assessment and medication reconciliation prior to requested colonoscopy with biopsy.",
-        "provider": "Dr. Priya Nair, MD, FACG",
-        "provider_npi": "2468135790",
-        "facility": "Houston Methodist Hospital - Digestive Disease Center",
+        "purpose_of_visit": "Pre-procedure review of bowel prep, medication holds, and anesthesia/sedation considerations before scheduled colonoscopy with biopsy.",
+        "provider": "Dr. Victor Nguyen, MD",
+        "provider_npi": "3047719056",
+        "facility": "Houston Methodist Hospital",
         "vital_signs": {
           "recorded_date": "2026-04-15",
-          "blood_pressure": "128/76 mmHg",
-          "heart_rate": "70 bpm",
+          "blood_pressure": "132/78 mmHg",
+          "heart_rate": "74 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "25.1 kg/m\u00b2",
+          "bmi": "25.3 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.0\u00b0F",
-          "respiratory_rate": "14 breaths/min"
+          "temperature": "98.2\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I'm here to go over the prep and make sure everything is set for the colonoscopy.",
-        "doctor_note": "HPI: Patient returns for pre-procedure evaluation prior to scheduled colonoscopy with biopsy (CPT 45380) on 2026-04-22 for hematochezia (K62.5), change in bowel habits (R19.4), constipation (K59.00), and iron deficiency anemia (D50.9). Since last visit, bleeding continues intermittently with wiping; fatigue improved slightly on iron but persists. No new alarm symptoms such as severe abdominal pain, syncope, or melena.\n\nReview of Systems: GI positive for intermittent rectal bleeding and constipation; negative for persistent vomiting. Cardiopulmonary negative for chest pain or shortness of breath. No history of anesthesia complications reported.\n\nPhysical Exam: Well-appearing. Heart regular rate/rhythm; lungs clear. Abdomen soft, non-tender today. No peripheral edema.\n\nAssessment: Proceed with planned colonoscopy with biopsy for evaluation of chronic lower GI bleeding and iron deficiency pattern. Comorbid HTN and HLD stable on current regimen.\n\nPlan: Reviewed bowel preparation step-by-step with emphasis on achieving clear effluent given constipation history; plan split-dose polyethylene glycol electrolyte solution. Medication instructions: continue amlodipine morning of procedure with sip of water; hold iron 5 days prior; avoid NSAIDs. Confirmed transportation and escort after sedation. Reviewed procedural risks and benefits and answered questions. Ensure recent CBC/iron studies on file prior to procedure date.",
+        "doctor_note": "HPI: Patient presents for pre-procedure evaluation prior to requested colonoscopy with biopsy (CPT 45380) scheduled for 2026-04-28 for evaluation of rectal bleeding (K62.5), change in bowel habits (R19.4), constipation (K59.00), and iron deficiency anemia (D50.9). He reports intermittent ongoing blood with wiping but no large-volume bleeding; fatigue persists but stable. He reports adherence to oral iron and chronic medications.\n\nReview of Systems: GI positive for intermittent rectal bleeding and constipation; denies melena and severe abdominal pain. CV/Resp denies chest pain, dyspnea, or palpitations. Constitutional: mild fatigue.\n\nPhysical Exam: Well-appearing, hemodynamically stable. Cardiopulmonary exam normal. Abdomen soft and non-tender.\n\nAssessment: Pre-op evaluation for colonoscopy with biopsy with stable comorbidities including essential hypertension (I10) and GERD (K21.9). Anemia (D50.9) noted with recent labs.\n\nPlan: Review split-dose bowel prep, clear liquid diet, and NPO requirements. Medication instructions: continue amlodipine and omeprazole morning of procedure; continue atorvastatin as usual; hold ferrous sulfate on 2026-04-27 (prep day) and 2026-04-28 (procedure day) to improve visualization; avoid NSAIDs; acetaminophen OK. Confirm driver and post-sedation monitoring plan. Proceed at Houston Methodist Hospital Endoscopy Unit as scheduled.",
         "observations": [
-          "No anticoagulant therapy to hold; low bleeding risk from meds.",
-          "Constipation history addressed to optimize prep quality.",
-          "Vitals stable; suitable for outpatient endoscopy with monitored anesthesia care."
+          "Stable vitals and cardiopulmonary status",
+          "Medication adherence reported",
+          "Anemia monitoring reviewed",
+          "Bowel prep instructions provided"
         ],
         "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit for evaluation and management of an established patient, moderate level"
+          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
         ],
         "diagnoses": [
           "D50.9 - Iron deficiency anemia, unspecified",
@@ -13496,19 +13534,20 @@
           "R19.4 - Change in bowel habit",
           "K59.00 - Constipation, unspecified",
           "I10 - Essential (primary) hypertension",
-          "E78.5 - Hyperlipidemia, unspecified",
           "K21.9 - Gastro-esophageal reflux disease without esophagitis"
         ],
         "medications_prescribed": [
-          "Polyethylene glycol electrolyte solution bowel prep (split-dose) per endoscopy instructions"
+          "Bowel prep prescription reviewed (PEG-electrolyte solution)",
+          "Continue amlodipine, omeprazole, atorvastatin per instructions",
+          "Hold ferrous sulfate on 2026-04-27 and 2026-04-28"
         ],
         "care_team": [
-          "Dr. Priya Nair, MD, FACG",
-          "Houston Methodist Pre-Op Nursing",
-          "Anesthesia Pre-Assessment Team"
+          "Dr. Victor Nguyen, MD",
+          "Dr. Anjali Patel, MD",
+          "Dr. Elena Ramirez, MD"
         ],
-        "progress_notes": "Pre-procedure evaluation completed with stable vitals and no interval red flags. Persistent bleeding and anemia evaluation remain the indication; patient understands prep and medication holds.",
-        "follow_up_instructions": "Begin low-residue diet 3 days prior. Follow split-dose prep instructions exactly. Hold oral iron 5 days prior; avoid NSAIDs. Arrive 90 minutes before procedure with escort. Post-procedure follow-up via phone within 7\u201310 days or sooner if significant bleeding, fever, severe abdominal pain, or dizziness occurs."
+        "progress_notes": "Pre-op review completed; patient understands prep and medication plan. Symptoms stable; procedure remains requested for evaluation of bleeding/anemia with ability to biopsy.",
+        "follow_up_instructions": "Follow clear liquid diet on prep day; complete split-dose prep as instructed. NPO after midnight except approved meds with sips of water. Arrive 90 minutes early with driver. Seek care for heavy bleeding, dizziness, or severe abdominal pain."
       }
     ],
     "images": [
@@ -13516,8 +13555,8 @@
         "type": "Abdominal X-ray (KUB)",
         "date": "2026-03-08",
         "provider": "Dr. Elena Ramirez, MD",
-        "facility": "Houston Methodist Outpatient Center - Radiology",
-        "findings": "Single supine abdominal radiograph obtained as part of constipation workup prior to requested colonoscopy with biopsy. Nonobstructive bowel gas pattern with moderate stool burden in the ascending and sigmoid colon. No dilated small bowel loops, no free intraperitoneal air identified on this limited view, and no radiopaque foreign body. Findings support constipation management to optimize bowel preparation quality before endoscopic evaluation."
+        "facility": "Houston Methodist Hospital",
+        "findings": "Non-obstructive bowel gas pattern with moderate colonic stool burden, greatest in descending/sigmoid colon. No radiographic evidence of bowel obstruction or acute intra-abdominal abnormality on single supine view."
       }
     ],
     "reports": [
@@ -13525,22 +13564,22 @@
         "type": "CBC with Differential",
         "date": "2026-03-10",
         "provider": "Dr. Elena Ramirez, MD",
-        "results": "WBC 6.1 K/uL; Hgb 10.9 g/dL (low); Hct 34.1% (low); MCV 78 fL (low); RDW 16.8% (high); Platelets 412 K/uL (mildly high). Differential within reference ranges.",
-        "notes": "Microcytic anemia pattern obtained during workup for rectal bleeding and in preparation for requested colonoscopy with biopsy (CPT 45380) to evaluate possible chronic GI blood loss."
+        "results": "Hgb 10.9 g/dL, Hct 34.1%, MCV 83 fL, RDW 16.9%, platelets 412k; WBC 6.8k with normal differential. Pattern consistent with anemia with elevated RDW; mild thrombocytosis.",
+        "notes": "Ordered for evaluation of rectal bleeding (K62.5) and bowel habit change (R19.4) prior to GI referral and planned colonoscopy with biopsy (CPT 45380)."
       },
       {
         "type": "Iron Studies",
         "date": "2026-03-10",
         "provider": "Dr. Elena Ramirez, MD",
-        "results": "Ferritin 9 ng/mL (low); Serum iron 28 mcg/dL (low); TIBC 410 mcg/dL (high); Transferrin saturation 7% (low).",
-        "notes": "Iron deficiency pattern consistent with chronic blood loss; supports need for diagnostic colonoscopy with biopsy (CPT 45380) to identify bleeding source and obtain histology if mucosal disease present."
+        "results": "Ferritin 9 ng/mL (low), serum iron 28 \u00b5g/dL (low), TIBC 452 \u00b5g/dL (high), transferrin saturation 6% (low).",
+        "notes": "Consistent with iron deficiency anemia (D50.9); supports need for diagnostic colonoscopy with biopsy (CPT 45380) to evaluate possible GI blood loss source."
       },
       {
         "type": "Repeat CBC and Ferritin",
         "date": "2026-04-07",
-        "provider": "Dr. Priya Nair, MD, FACG",
-        "results": "Hgb 11.4 g/dL (improving but low); Hct 35.6% (low); MCV 79 fL (low); Platelets 398 K/uL. Ferritin 12 ng/mL (low).",
-        "notes": "Partial response to oral iron with persistent iron deficiency; continued evaluation planned with requested colonoscopy with biopsy (CPT 45380) due to ongoing hematochezia and bowel habit changes."
+        "provider": "Dr. Elena Ramirez, MD",
+        "results": "Hgb 11.2 g/dL, Hct 35.0%, MCV 84 fL, RDW 16.2%, platelets 398k; ferritin 11 ng/mL (persistently low).",
+        "notes": "Persistent iron deficiency pattern despite oral iron therapy; obtained as pre-procedure trend prior to requested colonoscopy with biopsy (CPT 45380)."
       }
     ],
     "procedures": [
@@ -13549,48 +13588,49 @@
         "date": "2022-11-02",
         "provider": "Dr. Elena Ramirez, MD",
         "facility": "UT Physicians Primary Care - Houston",
-        "reason": "Baseline evaluation during hypertension management (I10) prior to chronic therapy.",
-        "notes": "Normal sinus rhythm per chart; no reported complications."
+        "reason": "Routine cardiovascular screening in patient with hypertension (I10) prior to medication adjustment",
+        "notes": "No complications reported; historical procedure completed."
       },
       {
         "name": "Upper GI endoscopy (diagnostic)",
         "date": "2019-06-14",
-        "provider": "Dr. Samuel Ortega, MD",
+        "provider": "Dr. Steven Kwan, MD",
         "facility": "Houston Methodist Hospital",
-        "reason": "GERD evaluation (K21.9) with chronic reflux symptoms.",
-        "notes": "Per patient report: no ulcers; continued on PPI. No colonoscopy history."
+        "reason": "Evaluation of GERD symptoms (K21.9)",
+        "notes": "Patient reports no anesthesia complications; historical procedure completed."
       }
     ],
     "social_history": {
-      "tobacco_use": "Former smoker - quit 2012",
-      "tobacco_frequency": "Previously ~0.5 pack/day for 20 years",
+      "tobacco_use": "Former smoker - quit 2008",
+      "tobacco_frequency": "Previously ~0.5 pack/day for ~20 years",
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "1\u20132 drinks/week, usually wine with dinner",
+      "alcohol_frequency": "1\u20132 drinks/week",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-04-15",
-      "last_visit_reason": "Pre-procedure evaluation for requested colonoscopy with biopsy",
+      "last_medical_visit": "2026-03-17",
+      "last_visit_reason": "GI consult for rectal bleeding and iron deficiency anemia prior to requested colonoscopy with biopsy",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Stress-related insomnia treated with short-term outpatient psychotherapy (2025)",
+      "mental_health_history": "Stress-related insomnia and rumination; completed short-term psychotherapy in 2025",
       "mental_health_current": "PHQ-9: 4 (minimal); GAD-7: 6 (mild)",
-      "exercise_habits": "Walks 30 minutes, 4\u20135 days/week; reduced pace due to fatigue",
-      "diet_notes": "Working on higher fiber intake; avoids late-night meals due to GERD; increased hydration for constipation",
-      "family_history_relevant": "Maternal uncle with colorectal cancer in early 60s; father with history of colon polyps; mother with hyperlipidemia."
+      "exercise_habits": "Walks 30 minutes, 4\u20135 days/week",
+      "diet_notes": "Home-cooked diet; increased fiber (oats/vegetables) and hydration for constipation; avoids frequent spicy foods due to GERD",
+      "family_history_relevant": "Father with history of colon polyps in older adulthood; mother with hypertension; no known family history of inflammatory bowel disease."
     },
     "vital_signs_current": {
       "recorded_date": "2026-04-15",
-      "blood_pressure": "128/76 mmHg",
-      "heart_rate": "70 bpm",
+      "blood_pressure": "132/78 mmHg",
+      "heart_rate": "74 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "25.1 kg/m\u00b2",
+      "bmi": "25.3 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.0\u00b0F",
-      "respiratory_rate": "14 breaths/min"
+      "temperature": "98.2\u00b0F",
+      "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "Male: PSA 1.6 ng/mL on 2025-09-22 per PCP records; digital rectal exam deferred at GI visit; no history of prostate cancer, urinary retention, or hematuria. Reports mild nocturia 1x/night without dysuria."
+    "gender_specific_history": "Male. PSA screening discussed with PCP; last PSA 1.4 ng/mL on 2025-09-12 per patient report. No history of prostate cancer. Mild nocturia 1x/night without dysuria or hematuria; no prior urologic procedures.",
+    "has_fit_fobt_result": false
   },
   "274": {
     "first_name": "Monica",
@@ -14040,5 +14080,448 @@
       "respiratory_rate": "15 breaths/min"
     },
     "gender_specific_history": "G2P2. Postmenopausal since age 52. Last Pap smear 2024-06-18 (reported normal). Last screening mammogram 2025-07-09 (reported BI-RADS 1). No history of abnormal Pap, cervical procedures, or gynecologic malignancy."
+  },
+  "275": {
+    "first_name": "Sandor",
+    "last_name": "Madsen",
+    "gender": "male",
+    "dob": "1957-11-18",
+    "address": "412 Oak Lawn Ave, Apt 9B, Dallas, TX 75219",
+    "telecom": "214-555-0198",
+    "race": "White (Non-Hispanic)",
+    "height": "5 ft 10 in",
+    "weight": "196 lb",
+    "maritalStatus": "Divorced",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Marina Madsen",
+      "telecom": "214-555-0133",
+      "address": "7001 Gaston Ave, Dallas, TX 75214",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2012-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Derek Hsu, MD",
+      "formatted_npi": "1649327851",
+      "managingOrganization": "UT Southwestern Medical Center - Internal Medicine",
+      "address": "5323 Harry Hines Blvd, Dallas, TX 75390",
+      "phone": "214-555-0207"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "J1113",
+      "payer_name": "UnitedHealthcare",
+      "plan_name": "Medicare Advantage",
+      "plan_type": "Medicare Advantage",
+      "member_id": "MBR-740390",
+      "policy_number": "POL-2026-6843",
+      "effective_date": "2026-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$35",
+      "deductible_amount": "$650"
+    },
+    "expected_procedure_date": "2026-05-08",
+    "procedure_requested": "Esophagogastroduodenoscopy (EGD), Diagnostic",
+    "procedure_facility": {
+      "facility_name": "Baylor University Medical Center at Dallas - Endoscopy Center",
+      "street_address": "3500 Gaston Ave",
+      "city": "Dallas",
+      "state": "TX",
+      "zip_code": "75246",
+      "department": "Gastroenterology / Endoscopy"
+    },
+    "pa_request": {
+      "requesting_provider": "Asha Patel, MD",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Intermittent, persistent epigastric discomfort with dyspepsia and nausea has continued for several months without a clear diagnosis. Given patient age and chronic NSAID exposure, diagnostic EGD is requested to evaluate for esophagitis, gastritis, and peptic ulcer disease and to guide management.",
+      "supporting_diagnoses": [
+        "R10.13 - Epigastric pain",
+        "K30 - Functional dyspepsia",
+        "R11.0 - Nausea"
+      ],
+      "previous_treatments": "Intermittent OTC antacids and diet modification; no documented prescription PPI/H2 blocker trial.",
+      "expected_outcome": "Diagnostic clarification of upper GI mucosal pathology and guidance for targeted treatment planning.",
+      "units_requested": "1"
+    },
+    "bio_narrative": "Sandor Madsen is a 68-year-old divorced man living in Dallas, Texas. He works part-time as a building maintenance supervisor for a small apartment complex, a role that keeps him on his feet and often requires lifting and bending. He describes himself as private and pragmatic, tending to downplay symptoms until they become disruptive. He lives alone and keeps close contact with his adult daughter, Marina, who is listed as his emergency contact and helps with appointments when his schedule is tight. Over the last 3\u20134 months, he has noticed intermittent, vague epigastric discomfort (R10.13) described as a dull pressure or fullness, sometimes associated with nausea (R11.0) after meals. The discomfort is not consistently triggered by specific foods, and he has not kept a reliable symptom diary. He reports occasional use of over-the-counter antacids but cannot clearly quantify frequency or symptom response. He denies any documented alarm symptoms in the available notes, including hematemesis, melena, progressive dysphagia, or unintentional weight loss, but the history is limited by inconsistent tracking and incomplete prior records. No abdominal imaging is documented, and there is no recorded H. pylori testing. He has not completed a documented prescription trial of proton pump inhibitor therapy. His comorbid conditions include essential hypertension (I10) and hyperlipidemia (E78.5), and he intermittently uses NSAIDs for chronic low back pain (M54.50), which is recognized as a potential contributor to upper GI irritation. Family history is notable for a father with coronary artery disease and a mother with \u201cstomach problems\u201d later in life, though specific diagnoses are unknown. Socially, he is a former smoker who quit years ago and drinks alcohol only occasionally. He walks for exercise when his back pain allows but has inconsistent routines. After an initial primary care evaluation with limited testing and ongoing symptoms, he was referred to gastroenterology. The current request is for a diagnostic EGD (CPT 43235) to directly evaluate the esophagus, stomach, and duodenum for mucosal disease such as esophagitis, gastritis, or peptic ulcer disease and to help guide subsequent treatment decisions.",
+    "has_fit_fobt_result": false,
+    "medications": [
+      {
+        "brand": "Norvasc",
+        "generic_name": "Amlodipine 5 mg",
+        "dosage": "Take 1 tablet by mouth daily",
+        "qty": "90 tablets",
+        "prescribed_by": "Derek Hsu, MD",
+        "status": "current",
+        "start_date": "2024-10-12",
+        "end_date": "ongoing",
+        "reason": "Blood pressure control for I10 - Essential (primary) hypertension"
+      },
+      {
+        "brand": "Lipitor",
+        "generic_name": "Atorvastatin 20 mg",
+        "dosage": "Take 1 tablet by mouth nightly",
+        "qty": "90 tablets",
+        "prescribed_by": "Derek Hsu, MD",
+        "status": "ongoing",
+        "start_date": "2023-05-22",
+        "end_date": "ongoing",
+        "reason": "Lipid control for E78.5 - Hyperlipidemia, unspecified"
+      },
+      {
+        "brand": "Advil",
+        "generic_name": "Ibuprofen 200 mg",
+        "dosage": "Take 1-2 tablets by mouth every 6-8 hours as needed for pain",
+        "qty": "OTC",
+        "prescribed_by": "Self/OTC",
+        "status": "current",
+        "start_date": "2022-01-01",
+        "end_date": "ongoing",
+        "reason": "Intermittent pain control for M54.50 - Low back pain, unspecified (NSAID exposure noted in GI history)"
+      },
+      {
+        "brand": "Tums",
+        "generic_name": "Calcium carbonate 500 mg chewable",
+        "dosage": "Chew 1-2 tablets as needed for heartburn/indigestion",
+        "qty": "OTC",
+        "prescribed_by": "Self/OTC",
+        "status": "current",
+        "start_date": "2026-01-20",
+        "end_date": "ongoing",
+        "reason": "Intermittent symptom relief for K30 - Functional dyspepsia"
+      },
+      {
+        "brand": "Tylenol",
+        "generic_name": "Acetaminophen 500 mg",
+        "dosage": "Take 1-2 tablets by mouth every 6 hours as needed; do not exceed 3,000 mg/day",
+        "qty": "OTC",
+        "prescribed_by": "Monica Green, FNP-C",
+        "status": "ongoing",
+        "start_date": "2026-03-04",
+        "end_date": "ongoing",
+        "reason": "Alternative analgesic recommended to reduce NSAID use for M54.50 - Low back pain, unspecified"
+      },
+      {
+        "brand": "Zyrtec",
+        "generic_name": "Cetirizine 10 mg",
+        "dosage": "Take 1 tablet by mouth daily as needed",
+        "qty": "30 tablets",
+        "prescribed_by": "Derek Hsu, MD",
+        "status": "past",
+        "start_date": "2025-03-10",
+        "end_date": "2025-06-10",
+        "reason": "Seasonal allergic rhinitis symptoms (non-diagnostic support; medication history only)"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Pruritic rash and hives",
+        "severity": "Moderate",
+        "onset_date": "1975-08-01"
+      },
+      {
+        "allergen": "Shellfish",
+        "allergy_type": "Food",
+        "reaction": "Lip swelling and urticaria",
+        "severity": "Severe",
+        "onset_date": "1998-05-01"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza (quadrivalent)",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-03",
+        "administered_by": "UT Southwestern Employee Health Clinic",
+        "dose_number": "Annual",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 mRNA (Moderna)",
+        "vaccine_type": "mRNA",
+        "date_administered": "2025-09-15",
+        "administered_by": "CVS Pharmacy - Dallas, TX",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Pneumococcal conjugate (PCV20)",
+        "vaccine_type": "Subunit",
+        "date_administered": "2024-11-08",
+        "administered_by": "UT Southwestern Internal Medicine",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tdap (tetanus, diphtheria, pertussis)",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2022-06-14",
+        "administered_by": "Walgreens Pharmacy - Dallas, TX",
+        "dose_number": "1",
+        "reason": "Catch-up"
+      },
+      {
+        "vaccine_name": "Recombinant zoster vaccine (Shingrix)",
+        "vaccine_type": "Subunit",
+        "date_administered": "2021-08-20",
+        "administered_by": "UT Southwestern Internal Medicine",
+        "dose_number": "2",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Physical",
+        "cpt_code": "97110",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility, each 15 minutes",
+        "icd10_codes": [
+          "M54.50 - Low back pain, unspecified"
+        ],
+        "provider": "Lena Alvarez, PT, DPT",
+        "provider_npi": "1871064398",
+        "facility": "UT Southwestern Outpatient Rehabilitation - Dallas",
+        "start_date": "2025-01-06",
+        "end_date": "2025-03-03",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Recurrent mechanical low back pain affecting work tolerance",
+        "notes": "Focused on core stabilization and hip mobility; patient attended most sessions but had intermittent cancellations due to work demands. Reported modest improvement in activity tolerance; home exercise compliance inconsistent."
+      }
+    ],
+    "behavioral_notes": "Patient is generally stoic and tends to minimize symptoms; he reports taking daily cardiovascular medications reliably but is inconsistent with lifestyle changes and home exercises. Diet is irregular with occasional late meals; uses OTC antacids sporadically without tracking response. Former smoker, drinks alcohol socially, denies illicit drug use. Mild anxiety around medical testing noted; he prefers clear plans and can be terse with staff when frustrated by scheduling delays.",
+    "encounters": [
+      {
+        "encounter_date": "2026-01-28",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Primary care evaluation for intermittent upper abdominal discomfort and queasiness.",
+        "provider": "Derek Hsu, MD",
+        "provider_npi": "1649327851",
+        "facility": "UT Southwestern Medical Center - Internal Medicine",
+        "vital_signs": {
+          "recorded_date": "2026-01-28",
+          "blood_pressure": "142/86 mmHg",
+          "heart_rate": "80 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "28.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I've had this vague stomach discomfort after eating and some nausea on and off.",
+        "doctor_note": "HPI: 68M with 2-3 months of intermittent epigastric discomfort and occasional nausea, often after meals but not clearly tied to particular foods. Denies vomiting, blood in stool, black stools, trouble swallowing, or weight loss per today\u2019s report. Uses OTC Tums a few times per week; not sure if it helps. Takes ibuprofen intermittently for back pain.\n\nROS: GI positive for intermittent epigastric discomfort and nausea. Negative for hematemesis, melena, persistent vomiting per patient report. No chest pain or dyspnea reported.\n\nPhysical Exam: Well-appearing. Abdomen soft, non-distended; mild epigastric tenderness without guarding. Cardiopulmonary exam normal.\n\nAssessment: Epigastric pain (R10.13) and dyspepsia symptoms consistent with functional dyspepsia (K30) with nausea (R11.0). Comorbid HTN (I10) and hyperlipidemia (E78.5). Limited prior records.\n\nPlan: Order CBC/CMP; review NSAID use and recommend limiting ibuprofen. Discuss dietary measures. GI referral placed for further evaluation; patient requests diagnostic clarity.",
+        "observations": [
+          "Mild epigastric tenderness on exam",
+          "No documented alarm symptoms in this visit note",
+          "Limited prior GI workup available"
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, level 4"
+        ],
+        "diagnoses": [
+          "R10.13 - Epigastric pain",
+          "K30 - Functional dyspepsia",
+          "R11.0 - Nausea",
+          "I10 - Essential (primary) hypertension",
+          "E78.5 - Hyperlipidemia, unspecified"
+        ],
+        "medications_prescribed": [
+          "Continue Norvasc (amlodipine) 5 mg daily",
+          "Continue Lipitor (atorvastatin) 20 mg nightly"
+        ],
+        "care_team": [
+          "Derek Hsu, MD",
+          "Monica Green, FNP-C"
+        ],
+        "progress_notes": "Symptoms described but not well characterized; patient has not tried prescription therapy and has not pursued imaging. Plan focused on basic labs and referral.",
+        "follow_up_instructions": "Return in 4-6 weeks or sooner if symptoms worsen; go to ER for GI bleeding, severe persistent pain, or inability to tolerate oral intake."
+      },
+      {
+        "encounter_date": "2026-03-04",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Gastroenterology consult for non-specific dyspepsia/epigastric discomfort and discussion of EGD request.",
+        "provider": "Asha Patel, MD",
+        "provider_npi": "2435179086",
+        "facility": "Baylor Scott & White Digestive Disease Center - Dallas",
+        "vital_signs": {
+          "recorded_date": "2026-03-04",
+          "blood_pressure": "136/80 mmHg",
+          "heart_rate": "74 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "28.0 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "My stomach just feels off and I get nauseated sometimes after meals.",
+        "doctor_note": "HPI: Referred for ~3 months intermittent epigastric discomfort/fullness with occasional nausea. No clear food triggers. OTC antacid use reported but response unclear. No documented PPI trial. Patient reports no black stools, vomiting blood, or swallowing issues; however, he has not tracked symptoms consistently.\n\nROS: GI positive for epigastric discomfort and nausea. Negative for overt bleeding or dysphagia in this visit note. Other systems reviewed briefly and non-contributory.\n\nPhysical Exam: NAD. Abdomen soft; minimal epigastric tenderness. No peritoneal signs.\n\nAssessment: Non-specific epigastric pain (R10.13), functional dyspepsia pattern (K30), nausea (R11.0). Noted NSAID exposure for back pain (M54.50). Comorbid I10 and E78.5.\n\nPlan: Discussed options including empiric acid suppression vs diagnostic EGD. Patient requests endoscopic evaluation for diagnostic clarification. Plan to schedule diagnostic EGD (CPT 43235). Recommended reducing NSAIDs and using acetaminophen as alternative.",
+        "observations": [
+          "History limited by lack of symptom diary and unclear medication response",
+          "No imaging available in chart prior to consult"
+        ],
+        "procedures_performed": [
+          "CPT 99204 - Office or other outpatient visit, new patient, level 4"
+        ],
+        "diagnoses": [
+          "R10.13 - Epigastric pain",
+          "K30 - Functional dyspepsia",
+          "R11.0 - Nausea",
+          "M54.50 - Low back pain, unspecified",
+          "I10 - Essential (primary) hypertension",
+          "E78.5 - Hyperlipidemia, unspecified"
+        ],
+        "medications_prescribed": [
+          "Tylenol (acetaminophen) 500 mg PRN pain (preferred over NSAIDs)"
+        ],
+        "care_team": [
+          "Asha Patel, MD",
+          "Derek Hsu, MD"
+        ],
+        "progress_notes": "GI consult completed; decision made to proceed with requested diagnostic EGD despite limited prior workup. Counseling provided regarding NSAID reduction and symptom monitoring.",
+        "follow_up_instructions": "Schedule EGD; seek care for GI bleeding, persistent vomiting, progressive pain, or new swallowing difficulty. Follow up 2-4 weeks after procedure for results review."
+      },
+      {
+        "encounter_date": "2026-04-10",
+        "encounter_type": "Telehealth",
+        "purpose_of_visit": "Interval symptom check prior to pre-op evaluation; review of limited workup status.",
+        "provider": "Asha Patel, MD",
+        "provider_npi": "2435179086",
+        "facility": "Baylor Scott & White Digestive Disease Center - Dallas (Telehealth)",
+        "vital_signs": null,
+        "chief_complaint": "Still having that off-and-on stomach discomfort; hard to say if anything helps.",
+        "doctor_note": "HPI: Patient reports symptoms are ongoing and intermittent. He has not kept a symptom diary and cannot quantify frequency. He reports using OTC antacids \u201csometimes\u201d with uncertain benefit. No documented start of PPI/H2 blocker therapy; patient states he did not pick up any new stomach medication. Denies vomiting blood or black stools during this call.\n\nROS: GI positive for intermittent epigastric discomfort and nausea. Denies overt GI bleeding per report. Remaining ROS not fully assessed by telehealth.\n\nPhysical Exam: Limited by video visit; patient appears comfortable and speaking in full sentences.\n\nAssessment: Persistent non-specific dyspepsia/epigastric pain (K30, R10.13) with nausea (R11.0). Limited objective data to date.\n\nPlan: Proceed with scheduled diagnostic EGD (CPT 43235). Basic labs (CBC/CMP) requested if not already completed. Reinforced avoidance of NSAIDs when possible and encouraged documentation of symptom timing and dietary triggers.",
+        "observations": [
+          "No new objective data obtained during telehealth",
+          "Documentation gap persists regarding response to OTC medications"
+        ],
+        "procedures_performed": [
+          "CPT 99442 - Telephone evaluation and management service, 11-20 minutes of medical discussion"
+        ],
+        "diagnoses": [
+          "R10.13 - Epigastric pain",
+          "K30 - Functional dyspepsia",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Asha Patel, MD"
+        ],
+        "progress_notes": "Symptoms persist but remain poorly characterized; patient has not initiated documented empiric therapy. EGD remains planned for diagnostic clarification.",
+        "follow_up_instructions": "Complete labs prior to pre-op visit; call clinic if worsening symptoms or any GI bleeding. Keep procedure appointment and arrange transportation."
+      },
+      {
+        "encounter_date": "2026-04-29",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-procedure evaluation for upcoming diagnostic EGD and peri-procedural instructions.",
+        "provider": "Evan Ross, MD",
+        "provider_npi": "3296148075",
+        "facility": "Baylor Scott & White Digestive Disease Center - Dallas",
+        "vital_signs": {
+          "recorded_date": "2026-04-29",
+          "blood_pressure": "138/82 mmHg",
+          "heart_rate": "76 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "28.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "Here for the pre-procedure check before my scope.",
+        "doctor_note": "HPI: Patient presents for pre-procedure assessment prior to requested diagnostic EGD (CPT 43235) for epigastric pain/dyspepsia with nausea (R10.13, K30, R11.0). Symptoms remain intermittent; patient reports no new red-flag symptoms since last contact but admits he has continued to use ibuprofen at times for back pain. He has not started a prescription stomach medication.\n\nROS: GI positive for intermittent epigastric discomfort and nausea. Denies melena or hematemesis per report. Cardiopulmonary ROS negative for chest pain or shortness of breath.\n\nPhysical Exam: Alert, oriented. Heart regular, lungs clear. Abdomen soft, non-distended, minimal epigastric tenderness. No edema.\n\nAssessment: Pre-procedure evaluation for diagnostic EGD. Comorbid HTN (I10) and hyperlipidemia (E78.5) noted for sedation planning. Limited diagnostic workup documented; CBC/CMP on file without anemia.\n\nPlan: Reviewed NPO and transportation requirements. Continue amlodipine morning of procedure with sip of water. Avoid NSAIDs starting 2026-05-01; use acetaminophen. Proceed with EGD as scheduled at Baylor University Medical Center at Dallas - Endoscopy Center.",
+        "observations": [
+          "Medication reconciliation suggests intermittent NSAID use persists",
+          "No imaging/H. pylori testing documented prior to procedure request"
+        ],
+        "procedures_performed": [
+          "CPT 99213 - Office or other outpatient visit, established patient, level 3"
+        ],
+        "diagnoses": [
+          "R10.13 - Epigastric pain",
+          "K30 - Functional dyspepsia",
+          "R11.0 - Nausea",
+          "I10 - Essential (primary) hypertension",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "M54.50 - Low back pain, unspecified"
+        ],
+        "medications_prescribed": [
+          "Avoid NSAIDs starting 2026-05-01; continue acetaminophen PRN",
+          "Continue amlodipine 5 mg daily",
+          "Continue atorvastatin 20 mg nightly"
+        ],
+        "care_team": [
+          "Evan Ross, MD",
+          "Asha Patel, MD",
+          "Derek Hsu, MD"
+        ],
+        "progress_notes": "Pre-op evaluation completed; patient counseled on medication holds and standard pre-procedure steps. Clinical documentation remains limited regarding prior empiric dyspepsia treatment and objective diagnostic workup.",
+        "follow_up_instructions": "Proceed with EGD on 2026-05-08. Call clinic for worsening symptoms; go to ER for bleeding, severe pain, or inability to tolerate liquids."
+      }
+    ],
+    "images": [],
+    "reports": [
+      {
+        "type": "CBC/CMP",
+        "date": "2026-04-18",
+        "provider": "Monica Green, FNP-C",
+        "results": "CBC: WBC 6.4, Hgb 14.1, Plt 238. CMP: Cr 1.02, AST 22, ALT 24, Albumin 4.3, Glucose 104. No anemia noted.",
+        "notes": "Ordered as limited workup and baseline assessment prior to requested diagnostic EGD (CPT 43235). No H. pylori or abdominal imaging documented."
+      }
+    ],
+    "procedures": [
+      {
+        "name": "Screening colonoscopy (completed)",
+        "date": "2017-08-11",
+        "provider": "Ravi Menon, MD",
+        "facility": "Baylor University Medical Center at Dallas - Endoscopy",
+        "reason": "Average-risk colorectal cancer screening",
+        "notes": "Patient reports normal exam; outside report not available in current chart. No complications reported."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Former smoker - quit 2001",
+      "tobacco_frequency": "Previously ~1 pack/day for 18 years",
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 drinks on weekends, not every week",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-04-29",
+      "last_visit_reason": "Pre-procedure evaluation for planned diagnostic EGD",
+      "missed_appointment": true,
+      "missed_appointment_reason": "Missed initial GI scheduling call due to work shift conflict",
+      "early_visit_reason": null,
+      "mental_health_history": "Situational anxiety noted during prior medical procedures; no formal diagnosis documented",
+      "mental_health_current": "GAD-7: 6 (mild anxiety) on 2026-03-04; PHQ-9 not documented",
+      "exercise_habits": "Walks 2-3x/week when back pain allows; otherwise active at work",
+      "diet_notes": "Irregular meal timing; occasional late-night meals; spicy/greasy foods on weekends",
+      "family_history_relevant": "Father with coronary artery disease; mother with chronic 'stomach problems' later in life (details unknown)"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-04-29",
+      "blood_pressure": "138/82 mmHg",
+      "heart_rate": "76 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "28.1 kg/m\u00b2",
+      "oxygen_saturation": "97%",
+      "temperature": "98.1\u00b0F",
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": "PSA 1.6 ng/mL reported from 2025-11-12 screening per PCP note; no urinary obstructive symptoms documented. No known history of prostate cancer; routine prostate screening discussed annually."
   }
 }

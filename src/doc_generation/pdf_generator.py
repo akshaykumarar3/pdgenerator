@@ -962,6 +962,10 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         (data_provider, "Provider"),
         (data_payer, "Payer"),
     ]:
+        for row in data_block:
+            for i, cell in enumerate(row):
+                if isinstance(cell, str):
+                    row[i] = Paragraph(f"<b>{cell}</b>" if i == 0 else cell, style_label if i == 0 else style_normal)
         t = Table(data_block, colWidths=[1.8*inch, 4.5*inch])
         t.setStyle(table_style)
         Story.append(t)
@@ -1017,6 +1021,11 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             ["Expected Outcome:", Paragraph(getattr(pa_request, 'expected_outcome', 'N/A'), style_normal)],
         ]
         
+        for row in pa_data:
+            for i, cell in enumerate(row):
+                if isinstance(cell, str):
+                    row[i] = Paragraph(f"<b>{cell}</b>" if i == 0 else cell, style_label if i == 0 else style_normal)
+        
         pa_table = Table(pa_data, colWidths=[2*inch, 4.5*inch])
         pa_table.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (0,-1), colors.HexColor("#fff3cd")),
@@ -1059,6 +1068,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                     Paragraph(f"{m.status}<br/>{dates}", style_normal),
                     Paragraph(m.reason or "N/A", style_normal)
                 ])
+            med_data[0] = [Paragraph(f"<b>{h}</b>", style_label) for h in med_data[0]]
             t = Table(med_data, colWidths=[1.8*inch, 0.6*inch, 1.2*inch, 1.3*inch, 1.5*inch])
             t.setStyle(table_style)
             Story.append(t)
@@ -1076,6 +1086,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                     Paragraph(getattr(a, 'severity', '') or "N/A", style_normal),
                     Paragraph(getattr(a, 'onset_date', '') or "N/A", style_normal)
                 ])
+            alg_data[0] = [Paragraph(f"<b>{h}</b>", style_label) for h in alg_data[0]]
             t = Table(alg_data, colWidths=[2.0*inch, 2.0*inch, 1.2*inch, 1.2*inch])
             t.setStyle(table_style)
             Story.append(t)
@@ -1093,6 +1104,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                     Paragraph(f"{v.administered_by or 'N/A'}<br/>Dose: {v.dose_number}", style_normal),
                     Paragraph(v.reason or "N/A", style_normal)
                 ])
+            vax_data[0] = [Paragraph(f"<b>{h}</b>", style_label) for h in vax_data[0]]
             t = Table(vax_data, colWidths=[2.0*inch, 1.0*inch, 1.5*inch, 1.9*inch])
             t.setStyle(table_style)
             Story.append(t)
@@ -1117,6 +1129,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                     Paragraph(f"{getattr(th, 'frequency', '') or ''}<br/>{getattr(th, 'status', '') or ''}", style_normal),
                     Paragraph(icd_str, style_normal)
                 ])
+            th_data[0] = [Paragraph(f"<b>{h}</b>", style_label) for h in th_data[0]]
             t = Table(th_data, colWidths=[1.4*inch, 1.2*inch, 1.5*inch, 1.0*inch, 1.3*inch])
             t.setStyle(table_style)
             Story.append(t)
@@ -1150,6 +1163,10 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
             early = getattr(sh, 'early_visit_reason', None)
             if early:
                 sh_data.append(["Early Visit Reason", early])
+            for row in sh_data:
+                for i, cell in enumerate(row):
+                    if isinstance(cell, str):
+                        row[i] = Paragraph(f"<b>{cell}</b>" if i == 0 else cell, style_label if i == 0 else style_normal)
             t = Table(sh_data, colWidths=[2.2*inch, 4.2*inch])
             t.setStyle(TableStyle([
                 ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
@@ -1178,6 +1195,10 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
                 ["Blood Sugar (Fasting)", getattr(vs, 'blood_sugar_fasting', None) or "(not recorded)"],
                 ["Blood Sugar (Post-meal)", getattr(vs, 'blood_sugar_postprandial', None) or "(not recorded)"],
             ]
+            for row in vs_data:
+                for i, cell in enumerate(row):
+                    if isinstance(cell, str):
+                        row[i] = Paragraph(f"<b>{cell}</b>" if i == 0 else cell, style_label if i == 0 else style_normal)
             t = Table(vs_data, colWidths=[2.2*inch, 4.2*inch])
             t.setStyle(TableStyle([
                 ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),

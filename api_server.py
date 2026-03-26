@@ -103,7 +103,9 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                      vaccinations: list, therapies: list,
                      behavioral_notes: str,
                      encounters: list, images: list,
-                     reports: list, procedures: list):
+                     reports: list, procedures: list,
+                     generate_rejection_docs: bool = False,
+                     rejection_gaps: str = ""):
     """Background worker: calls the generator and updates job state."""
     with _jobs_lock:
         _jobs[job_id]["status"] = "running"
@@ -214,6 +216,12 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                     "expected outcome label."
                 )
 
+            if generate_rejection_docs:
+                if rejection_gaps and rejection_gaps.strip():
+                    extra_blocks.append(f"[REJECTION GAPS / DENIAL FOCUS]: {rejection_gaps.strip()}")
+                else:
+                    extra_blocks.append("[REJECTION GAPS / DENIAL FOCUS]: Ensure the clinical evidence is insufficient. Omit critical supportive findings, exclude documentation of prior conservative treatments, and ensure the criteria for PA approval are explicitly NOT met.")
+
             combined_feedback = feedback.strip()
             if extra_blocks:
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
@@ -231,7 +239,8 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                 excluded_names=current_names,
                 generation_mode=generation_mode,
                 cancel_check=cancel_check,
-                archive_token=job_id
+                archive_token=job_id,
+                generate_rejection_docs=generate_rejection_docs
             )
 
             if cancel_check():
@@ -352,7 +361,9 @@ def _run_batch_generation(job_id, patient_ids, feedback, generation_mode, pa_opt
 def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                              generation_mode: dict, medications: list, allergies: list,
                              vaccinations: list, therapies: list, behavioral_notes: str,
-                             encounters: list, images: list, reports: list, procedures: list):
+                             encounters: list, images: list, reports: list, procedures: list,
+                             generate_rejection_docs: bool = False,
+                             rejection_gaps: str = ""):
     """Background worker: AI-only generation, stores payload for preview UI (no PDFs)."""
     with _jobs_lock:
         _jobs[job_id]["status"] = "running"
@@ -414,6 +425,12 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                 ]
                 extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(p_lines))
 
+            if generate_rejection_docs:
+                if rejection_gaps and rejection_gaps.strip():
+                    extra_blocks.append(f"[REJECTION GAPS / DENIAL FOCUS]: {rejection_gaps.strip()}")
+                else:
+                    extra_blocks.append("[REJECTION GAPS / DENIAL FOCUS]: Ensure the clinical evidence is insufficient. Omit critical supportive findings, exclude documentation of prior conservative treatments, and ensure the criteria for PA approval are explicitly NOT met.")
+
             combined_feedback = feedback.strip()
             if extra_blocks:
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
@@ -429,6 +446,7 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                 excluded_names=current_names,
                 generation_mode=generation_mode,
                 cancel_check=cancel_check,
+                generate_rejection_docs=generate_rejection_docs,
             )
 
         with _jobs_lock:
@@ -594,6 +612,8 @@ def api_generate():
     reports        = body.get("reports", [])
     procedures     = body.get("procedures", [])
     behavioral_notes = body.get("behavioral_notes", "")
+    generate_rejection_docs = bool(body.get("generate_rejection_docs", False))
+    rejection_gaps = str(body.get("rejection_gaps", "")).strip()
 
     if not patient_id:
         return jsonify({"error": "patient_id is required"}), 400
@@ -629,7 +649,7 @@ def api_generate():
         target=_run_generation,
         args=(job_id, patient_id, feedback, generation_mode, pa_optimize,
               medications, allergies, vaccinations, therapies, behavioral_notes,
-              encounters, images, reports, procedures),
+              encounters, images, reports, procedures, generate_rejection_docs, rejection_gaps),
         daemon=True
     )
     t.start()
@@ -656,6 +676,8 @@ def api_preview():
     images           = body.get("images", [])
     reports          = body.get("reports", [])
     procedures       = body.get("procedures", [])
+    generate_rejection_docs = bool(body.get("generate_rejection_docs", False))
+    rejection_gaps = str(body.get("rejection_gaps", "")).strip()
 
     job_id = str(uuid.uuid4())
     with _jobs_lock:
@@ -673,7 +695,8 @@ def api_preview():
     t = threading.Thread(
         target=_run_preview_generation,
         args=(job_id, patient_id, feedback, generation_mode, medications, allergies,
-              vaccinations, therapies, behavioral_notes, encounters, images, reports, procedures),
+              vaccinations, therapies, behavioral_notes, encounters, images, reports, procedures,
+              generate_rejection_docs, rejection_gaps),
         daemon=True,
     )
     t.start()

@@ -164,7 +164,7 @@ A `vertex_doc_reminder` CRITICAL instruction is always prepended to Vertex promp
 - **Bio narrative is enforced non-empty**: if the LLM returns a blank or too-short `bio_narrative`, it is backfilled from persona data, encounters, diagnoses, and case details.
 - **Report medical history is enforced**: if a document includes `past_medical_history` but it is blank, it is backfilled using supporting diagnoses or case context.
 - **No coverage/sufficiency judgments in clinical text**: documents are sanitized to remove explicit appropriateness/coverage or evidence-sufficiency language (e.g., "not indicated", "not medically necessary", "meets criteria", "insufficient evidence").
-- **Rejection → Approval for clinical docs**: when supporting reports are generated, rejection/denial case outcomes are converted to approval for clinical document generation (annotator summary can still reflect the original test case).
+- **Rejection/Approval Handling**: For default positive outcomes, the system forces approval document generation. However, when `generate_rejection_docs` is explicitly set, the system bypasses this and instructs the AI to generate clinically deficient documents (e.g. missing tests, failed criteria) to test denial workflows.
 
 ---
 
