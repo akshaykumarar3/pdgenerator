@@ -73,7 +73,7 @@ def get_patient_summary_folder(patient_id: str, patient_name: str | None = None)
 
 def get_patient_archive_folder(patient_id: str, patient_name: str | None = None) -> str:
     """Archive folder for a patient."""
-    return os.path.join(get_patient_root(patient_id, patient_name), "archive")
+    return os.path.join(get_patient_root(patient_id, patient_name), "_meta", "archive")
 
 def get_patient_logs_folder(patient_id: str, patient_name: str | None = None) -> str:
     """Logs folder for a patient (archive/log)."""
@@ -81,7 +81,7 @@ def get_patient_logs_folder(patient_id: str, patient_name: str | None = None) ->
 
 def get_patient_records_folder(patient_id: str, patient_name: str | None = None) -> str:
     """Text record folder for a patient (root)."""
-    return get_patient_root(patient_id, patient_name)
+    return os.path.join(get_patient_root(patient_id, patient_name), "_meta")
 
 
 __all__ = [

@@ -240,20 +240,34 @@ def validate_npi_consistency(payload: Any) -> tuple[bool, list[str]]:
     npi_to_provider = {}
     provider_to_npi = {}
     
+    def _normalize_name(name: str) -> str:
+        # Remove content in parentheses (e.g. facility names/depts) to avoid false mismatches
+        s = re.sub(r'\(.*?\)', '', name)
+        # Strip common titles / noise
+        s = s.replace(',', '').replace('.', '').strip().upper()
+        # Remove medical honorifics and suffixes
+        s = re.sub(r'\b(DR|MD|DO|PHD|DDS|DVM|FNP|RN|PA-C|LCSW|PA|NP)\b', '', s)
+        # Collapse multiple spaces
+        s = re.sub(r'\s+', ' ', s).strip()
+        return s
+
     def _record_npi(npi: str, provider: str):
         if not npi or not provider or npi == "N/A" or provider == "N/A" or provider == "Unknown Provider":
             return
         n = str(npi).strip()
-        p = str(provider).strip().upper()
-        if not n or not p or len(n) < 10: return
-
-        if n in npi_to_provider and npi_to_provider[n] != p:
-            errors.append(f"NPI {n} resolves to both '{npi_to_provider[n]}' and '{p}'")
-        if p in provider_to_npi and provider_to_npi[p] != n:
-            errors.append(f"Provider '{p}' has both NPI {provider_to_npi[p]} and {n}")
+        p_raw = str(provider).strip()
+        p_norm = _normalize_name(p_raw)
         
-        npi_to_provider[n] = p
-        provider_to_npi[p] = n
+        if not n or not p_norm or len(n) < 10: return
+
+        if n in npi_to_provider and npi_to_provider[n] != p_norm:
+            # We store normalized name for logic, but log raw names for info
+            errors.append(f"NPI {n} resolves to both '{npi_to_provider[n]}' and '{p_norm}' (normalized)")
+        if p_norm in provider_to_npi and provider_to_npi[p_norm] != n:
+            errors.append(f"Provider '{p_norm}' has both NPI {provider_to_npi[p_norm]} and {n}")
+        
+        npi_to_provider[n] = p_norm
+        provider_to_npi[p_norm] = n
 
     def _extract_from_dict(d: dict):
         # Look for keys containing "npi" and nearby "provider" keys

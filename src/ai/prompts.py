@@ -338,7 +338,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
-         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`. Format "XXXXXXXXXX" (10 digits). **STRICT RULE**: Every NPI must be assigned ONCE per provider. The same provider across all encounters, therapies, and documents MUST reuse the EXACT SAME NPI. No provider can have two different NPIs; no two providers can share the same NPI.
+         - **Provider NPI (MANDATORY)**: `provider.formatted_npi`. Format "XXXXXXXXXX" (10 digits). **STRICT RULE**: Every NPI must be assigned ONCE per provider. The same provider across all encounters, therapies, and documents MUST reuse the EXACT SAME NPI. The provider's FULL NAME string must also be identical everywhere it appears. No provider can have two different NPIs; no two providers can share the same NPI.
          - **Clinical Coding (MANDATORY - Must be filled for report alignment)**:
            - `target_cpt_code`: CPT code for the requested procedure
            - `target_cpt_description`: Full procedure description
@@ -549,7 +549,7 @@ def get_existing_patient_constraint(existing_persona: dict, case_details: dict) 
     - Gender: {existing_persona.get('gender')}
     - Address: {existing_persona.get('address')}
     - Telecom: {existing_persona.get('telecom')}
-    - Provider: {(existing_persona.get('provider') or dict()).get('generalPractitioner')} ({(existing_persona.get('provider') or dict()).get('managingOrganization')}){med_lock}{allergy_lock}{vax_lock}{therapy_lock}{encounter_lock}{image_lock}{report_lock}{procedure_lock}{behavioral_lock}
+    - Provider: {(existing_persona.get('provider') or dict()).get('generalPractitioner')} ({(existing_persona.get('provider') or dict()).get('managingOrganization')}) [NPI: {(existing_persona.get('provider') or dict()).get('formatted_npi')}]{med_lock}{allergy_lock}{vax_lock}{therapy_lock}{encounter_lock}{image_lock}{report_lock}{procedure_lock}{behavioral_lock}
     
     *Exception*: You MUST generate NEW encounters, vital signs, and adjust the bio narrative to logically support any new requested reports or user feedback.
     - Bio Narrative Strategy: Keep the *style* of the existing bio but update the clinical narrative to match the CURRENT procedure ({case_details['procedure']}) and any newly generated reports.
@@ -631,36 +631,29 @@ def get_image_generation_prompt(context: str, image_type: str) -> str:
     Generates prompt for medical image synthesis.
     
     Args:
-        context: Clinical context (e.g., "knee injury", "chest pain")  
+        context: Clinical context (e.g., "knee injury", "chest pain")
         image_type: Type of scan (e.g., "MRI", "X-ray", "CT", "ECG")
-    
-    CUSTOMIZATION GUIDE:
-    - Increase quality: Add "ultra-high resolution", "4K medical imaging"
-    - Change style: Modify "Black and white" to "color Doppler" for specific scans
-    - Add specificity: Include anatomical details like "sagittal view" or "AP projection"
-    
-    Returns:
-        Image generation prompt (max 3900 chars for API limits)
     """
-    return f"""A direct, close-up medical {image_type} scan result showing {context}.
+    return f"""A high-fidelity {image_type} radiological scan study, photorealistic and medically accurate, visualizing {context}.
 
 IMAGING REQUIREMENTS:
-- Style: AUTHENTIC, MEDICAL-GRADE DICOM/RADIOGRAPH format
-- Quality: High resolution, clinical diagnostic quality
-- Color: Black and white ONLY (grayscale) - authentic medical imaging
-- Contrast: HIGH contrast for clear visualization
-- View: Professional medical imaging perspective
+- Style: AUTHENTIC, MEDICAL-GRADE DICOM/RADIOGRAPH format, photorealistic textures
+- Quality: 8k resolution, ultra-high definition, clinical diagnostic fidelity
+- Color: Grayscale (except for color Doppler if appropriate), authentic medical imaging
+- Contrast: HIGH contrast for expert clinical visualization
+- Render: Sharp anatomical detail as seen in professional PACS systems
 
 CRITICAL RESTRICTIONS (Prevent Invalid Output):
-- NO HUMANS visible (no faces, no full body shots)
-- NO BODY PARTS visible (except internal anatomy/skeletal structures as appropriate)
-- NO DOCTORS or medical personnel
-- NO MEDICAL DEVICES/MACHINES surrounding the scan
-- NO TEXT overlays, labels, annotations, or watermarks
-- NO patient information or identifiers
-- NO equipment visible in frame
+- NO HUMANS visible (no faces, no full body shots, no skin surfaces)
+- NO BODY PARTS visible (except internal anatomical/skeletal structures as appropriate for the scan)
+- NO DOCTORS, medical personnel, or healthcare settings
+- NO MEDICAL DEVICES/MACHINES surrounding the scan area
+- NO TEXT overlays, labels, timestamps, annotations, or watermarks
+- NO patient information, hospital names, or identifiers
+- NO equipment or machinery visible in the frame (focus exclusively on the anatomy)
+- NO graphic or overtly visceral content (maintain professional radiological distance)
 
-OUTPUT: Just the raw, authentic scan image on a black background, as would appear in a PACS viewer or radiograph film."""
+OUTPUT: Just the raw, high-fidelity scan image on a deep black background, mimicking a digital radiograph viewer."""
 
 # ============================================================================
 # DOCUMENT REPAIR PROMPT

@@ -519,18 +519,23 @@ def process_patient_workflow(
 
                 image_path = None
                 imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
-                if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
+                # Use regex with word boundaries to avoid 'CT' matching 'ACTION'
+                found_keyword = next((kw for kw in imaging_keywords if re.search(rf'\b{kw}\b', str(doc.title_hint).upper())), "Radiograph")
+                
+                if any(re.search(rf'\b{kw}\b', str(doc.title_hint).upper()) for kw in imaging_keywords):
                     print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
                     img_filename = f"{final_filename_base}_img.png"
                     temp_image_path = os.path.join(patient_report_folder, img_filename)
                     
-                    # Pass a slice of the document description to guide DALL-E
-                    if isinstance(doc.content, dict):
-                        content_preview = json.dumps(doc.content)[:500]
-                    else:
-                        content_preview = str(doc.content)[:500]
-                    image_context = f"Visual supporting document {doc.title_hint}: {content_preview}"
-                    generated_path = ai_engine.generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                    # Provide a sanitized, high-fidelity context instead of raw JSON
+                    sanitized_hint = doc.title_hint.replace("_", " ").replace("-", " ")
+                    image_context = f"High-fidelity medical visualization of {sanitized_hint} radiological findings"
+                    
+                    generated_path = ai_engine.generate_clinical_image(
+                        context=image_context, 
+                        image_type=found_keyword, 
+                        output_path=temp_image_path
+                    )
                     
                     if generated_path:
                         image_path = generated_path
@@ -889,6 +894,32 @@ def render_patient_pdfs_from_content(
                     service_date=datetime.datetime.now().strftime("%Y-%m-%d"),
                     accession_number=f"ACC-{patient_id}-{seq_str}",
                 )
+                image_path = None
+                imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
+                found_keyword = next((kw for kw in imaging_keywords if re.search(rf'\b{kw}\b', str(title_hint).upper())), "Radiograph")
+                
+                if any(re.search(rf'\b{kw}\b', str(title_hint).upper()) for kw in imaging_keywords):
+                    print(f"      📸 Imaging document detected '{title_hint}', generating supportive AI visual...")
+                    img_filename = f"{final_base}_img.png"
+                    temp_image_path = os.path.join(patient_report_folder, img_filename)
+                    
+                    sanitized_hint = title_hint.replace("_", " ").replace("-", " ")
+                    image_context = f"High-fidelity medical visualization of {sanitized_hint} radiological findings"
+                    
+                    try:
+                        from src.ai.engine import AIEngine
+                        ai_engine = AIEngine()
+                        generated_path = ai_engine.generate_clinical_image(
+                            context=image_context, 
+                            image_type=found_keyword, 
+                            output_path=temp_image_path
+                        )
+                        if generated_path:
+                            image_path = generated_path
+                            print(f"      🖼️  Saved image to {image_path}")
+                    except Exception as e:
+                        print(f"      ⚠️  Could not generate image: {e}")
+
                 pdf_path = pdf_generator.create_patient_pdf(
                     patient_id=patient_id,
                     doc_type=final_base,
@@ -896,9 +927,18 @@ def render_patient_pdfs_from_content(
                     patient_persona=persona_obj,
                     doc_metadata=doc_meta,
                     base_output_folder=patient_report_folder,
-                    image_path=None,
+                    image_path=image_path,
                     version=doc_version,
                 )
+                
+                if image_path:
+                    persist_images = os.getenv("PERSIST_IMAGES", "false").lower() == "true"
+                    if not persist_images:
+                        try:
+                            os.remove(image_path)
+                        except Exception as e:
+                            print(f"      ⚠️  Could not remove temp image {image_path}: {e}")
+
                 docs_written.append(os.path.basename(pdf_path))
                 print(f"      ✅ {os.path.basename(pdf_path)}")
             except Exception as e:

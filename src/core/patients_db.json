@@ -4916,18 +4916,18 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Max Black",
-      "telecom": "555-123-9876",
-      "address": "456 Kings Place, Fort Worth, TX 76104",
+      "telecom": "555-222-1188",
+      "address": "4100 Maple Ave, Dallas, TX 75219",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2010-01-01",
+      "period_start": "2018-06-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Gregory House, MD",
-      "formatted_npi": "3456789012",
+      "formatted_npi": "2134567890",
       "managingOrganization": "Dallas Medical Center",
-      "address": "123 Medical Center Blvd, Suite 100, Dallas, TX 75201",
+      "address": "Dallas Medical Center, 7777 Forest Ln, Dallas, TX 75230",
       "phone": "555-019-8273"
     },
     "link": {
@@ -4935,47 +4935,56 @@
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "J1113",
+      "payer_id": "UHC",
       "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
+      "provider_abbreviation": "UHC",
+      "provider_policy_url": "https://www.uhcprovider.com/",
+      "plan_name": "Texas Select HMO (Commercial)",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO",
+      "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html",
       "member_id": "MBR-522051",
       "policy_number": "POL-2026-8279",
-      "effective_date": "2025-07-01",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$25",
-      "deductible_amount": "$500"
+      "copay_amount": "$50",
+      "deductible_amount": "$1500"
     },
-    "expected_procedure_date": "2026-04-21",
+    "expected_procedure_date": "2026-05-07",
     "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
     "procedure_facility": {
-      "facility_name": "Houston Methodist Hospital",
-      "street_address": "6565 Fannin Street",
-      "city": "Houston",
+      "facility_name": "Baylor University Medical Center",
+      "street_address": "3500 Gaston Ave",
+      "city": "Dallas",
       "state": "TX",
-      "zip_code": "77030",
-      "department": "Nephrology Department"
+      "zip_code": "75246",
+      "department": "Interventional Radiology"
     },
     "pa_request": {
-      "requesting_provider": "Dr. Sarah Johnson, MD, Nephrology",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient presents with ESRD and ongoing need for hemodialysis. The insertion of a tunneled catheter is medically necessary for long-term dialysis access management.",
+      "requesting_provider": "Dr. Gregory House, MD",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Patient with ESRD on hemodialysis (N18.6, Z99.2) has recurrent AV fistula access dysfunction (T82.590A) with documented low access flows and repeated dialysis interruptions. Tunneled hemodialysis catheter insertion (CPT 36558) is requested to provide reliable access to complete prescribed dialysis treatments while long-term access planning continues.",
       "supporting_diagnoses": [
-        "N18.6 - End stage renal disease"
+        "N18.6 - End stage renal disease",
+        "Z99.2 - Dependence on renal dialysis",
+        "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+        "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+        "D63.1 - Anemia in chronic kidney disease"
       ],
-      "previous_treatments": "Previous dialysis via AV fistula and graft; recurrent access site complications observed.",
-      "expected_outcome": "Achieve stable hemodialysis access, improved quality of life, and reduced hospital admissions."
+      "previous_treatments": "AV fistula creation (2025-05-15) and ongoing dialysis unit troubleshooting with repeated cannulation attempts and access surveillance; anemia management previously with methoxy polyethylene glycol-epoetin beta then switched to epoetin alfa; prior diuretic therapy (furosemide) discontinued as ESRD progressed.",
+      "expected_outcome": "Reliable vascular access to support completion of prescribed hemodialysis sessions with adequate blood flow and fewer treatment interruptions.",
+      "units_requested": "1"
     },
-    "bio_narrative": "Caroline Channing is a 40-year-old female from 123 Mockingbird Lane, Dallas, TX 75201 presenting for evaluation related to Insertion of tunneled central venous catheter for dialysis. The referral is tied to CPT 36558 with an anticipated procedure date of 2026-04-21. Key diagnoses include N18.6 - End stage renal disease. On 2026-02-01 specialist consult visit for Persistent trouble with current dialysis access sites.. On 2026-02-15 pre-op evaluation visit for Scheduled for tunneled catheter insertion.. Symptoms have progressed over months with measurable impact on daily function and work capacity. Mutliple Encounters with long term dialysis access Past medical history is notable for N18.6 - End stage renal disease. Prior procedures and interventions include AV Fistula Creation (2025-05-15) for Establish vascular access for dialysis. Current and recent medications include Procrit (Epoetin alfa 40,000 units/mL) 2,000 units subcutaneously weekly, Renvela (Sevelamer carbonate 800mg) 1 tablet with meals, TID, Lasix (Furosemide 40mg) 40mg BID. Therapy history includes Physical for Muscle weakness due to end stage renal disease. Social history: Never; Social/Occasional. Family history: Parental history of cardiovascular disease and hypertension. The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly. Additional documentation across encounters includes objective findings and response patterns to prior conservative management. Imaging and lab results in the chart align with the above diagnoses. The longitudinal record shows adherence to follow-up plans and evolving symptom burden despite treatment.\n\nThe chart reflects ongoing symptom tracking, routine follow-up, and consistent documentation of clinical findings.\n\nPrior conservative measures, medication adjustments, and lifestyle modifications are recorded with response trends.\n\nRelevant findings are summarized alongside encounter dates to maintain a clear longitudinal timeline.",
+    "bio_narrative": "Caroline Channing is a 40-year-old woman living in Dallas, Texas, who has been navigating end stage renal disease (N18.6) and dependence on maintenance hemodialysis (Z99.2). She previously underwent AV fistula creation on 2025-05-15 in an effort to establish durable access for thrice-weekly dialysis. Over the ensuing months, she remained engaged with her care team and learned to manage the day-to-day demands of dialysis, including medication adherence and diet changes geared toward sodium and phosphorus control. In early 2026, Caroline began experiencing repeated problems during dialysis sessions. She reports that staff often had difficulty achieving and maintaining the prescribed blood flow, and she frequently heard machine alarms that led to prolonged troubleshooting and, at times, shortened or incomplete treatments. These events became more frequent over several weeks, leaving her fatigued after dialysis and worried about not receiving full treatments. Her symptoms aligned with hemodialysis access dysfunction and were documented in multiple visits, consistent with a mechanical complication of vascular access (T82.590A) in the setting of hypertensive ESRD (I12.0). She also has anemia of chronic kidney disease (D63.1), managed with erythropoiesis-stimulating therapy; she previously received methoxy polyethylene glycol-epoetin beta but transitioned to epoetin alfa, and her hemoglobin has remained in a stable dialysis-range while still contributing to baseline fatigue. Caroline\u2019s social history is notable for strong adherence to her renal-friendly diet, low sodium intake, and consistent medication use. She does not use tobacco, drinks alcohol only occasionally at social gatherings, and denies illicit drug use. She maintains a practical routine around dialysis and relies on close friends for transportation support on heavier treatment days. Family history includes hypertension in a first-degree relative, which she recognizes as relevant to her kidney disease course. Her recent workup has included baseline chest X-ray imaging (2026-02-10), a hemodialysis access duplex ultrasound (2026-04-01) demonstrating reduced access flow with stenotic segments, and pre-procedure labs (2026-04-03 with repeat CBC/INR on 2026-04-06) to guide safe access planning. Given persistent inability to sustain adequate dialysis flows through the fistula despite dialysis-unit troubleshooting and objective imaging evidence of reduced access flow, her team is requesting insertion of a tunneled central venous catheter for dialysis (CPT 36558) to provide reliable access so she can consistently complete prescribed treatments while longer-term access planning continues.",
     "medications": [
       {
         "brand": "Procrit",
         "generic_name": "Epoetin alfa 40,000 units/mL",
         "dosage": "2,000 units subcutaneously weekly",
-        "qty": "4 vials",
+        "qty": "4 mL (dialysis clinic supply)",
         "prescribed_by": "Dr. Gregory House, MD",
         "status": "ongoing",
-        "start_date": "2025-11-01",
+        "start_date": "2026-01-12",
         "end_date": "ongoing",
         "reason": "Treatment of anemia associated with chronic kidney disease"
       },
@@ -4983,10 +4992,10 @@
         "brand": "Renvela",
         "generic_name": "Sevelamer carbonate 800mg",
         "dosage": "1 tablet with meals, TID",
-        "qty": "90 tablets",
+        "qty": "90 tablets (30-day supply)",
         "prescribed_by": "Dr. Sarah Johnson, MD",
         "status": "current",
-        "start_date": "2025-09-15",
+        "start_date": "2025-11-20",
         "end_date": "ongoing",
         "reason": "Control serum phosphorus in patients with chronic kidney disease on dialysis"
       },
@@ -4997,9 +5006,53 @@
         "qty": "60 tablets",
         "prescribed_by": "Dr. Gregory House, MD",
         "status": "past",
-        "start_date": "2024-06-10",
-        "end_date": "2025-10-10",
+        "start_date": "2024-08-01",
+        "end_date": "2025-12-20",
         "reason": "Edema associated with heart failure and renal disease"
+      },
+      {
+        "brand": "Nephro-Vite",
+        "generic_name": "Renal multivitamin (B-complex with C and folic acid)",
+        "dosage": "1 tablet daily",
+        "qty": "30 tablets (30-day supply)",
+        "prescribed_by": "Dr. Sarah Johnson, MD",
+        "status": "current",
+        "start_date": "2025-06-01",
+        "end_date": "ongoing",
+        "reason": "Vitamin supplementation for ESRD on hemodialysis (N18.6, Z99.2)"
+      },
+      {
+        "brand": "Mircera",
+        "generic_name": "Methoxy polyethylene glycol-epoetin beta 50 mcg/0.3 mL",
+        "dosage": "50 mcg IV every 4 weeks (dialysis unit protocol)",
+        "qty": "Clinic administered",
+        "prescribed_by": "Dr. Sarah Johnson, MD",
+        "status": "past",
+        "start_date": "2025-08-10",
+        "end_date": "2026-01-10",
+        "reason": "Anemia management in chronic kidney disease (D63.1); switched to epoetin alfa"
+      },
+      {
+        "brand": "Tums",
+        "generic_name": "Calcium carbonate 500mg",
+        "dosage": "1 tablet PRN for dyspepsia (do not take within 2 hours of Renvela)",
+        "qty": "As needed (OTC)",
+        "prescribed_by": "Dr. Gregory House, MD",
+        "status": "past",
+        "start_date": "2025-02-01",
+        "end_date": "2025-10-15",
+        "reason": "Intermittent dyspepsia; reviewed due to CKD mineral balance considerations"
+      },
+      {
+        "brand": "Zofran",
+        "generic_name": "Ondansetron ODT 4mg",
+        "dosage": "1 tablet every 8 hours PRN nausea",
+        "qty": "20 tablets",
+        "prescribed_by": "Dr. Gregory House, MD",
+        "status": "current",
+        "start_date": "2025-12-05",
+        "end_date": "ongoing",
+        "reason": "Intermittent post-dialysis nausea associated with ESRD (N18.6)"
       }
     ],
     "allergies": [
@@ -5008,7 +5061,7 @@
         "allergy_type": "Drug",
         "reaction": "Rash",
         "severity": "Moderate",
-        "onset_date": "2015-06-20"
+        "onset_date": "2002-05-01"
       }
     ],
     "vaccinations": [
@@ -5016,7 +5069,7 @@
         "vaccine_name": "Influenza",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-04",
-        "administered_by": "CVS Pharmacy",
+        "administered_by": "Dallas Medical Center Immunization Clinic",
         "dose_number": "Annual",
         "reason": "Routine Immunization"
       },
@@ -5024,7 +5077,7 @@
         "vaccine_name": "COVID-19 Bivalent Booster",
         "vaccine_type": "mRNA",
         "date_administered": "2025-09-10",
-        "administered_by": "Walgreens Pharmacy",
+        "administered_by": "CVS Pharmacy - Dallas, TX",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -5032,36 +5085,37 @@
         "vaccine_name": "Hepatitis B",
         "vaccine_type": "Subunit",
         "date_administered": "2024-12-01",
-        "administered_by": "Dallas Medical Center",
-        "dose_number": "Full series",
+        "administered_by": "DaVita Dialysis Center - Dallas",
+        "dose_number": "Series completion",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "Pneumococcal",
         "vaccine_type": "Conjugate",
         "date_administered": "2024-11-15",
-        "administered_by": "Dallas Medical Center",
+        "administered_by": "Dallas Medical Center Immunization Clinic",
         "dose_number": "1",
-        "reason": "Chronic condition management"
+        "reason": "Routine Immunization"
       }
     ],
     "therapies": [
       {
         "therapy_type": "Physical",
         "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercise, each 15 minutes",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
         "icd10_codes": [
-          "M62.81 - Muscle weakness"
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis"
         ],
         "provider": "Dr. Amy Lynn, PT",
-        "provider_npi": "1234567890",
-        "facility": "Dallas Rehabilitation Center",
-        "start_date": "2025-08-01",
-        "end_date": "2025-12-01",
+        "provider_npi": "1234567893",
+        "facility": "Dallas Medical Center",
+        "start_date": "2025-07-01",
+        "end_date": "2025-09-15",
         "frequency": "2x/week",
         "status": "Completed",
-        "reason": "Muscle weakness due to end stage renal disease",
-        "notes": "Improved mobility and reduced fatigue noted."
+        "reason": "Deconditioning and generalized weakness related to chronic illness and dialysis schedule",
+        "notes": "Focused on graded strengthening, gait endurance, and core stability; patient completed home exercise program and reported improved stamina for daily activities."
       }
     ],
     "behavioral_notes": "Caroline is adherent to her medication regimen, follows a renal-friendly diet, and maintains a low-sodium intake to manage her blood pressure. She indulges in alcohol sparingly at social gatherings and has no history of tobacco use. Her mental health is stable, with a positive outlook despite her chronic health challenges.",
@@ -5069,85 +5123,284 @@
       {
         "encounter_date": "2026-02-01",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Consultation for dialysis access management due to recurrent AV interventions.",
-        "provider": "Dr. Sarah Johnson, MD",
-        "provider_npi": "2123456789",
-        "facility": "Houston Methodist Hospital",
+        "purpose_of_visit": "Evaluation of recurrent dialysis access problems and shortened sessions; discuss next steps for access reliability.",
+        "provider": "Dr. Gregory House, MD",
+        "provider_npi": "2134567890",
+        "facility": "Dallas Medical Center",
         "vital_signs": {
           "recorded_date": "2026-02-01",
-          "blood_pressure": "142/85 mmHg",
-          "heart_rate": "75 bpm",
+          "blood_pressure": "148/92 mmHg",
+          "heart_rate": "86 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "22.0 kg/m\u00b2",
-          "oxygen_saturation": null,
-          "temperature": null,
-          "respiratory_rate": null
+          "bmi": "21.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "Persistent trouble with current dialysis access sites.",
-        "doctor_note": "Subjective: The patient reports continued difficulty with maintaining AV fistula access for dialysis, leading to repeated hospital visits.\nObjective: Exam revealed well-healed previous intervention sites with some venous scarring.\nAssessment: End stage renal disease with recurrent vascular access failure.\nPlan: Recommend insertion of a tunneled catheter due to persistent access issues and initiate pre-procedural planning.",
+        "chief_complaint": "My fistula sites keep failing and dialysis keeps getting cut short.",
+        "doctor_note": "HPI: Patient with ESRD on hemodialysis reports increasing difficulty with cannulation and maintaining blood flow through her AV fistula, with repeated alarms and shortened treatments over the last month. She describes fatigue after incomplete sessions and intermittent nausea after dialysis controlled with ondansetron. No fever, chills, or access site redness.\n\nReview of Systems: Positive for fatigue and intermittent nausea after dialysis. Negative for chest pain, dyspnea, syncope, focal neurologic deficits, or current infection symptoms.\n\nPhysical Exam: Vitals as above. General: alert, no acute distress. CV: regular rhythm. Lungs: clear. Extremities: AV fistula with palpable thrill but reduced along a segment; no erythema, warmth, or drainage. Neuro: nonfocal.\n\nAssessment: ESRD on hemodialysis (N18.6, Z99.2) with suspected mechanical complication of vascular access (T82.590A); hypertensive ESRD (I12.0); anemia of CKD (D63.1).\n\nPlan: Order baseline chest X-ray and access imaging to evaluate for mechanical causes of low flow. Review dialysis unit flow records. Continue ESRD meds including sevelamer, renal vitamins, and ESA therapy per protocol; provide counseling on infection signs and access care. Discussed that if access remains unreliable, tunneled catheter (CPT 36558) may be needed to ensure consistent dialysis while access plan is pursued.",
         "observations": [
-          "Venous scarring noted over previous access sites."
+          "Dialysis sessions frequently shortened due to low flow alarms",
+          "No signs of access infection on exam",
+          "Thrill diminished along mid-segment of fistula"
         ],
         "procedures_performed": [
-          "99245 - New Patient Office Consult"
+          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate complexity"
         ],
         "diagnoses": [
-          "N18.6 - End stage renal disease"
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
         ],
         "medications_prescribed": [
-          "Renvela"
+          "Continue current ESRD regimen; no new medications started"
         ],
         "care_team": [
-          "Dr. Sarah Johnson, MD"
+          "Dr. Gregory House, MD",
+          "Dialysis unit nursing staff"
         ],
-        "progress_notes": "Patient's dialysis via an AV fistula has faced recurring obstructions and infections, supporting the need for an alternative access method.",
-        "follow_up_instructions": "Discuss the procedure with patient and schedule preoperative evaluation."
+        "progress_notes": "This is the initial specialist evaluation documenting escalating access dysfunction; workup initiated with imaging and baseline testing to prepare for possible tunneled access if fistula remains unreliable.",
+        "follow_up_instructions": "Follow up after imaging results or sooner for inability to complete dialysis, fever, access site redness, or swelling."
       },
       {
         "encounter_date": "2026-02-15",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Preoperative evaluation for catheter insertion before upcoming dialysis access procedure.",
-        "provider": "Dr. Gregory House, MD",
-        "provider_npi": "3456789012",
+        "purpose_of_visit": "Pre-procedure assessment for dialysis access planning given ongoing fistula dysfunction and incomplete treatments.",
+        "provider": "Dr. Leonard McCoy, MD",
+        "provider_npi": "1456789012",
         "facility": "Dallas Medical Center",
         "vital_signs": {
           "recorded_date": "2026-02-15",
-          "blood_pressure": "140/82 mmHg",
+          "blood_pressure": "142/88 mmHg",
+          "heart_rate": "82 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "21.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.2\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I need a better access option because my fistula isn\u2019t working reliably.",
+        "doctor_note": "HPI: Patient returns for pre-procedure evaluation related to ongoing dialysis access dysfunction with repeated inability to maintain target blood flow. She reports no fevers or chills and no drainage from access site. She notes fatigue when sessions are shortened.\n\nReview of Systems: Positive for fatigue; negative for chest pain, shortness of breath, cough, or current infection symptoms.\n\nPhysical Exam: Vitals as above. Cardiopulmonary exam unremarkable. AV fistula with palpable thrill but less robust along mid segment; no erythema or tenderness.\n\nAssessment: ESRD on hemodialysis with access mechanical complication (N18.6, Z99.2, T82.590A) with comorbid hypertensive ESRD (I12.0) and anemia of CKD (D63.1).\n\nPlan: Reviewed baseline chest imaging plan and upcoming access duplex. Discussed sedation considerations and infection prevention if a tunneled catheter becomes necessary. Continue current medications; document penicillin allergy. Coordinate with nephrology/vascular team for definitive access pathway.",
+        "observations": [
+          "Ongoing reports of dialysis interruptions due to access flow issues",
+          "No active infection symptoms reported"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "No medication changes"
+        ],
+        "care_team": [
+          "Dr. Leonard McCoy, MD",
+          "Dr. Gregory House, MD"
+        ],
+        "progress_notes": "Pre-op planning visit documented ongoing access dysfunction and initiated coordination for imaging and contingency planning for tunneled catheter placement if fistula function remains inadequate.",
+        "follow_up_instructions": "Complete ordered imaging and return for review; seek care urgently for fever, rigors, or inability to receive dialysis."
+      },
+      {
+        "encounter_date": "2026-03-27",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Reassessment of dialysis adequacy concerns and access dysfunction after ongoing dialysis alarms.",
+        "provider": "Dr. Gregory House, MD",
+        "provider_npi": "2134567890",
+        "facility": "Dallas Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-03-27",
+          "blood_pressure": "150/94 mmHg",
+          "heart_rate": "88 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "21.2 kg/m\u00b2",
+          "oxygen_saturation": "99%",
+          "temperature": "98.6\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "Dialysis keeps alarming and they can\u2019t keep the blood flow up.",
+        "doctor_note": "HPI: Patient reports persistent low-flow alarms during hemodialysis and difficulty sustaining prescribed blood flow rates, resulting in shortened sessions. She notes increased fatigue after incomplete treatments. No access site erythema or drainage. Intermittent nausea post dialysis continues and improves with ondansetron.\n\nReview of Systems: Positive fatigue and nausea after dialysis. Negative fevers, chills, chest pain, or shortness of breath.\n\nPhysical Exam: Vitals above. AV fistula with diminished thrill in a segment; no infection signs. Lungs clear; heart regular.\n\nAssessment: ESRD on dialysis with ongoing access mechanical complication (N18.6, Z99.2, T82.590A); hypertensive ESRD (I12.0); anemia of CKD (D63.1).\n\nPlan: Expedite duplex ultrasound of access and obtain updated labs to support procedural planning. Discussed need for reliable temporary access if fistula continues to fail, including tunneled dialysis catheter (CPT 36558). Continue ESRD medication regimen and dialysis schedule; reinforce catheter infection prevention education in anticipation of possible placement.",
+        "observations": [
+          "Dialysis blood flow frequently below prescribed targets",
+          "Symptoms correlate with incomplete dialysis"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "Refill ondansetron ODT 4mg PRN nausea"
+        ],
+        "care_team": [
+          "Dr. Gregory House, MD",
+          "Dialysis unit charge nurse"
+        ],
+        "progress_notes": "Ongoing access dysfunction persists with increasing impact on dialysis completion; diagnostic workup prioritized to guide next steps including potential tunneled access.",
+        "follow_up_instructions": "Complete duplex ultrasound and labs; return within 1-2 weeks or sooner if dialysis cannot be completed."
+      },
+      {
+        "encounter_date": "2026-04-04",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Review access dysfunction symptoms and coordinate specialty evaluation for access planning.",
+        "provider": "Dr. Meredith Grey, MD",
+        "provider_npi": "1987654321",
+        "facility": "Dallas Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-04-04",
+          "blood_pressure": "146/90 mmHg",
+          "heart_rate": "84 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "21.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.3\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m still having trouble getting through dialysis because of the fistula.",
+        "doctor_note": "HPI: Patient presents for ongoing difficulty completing hemodialysis due to poor access flows. Reports repeated alarms and multiple cannulation attempts. Denies fever or chills. Fatigue is worse after shortened sessions.\n\nReview of Systems: Positive for fatigue. Negative for chest pain, dyspnea, or access site drainage.\n\nPhysical Exam: AV fistula with reduced thrill along a mid segment, no erythema/warmth. Cardiopulmonary exam otherwise unremarkable.\n\nAssessment: ESRD on hemodialysis (N18.6, Z99.2) with access mechanical complication (T82.590A). Comorbid hypertensive ESRD (I12.0) and anemia of CKD (D63.1).\n\nPlan: Reviewed duplex findings consistent with reduced flow/stenosis. Coordinated referral to interventional radiology for tunneled dialysis catheter placement planning (CPT 36558) due to persistent inability to sustain adequate dialysis flows. Continue current ESRD medications and monitor for infection symptoms.",
+        "observations": [
+          "Duplex findings discussed with patient",
+          "No infection signs at access site"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "No medication changes"
+        ],
+        "care_team": [
+          "Dr. Meredith Grey, MD",
+          "Dr. Gregory House, MD"
+        ],
+        "progress_notes": "Access dysfunction confirmed by imaging and persistent clinical issues; plan advanced toward temporary tunneled catheter to maintain dialysis adequacy.",
+        "follow_up_instructions": "Proceed with IR consult and pre-procedure labs; return for follow-up after catheter placement planning."
+      },
+      {
+        "encounter_date": "2026-04-05",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Specialist evaluation of low-flow AV fistula and inability to complete dialysis; assess need for tunneled catheter.",
+        "provider": "Dr. Gregory House, MD",
+        "provider_npi": "2134567890",
+        "facility": "Dallas Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-04-05",
+          "blood_pressure": "152/96 mmHg",
+          "heart_rate": "90 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "21.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.5\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "They keep saying my fistula flow is too low and I can\u2019t finish dialysis.",
+        "doctor_note": "HPI: Patient reports continued inability to maintain adequate dialysis blood flow through AV fistula with frequent low-flow alarms and shortened sessions despite troubleshooting. She denies fevers, chills, or access site drainage. She remains adherent with phosphate binder and renal vitamins; anemia managed with epoetin alfa.\n\nReview of Systems: Positive for fatigue and intermittent nausea after dialysis. Negative for dyspnea, chest pain, or infection symptoms.\n\nPhysical Exam: Vitals above. AV fistula with diminished segmental thrill; no erythema/warmth. Lungs clear; heart regular.\n\nAssessment: ESRD on dialysis (N18.6, Z99.2) with recurrent mechanical access complication (T82.590A), hypertensive ESRD (I12.0), anemia of CKD (D63.1).\n\nPlan: Recommend proceeding with tunneled dialysis catheter placement planning (CPT 36558) to provide reliable access for completion of prescribed dialysis while long-term access plan is pursued. Arrange IR consult and ensure pre-procedure labs are up to date. Reinforce infection prevention measures and catheter care education.",
+        "observations": [
+          "Persistent low-flow alarms despite repeated cannulation adjustments",
+          "Imaging and clinical course consistent with access dysfunction"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "Continue current medications"
+        ],
+        "care_team": [
+          "Dr. Gregory House, MD",
+          "Vascular access coordinator"
+        ],
+        "progress_notes": "Despite imaging-confirmed stenosis and ongoing dialysis unit difficulties, patient continues to have incomplete treatments; escalation to tunneled catheter planning initiated.",
+        "follow_up_instructions": "Attend IR consult; obtain repeat CBC/INR within 7 days of scheduled procedure; seek urgent care for fevers, rigors, or missed dialysis."
+      },
+      {
+        "encounter_date": "2026-04-06",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Interventional radiology consultation and pre-procedure planning for tunneled hemodialysis catheter due to ongoing fistula dysfunction.",
+        "provider": "Dr. Stephen Strange, MD",
+        "provider_npi": "1678901234",
+        "facility": "Baylor University Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-04-06",
+          "blood_pressure": "144/86 mmHg",
           "heart_rate": "80 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": "98%",
-          "temperature": null,
-          "respiratory_rate": null
+          "bmi": "21.1 kg/m\u00b2",
+          "oxygen_saturation": "99%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "14 breaths/min"
         },
-        "chief_complaint": "Scheduled for tunneled catheter insertion.",
-        "doctor_note": "The patient is evaluated preoperatively for the scheduled insertion of a tunneled venous catheter. No acute issues were found during the review. Laboratory results corroborate the necessity of a new access route.\nObjective: Blood tests indicate high creatinine levels, confirming kidney dysfunction.\nAssessment: Ready for scheduled procedure.\nPlan: Confirm date for procedure and provide patient with pre-op instructions.",
+        "chief_complaint": "Dialysis keeps getting cut short because my access won\u2019t keep the flow up.",
+        "doctor_note": "HPI: Patient with ESRD on hemodialysis presents to IR clinic for evaluation for tunneled dialysis catheter placement due to persistent AV fistula dysfunction with low flow alarms and incomplete treatments. Reports fatigue after shortened sessions and intermittent nausea post-dialysis controlled with ondansetron. Denies fever, chills, cough, chest pain, or shortness of breath.\n\nReview of Systems: Positive fatigue and intermittent nausea after dialysis. Negative for infectious symptoms, bleeding, or new neurologic symptoms.\n\nPhysical Exam: Vitals as above. General: well-appearing. Lungs clear. Heart regular. Neck without skin breakdown. Extremities: fistula with reduced thrill segmentally; no erythema/warmth.\n\nAssessment: ESRD on dialysis (N18.6, Z99.2) with access mechanical complication (T82.590A) causing dialysis inadequacy; hypertensive ESRD (I12.0); anemia of CKD (D63.1).\n\nPlan: Schedule tunneled hemodialysis catheter insertion (CPT 36558) for 2026-05-07 at Baylor University Medical Center. Review pre-procedure labs; repeat CBC/INR obtained today. Provide education on catheter care and infection prevention. Coordinate with dialysis unit for timing of dialysis relative to procedure to optimize volume status and potassium management.",
         "observations": [
-          "No acute issues found in pre-op evaluation."
+          "IR reviewed duplex findings showing reduced access flow",
+          "No evidence of active infection on exam"
         ],
         "procedures_performed": [
-          "99214 - Established Patient Office Visit"
+          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate complexity"
         ],
         "diagnoses": [
-          "N18.6 - End stage renal disease"
+          "N18.6 - End stage renal disease",
+          "Z99.2 - Dependence on renal dialysis",
+          "T82.590A - Other mechanical complication of other cardiac and vascular devices and implants, initial encounter",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease"
         ],
-        "medications_prescribed": [],
+        "medications_prescribed": [
+          "No new medications; continue current ESRD regimen"
+        ],
         "care_team": [
+          "Dr. Stephen Strange, MD",
+          "Interventional Radiology nursing team",
           "Dr. Gregory House, MD"
         ],
-        "progress_notes": "Pre-op assessment complete. All systems review normal and patient cleared for procedure.",
-        "follow_up_instructions": "Advised to fast 12 hours before procedure and arrive 1 hour early at the nephrology department."
+        "progress_notes": "IR consultation completed with review of imaging and labs; tunneled catheter placement scheduled to ensure reliable dialysis access given recurrent fistula dysfunction and incomplete treatments.",
+        "follow_up_instructions": "Complete anesthesia pre-op evaluation; keep catheter placement appointment on 2026-05-07; call clinic for fever, chills, or new respiratory symptoms prior to procedure."
       }
     ],
     "images": [
       {
         "type": "Chest X-ray",
         "date": "2026-02-10",
-        "provider": "Dr. Sarah Johnson, MD",
-        "facility": "Houston Methodist Hospital",
-        "findings": "Chest X-ray reveals no signs of pleural effusion or pneumothorax. Presence of mild vascular congestion correlating with chronic renal disease."
+        "provider": "Dr. Gregory House, MD",
+        "facility": "Dallas Medical Center",
+        "findings": "Cardiomediastinal silhouette normal. No focal consolidation, pleural effusion, or pneumothorax. Mild interstitial prominence without frank pulmonary edema; serves as baseline pre-central access planning in dialysis-dependent patient."
+      },
+      {
+        "type": "Duplex ultrasound - Hemodialysis access (AV fistula) evaluation",
+        "date": "2026-04-01",
+        "provider": "Dr. Meredith Grey, MD",
+        "facility": "Dallas Medical Center",
+        "findings": "Patent AV fistula with reduced access flow and focal stenosis with diminished augmentation; correlates with repeated low-flow alarms and incomplete dialysis sessions."
       }
     ],
     "reports": [
@@ -5155,50 +5408,63 @@
         "type": "Serum Creatinine",
         "date": "2026-02-05",
         "provider": "Dr. Gregory House, MD",
-        "results": "Elevated serum creatinine level at 4.9 mg/dL indicating severe renal dysfunction.",
-        "notes": "Results support the need for alternative dialysis access."
+        "results": "Creatinine 8.7 mg/dL (consistent with ESRD on hemodialysis).",
+        "notes": "Result reviewed in context of ESRD (N18.6) and dialysis dependence (Z99.2) during access evaluation."
+      },
+      {
+        "type": "BMP/CBC/Coagulation Panel",
+        "date": "2026-04-03",
+        "provider": "Dr. Gregory House, MD",
+        "results": "BMP: Na 137, K 5.2, CO2 20, BUN 68, Cr 9.1, Ca 8.3, Glucose 92. CBC: WBC 6.8, Hgb 9.8, Plt 214. Coags: PT 12.2, INR 1.0, aPTT 29.",
+        "notes": "Obtained as part of pre-procedure planning for requested tunneled dialysis catheter placement (CPT 36558); anemia consistent with D63.1 and stable coagulation profile."
       }
     ],
     "procedures": [
       {
         "name": "AV Fistula Creation",
         "date": "2025-05-15",
-        "provider": "Dr. Sarah Johnson, MD",
-        "facility": "Houston Methodist Hospital",
-        "reason": "Establish vascular access for dialysis",
-        "notes": "Initial placement unsuccessful; revisions required due to obstruction."
+        "provider": "Dr. Meredith Grey, MD",
+        "facility": "Dallas Medical Center",
+        "reason": "Establish durable hemodialysis access for ESRD (N18.6) with dialysis dependence (Z99.2).",
+        "notes": "Post-operative course initially uncomplicated; later developed recurrent low-flow issues leading to evaluation for alternative access."
       }
     ],
     "social_history": {
       "tobacco_use": "Never",
       "tobacco_frequency": null,
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "2 glasses of wine on weekends",
+      "alcohol_frequency": "1-2 drinks/month at social gatherings",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-02-15",
-      "last_visit_reason": "Pre-op evaluation for tunneled catheter insertion",
+      "last_medical_visit": "2026-04-06",
+      "last_visit_reason": "Interventional radiology consultation for tunneled dialysis catheter planning due to AV fistula dysfunction",
       "missed_appointment": false,
       "missed_appointment_reason": null,
-      "early_visit_reason": null,
-      "mental_health_history": "Mentally stable, coping well with ESRD diagnosis",
+      "early_visit_reason": "Came in earlier than scheduled due to repeated incomplete dialysis sessions and worsening fatigue",
+      "mental_health_history": null,
       "mental_health_current": null,
-      "exercise_habits": "Light walking 3x/week",
-      "diet_notes": "Renal-friendly diet, low sodium intake",
-      "family_history_relevant": "Parental history of cardiovascular disease and hypertension"
+      "exercise_habits": "Walks 20-30 minutes on non-dialysis days when energy allows",
+      "diet_notes": "Renal-friendly diet with low sodium; monitors phosphorus intake; uses sevelamer with meals",
+      "family_history_relevant": "Family history of hypertension in a first-degree relative; patient reports no known familial clotting disorders"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-02-15",
-      "blood_pressure": "140/82 mmHg",
+      "recorded_date": "2026-04-06",
+      "blood_pressure": "144/86 mmHg",
       "heart_rate": "80 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "22.0 kg/m\u00b2",
-      "oxygen_saturation": "98%",
-      "temperature": null,
-      "respiratory_rate": null
+      "bmi": "21.1 kg/m\u00b2",
+      "oxygen_saturation": "99%",
+      "temperature": "98.1\u00b0F",
+      "respiratory_rate": "14 breaths/min"
     },
-    "gender_specific_history": null
+    "gender_specific_history": "G0P0. Last Pap smear: 2024-08-12 (reported normal). Mammogram: 2025-06-20 (screening; reported normal). No history of abnormal Pap tests, STIs, or gynecologic surgeries. Menstrual cycles reported as regular but sometimes lighter on dialysis weeks.",
+    "has_fit_fobt_result": false,
+    "insurance_selection": {
+      "provider_id": "UHC",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO"
+    }
   },
   "224": {
     "first_name": "Ross",
@@ -16184,20 +16450,20 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Monica Geller",
-      "telecom": "512-555-0129",
-      "address": "2200 Guadalupe St, Austin, TX 78705",
+      "name": "Fiona Fox",
+      "telecom": "512-555-0199",
+      "address": "1212 S Congress Ave, Austin, TX 78704",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "2018-09-01",
+      "period_start": "2012-05-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Maya Patel, MD",
-      "formatted_npi": "2145608931",
+      "formatted_npi": "2147003581",
       "managingOrganization": "UT Health Austin - Internal Medicine",
-      "address": "1601 Trinity St, Bldg B, Suite 7.400, Austin, TX 78712",
-      "phone": "512-555-0140"
+      "address": "1601 Trinity St, Austin, TX 78712",
+      "phone": "512-555-0100"
     },
     "link": {
       "other_patient": "N/A",
@@ -16208,7 +16474,7 @@
       "payer_name": "UnitedHealthcare",
       "provider_abbreviation": "UHC",
       "provider_policy_url": "https://www.uhcprovider.com/",
-      "plan_name": "Texas AARP\u00ae Medicare Advantage Plans",
+      "plan_name": "Texas AARP Medicare Advantage Plans",
       "plan_type": "Medicare Advantage",
       "plan_id": "UHC_TX_MA",
       "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-aarp-medcomp-sechorizons.html",
@@ -16219,7 +16485,7 @@
       "copay_amount": "$35",
       "deductible_amount": "$0"
     },
-    "expected_procedure_date": "2026-05-05",
+    "expected_procedure_date": "2026-05-12",
     "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
     "procedure_facility": {
       "facility_name": "Ascension Seton Medical Center Austin",
@@ -16232,21 +16498,19 @@
     "pa_request": {
       "requesting_provider": "Dr. Arjun Mehta, MD",
       "urgency_level": "Pre-Service Routine",
-      "clinical_justification": "Patient with advanced CKD (N18.4) and hypertensive CKD (I12.9) has persistent fatigue and intermittent nausea (R53.83, R11.0) with anemia in CKD (D63.1). Tunneled dialysis catheter placement (CPT 36558) is requested to establish vascular access for anticipated hemodialysis initiation in the setting of worsening renal function described in recent visits.",
+      "clinical_justification": "Patient with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) has progressive fatigue and intermittent nausea (R11.0) with anemia of CKD (D63.1). Tunneled dialysis catheter placement (CPT 36558) is requested to establish dialysis-capable access should renal replacement therapy be initiated given symptom burden and declining renal function.",
       "supporting_diagnoses": [
-        "N18.4 - Chronic kidney disease, stage 4 (severe)",
         "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+        "N18.4 - Chronic kidney disease, stage 4 (severe)",
         "D63.1 - Anemia in chronic kidney disease",
-        "R11.0 - Nausea",
-        "R53.83 - Other fatigue",
-        "Z45.2 - Encounter for adjustment and management of vascular access device"
+        "R11.0 - Nausea"
       ],
-      "previous_treatments": "Medical management with amlodipine, furosemide, sodium bicarbonate, oral iron; PRN ondansetron. Lisinopril was previously discontinued after concern for worsening renal function and mild hyperkalemia.",
-      "expected_outcome": "Establish central venous access to allow initiation of hemodialysis when clinically indicated and avoid delays related to vascular access limitations.",
+      "previous_treatments": "Medication management for hypertension/volume (amlodipine, furosemide), metabolic acidosis (sodium bicarbonate), and anemia (oral iron). Past lisinopril trial discontinued after renal function concern and mild hyperkalemia. Symptomatic nausea treatment with ondansetron as needed. Limited vein mapping completed without definitive AV fistula suitability conclusion.",
+      "expected_outcome": "Dialysis access availability if hemodialysis is initiated; reduced need for repeated peripheral IV attempts during acute care visits.",
       "units_requested": "1"
     },
-    "bio_narrative": "Dina Fox is a 60-year-old woman in Austin, Texas, followed by Dr. Maya Patel (internal medicine) for hypertensive chronic kidney disease (I12.9) with stage 4 chronic kidney disease (N18.4). Over the past year she has noticed a gradual decline in energy and increased difficulty maintaining stamina during long work shifts. In early 2026 she began experiencing intermittent nausea (R11.0) and more persistent fatigue (R53.83), which she described as \u201cwiped out\u201d after routine activities. She uses a pill organizer and generally keeps a structured routine, but admits she sometimes misses doses when her schedule is unpredictable. In March 2026, Dina sought care in clinic for exhaustion and elevated blood pressures at home. Two weeks later she presented to the emergency department with nausea and marked fatigue, where labs (CBC/CMP) were obtained and showed anemia consistent with anemia in chronic kidney disease (D63.1) and metabolic derangements compatible with advanced CKD. She also required peripheral IV placement and was noted to have difficult access, which increased her concern about how future treatments would be delivered. A renal ultrasound performed on 2026-03-31 showed echogenic kidneys with mild cortical thinning and no obstruction, supporting chronic medical renal disease. Dina then met with nephrology on 2026-04-02 to review her symptoms and recent workup. While the available documentation emphasizes symptom burden and stage of CKD, it contains limited longitudinal trend data and limited detailed documentation of formal dialysis education or long-term access planning. Given the description of worsening renal function and continued symptoms despite ongoing medical management (amlodipine and furosemide for blood pressure/volume, sodium bicarbonate for metabolic acidosis, oral iron for anemia, and PRN ondansetron for nausea), she was referred for pre-procedure evaluation and access planning. A tunneled central venous catheter for dialysis (CPT 36558) has been requested to establish near-term vascular access for anticipated hemodialysis initiation. Socially, Dina lives in central Austin and works variable shifts that interfere with consistent low-sodium eating; she is attempting gradual dietary improvements. She is a former smoker and reports rare alcohol use and no illicit drug use. She reports elevated stress and irritability around uncertainty in her medical plan and remains engaged in biweekly psychotherapy, relying on structured, rule-based instructions to manage anxiety. Family history is limited in the record but includes hypertension in a first-degree relative and \u201ckidney problems\u201d in an older sibling, which Dina reports contributed to her concern about progression.",
-    "has_fit_fobt_result": null,
+    "bio_narrative": "Dina Fox is a 60-year-old woman living in Austin, Texas, followed by Dr. Maya Patel for hypertensive chronic kidney disease. Over the last year she has noticed gradually worsening stamina, and over the past 2\u20133 months she has had more frequent days of pronounced fatigue with intermittent nausea. She works rotating shifts, which has made meal planning and strict low-sodium adherence inconsistent. She uses a weekly pill organizer and generally takes her medications as prescribed, but acknowledges missing occasional doses on long workdays, which adds to her anxiety about her health trajectory. On 2026-03-10, she presented to primary care reporting exhaustion and home blood pressure readings that had been running high. Management focused on blood pressure and volume control for I12.9 and monitoring of stage 4 CKD (N18.4). On 2026-03-24, she went to the emergency department for nausea and feeling \u201cwiped out,\u201d where labs were obtained demonstrating reduced kidney function with anemia consistent with D63.1. Peripheral venous access was difficult, requiring additional time and attempts for IV placement. A renal ultrasound on 2026-03-31 showed chronic medical renal disease without hydronephrosis. She was seen by nephrology on 2026-04-02 to discuss CKD progression and potential renal replacement therapy pathways. Dina reports she has not started dialysis and is unclear on the exact timing for initiation, but she understands that access planning is being discussed as symptoms have become more disruptive. A limited upper extremity venous mapping study was completed on 2026-04-04 for access planning; the available report provides vein diameter measurements but does not include a definitive statement regarding suitability for an AV fistula. Her family history is notable for hypertension in both parents and chronic kidney disease in an older sibling, which heightens her concern about long-term kidney outcomes. She is a former smoker, uses alcohol rarely, and denies illicit drug use. She is actively engaged in psychotherapy every two weeks to manage stress and irritability that increase when plans feel uncertain. The current referral requests insertion of a tunneled central venous catheter for dialysis (CPT 36558) to provide dialysis-capable access as her symptom burden continues in the setting of progressive CKD.",
+    "has_fit_fobt_result": false,
     "medications": [
       {
         "brand": "Norvasc",
@@ -16255,7 +16519,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "current",
-        "start_date": "2024-08-15",
+        "start_date": "2024-08-14",
         "end_date": "ongoing",
         "reason": "Blood pressure control in hypertensive CKD (I12.9)."
       },
@@ -16266,7 +16530,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "current",
-        "start_date": "2025-02-01",
+        "start_date": "2025-01-05",
         "end_date": "ongoing",
         "reason": "Volume and blood pressure management in CKD/HTN (I12.9, N18.4)."
       },
@@ -16288,7 +16552,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "ongoing",
-        "start_date": "2025-09-10",
+        "start_date": "2025-09-02",
         "end_date": "ongoing",
         "reason": "Anemia support in CKD (D63.1)."
       },
@@ -16310,8 +16574,8 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "past",
-        "start_date": "2025-06-01",
-        "end_date": "2025-11-20",
+        "start_date": "2025-11-10",
+        "end_date": "2026-02-20",
         "reason": "Trial for hypertension/proteinuria; stopped after concern for worsening renal function and mild hyperkalemia in CKD (I12.9, R80.9)."
       }
     ],
@@ -16321,14 +16585,14 @@
         "allergy_type": "Drug",
         "reaction": "Hives and itching",
         "severity": "Moderate",
-        "onset_date": "1998-05-01"
+        "onset_date": "2001-05-12"
       },
       {
         "allergen": "Latex",
         "allergy_type": "Latex",
         "reaction": "Contact rash",
         "severity": "Mild",
-        "onset_date": "2009-03-12"
+        "onset_date": "2015-09-01"
       }
     ],
     "vaccinations": [
@@ -16360,7 +16624,7 @@
         "vaccine_name": "Tdap",
         "vaccine_type": "Toxoid",
         "date_administered": "2021-06-22",
-        "administered_by": "Walgreens Pharmacy - Austin, TX",
+        "administered_by": "Travis County Public Health",
         "dose_number": "1",
         "reason": "Routine Immunization"
       }
@@ -16371,17 +16635,17 @@
         "cpt_code": "90834",
         "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
-          "R53.83 - Other fatigue"
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease"
         ],
         "provider": "Dr. Simone Harper, PhD",
-        "provider_npi": "3412789056",
-        "facility": "Austin Anxiety & Stress Clinic",
+        "provider_npi": "1987654321",
+        "facility": "Austin MindCare Clinic",
         "start_date": "2025-12-03",
         "end_date": "ongoing",
         "frequency": "Every 2 weeks",
         "status": "Active",
-        "reason": "Stress and anxiety symptoms associated with chronic illness uncertainty and difficulty coping with changing medical plans.",
-        "notes": "Patient prefers structured, skills-based sessions; uses scheduling routines and symptom tracking to reduce uncertainty-related distress."
+        "reason": "Stress and anxiety symptoms related to chronic medical illness management and uncertainty around care plans.",
+        "notes": "Focus on structured routines, coping skills, and adherence strategies; patient prefers clear, rule-based instructions."
       }
     ],
     "behavioral_notes": "Patient is punctual and strongly prefers clear, rule-based instructions; she tracks medications in a weekly pill organizer but admits missing occasional doses on long workdays. Diet adherence is inconsistent due to shift work, though she is attempting lower sodium choices. Former smoker; rare alcohol use; denies illicit drugs. Reports elevated stress and irritability around uncertainty in her medical plan; engaged in psychotherapy and uses structured routines to manage anxiety symptoms.",
@@ -16389,106 +16653,14 @@
       {
         "encounter_date": "2026-03-10",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluation of increasing fatigue and elevated home blood pressure readings in known CKD.",
+        "purpose_of_visit": "Evaluation of fatigue and elevated home blood pressure readings in the setting of known hypertensive CKD.",
         "provider": "Dr. Maya Patel, MD",
-        "provider_npi": "2145608931",
+        "provider_npi": "2147003581",
         "facility": "UT Health Austin - Internal Medicine",
         "vital_signs": {
           "recorded_date": "2026-03-10",
           "blood_pressure": "158/92 mmHg",
-          "heart_rate": "84 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "30.2 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.4\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I\u2019m exhausted and my blood pressure has been high.",
-        "doctor_note": "HPI: 60-year-old woman with hypertensive CKD reports several weeks of worsening fatigue and elevated BP readings at home. She denies chest pain, shortness of breath, or fever. She notes intermittent decreased appetite and occasional nausea but has not vomited. She reports occasional missed doses on long shifts.\n\nReview of Systems: Positive for fatigue. Negative for chest pain, dyspnea, syncope. GI: intermittent nausea, no persistent vomiting or abdominal pain. GU: no dysuria reported.\n\nPhysical Exam: Well-appearing, tired-appearing female in no acute distress. BP elevated in clinic. Cardiac regular rate/rhythm. Lungs clear. Abdomen soft, non-tender. Trace bilateral ankle edema.\n\nAssessment: I12.9 hypertensive CKD; N18.4 stage 4 CKD; R53.83 fatigue; R11.0 nausea (intermittent). D63.1 anemia in CKD on supplementation.\n\nPlan: Reinforced medication adherence and home BP log. Continue amlodipine and furosemide. Continue iron supplementation. Provided PRN nausea guidance and advised hydration within CKD limits. Ordered follow-up labs through nephrology records and renal ultrasound already scheduled. Discussed that worsening CKD symptoms may require renal replacement therapy planning; referral to nephrology confirmed.",
-        "observations": [
-          "Elevated clinic blood pressure with reported variability at home.",
-          "Trace bilateral ankle edema.",
-          "Symptoms of fatigue out of proportion to activity level."
-        ],
-        "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
-        ],
-        "diagnoses": [
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
-          "N18.4 - Chronic kidney disease, stage 4 (severe)",
-          "R53.83 - Other fatigue",
-          "R11.0 - Nausea",
-          "D63.1 - Anemia in chronic kidney disease"
-        ],
-        "medications_prescribed": [
-          "Continue Norvasc (Amlodipine 10 mg) daily",
-          "Continue Lasix (Furosemide 20 mg) each morning",
-          "Continue Fer-In-Sol (Ferrous sulfate 325 mg) daily"
-        ],
-        "care_team": [
-          "Dr. Maya Patel, MD"
-        ],
-        "progress_notes": "Symptoms persist; BP remains above goal. Patient awaiting additional nephrology evaluation and imaging.",
-        "follow_up_instructions": "Return in 2 weeks or sooner for worsening fatigue, persistent vomiting, confusion, chest pain, or shortness of breath. Bring home BP log and medication list."
-      },
-      {
-        "encounter_date": "2026-03-24",
-        "encounter_type": "ER Visit",
-        "purpose_of_visit": "Acute evaluation of nausea and profound fatigue in patient with advanced CKD.",
-        "provider": "Dr. Colin Reyes, MD",
-        "provider_npi": "1976438205",
-        "facility": "Ascension Seton Medical Center Austin",
-        "vital_signs": {
-          "recorded_date": "2026-03-24",
-          "blood_pressure": "166/96 mmHg",
-          "heart_rate": "90 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "30.1 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.7\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "I feel nauseated and wiped out.",
-        "doctor_note": "HPI: Patient with known CKD stage 4 presents with intermittent nausea and significant fatigue. She reports poor appetite today and feels dehydrated but is trying to limit fluids due to kidney disease. No chest pain or shortness of breath. No fever.\n\nReview of Systems: Positive for nausea and fatigue. Negative for hematemesis, melena, or severe abdominal pain. Denies dyspnea and chest pain.\n\nPhysical Exam: Afebrile, hemodynamically stable though hypertensive. Mucous membranes mildly dry. Lungs clear. Heart regular. Abdomen soft, non-tender. No focal neurologic deficits.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; R11.0 nausea; R53.83 fatigue; D63.1 anemia in CKD.\n\nPlan: CBC/CMP obtained. Treated symptomatically with ondansetron; encouraged renal-appropriate oral intake. Difficult IV access required peripheral IV placement. Discharged with close follow-up with nephrology and PCP and strict return precautions.",
-        "observations": [
-          "Mild dehydration on exam.",
-          "Difficult peripheral venous access noted by nursing.",
-          "No abdominal tenderness on palpation."
-        ],
-        "procedures_performed": [
-          "CPT 99284 - Emergency department visit, moderate severity",
-          "CPT 36410 - Venipuncture, age 3 years or older, necessitating physician's skill (difficult access)"
-        ],
-        "diagnoses": [
-          "N18.4 - Chronic kidney disease, stage 4 (severe)",
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
-          "R11.0 - Nausea",
-          "R53.83 - Other fatigue",
-          "D63.1 - Anemia in chronic kidney disease"
-        ],
-        "medications_prescribed": [
-          "Zofran ODT (Ondansetron 4 mg ODT) dissolve 1 tablet every 8 hours as needed"
-        ],
-        "care_team": [
-          "Dr. Colin Reyes, MD",
-          "ED nursing team"
-        ],
-        "progress_notes": "Symptoms improved transiently with antiemetic. Labs reviewed with patient; advised expedited outpatient nephrology follow-up.",
-        "follow_up_instructions": "Follow up with nephrology within 1 week and PCP within 1-2 weeks. Return for inability to keep fluids down, worsening weakness, chest pain, dyspnea, or confusion."
-      },
-      {
-        "encounter_date": "2026-04-02",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Nephrology evaluation for advanced CKD symptoms and planning for potential renal replacement therapy.",
-        "provider": "Dr. Arjun Mehta, MD",
-        "provider_npi": "2867451930",
-        "facility": "UT Health Austin - Nephrology",
-        "vital_signs": {
-          "recorded_date": "2026-04-02",
-          "blood_pressure": "152/88 mmHg",
-          "heart_rate": "82 bpm",
+          "heart_rate": "86 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "30.2 kg/m\u00b2",
@@ -16496,23 +16668,107 @@
           "temperature": "98.2\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "I\u2019m tired all the time and nauseated on and off.",
-        "doctor_note": "HPI: Patient with stage 4 CKD and hypertensive CKD presents for nephrology consultation after recent ER visit. She reports persistent fatigue and intermittent nausea; uses PRN ondansetron. She reports edema comes and goes and blood pressure is variable. Available documents include recent CBC/CMP and renal ultrasound; longitudinal trend data not available in today\u2019s packet.\n\nReview of Systems: Positive for fatigue and nausea. Denies chest pain, dyspnea, or fever.\n\nPhysical Exam: Alert and oriented, tired-appearing. Mild lower extremity edema. Lungs clear; heart regular.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; D63.1 anemia in CKD; R11.0 nausea; R53.83 fatigue; Z45.2 vascular access planning/management.\n\nPlan: Continue BP and volume management regimen, continue iron supplementation. Start sodium bicarbonate for metabolic acidosis management. Discussed dialysis planning at a high level; placed referral for tunneled catheter consideration (CPT 36558) given anticipated need for reliable access if dialysis is initiated. Asked patient to obtain outside labs for trend review; follow-up planned.",
+        "chief_complaint": "I\u2019m exhausted and my blood pressure has been high.",
+        "doctor_note": "HPI: 60-year-old female with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents with 6\u20138 weeks of worsening fatigue and higher home BP readings. She reports occasional missed doses on long workdays and inconsistent low-sodium diet due to shift work. Denies chest pain or shortness of breath at rest. Intermittent nausea is present but not daily.\n\nROS: Positive for fatigue. GI positive for intermittent nausea without vomiting. CV negative for chest pain. Resp negative for dyspnea at rest. GU negative for dysuria.\n\nPhysical Exam: Appears tired but in no acute distress. Heart regular rate/rhythm. Lungs clear. Abdomen soft, non-tender. Trace ankle edema.\n\nAssessment: I12.9 hypertensive CKD; N18.4 CKD stage 4; D63.1 anemia in CKD (known history); R11.0 nausea intermittent.\n\nPlan: Continue amlodipine and furosemide. Reinforce medication adherence and low-sodium choices. Ordered follow-up labs and referred to nephrology for CKD progression discussion. Return precautions reviewed.",
         "observations": [
-          "Trace edema persists despite diuretic use.",
-          "Symptoms consistent with CKD/anemia but severity not quantified with functional measures.",
-          "No formal vascular mapping performed in clinic."
+          "Fatigue with mild edema noted.",
+          "BP elevated in clinic."
         ],
         "procedures_performed": [
-          "CPT 99204 - Office or other outpatient visit for evaluation and management of a new patient, 45-59 minutes"
+          "99214 - Office or other outpatient visit, established patient, level 4"
+        ],
+        "diagnoses": [
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [
+          "Continue Norvasc (Amlodipine 10 mg) 1 tablet by mouth daily",
+          "Continue Lasix (Furosemide 20 mg) 1 tablet by mouth each morning"
+        ],
+        "care_team": [
+          "Dr. Maya Patel, MD"
+        ],
+        "progress_notes": "Symptoms persisted despite stable antihypertensive regimen; nephrology referral placed for further evaluation.",
+        "follow_up_instructions": "Follow up with nephrology as scheduled. Monitor home BP and bring log. Seek urgent care for worsening nausea/vomiting, confusion, chest pain, shortness of breath, or decreased urination."
+      },
+      {
+        "encounter_date": "2026-03-24",
+        "encounter_type": "ER Visit",
+        "purpose_of_visit": "ED evaluation for nausea and marked fatigue/weakness in a patient with advanced CKD.",
+        "provider": "Dr. Colin Reyes, MD",
+        "provider_npi": "1765432098",
+        "facility": "Ascension Seton Medical Center Austin - Emergency Department",
+        "vital_signs": {
+          "recorded_date": "2026-03-24",
+          "blood_pressure": "166/94 mmHg",
+          "heart_rate": "92 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": null,
+          "oxygen_saturation": "97%",
+          "temperature": "98.5\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "I feel nauseated and wiped out.",
+        "doctor_note": "HPI: 60-year-old female with known hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents with nausea and generalized weakness. She reports poor oral intake earlier today and feels more fatigued than baseline. No chest pain, no shortness of breath at rest. She is not on dialysis. Past history notable for anemia in CKD.\n\nROS: GI positive for nausea; denies persistent vomiting. Constitutional positive for fatigue. CV negative for chest pain. Resp negative for dyspnea.\n\nPhysical Exam: Alert, oriented, dry mucous membranes. Lungs clear. Heart regular. Abdomen soft, non-tender. No focal neurologic deficits.\n\nAssessment: R11.0 nausea, N18.4 CKD stage 4, D63.1 anemia in CKD, I12.9 hypertensive CKD.\n\nPlan: CBC/CMP obtained. Difficult IV access; peripheral IV placed after multiple attempts. Treated symptomatically with ondansetron and oral hydration as tolerated. Discharged with instructions to follow with PCP and nephrology; return for worsening symptoms.",
+        "observations": [
+          "Decreased oral intake noted.",
+          "Peripheral access difficult; required multiple attempts."
+        ],
+        "procedures_performed": [
+          "99284 - Emergency department visit, level 4",
+          "36410 - Venipuncture, age 3 years or older, necessitating physician's skill (separate procedure)"
+        ],
+        "diagnoses": [
+          "R11.0 - Nausea",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "D63.1 - Anemia in chronic kidney disease",
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "Zofran ODT (Ondansetron 4 mg ODT) dissolve 1 tablet on tongue every 8 hours as needed for nausea"
+        ],
+        "care_team": [
+          "Dr. Colin Reyes, MD",
+          "ED nursing staff"
+        ],
+        "progress_notes": "ED visit highlighted symptom recurrence and limited physiologic reserve with CKD; outpatient follow-up emphasized.",
+        "follow_up_instructions": "Follow up with PCP within 1 week and nephrology as scheduled. Return to ED for persistent vomiting, inability to keep fluids down, chest pain, shortness of breath, confusion, or decreased urine output."
+      },
+      {
+        "encounter_date": "2026-04-02",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Nephrology consultation for stage 4 CKD symptoms and discussion of renal replacement therapy options and access planning.",
+        "provider": "Dr. Arjun Mehta, MD",
+        "provider_npi": "2315987421",
+        "facility": "Ascension Seton Medical Center Austin",
+        "vital_signs": {
+          "recorded_date": "2026-04-02",
+          "blood_pressure": "154/88 mmHg",
+          "heart_rate": "84 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m tired all the time and nauseated on and off.",
+        "doctor_note": "HPI: Patient with I12.9 and N18.4 reports progressive fatigue and intermittent nausea after recent ED visit. She is not on dialysis and is seeking guidance on next steps. She reports adherence is generally good but variable with shift work.\n\nROS: Positive for fatigue and nausea. No chest pain. No dyspnea at rest.\n\nPhysical Exam: Trace edema; otherwise nonfocal exam.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; D63.1 anemia in CKD; R11.0 nausea.\n\nPlan: Continue current meds. Start sodium bicarbonate for low CO2 noted on ER CMP. Discussed dialysis modalities at a high level; ordered limited venous mapping to inform access planning. Follow up with labs prior to next visit.",
+        "observations": [
+          "Discussed renal replacement options without documented dialysis start date.",
+          "Access planning initiated with limited vein mapping order."
+        ],
+        "procedures_performed": [
+          "99204 - Office or other outpatient visit, new patient, level 4"
         ],
         "diagnoses": [
           "N18.4 - Chronic kidney disease, stage 4 (severe)",
           "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
           "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea",
-          "R53.83 - Other fatigue",
-          "Z45.2 - Encounter for adjustment and management of vascular access device"
+          "R11.0 - Nausea"
         ],
         "medications_prescribed": [
           "Sodium Bicarbonate (Sodium bicarbonate 650 mg) 1 tablet by mouth twice daily"
@@ -16521,56 +16777,53 @@
           "Dr. Arjun Mehta, MD",
           "Dr. Maya Patel, MD"
         ],
-        "progress_notes": "After ER visit, symptoms persist. Planning initiated for potential dialysis access though full laboratory trend documentation remains limited in chart.",
-        "follow_up_instructions": "Follow up nephrology in 2-4 weeks with updated labs. Continue home BP log. Seek urgent care for worsening symptoms."
+        "progress_notes": "Nephrology initiated additional medical therapy and began access planning steps; patient remains pre-dialysis.",
+        "follow_up_instructions": "Schedule labs in 2\u20134 weeks before nephrology follow-up. Continue current medications. Call clinic for worsening nausea, vomiting, confusion, shortness of breath, or reduced urine output."
       },
       {
         "encounter_date": "2026-04-05",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-procedure evaluation and clearance for requested tunneled dialysis catheter insertion (CPT 36558).",
-        "provider": "Dr. Priya Nair, MD",
-        "provider_npi": "3159074628",
+        "purpose_of_visit": "Pre-operative evaluation prior to requested tunneled hemodialysis catheter placement (CPT 36558).",
+        "provider": "Dr. Lena Tran, MD",
+        "provider_npi": "3098456712",
         "facility": "Ascension Seton Medical Center Austin - Pre-Op Clinic",
         "vital_signs": {
           "recorded_date": "2026-04-05",
-          "blood_pressure": "160/94 mmHg",
-          "heart_rate": "86 bpm",
+          "blood_pressure": "150/86 mmHg",
+          "heart_rate": "80 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "30.2 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.5\u00b0F",
-          "respiratory_rate": "17 breaths/min"
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m here for pre-op clearance for a dialysis catheter.",
-        "doctor_note": "HPI: Patient presents for pre-op evaluation for tunneled dialysis catheter placement (CPT 36558) planned at Ascension Seton Medical Center Austin. She reports ongoing fatigue and intermittent nausea. No chest pain, dyspnea, or infectious symptoms reported today. Medication list reviewed.\n\nReview of Systems: Positive fatigue and intermittent nausea. Negative for fever, cough, or dyspnea.\n\nPhysical Exam: No acute distress. Cardiopulmonary exam without acute findings. Mild bilateral ankle edema. Skin intact; no signs of active infection at potential access sites.\n\nAssessment: CKD stage 4 with hypertensive CKD (N18.4, I12.9), anemia in CKD (D63.1), intermittent nausea (R11.0), fatigue (R53.83). Pre-op evaluation for vascular access device placement (Z45.2).\n\nPlan: Cleared to proceed from a general medical perspective based on today\u2019s exam and available recent labs; noted that BP is elevated and should be optimized peri-procedurally. Reviewed allergy history (penicillin, latex). Reviewed general catheter risks and infection precautions. Coordinated with interventional radiology scheduling for requested tunneled catheter placement date. Concurrent Care Reference: Patient continues active mental health psychotherapy every 2 weeks (CPT 90834) for stress/anxiety management related to chronic illness.",
+        "doctor_note": "HPI: 60-year-old female with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents for pre-op evaluation for requested tunneled dialysis catheter insertion (CPT 36558). She reports fatigue and intermittent nausea; denies chest pain or shortness of breath at rest. She is not currently receiving dialysis treatments and does not have a documented dialysis start date in the pre-op paperwork.\n\nROS: Positive fatigue and nausea; otherwise negative as reviewed.\n\nPhysical Exam: Well-appearing, no acute distress. Airway Mallampati II. Heart regular. Lungs clear. Trace lower extremity edema.\n\nAssessment: Pre-op evaluation for requested dialysis catheter in patient with N18.4/I12.9 and anemia of CKD (D63.1).\n\nPlan: Review recent labs/imaging. Counsel on peri-procedural infection/bleeding risks and line care basics. Medication review performed; no anticoagulants documented. Continue amlodipine, furosemide, sodium bicarbonate, and iron; continue ondansetron PRN. Proceed with scheduling per interventional radiology.\n\nConcurrent Care Reference: Patient is actively engaged in Mental Health / Psychotherapy every 2 weeks with Dr. Simone Harper, PhD.",
         "observations": [
-          "Blood pressure above goal at pre-op visit.",
-          "No signs of active infection.",
-          "Patient demonstrates understanding when given structured step-by-step instructions."
+          "Pre-op paperwork references dialysis catheter request; dialysis start plan not documented.",
+          "Active psychotherapy noted in pre-op assessment."
         ],
         "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
+          "99203 - Office or other outpatient visit, new patient, level 3"
         ],
         "diagnoses": [
-          "N18.4 - Chronic kidney disease, stage 4 (severe)",
           "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
           "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea",
-          "R53.83 - Other fatigue",
-          "Z45.2 - Encounter for adjustment and management of vascular access device"
+          "R11.0 - Nausea"
         ],
         "medications_prescribed": [
-          "Continue current medication regimen per nephrology/PCP"
+          "No new medications prescribed at this visit"
         ],
         "care_team": [
-          "Dr. Priya Nair, MD",
-          "Interventional Radiology scheduling",
+          "Dr. Lena Tran, MD",
+          "Interventional Radiology scheduling team",
           "Dr. Arjun Mehta, MD",
           "Dr. Maya Patel, MD"
         ],
-        "progress_notes": "Pre-op readiness reviewed; documentation focuses on symptom burden and existing CKD diagnosis. No additional pre-op testing documented beyond existing CBC/CMP and renal ultrasound.",
-        "follow_up_instructions": "Follow IR instructions for arrival time and pre-procedure fasting. Bring medication list. Monitor BP at home and report very high readings or symptoms. Notify team of fever or signs of infection prior to procedure."
+        "progress_notes": "Pre-op assessment completed with review of available studies; patient remains pre-dialysis with ongoing symptoms.",
+        "follow_up_instructions": "Follow IR scheduling instructions and arrive NPO per anesthesia guidance if applicable. Bring updated medication list. Call clinic for fever, worsening shortness of breath, chest pain, or uncontrolled vomiting."
       }
     ],
     "images": [
@@ -16579,7 +16832,14 @@
         "date": "2026-03-31",
         "provider": "Dr. Maya Patel, MD",
         "facility": "Ascension Seton Medical Center Austin",
-        "findings": "Right kidney 9.1 cm and left kidney 9.4 cm with increased echogenicity and mild cortical thinning bilaterally, consistent with chronic medical renal disease. No hydronephrosis or obstructing lesion identified. Bladder partially distended without gross abnormality described."
+        "findings": "Bilateral kidneys small with increased cortical echogenicity and mild cortical thinning, consistent with chronic medical renal disease. No hydronephrosis or obstructing stone identified. Bladder partially distended without focal mass noted."
+      },
+      {
+        "type": "Upper Extremity Venous Mapping (limited)",
+        "date": "2026-04-04",
+        "provider": "Dr. Arjun Mehta, MD",
+        "facility": "Ascension Seton Medical Center Austin - Vascular Lab",
+        "findings": "Limited duplex mapping with superficial vein diameters recorded (cephalic ~2.0\u20132.6 mm; basilic ~2.7\u20133.1 mm). No thrombosis documented in segments visualized. Report lacks arterial mapping and does not state AV fistula suitability or recommended site."
       }
     ],
     "reports": [
@@ -16587,25 +16847,25 @@
         "type": "CBC/CMP",
         "date": "2026-03-24",
         "provider": "Dr. Colin Reyes, MD",
-        "results": "CBC: Hgb 9.1 g/dL, Hct 28.4%, WBC 7.8, Plt 248. CMP: Cr 3.4 mg/dL, BUN 62 mg/dL, eGFR ~15, K 5.2, CO2 18, Na 137, Ca 8.3, Alb 3.6.",
-        "notes": "Obtained during ER evaluation for nausea/fatigue; summarized values only, with limited trend documentation available."
+        "results": "Hgb 9.6 g/dL; Cr 3.1 mg/dL; eGFR 16 mL/min/1.73m\u00b2; BUN 62 mg/dL; K 5.2 mmol/L; CO2 18 mmol/L.",
+        "notes": "Findings consistent with anemia of CKD and advanced CKD; trend data and dialysis initiation thresholds not documented in this report."
       }
     ],
     "procedures": [
       {
         "name": "Peripheral IV placement (difficult access)",
         "date": "2026-03-24",
-        "provider": "ED nursing team",
-        "facility": "Ascension Seton Medical Center Austin",
-        "reason": "IV access for symptom management and blood draw during ER visit for nausea/fatigue (R11.0, R53.83) in CKD stage 4 (N18.4).",
-        "notes": "Multiple attempts reported; IV obtained with difficulty."
+        "provider": "Dr. Colin Reyes, MD",
+        "facility": "Ascension Seton Medical Center Austin - Emergency Department",
+        "reason": "Need for IV access for ED evaluation/labs and symptomatic treatment; multiple attempts required.",
+        "notes": "Difficult peripheral venous access documented; no central access placed at that time."
       }
     ],
     "social_history": {
-      "tobacco_use": "Former smoker - quit 2012",
-      "tobacco_frequency": "Previously ~0.5 pack/day for 18 years",
-      "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "1-2 drinks every few months",
+      "tobacco_use": "Former smoker - quit 2016",
+      "tobacco_frequency": "Previously ~0.5 pack/day for ~20 years",
+      "alcohol_use": "Rare",
+      "alcohol_frequency": "1-2 drinks per month at most",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-04-05",
@@ -16613,23 +16873,498 @@
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
-      "mental_health_history": "Anxiety symptoms with stress-related irritability; in psychotherapy since 2025",
-      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety) reported at therapy visit; no suicidal ideation reported",
-      "exercise_habits": null,
-      "diet_notes": "Inconsistent low-sodium diet due to shift work; attempting gradual reduction in processed foods",
-      "family_history_relevant": "Hypertension in first-degree relative; patient reports an older sibling with 'kidney problems'"
+      "mental_health_history": "Anxiety symptoms associated with chronic medical illness and uncertainty; in psychotherapy since 2025.",
+      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety); PHQ-9: 6 (mild depressive symptoms)",
+      "exercise_habits": "Walks 15\u201320 minutes 2x/week when energy allows; otherwise limited by fatigue",
+      "diet_notes": "Attempting lower sodium; meal timing inconsistent due to shift work",
+      "family_history_relevant": "Both parents with hypertension; older sibling with chronic kidney disease."
     },
     "vital_signs_current": {
       "recorded_date": "2026-04-05",
-      "blood_pressure": "160/94 mmHg",
-      "heart_rate": "86 bpm",
+      "blood_pressure": "150/86 mmHg",
+      "heart_rate": "80 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": "30.2 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.5\u00b0F",
-      "respiratory_rate": "17 breaths/min"
+      "temperature": "98.0\u00b0F",
+      "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "G2P2. Last Pap smear: 2023-08-14 (reported up to date). Last mammogram: 2024-09-03 (reported normal per patient). No history of gynecologic cancers reported."
+    "gender_specific_history": "G2P2. Last Pap smear: 2023-09-14 (reported normal). Last mammogram: 2024-11-03 (reported normal). Menopause in early 50s; no postmenopausal bleeding reported.",
+    "insurance_selection": {
+      "provider_id": "UHC",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO"
+    }
+  },
+  "2221": {
+    "insurance_selection": {
+      "provider_id": "UHC",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO"
+    },
+    "first_name": "Amelia",
+    "last_name": "Shepherd",
+    "gender": "female",
+    "dob": "1983-11-14",
+    "address": "3412 North Fitzhugh Ave, Dallas, TX 75204",
+    "telecom": "214-555-0186",
+    "race": "White",
+    "height": "5 ft 6 in",
+    "weight": "154 lbs",
+    "maritalStatus": "Divorced",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Nancy Shepherd",
+      "telecom": "972-555-0119",
+      "address": "11700 Preston Rd, Dallas, TX 75230",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2010-06-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Owen Hunt, MD",
+      "formatted_npi": "3198457620",
+      "managingOrganization": "UT Southwestern Medical Center - Primary Care",
+      "address": "5939 Harry Hines Blvd, Dallas, TX 75390",
+      "phone": "214-645-8300"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC",
+      "payer_name": "UnitedHealthcare",
+      "provider_abbreviation": "UHC",
+      "provider_policy_url": "https://www.uhcprovider.com/",
+      "plan_name": "Texas Select HMO (Commercial)",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO",
+      "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html",
+      "member_id": "MBR-984973",
+      "policy_number": "POL-2026-7402",
+      "effective_date": "2026-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$50",
+      "deductible_amount": "$2000"
+    },
+    "expected_procedure_date": "2026-05-12",
+    "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
+    "procedure_facility": {
+      "facility_name": "UT Southwestern Medical Center",
+      "street_address": "5323 Harry Hines Blvd",
+      "city": "Dallas",
+      "state": "TX",
+      "zip_code": "75390",
+      "department": "Interventional Radiology"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Rohan Iyer, MD",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Patient with CKD stage 5 (N18.5) is undergoing dialysis planning and requires access for possible hemodialysis initiation. Comorbid hypertensive CKD (I12.0) and anemia in CKD (D63.1) are present and are being managed in parallel; tunneled catheter placement (CPT 36558) is requested to establish access while outpatient planning continues.",
+      "supporting_diagnoses": [
+        "N18.5 - Chronic kidney disease, stage 5",
+        "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+        "D63.1 - Anemia in chronic kidney disease",
+        "R53.83 - Other fatigue",
+        "R11.0 - Nausea"
+      ],
+      "previous_treatments": "Supportive CKD management with antihypertensive therapy, oral iron for anemia, dietary counseling to reduce sodium/potassium, and avoidance of nephrotoxins. No documented permanent access planning steps (vascular mapping or AV fistula creation) are present in the provided chart.",
+      "expected_outcome": "Central venous access available for hemodialysis sessions if initiation is required during continued monitoring and outpatient dialysis planning.",
+      "units_requested": "1"
+    },
+    "bio_narrative": "Amelia Shepherd is a 42-year-old female from 3412 North Fitzhugh Ave, Dallas, TX 75204 presenting for evaluation related to Insertion of tunneled central venous catheter for dialysis. The referral is tied to CPT 36558 with an anticipated procedure date of 2026-05-12. Key diagnoses include N18.5 - Chronic kidney disease, stage 5, I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease, D63.1 - Anemia in chronic kidney disease, R53.83 - Other fatigue. On 2026-03-12 specialist consult visit for I\u2019m exhausted all the time and my labs keep getting worse.. On 2026-03-28 telehealth visit for I still feel worn out and sometimes nauseated.. Symptoms have progressed over months with measurable impact on daily function and work capacity. New patient Past medical history is notable for N18.5 - Chronic kidney disease, stage 5, I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease, D63.1 - Anemia in chronic kidney disease, R53.83 - Other fatigue. Prior procedures and interventions include Renal ultrasound (completed) (2025-09-18) for Evaluation of chronic kidney disease progression (N18.5) and assessment of renal size/echogenicity.. Current and recent medications include Norvasc (Amlodipine 10mg) 1 tablet by mouth daily, Coreg (Carvedilol 12.5mg) 1 tablet by mouth twice daily with meals, Ferrous Sulfate (Feosol) (Ferrous sulfate 325mg (65mg elemental iron)) 1 tablet by mouth every other day, Zofran (Ondansetron ODT 4mg) Dissolve 1 tablet on tongue every 8 hours as needed for nausea. Therapy history includes Mental Health / Psychotherapy for Coping with chronic illness-related stress and persistent fatigue impacting daily function. Social history: Never; Social/Occasional. Family history: Family history of hypertension in multiple first-degree relatives; kidney disease reported in an older maternal relative (details limited). The record documents persistent symptoms despite conservative management and objective findings aligned with the above diagnoses. The requested procedure has been planned accordingly.",
+    "has_fit_fobt_result": null,
+    "medications": [
+      {
+        "brand": "Norvasc",
+        "generic_name": "Amlodipine 10mg",
+        "dosage": "1 tablet by mouth daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Owen Hunt, MD",
+        "status": "current",
+        "start_date": "2025-06-10",
+        "end_date": "ongoing",
+        "reason": "Hypertension associated with hypertensive CKD (I12.0)"
+      },
+      {
+        "brand": "Coreg",
+        "generic_name": "Carvedilol 12.5mg",
+        "dosage": "1 tablet by mouth twice daily with meals",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Owen Hunt, MD",
+        "status": "current",
+        "start_date": "2025-11-03",
+        "end_date": "ongoing",
+        "reason": "Blood pressure control in hypertensive CKD (I12.0)"
+      },
+      {
+        "brand": "Ferrous Sulfate (Feosol)",
+        "generic_name": "Ferrous sulfate 325mg (65mg elemental iron)",
+        "dosage": "1 tablet by mouth every other day",
+        "qty": "45 tablets",
+        "prescribed_by": "Dr. Rohan Iyer, MD",
+        "status": "ongoing",
+        "start_date": "2026-03-12",
+        "end_date": "ongoing",
+        "reason": "Anemia in chronic kidney disease (D63.1)"
+      },
+      {
+        "brand": "Zofran",
+        "generic_name": "Ondansetron ODT 4mg",
+        "dosage": "Dissolve 1 tablet on tongue every 8 hours as needed for nausea",
+        "qty": "20 tablets",
+        "prescribed_by": "Dr. Rohan Iyer, MD",
+        "status": "current",
+        "start_date": "2026-03-28",
+        "end_date": "ongoing",
+        "reason": "Intermittent nausea (R11.0) related to advanced CKD symptoms"
+      },
+      {
+        "brand": "Renvela",
+        "generic_name": "Sevelamer carbonate 800mg",
+        "dosage": "1 tablet by mouth three times daily with meals",
+        "qty": "90 tablets",
+        "prescribed_by": "Dr. Rohan Iyer, MD",
+        "status": "current",
+        "start_date": "2026-04-02",
+        "end_date": "ongoing",
+        "reason": "Hyperphosphatemia risk in advanced CKD stage 5 (N18.5) dietary management support"
+      },
+      {
+        "brand": "Cholecalciferol",
+        "generic_name": "Vitamin D3 2000 IU",
+        "dosage": "1 capsule by mouth daily",
+        "qty": "30 capsules",
+        "prescribed_by": "Dr. Owen Hunt, MD",
+        "status": "ongoing",
+        "start_date": "2025-02-15",
+        "end_date": "ongoing",
+        "reason": "Vitamin D supplementation in CKD (N18.5)"
+      },
+      {
+        "brand": "Lasix",
+        "generic_name": "Furosemide 20mg",
+        "dosage": "1 tablet by mouth daily as needed for swelling",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Owen Hunt, MD",
+        "status": "past",
+        "start_date": "2025-07-22",
+        "end_date": "2025-10-01",
+        "reason": "Intermittent lower extremity swelling reported during CKD progression (N18.5); later discontinued as edema not prominent"
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Hives and pruritic rash",
+        "severity": "Moderate",
+        "onset_date": "2001-05-01"
+      },
+      {
+        "allergen": "Shellfish",
+        "allergy_type": "Food",
+        "reaction": "Lip swelling and throat tightness",
+        "severity": "Severe",
+        "onset_date": "2010-08-12"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza (quadrivalent)",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-05",
+        "administered_by": "UT Southwestern Medical Center - Primary Care",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 mRNA (BNT162b2)",
+        "vaccine_type": "mRNA",
+        "date_administered": "2024-10-20",
+        "administered_by": "CVS Pharmacy, Dallas, TX",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Hepatitis B (Engerix-B)",
+        "vaccine_type": "Subunit",
+        "date_administered": "2026-03-28",
+        "administered_by": "UT Southwestern Medical Center - Nephrology Clinic",
+        "dose_number": "1",
+        "reason": "Catch-up"
+      },
+      {
+        "vaccine_name": "Pneumococcal PCV20",
+        "vaccine_type": "Subunit",
+        "date_administered": "2026-04-02",
+        "administered_by": "UT Southwestern Medical Center - Nephrology Clinic",
+        "dose_number": "1",
+        "reason": "Catch-up"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Mental Health / Psychotherapy",
+        "cpt_code": "90834",
+        "cpt_description": "Psychotherapy, 45 minutes with patient",
+        "icd10_codes": [
+          "R53.83 - Other fatigue"
+        ],
+        "provider": "Dr. Priya Nair, PhD",
+        "provider_npi": "1427368095",
+        "facility": "MindPath Health - Dallas",
+        "start_date": "2026-02-10",
+        "end_date": "ongoing",
+        "frequency": "Every 2 weeks",
+        "status": "Active",
+        "reason": "Coping with chronic illness-related stress and persistent fatigue impacting daily function",
+        "notes": "Focus on stress management, sleep hygiene, and adjustment to chronic disease; no suicidal ideation documented."
+      }
+    ],
+    "behavioral_notes": "Patient is generally adherent with daily medications but admits occasional missed evening doses of carvedilol during long work shifts. Diet is inconsistent; she attempts to limit sodium but has not reliably followed a structured renal diet and sometimes skips meals. She does not smoke and reports occasional alcohol (1\u20132 drinks on some weekends). She attends psychotherapy every other week for stress and sleep disruption related to chronic illness; denies illicit drug use.",
+    "encounters": [
+      {
+        "encounter_date": "2026-03-12",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Initial nephrology evaluation for declining renal function and CKD staging with discussion of renal replacement therapy planning.",
+        "provider": "Dr. Rohan Iyer, MD",
+        "provider_npi": "2630197741",
+        "facility": "UT Southwestern Medical Center - Nephrology Clinic",
+        "vital_signs": {
+          "recorded_date": "2026-03-12",
+          "blood_pressure": "152/92 mmHg",
+          "heart_rate": "86 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "24.9 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m exhausted all the time and my labs keep getting worse.",
+        "doctor_note": "HPI: 42-year-old female referred for elevated creatinine and progressive CKD. She reports months of fatigue and reduced stamina, with intermittent nausea but no vomiting. Denies chest pain, dyspnea at rest, or fevers. Reports long work hours and difficulty maintaining sleep.\n\nReview of Systems: Positive for fatigue and intermittent nausea. Negative for chest pain, orthopnea, cough, dysuria, or focal neurologic symptoms.\n\nPhysical Exam: Tired-appearing but in no acute distress. Lungs clear, heart regular, abdomen soft and nontender. No significant peripheral edema documented.\n\nAssessment: Advanced CKD stage 5 (N18.5) in setting of hypertensive CKD (I12.0) with anemia (D63.1). Symptoms are non-specific (R53.83, R11.0). \n\nPlan: Order CBC and BMP; continue BP regimen; avoid nephrotoxins; begin dialysis education discussion and modalities overview. Follow-up in 2\u20133 weeks to review labs and revisit access planning depending on trajectory.",
+        "observations": [
+          "Fatigue impacting work schedule",
+          "No marked edema on exam",
+          "Blood pressure elevated in clinic"
+        ],
+        "procedures_performed": [
+          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, level 4"
+        ],
+        "diagnoses": [
+          "N18.5 - Chronic kidney disease, stage 5",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [
+          "Ferrous sulfate 325mg every other day"
+        ],
+        "care_team": [
+          "Dr. Rohan Iyer, MD (Nephrology)",
+          "UTSW Nephrology RN Educator"
+        ],
+        "progress_notes": "New nephrology patient; limited outside records. Labs ordered to establish baseline and guide ongoing dialysis planning.",
+        "follow_up_instructions": "Obtain labs within 1\u20132 weeks; bring BP log; avoid NSAIDs; return in 2\u20133 weeks or sooner for worsening symptoms."
+      },
+      {
+        "encounter_date": "2026-03-28",
+        "encounter_type": "Telehealth",
+        "purpose_of_visit": "Lab review and symptom check-in after initial nephrology consult; ongoing discussion of dialysis planning.",
+        "provider": "Dr. Rohan Iyer, MD",
+        "provider_npi": "2630197741",
+        "facility": "UT Southwestern Medical Center - Nephrology Clinic",
+        "vital_signs": null,
+        "chief_complaint": "I still feel worn out and sometimes nauseated.",
+        "doctor_note": "HPI: Patient seen by video to review results and reassess symptoms. She reports persistent fatigue and intermittent nausea; denies vomiting, fevers, chest pain, or shortness of breath at rest. She has not started any structured renal diet yet.\n\nReview of Systems: Positive fatigue and nausea. Negative for confusion, severe dyspnea, or swelling.\n\nPhysical Exam (limited by telehealth): Patient appears alert and conversant. No visible respiratory distress.\n\nAssessment: CKD stage 5 (N18.5) with anemia in CKD (D63.1) and ongoing symptoms (R53.83, R11.0). Hypertensive CKD (I12.0) ongoing.\n\nPlan: Continue antihypertensives; start ondansetron PRN for nausea. Discussed dialysis modality options at a general level and reinforced need for ongoing monitoring. Plan to revisit access options at next in-person follow-up; no vascular mapping results available in chart.",
+        "observations": [
+          "Symptoms unchanged from initial consult",
+          "Telehealth limits exam detail"
+        ],
+        "procedures_performed": [
+          "99442 - Telephone evaluation and management service, 11-20 minutes"
+        ],
+        "diagnoses": [
+          "N18.5 - Chronic kidney disease, stage 5",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [
+          "Ondansetron ODT 4mg q8h PRN nausea"
+        ],
+        "care_team": [
+          "Dr. Rohan Iyer, MD (Nephrology)"
+        ],
+        "progress_notes": "Reviewed labs consistent with advanced CKD and anemia; symptoms persist but no clear emergent dialysis features documented during call.",
+        "follow_up_instructions": "Continue meds; monitor symptoms; seek urgent evaluation for worsening dyspnea, confusion, persistent vomiting, or inability to keep fluids down; follow up in 1\u20132 weeks."
+      },
+      {
+        "encounter_date": "2026-04-02",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "In-person nephrology follow-up for CKD stage 5 management and further dialysis access discussion.",
+        "provider": "Dr. Rohan Iyer, MD",
+        "provider_npi": "2630197741",
+        "facility": "UT Southwestern Medical Center - Nephrology Clinic",
+        "vital_signs": {
+          "recorded_date": "2026-04-02",
+          "blood_pressure": "150/90 mmHg",
+          "heart_rate": "84 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "24.8 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m tired every day and I\u2019m worried I\u2019ll need dialysis soon.",
+        "doctor_note": "HPI: Patient returns for follow-up of advanced CKD. She reports ongoing fatigue and intermittent nausea; no vomiting. Denies chest pain or shortness of breath at rest. Reports difficulty maintaining diet changes. No documentation of completed vascular mapping is available in the chart today.\n\nReview of Systems: Positive fatigue and nausea. Negative for fever, cough, dysuria.\n\nPhysical Exam: Alert, tired-appearing. Lungs clear, cardiac exam regular. Abdomen soft. No significant edema documented.\n\nAssessment: CKD stage 5 (N18.5) with hypertensive CKD (I12.0) and anemia (D63.1). Non-specific symptoms continue (R53.83, R11.0). \n\nPlan: Continue medical management. Started sevelamer with meals for renal metabolic management. Discussed need for access planning; due to lack of established permanent access documentation and concern that dialysis initiation may become necessary during continued monitoring, requested tunneled dialysis catheter placement (CPT 36558) and placed referral to interventional radiology. Pre-op evaluation to be scheduled.",
+        "observations": [
+          "Persistent fatigue",
+          "Blood pressure remains elevated",
+          "No documented edema"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, level 4"
+        ],
+        "diagnoses": [
+          "N18.5 - Chronic kidney disease, stage 5",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [
+          "Sevelamer carbonate 800mg TID with meals"
+        ],
+        "care_team": [
+          "Dr. Rohan Iyer, MD (Nephrology)",
+          "Interventional Radiology Scheduling Team"
+        ],
+        "progress_notes": "Dialysis planning advanced to access request stage due to continued symptoms and advanced CKD; documentation remains limited regarding permanent access workup.",
+        "follow_up_instructions": "Schedule pre-op visit; continue BP meds; avoid NSAIDs; follow up with nephrology in 4 weeks or sooner for symptom changes."
+      },
+      {
+        "encounter_date": "2026-04-07",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Medical clearance and perioperative review prior to scheduled tunneled dialysis catheter placement.",
+        "provider": "Dr. Leah Park, MD",
+        "provider_npi": "1987345602",
+        "facility": "UT Southwestern Medical Center - Perioperative Services",
+        "vital_signs": {
+          "recorded_date": "2026-04-07",
+          "blood_pressure": "148/88 mmHg",
+          "heart_rate": "82 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "24.8 kg/m\u00b2",
+          "oxygen_saturation": "99%",
+          "temperature": "98.2\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m here for the pre-op visit for the catheter procedure.",
+        "doctor_note": "HPI: Patient presents for pre-op evaluation prior to planned tunneled dialysis catheter placement for CKD stage 5. She reports fatigue and intermittent nausea; denies fever, cough, dysuria, chest pain, or acute shortness of breath. No prior anesthesia complications are documented.\n\nReview of Systems: Positive fatigue and nausea. Negative for fever, chills, active infection symptoms.\n\nPhysical Exam: General appearance well, no acute distress. Heart regular rhythm, lungs clear. No marked edema. Airway exam reassuring.\n\nAssessment: CKD stage 5 (N18.5), hypertensive CKD (I12.0), anemia in CKD (D63.1), with symptoms of fatigue (R53.83) and nausea (R11.0). \n\nPlan: Proceed with scheduled procedure. Continue amlodipine and carvedilol morning of procedure unless otherwise instructed. Recommend updated CBC/BMP closer to procedure date per protocol. Reviewed infection and bleeding precautions.",
+        "observations": [
+          "No signs of active infection on ROS",
+          "Stable vitals"
+        ],
+        "procedures_performed": [
+          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, level 4"
+        ],
+        "diagnoses": [
+          "N18.5 - Chronic kidney disease, stage 5",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Leah Park, MD (Perioperative Medicine)",
+          "Dr. Rohan Iyer, MD (Nephrology)",
+          "UTSW Interventional Radiology Team"
+        ],
+        "progress_notes": "Pre-op evaluation completed; reviewed existing lab data and comorbidities. Limited documentation available regarding permanent access planning steps.",
+        "follow_up_instructions": "Follow IR instructions; arrive NPO per sedation guidelines; arrange driver; call for fever, redness, drainage, shortness of breath, chest pain, or worsening symptoms."
+      }
+    ],
+    "images": [
+      {
+        "type": "Chest X-ray, 2 views",
+        "date": "2026-04-02",
+        "provider": "Dr. Rohan Iyer, MD",
+        "facility": "UT Southwestern Medical Center - Radiology",
+        "findings": "Two-view chest radiograph obtained as part of pre-procedure evaluation prior to requested tunneled dialysis catheter placement (CPT 36558). Cardiomediastinal silhouette within normal size limits. No focal consolidation, pleural effusion, or pneumothorax is identified. No acute osseous abnormality is seen; imaging does not document findings related to venous anatomy."
+      }
+    ],
+    "reports": [
+      {
+        "type": "CBC/BMP",
+        "date": "2026-03-25",
+        "provider": "Dr. Rohan Iyer, MD",
+        "results": "CBC: Hgb 9.4 g/dL, Hct 29.1%, WBC 6.8, Plt 214. BMP: Na 137, K 5.0, CO2 19, BUN 62, Cr 5.1, eGFR ~10.",
+        "notes": "Consistent with anemia in CKD (D63.1) and advanced CKD (N18.5). No documentation of refractory hyperkalemia or acute decompensation in accompanying progress note."
+      },
+      {
+        "type": "Iron studies",
+        "date": "2026-03-25",
+        "provider": "Dr. Rohan Iyer, MD",
+        "results": "Ferritin 92 ng/mL, Transferrin saturation 18%, Serum iron 48 \u00b5g/dL, TIBC 266 \u00b5g/dL.",
+        "notes": "Supports mixed iron deficiency/anemia of chronic disease picture in context of D63.1; continued oral iron planned."
+      }
+    ],
+    "procedures": [
+      {
+        "name": "Renal ultrasound (completed)",
+        "date": "2025-09-18",
+        "provider": "Dr. Owen Hunt, MD",
+        "facility": "UT Southwestern Medical Center - Radiology",
+        "reason": "Evaluation of chronic kidney disease progression (N18.5) and assessment of renal size/echogenicity.",
+        "notes": "Report not available in transferred records; referenced in PCP note as 'chronic changes' without specific measurements."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Never",
+      "tobacco_frequency": null,
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 drinks on some weekends",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-04-07",
+      "last_visit_reason": "Pre-op evaluation for planned tunneled dialysis catheter placement",
+      "missed_appointment": true,
+      "missed_appointment_reason": "Missed one nutrition counseling visit due to work schedule conflict",
+      "early_visit_reason": null,
+      "mental_health_history": "Adjustment-related stress and insomnia symptoms since late 2025; no prior psychiatric hospitalizations documented",
+      "mental_health_current": "PHQ-9: 7 (mild depressive symptoms); GAD-7: 6 (mild anxiety)",
+      "exercise_habits": "Light walking 1-2x/week when energy allows",
+      "diet_notes": "Attempts to reduce sodium; renal diet adherence inconsistent; reports occasional skipped meals during long shifts",
+      "family_history_relevant": "Family history of hypertension in multiple first-degree relatives; kidney disease reported in an older maternal relative (details limited)"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-04-07",
+      "blood_pressure": "148/88 mmHg",
+      "heart_rate": "82 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "24.8 kg/m\u00b2",
+      "oxygen_saturation": "99%",
+      "temperature": "98.2\u00b0F",
+      "respiratory_rate": "16 breaths/min"
+    },
+    "gender_specific_history": "G2P1. Last Pap smear: 2024-06-11 (reported normal). Mammogram: 2025-07-19 (reported normal). No known history of gestational hypertension; menstrual cycles irregular over past 6 months per patient report."
   }
 }
