@@ -448,6 +448,16 @@ Workflow continues gracefully.
 
 ---
 
+# Maintenance & Updates
+
+### v4.1 Robustness Improvements (2026-04-07)
+* **Indentation Fix**: Resolved `IndentationError` in `src/workflow.py` causing server startup failures.
+* **Folder Safety**: Added `patient_report_folder` validation and fallback logic to prevent `os.makedirs` crashes during headless generation or persona name alignment.
+* **API Stability**: Corrected `history_manager` local import in `api_server.py` to use `src.data.history`.
+* **Dependency Alignment**: Added `Flask` and `Flask-Cors` to `requirements.txt`.
+
+---
+
 # Testing
 
 Mac/Linux

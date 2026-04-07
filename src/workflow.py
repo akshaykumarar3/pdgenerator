@@ -179,7 +179,7 @@ def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
 
     # Load existing reports only when we are NOT regenerating them
     if not generation_mode.get("reports", False):
-    patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
+        patient_report_folder = get_patient_report_folder(patient_id)
         if os.path.exists(patient_report_folder):
             report_files = [
                 f for f in os.listdir(patient_report_folder)
@@ -396,6 +396,8 @@ def process_patient_workflow(
     current_mrn  = f"MRN-{patient_id}-{current_year}"
     docs_written: list[str] = []
 
+    if not patient_report_folder:
+        patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
     # Ensure the patient's report sub-folder exists before writing
     os.makedirs(patient_report_folder, exist_ok=True)
 
@@ -835,7 +837,6 @@ def render_patient_pdfs_from_content(
         return []
 
     archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
-    if not patient_report_folder:
     if not patient_report_folder:
         patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
     os.makedirs(patient_report_folder, exist_ok=True)

@@ -10,29 +10,145 @@
  * Running on http://127.0.0.1:410
  * Running on http://192.168.31.225:410
 [33mPress CTRL+C to quit[0m
-127.0.0.1 - - [07/Apr/2026 11:44:05] "GET /api/status HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:05] "GET /api/patients HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:13] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:13] "GET /api/insurance/config HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:13] "GET /api/output/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:37] "OPTIONS /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:37] "POST /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:37] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:37] "GET /api/output/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:40] "OPTIONS /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:40] "POST /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:40] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:40] "GET /api/output/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:42] "OPTIONS /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:42] "POST /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:42] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:42] "GET /api/output/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:48] "OPTIONS /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:48] "POST /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:49] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:44:49] "GET /api/output/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:50:22] "OPTIONS /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:50:22] "POST /api/patient/210/insurance HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:50:22] "GET /api/patient/210 HTTP/1.1" 200 -
-127.0.0.1 - - [07/Apr/2026 11:50:22] "GET /api/output/210 HTTP/1.1" 200 -
-./run_api.sh: line 14: 34086 Terminated: 15          python3 -m api_server
+127.0.0.1 - - [07/Apr/2026 12:35:54] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:35:54] "GET /api/patients HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:37:51] "GET /api/patient/222 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:37:51] "GET /api/insurance/config HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:37:51] "GET /api/output/222 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:11] "OPTIONS /api/generate HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:11] "POST /api/generate HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:13] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=0 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:15] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=1 HTTP/1.1" 200 -
+   🤖 AI Provider: OPENAI
+
+🚀 Starting Workflow for Patient ID: 222
+   Mode → Persona:True | Reports:True | Summary:False
+
+📂 Loading Case Data for ID: 222…
+   ✅ Case: Insertion of tunneled central venous catheter for dialysis → PA Rejection
+   🔄 Existing record: Dina Fox
+
+🧠 Generating with AI… (Outcome: PA Rejection)
+   [DEBUG] Calling AI Provider: openai, Model: gpt-5.2
+   [DEBUG] Sending request...
+127.0.0.1 - - [07/Apr/2026 12:38:17] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=1 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:19] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:21] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:23] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:25] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:27] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:29] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:31] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:33] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:35] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:37] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:39] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:41] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:43] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:45] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:47] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:49] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:51] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:53] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:55] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:57] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:38:59] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:01] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:03] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:05] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:07] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:09] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:11] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:13] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:15] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:17] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:19] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:21] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:23] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:25] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:27] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:29] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:31] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:33] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:35] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:37] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:39] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:42] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:43] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:45] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:47] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:49] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:51] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:53] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:55] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:57] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:39:59] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:01] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:03] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:05] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:07] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:09] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:11] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:13] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:15] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:17] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:19] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:21] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:23] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:25] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:27] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:29] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:31] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:36] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:37] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:39] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:41] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:43] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:45] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:47] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:49] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:51] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:53] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:55] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:57] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:40:59] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:01] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:03] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:05] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:07] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:09] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:11] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+   [DEBUG] Request complete.
+      💾 Patient 222 (Unknown) saved to Core DB.
+   💾 Patient DB updated: Dina Fox (ID 222)
+   🔖 Document version: v1
+   👤 Persona → 222-Dina_Fox-persona-v1.pdf
+   📄 Generating 5 report(s) at v1…
+      ✅ DOC-222-v1-001-Prior_Authorization_Request_Tunneled_Dialysis_Catheter_36558.pdf
+      ✅ DOC-222-v1-002-Patient_Clinical_Summary_Dialysis_Catheter_Request.pdf
+      ✅ DOC-222-v1-003-Nephrology_Specialist_Consult_Stage4_CKD_Access_Planning.pdf
+      ✅ DOC-222-v1-004-Lab_Report_CBC_CMP_PreProcedure_Workup.pdf
+      📸 Imaging document detected 'Renal_Ultrasound_Report_Chronic_Medical_Renal_Disease', generating supportive AI visual...
+127.0.0.1 - - [07/Apr/2026 12:41:13] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=10 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:15] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:17] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:19] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:21] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:23] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:25] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:27] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:29] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:31] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:33] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:35] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:37] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:39] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:41] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:41:43] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+      🖼️  Saved image to /Users/akshaykumar/Desktop/Lucenz/Generated Docs/patient-data/222 - Dina Fox/DOC-222-v1-005-Renal_Ultrasound_Report_Chronic_Medical_Renal_Disease_img.png
+      ✅ DOC-222-v1-005-Renal_Ultrasound_Report_Chronic_Medical_Renal_Disease.pdf
+   📝 Patient record updated: 222-record.txt
+
+✅ Workflow complete for patient 222. 6 document(s) written.
+127.0.0.1 - - [07/Apr/2026 12:42:25] "GET /api/job/ad83aedb-d027-4daa-be0c-1a61c617ed04?since=21 HTTP/1.1" 200 -
+127.0.0.1 - - [07/Apr/2026 12:42:25] "GET /api/output/222 HTTP/1.1" 200 -

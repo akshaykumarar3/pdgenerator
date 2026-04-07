@@ -211,6 +211,7 @@
             <div class="text-[9px] text-gray-400 uppercase">Patient</div>
             <div id="info-name" class="text-xs font-semibold mt-0.5">—</div>
             <div id="info-mrn" class="text-[10px] font-mono text-gray-500 mt-0.5">—</div>
+            <div id="info-cpt" class="text-[10px] text-gray-500 mt-0.5">—</div>
           </div>
           <div class="bg-gray-50 p-2 rounded">
             <div class="text-[9px] text-gray-400 uppercase">DOB</div>
@@ -249,8 +250,10 @@
                 </select>
               </div>
               <div class="col-span-2">
-                <div class="text-[9px] text-gray-400 uppercase">Plan Name</div>
-                <div id="insurance-plan-name" class="text-[11px] mt-0.5 text-gray-700">—</div>
+                <div class="text-[9px] text-gray-400 uppercase">Plan</div>
+                <select id="insurance-plan-select" class="w-full text-[11px] border border-gray-200 rounded px-2 py-1 bg-white">
+                  <option value="">—</option>
+                </select>
               </div>
             </div>
             <div class="flex items-center justify-between mt-1">
@@ -597,23 +600,26 @@
         const providerId = document.getElementById('insurance-provider-select').value;
         const provider = getProviderById(providerId);
         const planTypeSelect = document.getElementById('insurance-plan-type-select');
-        const planNameEl = document.getElementById('insurance-plan-name');
+        const planSelect = document.getElementById('insurance-plan-select');
         if (planTypeSelect) {
           const types = getProviderPlanTypes(provider);
           planTypeSelect.innerHTML = types.map(t => `<option value="${t}">${t}</option>`).join('');
           planTypeSelect.value = types[0] || '';
         }
-        if (planNameEl) {
-          planNameEl.textContent = resolvePlanName(provider, planTypeSelect?.value);
+        if (planSelect) {
+          populatePlanOptions(planSelect, provider, planTypeSelect?.value, null);
         }
         saveInsuranceSelection();
       });
       document.getElementById('insurance-plan-type-select')?.addEventListener('change', () => {
         const providerId = document.getElementById('insurance-provider-select').value;
         const provider = getProviderById(providerId);
-        const planNameEl = document.getElementById('insurance-plan-name');
+        const planSelect = document.getElementById('insurance-plan-select');
         const planType = document.getElementById('insurance-plan-type-select').value;
-        if (planNameEl) planNameEl.textContent = resolvePlanName(provider, planType);
+        if (planSelect) populatePlanOptions(planSelect, provider, planType, null);
+        saveInsuranceSelection();
+      });
+      document.getElementById('insurance-plan-select')?.addEventListener('change', () => {
         saveInsuranceSelection();
       });
       document.getElementById('insurance-clear-btn')?.addEventListener('click', (e) => {
@@ -701,21 +707,43 @@
       return [...new Set(types)];
     }
 
-    function resolvePlanName(provider, planType) {
-      if (!provider) return '—';
-      const plans = provider.plans || [];
-      let match = plans.find(p => p.plan_type === planType && p.is_default);
-      if (!match) match = plans.find(p => p.plan_type === planType);
-      if (!match) match = plans.find(p => p.is_default) || plans[0];
-      return match ? match.plan_name : '—';
+    function getPlansForType(provider, planType) {
+      const plans = provider?.plans || [];
+      return planType ? plans.filter(p => p.plan_type === planType) : plans;
+    }
+
+    function getPlanById(provider, planId) {
+      if (!provider || !planId) return null;
+      return (provider.plans || []).find(p => p.plan_id === planId) || null;
+    }
+
+    function resolveDefaultPlan(provider, planType) {
+      const plans = getPlansForType(provider, planType);
+      if (!plans.length) return null;
+      return plans.find(p => p.is_default) || plans[0];
+    }
+
+    function populatePlanOptions(planSelect, provider, planType, selectedPlanId) {
+      const plans = getPlansForType(provider, planType);
+      planSelect.innerHTML = plans.map(p => {
+        const label = p.plan_name || p.plan_id || 'Plan';
+        const value = p.plan_id || p.plan_name || '';
+        return `<option value="${value}">${label}</option>`;
+      }).join('');
+      let chosen = selectedPlanId && plans.find(p => (p.plan_id || p.plan_name) === selectedPlanId) ? selectedPlanId : '';
+      if (!chosen) {
+        const def = resolveDefaultPlan(provider, planType);
+        chosen = def ? (def.plan_id || def.plan_name || '') : '';
+      }
+      planSelect.value = chosen;
     }
 
     async function populateInsuranceSelectors(p) {
       await loadInsuranceConfig();
       const providerSelect = document.getElementById('insurance-provider-select');
       const planTypeSelect = document.getElementById('insurance-plan-type-select');
-      const planNameEl = document.getElementById('insurance-plan-name');
-      if (!providerSelect || !planTypeSelect || !planNameEl) return;
+      const planSelect = document.getElementById('insurance-plan-select');
+      if (!providerSelect || !planTypeSelect || !planSelect) return;
 
       providerSelect.innerHTML = (insuranceConfig.providers || []).map(pr => `<option value="${pr.provider_id}">${pr.name}</option>`).join('');
 
@@ -728,19 +756,26 @@
       const types = getProviderPlanTypes(provider);
       planTypeSelect.innerHTML = types.map(t => `<option value="${t}">${t}</option>`).join('');
 
-      const planType = selection.plan_type || (types[0] || '');
+      let planType = selection.plan_type || '';
+      if (!planType && selection.plan_id && provider) {
+        const match = (provider.plans || []).find(p => p.plan_id === selection.plan_id);
+        if (match) planType = match.plan_type || '';
+      }
+      if (!planType) planType = types[0] || '';
       planTypeSelect.value = planType;
-      planNameEl.textContent = resolvePlanName(provider, planType);
+      populatePlanOptions(planSelect, provider, planType, selection.plan_id || null);
     }
 
     async function saveInsuranceSelection() {
       if (!currentPatientId) return;
       const providerSelect = document.getElementById('insurance-provider-select');
       const planTypeSelect = document.getElementById('insurance-plan-type-select');
-      if (!providerSelect || !planTypeSelect) return;
+      const planSelect = document.getElementById('insurance-plan-select');
+      if (!providerSelect || !planTypeSelect || !planSelect) return;
       const body = {
         provider_id: providerSelect.value,
-        plan_type: planTypeSelect.value
+        plan_type: planTypeSelect.value,
+        plan_id: planSelect.value
       };
       try {
         await fetch(`${API}/api/patient/${currentPatientId}/insurance`, {
@@ -748,8 +783,22 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body)
         });
-        // Refresh patient data to reflect payer in identity display
-        if (currentPatientId) onPatientChange();
+        // Update identity display immediately without full reload
+        const provider = getProviderById(body.provider_id);
+        const plan = getPlanById(provider, body.plan_id) || resolveDefaultPlan(provider, body.plan_type);
+        if (currentPatientData) {
+          currentPatientData.payer = {
+            payer_id: provider?.provider_id || 'UNKNOWN',
+            payer_name: provider?.name || 'Unknown',
+            plan_name: plan?.plan_name || 'Unknown Plan',
+            plan_type: plan?.plan_type || body.plan_type || 'Unknown',
+            plan_id: plan?.plan_id || body.plan_id || '',
+            provider_abbreviation: provider?.abbreviation || '',
+            provider_policy_url: provider?.policy_url || '',
+            plan_policy_url: plan?.policy_url || ''
+          };
+          updateProviderDisplay(currentPatientData);
+        }
       } catch (_) {}
     }
 
@@ -787,6 +836,12 @@
       const mrn = p.mrn || (p.identifiers && p.identifiers.mrn) || (currentPatientId ? `MRN-${currentPatientId}-${year}` : '—');
       document.getElementById('info-name').textContent = fullName;
       document.getElementById('info-mrn').textContent = mrn;
+      if (c) {
+        const cptLabel = (c.procedure || '—') + (c.cpt_code ? ` | CPT ${c.cpt_code}` : '');
+        document.getElementById('info-cpt').textContent = cptLabel;
+      } else {
+        document.getElementById('info-cpt').textContent = '—';
+      }
       document.getElementById('info-dob').textContent = get(p, 'dob') || get(p, 'demographics', 'dob') || '—';
       document.getElementById('info-gender').textContent = p.gender || '—';
       updateProviderDisplay(p);
@@ -814,13 +869,13 @@
     }
 
     function clearDossier() {
-      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary', 'case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => {
+      ['info-name', 'info-mrn', 'info-cpt', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary', 'case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => {
         if (document.getElementById(id)) document.getElementById(id).textContent = '—';
       });
     }
 
     function clearIdentityOnly() {
-      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary'].forEach(id => {
+      ['info-name', 'info-mrn', 'info-cpt', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary'].forEach(id => {
         if (document.getElementById(id)) document.getElementById(id).textContent = '—';
       });
     }

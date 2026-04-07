@@ -92,6 +92,15 @@ def get_default_provider() -> Optional[Dict[str, Any]]:
     return get_provider_by_id(pid) if pid else None
 
 
+def get_plan_by_id(provider: Optional[Dict[str, Any]], plan_id: Optional[str]) -> Optional[Dict[str, Any]]:
+    if not provider or not plan_id:
+        return None
+    for p in provider.get("plans") or []:
+        if p.get("plan_id") == plan_id:
+            return p
+    return None
+
+
 def resolve_plan(
     provider: Optional[Dict[str, Any]],
     plan_type: Optional[str] = None,

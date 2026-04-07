@@ -85,3 +85,5 @@ yarl>=1.22.0
 # Web Search for Medical Information
 tavily-python>=0.3.0
 flasgger
+Flask
+Flask-Cors

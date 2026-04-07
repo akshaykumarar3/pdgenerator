@@ -260,7 +260,7 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
         # Capture changes_summary from AI result if accessible via history
         changes_summary = None
         try:
-            import history_manager
+            from src.data import history as history_manager
             hist = history_manager.get_history(patient_id)
             if hist:
                 # Last entry in history has the changes_summary
@@ -598,6 +598,14 @@ def api_update_patient_insurance(patient_id: str):
     provider = insurance_config.get_provider_by_id(provider_id)
     if not provider:
         return jsonify({"error": "Invalid provider_id"}), 400
+
+    plan = insurance_config.get_plan_by_id(provider, plan_id) if plan_id else None
+    if plan_id and not plan:
+        return jsonify({"error": "Invalid plan_id for provider"}), 400
+    if plan and not plan_type:
+        plan_type = str(plan.get("plan_type") or "").strip()
+    if plan and plan_type and str(plan.get("plan_type") or "").strip() != plan_type:
+        return jsonify({"error": "plan_id does not match plan_type"}), 400
 
     if plan_type:
         valid_types = {p.get("plan_type") for p in (provider.get("plans") or [])}

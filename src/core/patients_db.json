@@ -13993,7 +13993,7 @@
     "gender_specific_history": "PSA screening discussed with PCP; most recent PSA 1.3 ng/mL (2025-11-14). No history of prostate cancer. Reports mild nocturia 1x/night without dysuria or hematuria; no urology referral documented.",
     "insurance_selection": {
       "provider_id": "UHC",
-      "plan_type": "EPO",
+      "plan_type": "Medicare Advantage",
       "plan_id": null
     }
   },
@@ -16163,5 +16163,473 @@
       "respiratory_rate": "16 breaths/min"
     },
     "gender_specific_history": "G3P2 (one miscarriage). Postmenopausal since age 52. Last Pap smear: 2023-07-18 (reported normal). Last mammogram: 2025-08-22 (reported normal). No history of gynecologic malignancy or thromboembolism."
+  },
+  "222": {
+    "first_name": "Dina",
+    "last_name": "Fox",
+    "gender": "female",
+    "dob": "1965-11-19",
+    "address": "410 W 15th St, Austin, TX 78701",
+    "telecom": "512-555-0142",
+    "race": "White",
+    "height": "5 ft 4 in",
+    "weight": "176 lbs",
+    "maritalStatus": "Divorced",
+    "multipleBirthBoolean": false,
+    "multipleBirthInteger": 1,
+    "photo": "placeholder_patient_photo.png",
+    "communication": {
+      "language": "English",
+      "preferred": true
+    },
+    "contact": {
+      "relationship": "Emergency Contact",
+      "name": "Monica Geller",
+      "telecom": "512-555-0129",
+      "address": "2200 Guadalupe St, Austin, TX 78705",
+      "gender": "female",
+      "organization": "N/A",
+      "period_start": "2018-09-01",
+      "period_end": "ongoing"
+    },
+    "provider": {
+      "generalPractitioner": "Dr. Maya Patel, MD",
+      "formatted_npi": "2145608931",
+      "managingOrganization": "UT Health Austin - Internal Medicine",
+      "address": "1601 Trinity St, Bldg B, Suite 7.400, Austin, TX 78712",
+      "phone": "512-555-0140"
+    },
+    "link": {
+      "other_patient": "N/A",
+      "link_type": "N/A"
+    },
+    "payer": {
+      "payer_id": "UHC",
+      "payer_name": "UnitedHealthcare",
+      "provider_abbreviation": "UHC",
+      "provider_policy_url": "https://www.uhcprovider.com/",
+      "plan_name": "Texas AARP\u00ae Medicare Advantage Plans",
+      "plan_type": "Medicare Advantage",
+      "plan_id": "UHC_TX_MA",
+      "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-aarp-medcomp-sechorizons.html",
+      "member_id": "MBR-246360",
+      "policy_number": "POL-2026-5662",
+      "effective_date": "2024-01-01",
+      "termination_date": "ongoing",
+      "copay_amount": "$35",
+      "deductible_amount": "$0"
+    },
+    "expected_procedure_date": "2026-05-05",
+    "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
+    "procedure_facility": {
+      "facility_name": "Ascension Seton Medical Center Austin",
+      "street_address": "1201 W 38th St",
+      "city": "Austin",
+      "state": "TX",
+      "zip_code": "78705",
+      "department": "Interventional Radiology"
+    },
+    "pa_request": {
+      "requesting_provider": "Dr. Arjun Mehta, MD",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Patient with advanced CKD (N18.4) and hypertensive CKD (I12.9) has persistent fatigue and intermittent nausea (R53.83, R11.0) with anemia in CKD (D63.1). Tunneled dialysis catheter placement (CPT 36558) is requested to establish vascular access for anticipated hemodialysis initiation in the setting of worsening renal function described in recent visits.",
+      "supporting_diagnoses": [
+        "N18.4 - Chronic kidney disease, stage 4 (severe)",
+        "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+        "D63.1 - Anemia in chronic kidney disease",
+        "R11.0 - Nausea",
+        "R53.83 - Other fatigue",
+        "Z45.2 - Encounter for adjustment and management of vascular access device"
+      ],
+      "previous_treatments": "Medical management with amlodipine, furosemide, sodium bicarbonate, oral iron; PRN ondansetron. Lisinopril was previously discontinued after concern for worsening renal function and mild hyperkalemia.",
+      "expected_outcome": "Establish central venous access to allow initiation of hemodialysis when clinically indicated and avoid delays related to vascular access limitations.",
+      "units_requested": "1"
+    },
+    "bio_narrative": "Dina Fox is a 60-year-old woman in Austin, Texas, followed by Dr. Maya Patel (internal medicine) for hypertensive chronic kidney disease (I12.9) with stage 4 chronic kidney disease (N18.4). Over the past year she has noticed a gradual decline in energy and increased difficulty maintaining stamina during long work shifts. In early 2026 she began experiencing intermittent nausea (R11.0) and more persistent fatigue (R53.83), which she described as \u201cwiped out\u201d after routine activities. She uses a pill organizer and generally keeps a structured routine, but admits she sometimes misses doses when her schedule is unpredictable. In March 2026, Dina sought care in clinic for exhaustion and elevated blood pressures at home. Two weeks later she presented to the emergency department with nausea and marked fatigue, where labs (CBC/CMP) were obtained and showed anemia consistent with anemia in chronic kidney disease (D63.1) and metabolic derangements compatible with advanced CKD. She also required peripheral IV placement and was noted to have difficult access, which increased her concern about how future treatments would be delivered. A renal ultrasound performed on 2026-03-31 showed echogenic kidneys with mild cortical thinning and no obstruction, supporting chronic medical renal disease. Dina then met with nephrology on 2026-04-02 to review her symptoms and recent workup. While the available documentation emphasizes symptom burden and stage of CKD, it contains limited longitudinal trend data and limited detailed documentation of formal dialysis education or long-term access planning. Given the description of worsening renal function and continued symptoms despite ongoing medical management (amlodipine and furosemide for blood pressure/volume, sodium bicarbonate for metabolic acidosis, oral iron for anemia, and PRN ondansetron for nausea), she was referred for pre-procedure evaluation and access planning. A tunneled central venous catheter for dialysis (CPT 36558) has been requested to establish near-term vascular access for anticipated hemodialysis initiation. Socially, Dina lives in central Austin and works variable shifts that interfere with consistent low-sodium eating; she is attempting gradual dietary improvements. She is a former smoker and reports rare alcohol use and no illicit drug use. She reports elevated stress and irritability around uncertainty in her medical plan and remains engaged in biweekly psychotherapy, relying on structured, rule-based instructions to manage anxiety. Family history is limited in the record but includes hypertension in a first-degree relative and \u201ckidney problems\u201d in an older sibling, which Dina reports contributed to her concern about progression.",
+    "has_fit_fobt_result": null,
+    "medications": [
+      {
+        "brand": "Norvasc",
+        "generic_name": "Amlodipine 10 mg",
+        "dosage": "1 tablet by mouth daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Maya Patel, MD",
+        "status": "current",
+        "start_date": "2024-08-15",
+        "end_date": "ongoing",
+        "reason": "Blood pressure control in hypertensive CKD (I12.9)."
+      },
+      {
+        "brand": "Lasix",
+        "generic_name": "Furosemide 20 mg",
+        "dosage": "1 tablet by mouth each morning",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Maya Patel, MD",
+        "status": "current",
+        "start_date": "2025-02-01",
+        "end_date": "ongoing",
+        "reason": "Volume and blood pressure management in CKD/HTN (I12.9, N18.4)."
+      },
+      {
+        "brand": "Zofran ODT",
+        "generic_name": "Ondansetron 4 mg ODT",
+        "dosage": "Dissolve 1 tablet on tongue every 8 hours as needed for nausea",
+        "qty": "20 tablets",
+        "prescribed_by": "Dr. Colin Reyes, MD",
+        "status": "current",
+        "start_date": "2026-03-24",
+        "end_date": "ongoing",
+        "reason": "Symptomatic treatment of nausea (R11.0)."
+      },
+      {
+        "brand": "Fer-In-Sol",
+        "generic_name": "Ferrous sulfate 325 mg (65 mg elemental)",
+        "dosage": "1 tablet by mouth daily with food",
+        "qty": "90 tablets",
+        "prescribed_by": "Dr. Maya Patel, MD",
+        "status": "ongoing",
+        "start_date": "2025-09-10",
+        "end_date": "ongoing",
+        "reason": "Anemia support in CKD (D63.1)."
+      },
+      {
+        "brand": "Sodium Bicarbonate",
+        "generic_name": "Sodium bicarbonate 650 mg",
+        "dosage": "1 tablet by mouth twice daily",
+        "qty": "180 tablets",
+        "prescribed_by": "Dr. Arjun Mehta, MD",
+        "status": "current",
+        "start_date": "2026-04-02",
+        "end_date": "ongoing",
+        "reason": "Mild metabolic acidosis associated with CKD (N18.4)."
+      },
+      {
+        "brand": "Prinivil",
+        "generic_name": "Lisinopril 10 mg",
+        "dosage": "1 tablet by mouth daily",
+        "qty": "30 tablets",
+        "prescribed_by": "Dr. Maya Patel, MD",
+        "status": "past",
+        "start_date": "2025-06-01",
+        "end_date": "2025-11-20",
+        "reason": "Trial for hypertension/proteinuria; stopped after concern for worsening renal function and mild hyperkalemia in CKD (I12.9, R80.9)."
+      }
+    ],
+    "allergies": [
+      {
+        "allergen": "Penicillin",
+        "allergy_type": "Drug",
+        "reaction": "Hives and itching",
+        "severity": "Moderate",
+        "onset_date": "1998-05-01"
+      },
+      {
+        "allergen": "Latex",
+        "allergy_type": "Latex",
+        "reaction": "Contact rash",
+        "severity": "Mild",
+        "onset_date": "2009-03-12"
+      }
+    ],
+    "vaccinations": [
+      {
+        "vaccine_name": "Influenza (quadrivalent)",
+        "vaccine_type": "Inactivated",
+        "date_administered": "2025-10-05",
+        "administered_by": "UT Health Austin - Internal Medicine",
+        "dose_number": "Annual",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "COVID-19 mRNA (Moderna)",
+        "vaccine_type": "mRNA",
+        "date_administered": "2024-10-12",
+        "administered_by": "CVS Pharmacy - Austin, TX",
+        "dose_number": "Booster",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Pneumococcal PCV20",
+        "vaccine_type": "Subunit",
+        "date_administered": "2025-01-18",
+        "administered_by": "UT Health Austin - Internal Medicine",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      },
+      {
+        "vaccine_name": "Tdap",
+        "vaccine_type": "Toxoid",
+        "date_administered": "2021-06-22",
+        "administered_by": "Walgreens Pharmacy - Austin, TX",
+        "dose_number": "1",
+        "reason": "Routine Immunization"
+      }
+    ],
+    "therapies": [
+      {
+        "therapy_type": "Mental Health / Psychotherapy",
+        "cpt_code": "90834",
+        "cpt_description": "Psychotherapy, 45 minutes with patient",
+        "icd10_codes": [
+          "R53.83 - Other fatigue"
+        ],
+        "provider": "Dr. Simone Harper, PhD",
+        "provider_npi": "3412789056",
+        "facility": "Austin Anxiety & Stress Clinic",
+        "start_date": "2025-12-03",
+        "end_date": "ongoing",
+        "frequency": "Every 2 weeks",
+        "status": "Active",
+        "reason": "Stress and anxiety symptoms associated with chronic illness uncertainty and difficulty coping with changing medical plans.",
+        "notes": "Patient prefers structured, skills-based sessions; uses scheduling routines and symptom tracking to reduce uncertainty-related distress."
+      }
+    ],
+    "behavioral_notes": "Patient is punctual and strongly prefers clear, rule-based instructions; she tracks medications in a weekly pill organizer but admits missing occasional doses on long workdays. Diet adherence is inconsistent due to shift work, though she is attempting lower sodium choices. Former smoker; rare alcohol use; denies illicit drugs. Reports elevated stress and irritability around uncertainty in her medical plan; engaged in psychotherapy and uses structured routines to manage anxiety symptoms.",
+    "encounters": [
+      {
+        "encounter_date": "2026-03-10",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Evaluation of increasing fatigue and elevated home blood pressure readings in known CKD.",
+        "provider": "Dr. Maya Patel, MD",
+        "provider_npi": "2145608931",
+        "facility": "UT Health Austin - Internal Medicine",
+        "vital_signs": {
+          "recorded_date": "2026-03-10",
+          "blood_pressure": "158/92 mmHg",
+          "heart_rate": "84 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m exhausted and my blood pressure has been high.",
+        "doctor_note": "HPI: 60-year-old woman with hypertensive CKD reports several weeks of worsening fatigue and elevated BP readings at home. She denies chest pain, shortness of breath, or fever. She notes intermittent decreased appetite and occasional nausea but has not vomited. She reports occasional missed doses on long shifts.\n\nReview of Systems: Positive for fatigue. Negative for chest pain, dyspnea, syncope. GI: intermittent nausea, no persistent vomiting or abdominal pain. GU: no dysuria reported.\n\nPhysical Exam: Well-appearing, tired-appearing female in no acute distress. BP elevated in clinic. Cardiac regular rate/rhythm. Lungs clear. Abdomen soft, non-tender. Trace bilateral ankle edema.\n\nAssessment: I12.9 hypertensive CKD; N18.4 stage 4 CKD; R53.83 fatigue; R11.0 nausea (intermittent). D63.1 anemia in CKD on supplementation.\n\nPlan: Reinforced medication adherence and home BP log. Continue amlodipine and furosemide. Continue iron supplementation. Provided PRN nausea guidance and advised hydration within CKD limits. Ordered follow-up labs through nephrology records and renal ultrasound already scheduled. Discussed that worsening CKD symptoms may require renal replacement therapy planning; referral to nephrology confirmed.",
+        "observations": [
+          "Elevated clinic blood pressure with reported variability at home.",
+          "Trace bilateral ankle edema.",
+          "Symptoms of fatigue out of proportion to activity level."
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
+        ],
+        "diagnoses": [
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "Continue Norvasc (Amlodipine 10 mg) daily",
+          "Continue Lasix (Furosemide 20 mg) each morning",
+          "Continue Fer-In-Sol (Ferrous sulfate 325 mg) daily"
+        ],
+        "care_team": [
+          "Dr. Maya Patel, MD"
+        ],
+        "progress_notes": "Symptoms persist; BP remains above goal. Patient awaiting additional nephrology evaluation and imaging.",
+        "follow_up_instructions": "Return in 2 weeks or sooner for worsening fatigue, persistent vomiting, confusion, chest pain, or shortness of breath. Bring home BP log and medication list."
+      },
+      {
+        "encounter_date": "2026-03-24",
+        "encounter_type": "ER Visit",
+        "purpose_of_visit": "Acute evaluation of nausea and profound fatigue in patient with advanced CKD.",
+        "provider": "Dr. Colin Reyes, MD",
+        "provider_npi": "1976438205",
+        "facility": "Ascension Seton Medical Center Austin",
+        "vital_signs": {
+          "recorded_date": "2026-03-24",
+          "blood_pressure": "166/96 mmHg",
+          "heart_rate": "90 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.7\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "I feel nauseated and wiped out.",
+        "doctor_note": "HPI: Patient with known CKD stage 4 presents with intermittent nausea and significant fatigue. She reports poor appetite today and feels dehydrated but is trying to limit fluids due to kidney disease. No chest pain or shortness of breath. No fever.\n\nReview of Systems: Positive for nausea and fatigue. Negative for hematemesis, melena, or severe abdominal pain. Denies dyspnea and chest pain.\n\nPhysical Exam: Afebrile, hemodynamically stable though hypertensive. Mucous membranes mildly dry. Lungs clear. Heart regular. Abdomen soft, non-tender. No focal neurologic deficits.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; R11.0 nausea; R53.83 fatigue; D63.1 anemia in CKD.\n\nPlan: CBC/CMP obtained. Treated symptomatically with ondansetron; encouraged renal-appropriate oral intake. Difficult IV access required peripheral IV placement. Discharged with close follow-up with nephrology and PCP and strict return precautions.",
+        "observations": [
+          "Mild dehydration on exam.",
+          "Difficult peripheral venous access noted by nursing.",
+          "No abdominal tenderness on palpation."
+        ],
+        "procedures_performed": [
+          "CPT 99284 - Emergency department visit, moderate severity",
+          "CPT 36410 - Venipuncture, age 3 years or older, necessitating physician's skill (difficult access)"
+        ],
+        "diagnoses": [
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [
+          "Zofran ODT (Ondansetron 4 mg ODT) dissolve 1 tablet every 8 hours as needed"
+        ],
+        "care_team": [
+          "Dr. Colin Reyes, MD",
+          "ED nursing team"
+        ],
+        "progress_notes": "Symptoms improved transiently with antiemetic. Labs reviewed with patient; advised expedited outpatient nephrology follow-up.",
+        "follow_up_instructions": "Follow up with nephrology within 1 week and PCP within 1-2 weeks. Return for inability to keep fluids down, worsening weakness, chest pain, dyspnea, or confusion."
+      },
+      {
+        "encounter_date": "2026-04-02",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Nephrology evaluation for advanced CKD symptoms and planning for potential renal replacement therapy.",
+        "provider": "Dr. Arjun Mehta, MD",
+        "provider_npi": "2867451930",
+        "facility": "UT Health Austin - Nephrology",
+        "vital_signs": {
+          "recorded_date": "2026-04-02",
+          "blood_pressure": "152/88 mmHg",
+          "heart_rate": "82 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.2\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m tired all the time and nauseated on and off.",
+        "doctor_note": "HPI: Patient with stage 4 CKD and hypertensive CKD presents for nephrology consultation after recent ER visit. She reports persistent fatigue and intermittent nausea; uses PRN ondansetron. She reports edema comes and goes and blood pressure is variable. Available documents include recent CBC/CMP and renal ultrasound; longitudinal trend data not available in today\u2019s packet.\n\nReview of Systems: Positive for fatigue and nausea. Denies chest pain, dyspnea, or fever.\n\nPhysical Exam: Alert and oriented, tired-appearing. Mild lower extremity edema. Lungs clear; heart regular.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; D63.1 anemia in CKD; R11.0 nausea; R53.83 fatigue; Z45.2 vascular access planning/management.\n\nPlan: Continue BP and volume management regimen, continue iron supplementation. Start sodium bicarbonate for metabolic acidosis management. Discussed dialysis planning at a high level; placed referral for tunneled catheter consideration (CPT 36558) given anticipated need for reliable access if dialysis is initiated. Asked patient to obtain outside labs for trend review; follow-up planned.",
+        "observations": [
+          "Trace edema persists despite diuretic use.",
+          "Symptoms consistent with CKD/anemia but severity not quantified with functional measures.",
+          "No formal vascular mapping performed in clinic."
+        ],
+        "procedures_performed": [
+          "CPT 99204 - Office or other outpatient visit for evaluation and management of a new patient, 45-59 minutes"
+        ],
+        "diagnoses": [
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue",
+          "Z45.2 - Encounter for adjustment and management of vascular access device"
+        ],
+        "medications_prescribed": [
+          "Sodium Bicarbonate (Sodium bicarbonate 650 mg) 1 tablet by mouth twice daily"
+        ],
+        "care_team": [
+          "Dr. Arjun Mehta, MD",
+          "Dr. Maya Patel, MD"
+        ],
+        "progress_notes": "After ER visit, symptoms persist. Planning initiated for potential dialysis access though full laboratory trend documentation remains limited in chart.",
+        "follow_up_instructions": "Follow up nephrology in 2-4 weeks with updated labs. Continue home BP log. Seek urgent care for worsening symptoms."
+      },
+      {
+        "encounter_date": "2026-04-05",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-procedure evaluation and clearance for requested tunneled dialysis catheter insertion (CPT 36558).",
+        "provider": "Dr. Priya Nair, MD",
+        "provider_npi": "3159074628",
+        "facility": "Ascension Seton Medical Center Austin - Pre-Op Clinic",
+        "vital_signs": {
+          "recorded_date": "2026-04-05",
+          "blood_pressure": "160/94 mmHg",
+          "heart_rate": "86 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.5\u00b0F",
+          "respiratory_rate": "17 breaths/min"
+        },
+        "chief_complaint": "I\u2019m here for pre-op clearance for a dialysis catheter.",
+        "doctor_note": "HPI: Patient presents for pre-op evaluation for tunneled dialysis catheter placement (CPT 36558) planned at Ascension Seton Medical Center Austin. She reports ongoing fatigue and intermittent nausea. No chest pain, dyspnea, or infectious symptoms reported today. Medication list reviewed.\n\nReview of Systems: Positive fatigue and intermittent nausea. Negative for fever, cough, or dyspnea.\n\nPhysical Exam: No acute distress. Cardiopulmonary exam without acute findings. Mild bilateral ankle edema. Skin intact; no signs of active infection at potential access sites.\n\nAssessment: CKD stage 4 with hypertensive CKD (N18.4, I12.9), anemia in CKD (D63.1), intermittent nausea (R11.0), fatigue (R53.83). Pre-op evaluation for vascular access device placement (Z45.2).\n\nPlan: Cleared to proceed from a general medical perspective based on today\u2019s exam and available recent labs; noted that BP is elevated and should be optimized peri-procedurally. Reviewed allergy history (penicillin, latex). Reviewed general catheter risks and infection precautions. Coordinated with interventional radiology scheduling for requested tunneled catheter placement date. Concurrent Care Reference: Patient continues active mental health psychotherapy every 2 weeks (CPT 90834) for stress/anxiety management related to chronic illness.",
+        "observations": [
+          "Blood pressure above goal at pre-op visit.",
+          "No signs of active infection.",
+          "Patient demonstrates understanding when given structured step-by-step instructions."
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, 30-39 minutes"
+        ],
+        "diagnoses": [
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue",
+          "Z45.2 - Encounter for adjustment and management of vascular access device"
+        ],
+        "medications_prescribed": [
+          "Continue current medication regimen per nephrology/PCP"
+        ],
+        "care_team": [
+          "Dr. Priya Nair, MD",
+          "Interventional Radiology scheduling",
+          "Dr. Arjun Mehta, MD",
+          "Dr. Maya Patel, MD"
+        ],
+        "progress_notes": "Pre-op readiness reviewed; documentation focuses on symptom burden and existing CKD diagnosis. No additional pre-op testing documented beyond existing CBC/CMP and renal ultrasound.",
+        "follow_up_instructions": "Follow IR instructions for arrival time and pre-procedure fasting. Bring medication list. Monitor BP at home and report very high readings or symptoms. Notify team of fever or signs of infection prior to procedure."
+      }
+    ],
+    "images": [
+      {
+        "type": "Ultrasound Kidneys and Bladder",
+        "date": "2026-03-31",
+        "provider": "Dr. Maya Patel, MD",
+        "facility": "Ascension Seton Medical Center Austin",
+        "findings": "Right kidney 9.1 cm and left kidney 9.4 cm with increased echogenicity and mild cortical thinning bilaterally, consistent with chronic medical renal disease. No hydronephrosis or obstructing lesion identified. Bladder partially distended without gross abnormality described."
+      }
+    ],
+    "reports": [
+      {
+        "type": "CBC/CMP",
+        "date": "2026-03-24",
+        "provider": "Dr. Colin Reyes, MD",
+        "results": "CBC: Hgb 9.1 g/dL, Hct 28.4%, WBC 7.8, Plt 248. CMP: Cr 3.4 mg/dL, BUN 62 mg/dL, eGFR ~15, K 5.2, CO2 18, Na 137, Ca 8.3, Alb 3.6.",
+        "notes": "Obtained during ER evaluation for nausea/fatigue; summarized values only, with limited trend documentation available."
+      }
+    ],
+    "procedures": [
+      {
+        "name": "Peripheral IV placement (difficult access)",
+        "date": "2026-03-24",
+        "provider": "ED nursing team",
+        "facility": "Ascension Seton Medical Center Austin",
+        "reason": "IV access for symptom management and blood draw during ER visit for nausea/fatigue (R11.0, R53.83) in CKD stage 4 (N18.4).",
+        "notes": "Multiple attempts reported; IV obtained with difficulty."
+      }
+    ],
+    "social_history": {
+      "tobacco_use": "Former smoker - quit 2012",
+      "tobacco_frequency": "Previously ~0.5 pack/day for 18 years",
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 drinks every few months",
+      "illicit_drug_use": "None",
+      "substance_history": null,
+      "last_medical_visit": "2026-04-05",
+      "last_visit_reason": "Pre-op evaluation for dialysis catheter",
+      "missed_appointment": false,
+      "missed_appointment_reason": null,
+      "early_visit_reason": null,
+      "mental_health_history": "Anxiety symptoms with stress-related irritability; in psychotherapy since 2025",
+      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety) reported at therapy visit; no suicidal ideation reported",
+      "exercise_habits": null,
+      "diet_notes": "Inconsistent low-sodium diet due to shift work; attempting gradual reduction in processed foods",
+      "family_history_relevant": "Hypertension in first-degree relative; patient reports an older sibling with 'kidney problems'"
+    },
+    "vital_signs_current": {
+      "recorded_date": "2026-04-05",
+      "blood_pressure": "160/94 mmHg",
+      "heart_rate": "86 bpm",
+      "blood_sugar_fasting": null,
+      "blood_sugar_postprandial": null,
+      "bmi": "30.2 kg/m\u00b2",
+      "oxygen_saturation": "98%",
+      "temperature": "98.5\u00b0F",
+      "respiratory_rate": "17 breaths/min"
+    },
+    "gender_specific_history": "G2P2. Last Pap smear: 2023-08-14 (reported up to date). Last mammogram: 2024-09-03 (reported normal per patient). No history of gynecologic cancers reported."
   }
 }

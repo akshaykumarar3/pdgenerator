@@ -2,6 +2,7 @@ import os
 import json
 import uuid
 import datetime
+import random
 from typing import Dict, Any
 
 from . import patient_db
