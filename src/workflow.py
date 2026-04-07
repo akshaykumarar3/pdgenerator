@@ -15,7 +15,11 @@ from .data import patient_record_writer
 from .core import state as state_manager
 from .doc_generation import planner as document_planner
 from .doc_generation.validator import validate_structure, format_clinical_document
-from .core.config import get_patient_report_folder, SUMMARY_DIR, PERSONA_DIR
+from .core.config import (
+    get_patient_report_folder,
+    get_patient_persona_folder,
+    get_patient_summary_folder,
+)
 from .utils.file_utils import get_persona_version, archive_patient_files, sanitize_filename_component
 
 def _is_policy_criteria_doc(doc) -> bool:
@@ -148,18 +152,22 @@ def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
 
     # Load existing reports only when we are NOT regenerating them
     if not generation_mode.get("reports", False):
-        patient_report_folder = get_patient_report_folder(patient_id)
+    patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
         if os.path.exists(patient_report_folder):
             report_files = [
-                f for f in os.listdir(patient_report_folder) if f.endswith(".pdf")
+                f for f in os.listdir(patient_report_folder)
+                if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-")
             ]
             context["reports"] = report_files[:5]  # cap for prompt size
 
     # Load existing summary only when we are NOT regenerating it
     if not generation_mode.get("summary", False):
-        summary_file = os.path.join(SUMMARY_DIR, f"{patient_id}-summary.pdf")
-        if os.path.exists(summary_file):
-            context["summary"] = summary_file
+        summary_folder = get_patient_summary_folder(patient_id)
+        if os.path.isdir(summary_folder):
+            for f in os.listdir(summary_folder):
+                if f.endswith(".pdf") and f.startswith(f"Clinical_Summary_Patient_{patient_id}"):
+                    context["summary"] = os.path.join(summary_folder, f)
+                    break
 
     return context
 
@@ -178,31 +186,34 @@ def check_patient_sync_status(patient_id: str, generation_mode: dict) -> bool:
     has_summary  = not req_summary
 
     # Check Persona
-    if req_persona and os.path.isdir(PERSONA_DIR):
-        has_persona = any(
-            f.startswith(f"{patient_id}-") and f.endswith(".pdf")
-            for f in os.listdir(PERSONA_DIR)
-            if f != "archive"
-        )
+    if req_persona:
+        persona_folder = get_patient_persona_folder(patient_id)
+        if os.path.isdir(persona_folder):
+            has_persona = any(
+                f.endswith(".pdf") and "-persona" in f
+                for f in os.listdir(persona_folder)
+                if f != "archive"
+            )
 
     # Check Reports
     if req_reports:
         rpt_folder = get_patient_report_folder(patient_id)
         if os.path.isdir(rpt_folder):
             has_report = any(
-                f.endswith(".pdf")
+                f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-")
                 for f in os.listdir(rpt_folder)
                 if f != "archive"
             )
 
     # Check Summary
-    if req_summary and os.path.isdir(SUMMARY_DIR):
-        has_summary = any(
-            (f.startswith(f"{patient_id}-") or f.startswith(f"Clinical_Summary_Patient_{patient_id}"))
-            and f.endswith(".pdf")
-            for f in os.listdir(SUMMARY_DIR)
-            if f != "archive"
-        )
+    if req_summary:
+        summary_folder = get_patient_summary_folder(patient_id)
+        if os.path.isdir(summary_folder):
+            has_summary = any(
+                f.endswith(".pdf") and f.startswith(f"Clinical_Summary_Patient_{patient_id}")
+                for f in os.listdir(summary_folder)
+                if f != "archive"
+            )
 
     exists = has_persona and has_report and has_summary
     if not exists:
@@ -272,8 +283,6 @@ def process_patient_workflow(
     # ── 4. BUILD PATIENT STATE & DOCUMENT PLAN ─────────────────────────────────
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
-    
-    patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
     if generate_rejection_docs:
         case_details_for_generation = dict(case_data or {})
@@ -327,6 +336,19 @@ def process_patient_workflow(
         p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
         print(f"   💾 Patient DB updated: {p_full_name} (ID {patient_id})")
 
+    # Ensure patient output folder uses "ID - Name" convention when possible
+    patient_report_folder = None
+    if p_full_name:
+        try:
+            from .core.config import find_patient_folder, get_patient_root
+            existing_root = find_patient_folder(patient_id)
+            desired_root = get_patient_root(patient_id, p_full_name, prefer_name=True)
+            if existing_root and existing_root != desired_root and not os.path.exists(desired_root):
+                os.rename(existing_root, desired_root)
+            patient_report_folder = desired_root if os.path.exists(desired_root) else (existing_root or desired_root)
+        except Exception as e:
+            print(f"   ⚠️  Could not align patient folder name: {e}")
+
     # ── 7. VERSION & ARCHIVE ───────────────────────────────────────────────────
     doc_version = get_persona_version(patient_id)
     print(f"   🔖 Document version: v{doc_version}")
@@ -355,7 +377,7 @@ def process_patient_workflow(
             filtered_documents,
             image_map=None,
             mrn=current_mrn,
-            output_folder=PERSONA_DIR,
+            output_folder=get_patient_persona_folder(patient_id),
             version=doc_version,
         )
         pf = os.path.basename(persona_path)
@@ -378,6 +400,7 @@ def process_patient_workflow(
             else:
                 loaded_template_sections.append([])
 
+        persist_images = os.getenv("PERSIST_IMAGES", "false").lower() == "true"
         print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
         for seq, doc in enumerate(filtered_documents, start=1):
             if cancel_check and cancel_check():
@@ -490,6 +513,11 @@ def process_patient_workflow(
                     image_path=image_path,
                     version=doc_version,
                 )
+                if image_path and not persist_images:
+                    try:
+                        os.remove(image_path)
+                    except Exception as e:
+                        print(f"      ⚠️  Could not remove temp image {image_path}: {e}")
                 rf = os.path.basename(pdf_path)
                 docs_written.append(rf)
                 print(f"      ✅ {rf}")
@@ -558,7 +586,7 @@ def process_patient_workflow(
                 annotator_summary=annotator_summary,
                 case_details=case_data,
                 patient_persona=result.patient_persona,
-                output_folder=SUMMARY_DIR,
+                output_folder=get_patient_summary_folder(patient_id),
                 version=doc_version,
             )
 
@@ -749,12 +777,27 @@ def render_patient_pdfs_from_content(
         else f"Patient_{patient_id}"
     )
 
+    # Ensure patient output folder uses "ID - Name" convention when possible
+    patient_report_folder = None
+    if persona_obj:
+        try:
+            from .core.config import find_patient_folder, get_patient_root
+            existing_root = find_patient_folder(patient_id)
+            desired_root = get_patient_root(patient_id, p_full_name, prefer_name=True)
+            if existing_root and existing_root != desired_root and not os.path.exists(desired_root):
+                os.rename(existing_root, desired_root)
+            patient_report_folder = desired_root if os.path.exists(desired_root) else (existing_root or desired_root)
+        except Exception as e:
+            print(f"   ⚠️  Could not align patient folder name: {e}")
+
     if cancel_check and cancel_check():
         print("   ⛔ Cancellation requested before archiving files.")
         return []
 
     archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
-    patient_report_folder = get_patient_report_folder(patient_id)
+    if not patient_report_folder:
+    if not patient_report_folder:
+        patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
     os.makedirs(patient_report_folder, exist_ok=True)
 
     # ── Persona PDF ───────────────────────────────────────────────────────────
@@ -763,7 +806,7 @@ def render_patient_pdfs_from_content(
             persona_path = pdf_generator.create_persona_pdf(
                 patient_id, p_full_name, persona_obj, [],
                 image_map=None, mrn=current_mrn,
-                output_folder=PERSONA_DIR, version=doc_version,
+                output_folder=get_patient_persona_folder(patient_id), version=doc_version,
             )
             docs_written.append(os.path.basename(persona_path))
             print(f"   👤 Persona → {os.path.basename(persona_path)}")
@@ -839,7 +882,7 @@ def render_patient_pdfs_from_content(
                 annotator_summary=annotator_summary,
                 case_details=case_data,
                 patient_persona=persona_obj,
-                output_folder=SUMMARY_DIR,
+                output_folder=get_patient_summary_folder(patient_id),
                 version=doc_version,
             )
             if sum_path:

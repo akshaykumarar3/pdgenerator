@@ -1,32 +1,17 @@
 import os
-import shutil
 from datetime import datetime
 
-from ..core.config import LOGS_DIR
-
-# Legacy output path (pre-refactor): <repo>/src/generated_output/logs
-_legacy_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LEGACY_LOGS_DIR = os.path.join(_legacy_root, "generated_output", "logs")
+from ..core.config import get_patient_logs_folder
 
 def get_history(patient_id: str) -> str:
     """
     Reads the history log for a patient.
     Returns the content string or empty string if no log exists.
     """
-    log_path = os.path.join(LOGS_DIR, f"{patient_id}.txt")
+    log_dir = get_patient_logs_folder(patient_id)
+    log_path = os.path.join(log_dir, f"{patient_id}.txt")
     if os.path.exists(log_path):
         with open(log_path, 'r', encoding='utf-8') as f:
-            return f.read()
-
-    # Fallback to legacy logs and migrate if found
-    legacy_path = os.path.join(LEGACY_LOGS_DIR, f"{patient_id}.txt")
-    if os.path.exists(legacy_path):
-        os.makedirs(LOGS_DIR, exist_ok=True)
-        try:
-            shutil.copy2(legacy_path, log_path)
-        except Exception:
-            pass
-        with open(legacy_path, 'r', encoding='utf-8') as f:
             return f.read()
 
     return ""
@@ -36,10 +21,11 @@ def append_history(patient_id: str, feedback: str, changes_summary: str):
     Appends a new entry to the patient's history log.
     FORMAT: [YYYY-MM-DD HH:MM] Feedback: <text> | Changes: <text>
     """
-    if not os.path.exists(LOGS_DIR):
-        os.makedirs(LOGS_DIR)
-        
-    log_path = os.path.join(LOGS_DIR, f"{patient_id}.txt")
+    log_dir = get_patient_logs_folder(patient_id)
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+
+    log_path = os.path.join(log_dir, f"{patient_id}.txt")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     entry = f"\n--------------------------------------------------\n"

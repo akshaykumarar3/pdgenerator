@@ -66,7 +66,10 @@ swagger = Swagger(app, config=swagger_config, template=template)
 _jobs: dict = {}
 _jobs_lock = threading.Lock()
 
-from src.core.config import OUTPUT_DIR, REPORTS_DIR, PERSONA_DIR, SUMMARY_DIR
+from src.core.config import (
+    get_patient_report_folder,
+    get_patient_records_folder,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -291,19 +294,24 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
 
 
-def _run_batch_generation(job_id, patient_ids, feedback, generation_mode, pa_optimize):
+def _run_batch_generation(job_id, patients_payload, pa_optimize):
     """Background worker for batch processing specific patients."""
     try:
         def log_cb(msg):
             with _jobs_lock:
                 _jobs[job_id]["logs"].append(msg)
 
-        log_cb(f"🚀 Starting BATCH generation for {len(patient_ids)} patients.")
+        log_cb(f"🚀 Starting BATCH generation for {len(patients_payload)} patients.")
 
         success_count = 0
         from src.workflow import process_patient_workflow
 
-        for p_id in patient_ids:
+        for entry in patients_payload:
+            p_id = str(entry.get("patient_id", "")).strip()
+            if not p_id:
+                continue
+            generation_mode = entry.get("generation_mode") or {"summary": True, "reports": True, "persona": True}
+            feedback = entry.get("feedback", "")
             with _jobs_lock:
                 if _jobs[job_id].get("cancelled"):
                     log_cb("⛔ Batch cancelled. Stopping.")
@@ -346,10 +354,10 @@ def _run_batch_generation(job_id, patient_ids, feedback, generation_mode, pa_opt
         with _jobs_lock:
             if _jobs[job_id].get("cancelled"):
                 _jobs[job_id]["status"] = "cancelled"
-                _jobs[job_id]["result"] = f"Batch Cancelled: {success_count}/{len(patient_ids)} OK"
+                _jobs[job_id]["result"] = f"Batch Cancelled: {success_count}/{len(patients_payload)} OK"
             else:
                 _jobs[job_id]["status"] = "done"
-                _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(patient_ids)} OK"
+                _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(patients_payload)} OK"
                 _jobs[job_id]["logs"].append("🏁 Batch run finished.")
     except Exception as e:
         with _jobs_lock:
@@ -748,27 +756,54 @@ def api_generate_all():
         description: Batch Job queued
     """
     body = request.get_json(force=True) or {}
-    patient_ids    = body.get("patient_ids", [])
-    if not patient_ids:
-        return jsonify({"error": "patient_ids is required and cannot be empty"}), 400
-    
-    feedback       = body.get("feedback", "")
-    generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
-    pa_optimize    = bool(body.get("pa_optimize", False))
+    patients_payload = body.get("patients", None)
+    pa_optimize = bool(body.get("pa_optimize", False))
+
+    normalized = []
+    if patients_payload:
+        for entry in patients_payload:
+            pid = str(entry.get("patient_id", "")).strip()
+            if not pid:
+                continue
+            generation_mode = entry.get("generation_mode") or body.get(
+                "generation_mode",
+                {"summary": True, "reports": True, "persona": True},
+            )
+            feedback = entry.get("feedback")
+            if feedback is None or str(feedback).strip() == "":
+                feedback = body.get("feedback", "")
+            normalized.append({
+                "patient_id": pid,
+                "generation_mode": generation_mode,
+                "feedback": feedback,
+            })
+    else:
+        patient_ids = body.get("patient_ids", [])
+        if not patient_ids:
+            return jsonify({"error": "patient_ids is required and cannot be empty"}), 400
+        feedback = body.get("feedback", "")
+        generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
+        normalized = [
+            {"patient_id": str(pid), "generation_mode": generation_mode, "feedback": feedback}
+            for pid in patient_ids
+        ]
+
+    if not normalized:
+        return jsonify({"error": "patients payload is empty"}), 400
 
     job_id = str(uuid.uuid4())
     with _jobs_lock:
         _jobs[job_id] = {
             "status": "queued",
-            "logs": [f"🚀 BATCH Job {job_id} queued for {len(patient_ids)} patients"],
+            "logs": [f"🚀 BATCH Job {job_id} queued for {len(normalized)} patients"],
             "error": None,
             "result": None,
             "changes_summary": None,
             "patient_id": "BATCH",
             "created_at": datetime.now().isoformat(),
             "request_context": {
-                "feedback": feedback,
-                "generation_mode": generation_mode,
+                "feedback": body.get("feedback", ""),
+                "generation_mode": body.get("generation_mode", None),
                 "pa_optimize": pa_optimize,
                 "is_batch": True
             }
@@ -776,7 +811,7 @@ def api_generate_all():
 
     t = threading.Thread(
         target=_run_batch_generation,
-        args=(job_id, patient_ids, feedback, generation_mode, pa_optimize),
+        args=(job_id, normalized, pa_optimize),
         daemon=True
     )
     t.start()
@@ -864,28 +899,20 @@ def api_output(patient_id: str):
     """
     files = []
 
-    # Reports (exclude archive subfolder)
-    report_folder = os.path.join(REPORTS_DIR, patient_id)
-    if os.path.exists(report_folder):
-        for f in sorted(os.listdir(report_folder)):
-            if f.endswith(".pdf") and f != "archive":
-                full_path = os.path.join(report_folder, f)
-                if os.path.isfile(full_path):
-                    files.append({"type": "report", "name": f, "path": full_path})
-
-    # Persona (match any -persona-vN.pdf pattern for versioned files)
-    if os.path.exists(PERSONA_DIR):
-        for f in sorted(os.listdir(PERSONA_DIR)):
-            fp = os.path.join(PERSONA_DIR, f)
-            if str(patient_id) in f and f.endswith(".pdf") and "-persona" in f and os.path.isfile(fp):
-                files.append({"type": "persona", "name": f, "path": fp})
-
-    # Summary (versioned)
-    if os.path.exists(SUMMARY_DIR):
-        for f in sorted(os.listdir(SUMMARY_DIR)):
-            fp = os.path.join(SUMMARY_DIR, f)
-            if str(patient_id) in f and f.endswith(".pdf") and os.path.isfile(fp):
-                files.append({"type": "summary", "name": f, "path": fp})
+    root_folder = get_patient_report_folder(patient_id)
+    if os.path.exists(root_folder):
+        for f in sorted(os.listdir(root_folder)):
+            if not f.endswith(".pdf"):
+                continue
+            full_path = os.path.join(root_folder, f)
+            if not os.path.isfile(full_path):
+                continue
+            if f.startswith(f"DOC-{patient_id}-"):
+                files.append({"type": "report", "name": f, "path": full_path})
+            elif "-persona" in f and f.startswith(f"{patient_id}-"):
+                files.append({"type": "persona", "name": f, "path": full_path})
+            elif f.startswith(f"Clinical_Summary_Patient_{patient_id}"):
+                files.append({"type": "summary", "name": f, "path": full_path})
 
     return jsonify({"patient_id": patient_id, "files": files})
 
@@ -893,8 +920,7 @@ def api_output(patient_id: str):
 @app.route("/api/record/<patient_id>")
 def api_get_patient_record(patient_id: str):
     """Return the human-readable patient text record."""
-    from src.core.config import RECORDS_DIR
-    record_path = os.path.join(RECORDS_DIR, f"{patient_id}-record.txt")
+    record_path = os.path.join(get_patient_records_folder(patient_id), f"{patient_id}-record.txt")
     if not os.path.exists(record_path):
         return jsonify({"error": "Record not found", "patient_id": patient_id}), 404
     with open(record_path, "r", encoding="utf-8") as f:
@@ -906,11 +932,11 @@ def api_get_patient_record(patient_id: str):
 def api_download_file(patient_id: str, file_type: str, filename: str):
     """Serve a generated PDF file."""
     if file_type == "report":
-        directory = os.path.join(REPORTS_DIR, patient_id)
+        directory = get_patient_report_folder(patient_id)
     elif file_type == "persona":
-        directory = PERSONA_DIR
+        directory = get_patient_report_folder(patient_id)
     elif file_type == "summary":
-        directory = SUMMARY_DIR
+        directory = get_patient_report_folder(patient_id)
     else:
         return jsonify({"error": "Invalid file type"}), 400
     
@@ -1016,9 +1042,12 @@ def api_save_template():
         return jsonify({"error": "Missing parameters"}), 400
 
     base_dir = ""
-    if file_type == "persona": base_dir = PERSONA_DIR
-    elif file_type == "report": base_dir = os.path.join(REPORTS_DIR, patient_id)
-    elif file_type == "summary": base_dir = SUMMARY_DIR
+    if file_type == "persona":
+        base_dir = get_patient_report_folder(patient_id)
+    elif file_type == "report":
+        base_dir = get_patient_report_folder(patient_id)
+    elif file_type == "summary":
+        base_dir = get_patient_report_folder(patient_id)
     
     source_path = os.path.join(base_dir, filename)
     if not os.path.exists(source_path):

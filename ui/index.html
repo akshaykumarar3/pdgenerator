@@ -221,7 +221,15 @@
             <div id="info-gender" class="text-xs mt-0.5">—</div>
           </div>
           <div class="col-span-2 bg-gray-50 p-2 rounded">
-            <div class="text-[9px] text-gray-400 uppercase">Provider</div>
+            <div class="flex items-center justify-between">
+              <div class="text-[9px] text-gray-400 uppercase">Provider</div>
+              <select id="info-provider-mode"
+                class="text-[9px] border border-gray-200 rounded px-1 py-0.5 text-gray-600 bg-white">
+                <option value="provider" selected>Provider</option>
+                <option value="insurance_provider">Insurance Provider</option>
+                <option value="plan_type">Plan Type</option>
+              </select>
+            </div>
             <div id="info-provider" class="text-xs mt-0.5 truncate">—</div>
           </div>
         </div>
@@ -388,8 +396,22 @@
           <button onclick="toggleSelectAll()" class="ml-auto text-[10px] text-gray-500 underline">Select All</button>
         </div>
       </div>
-      <div id="batch-patient-list" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1">
-        <p class="text-xs text-gray-400">Loading…</p>
+      <div id="batch-patient-list" class="flex-1 overflow-y-auto custom-scrollbar p-4">
+        <table class="w-full text-xs border-collapse">
+          <thead>
+            <tr class="text-[9px] text-gray-400 uppercase tracking-wider border-b border-gray-200">
+              <th class="pb-2 text-left font-bold w-10">Select</th>
+              <th class="pb-2 text-left font-bold">Patient</th>
+              <th class="pb-2 text-left font-bold w-16">Persona</th>
+              <th class="pb-2 text-left font-bold w-16">Reports</th>
+              <th class="pb-2 text-left font-bold w-16">Summary</th>
+              <th class="pb-2 text-left font-bold">Feedback</th>
+            </tr>
+          </thead>
+          <tbody id="batch-patient-rows" class="divide-y divide-gray-100">
+            <tr><td colspan="6" class="py-3 text-gray-400 text-[11px] italic">Loading…</td></tr>
+          </tbody>
+        </table>
       </div>
       <div class="p-4 border-t border-gray-200 flex gap-3 shrink-0">
         <button onclick="closeBatchModal()"
@@ -541,6 +563,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       checkServer(); loadPatients();
       document.getElementById('patient-select').addEventListener('change', onPatientChange);
+      document.getElementById('info-provider-mode')?.addEventListener('change', () => {
+        if (currentPatientData) updateProviderDisplay(currentPatientData);
+      });
       document.getElementById('batch-modal').addEventListener('click', function (e) { if (e.target === this) closeBatchModal(); });
       document.getElementById('purge-modal').addEventListener('click', function (e) { if (e.target === this) closePurgeModal(); });
     });
@@ -601,6 +626,19 @@
       return (p?.bio_narrative || p?.pa_request?.clinical_justification || p?.procedure_requested || c?.details || '—');
     }
 
+    function updateProviderDisplay(p) {
+      const mode = document.getElementById('info-provider-mode')?.value || 'provider';
+      let val = '—';
+      if (mode === 'provider') {
+        val = get(p, 'provider', 'managingOrganization') || (p.providers && p.providers[0] && p.providers[0].name) || '—';
+      } else if (mode === 'insurance_provider') {
+        val = get(p, 'payer', 'payer_name') || get(p, 'payer', 'plan_name') || '—';
+      } else if (mode === 'plan_type') {
+        val = get(p, 'payer', 'plan_type') || '—';
+      }
+      document.getElementById('info-provider').textContent = val || '—';
+    }
+
     function populateIdentity(p, c) {
       if (!p) { clearDossier(); return; }
       const fullName = [p.first_name, p.last_name].filter(Boolean).join(' ') || p.name || '—';
@@ -610,7 +648,7 @@
       document.getElementById('info-mrn').textContent = mrn;
       document.getElementById('info-dob').textContent = get(p, 'dob') || get(p, 'demographics', 'dob') || '—';
       document.getElementById('info-gender').textContent = p.gender || '—';
-      document.getElementById('info-provider').textContent = get(p, 'provider', 'managingOrganization') || (p.providers && p.providers[0] && p.providers[0].name) || '—';
+      updateProviderDisplay(p);
       document.getElementById('info-dx').textContent = (p.diagnoses && p.diagnoses[0] && (p.diagnoses[0].condition || p.diagnoses[0].code)) || '—';
       document.getElementById('info-summary').textContent = buildClinicalSummary(p, c);
     }
@@ -869,13 +907,18 @@
       renderDocTab(tab);
     }
 
-    function renderDocTab(tab) { setDocList(tab === 'all' ? allFiles : allFiles.filter(f => f.type === tab)); }
+    function renderDocTab(tab) {
+      if (tab === 'all') { setDocList(allFiles); return; }
+      const typeMap = { reports: ['report', 'reports'] };
+      const allowed = typeMap[tab] || [tab];
+      setDocList(allFiles.filter(f => allowed.includes(f.type)));
+    }
 
     function setDocList(files) {
       const list = document.getElementById('doc-list');
       if (files === null) { list.innerHTML = '<p class="text-[11px] text-gray-400 italic animate-pulse">Loading…</p>'; return; }
       if (!files.length) { list.innerHTML = '<p class="text-[11px] text-gray-400 italic">No documents found</p>'; return; }
-      const icons = { persona: 'person', reports: 'article', summary: 'summarize' };
+      const icons = { persona: 'person', reports: 'article', report: 'article', summary: 'summarize' };
       list.innerHTML = files.map(f => `
         <a href="${API}/api/download/${currentPatientId}/${f.type}/${encodeURIComponent(f.name)}" target="_blank" rel="noopener"
            class="group flex items-center gap-2 p-2 hover:bg-gray-50 rounded transition-colors cursor-pointer">
@@ -1131,26 +1174,40 @@
     // ── Batch ──────────────────────────────────────────────────────────────
     function openBatchModal() {
       const modal = document.getElementById('batch-modal'); modal.classList.remove('hidden'); modal.classList.add('flex');
-      document.getElementById('batch-patient-list').innerHTML = allPatientIds.map(id => `
-        <label class="flex items-center gap-3 px-2 py-1.5 hover:bg-gray-50 rounded cursor-pointer">
-            <input type="checkbox" class="batch-chk lg-chk" value="${id}" checked>
-            <span class="text-sm">Patient ${id}</span>
-        </label>`).join('');
+      const defaults = {
+        persona: document.getElementById('chk-batch-persona').checked,
+        reports: document.getElementById('chk-batch-reports').checked,
+        summary: document.getElementById('chk-batch-summary').checked
+      };
+      document.getElementById('batch-patient-rows').innerHTML = allPatientIds.map(id => `
+        <tr data-patient-id="${id}" class="hover:bg-gray-50">
+          <td class="py-2 pr-2"><input type="checkbox" class="batch-select lg-chk" value="${id}" checked></td>
+          <td class="py-2 pr-4 text-[11px] font-medium">Patient ${id}</td>
+          <td class="py-2 pr-2"><input type="checkbox" class="batch-doc batch-persona lg-chk" ${defaults.persona ? 'checked' : ''}></td>
+          <td class="py-2 pr-2"><input type="checkbox" class="batch-doc batch-reports lg-chk" ${defaults.reports ? 'checked' : ''}></td>
+          <td class="py-2 pr-2"><input type="checkbox" class="batch-doc batch-summary lg-chk" ${defaults.summary ? 'checked' : ''}></td>
+          <td class="py-2">
+            <input type="text" class="batch-feedback w-full text-[11px] border border-gray-200 rounded px-2 py-1"
+                   placeholder="Optional feedback">
+          </td>
+        </tr>`).join('');
       batchSelectAll = true;
+      document.querySelector('[onclick="toggleSelectAll()"]').textContent = 'Deselect All';
     }
 
     function closeBatchModal() { const m = document.getElementById('batch-modal'); m.classList.add('hidden'); m.classList.remove('flex'); }
 
     function toggleSelectAll() {
       batchSelectAll = !batchSelectAll;
-      document.querySelectorAll('.batch-chk').forEach(c => c.checked = batchSelectAll);
+      document.querySelectorAll('.batch-select').forEach(c => c.checked = batchSelectAll);
       document.querySelector('[onclick="toggleSelectAll()"]').textContent = batchSelectAll ? 'Deselect All' : 'Select All';
     }
 
     async function startBatch() {
-      const sel = [...document.querySelectorAll('.batch-chk:checked')].map(c => c.value);
-      if (!sel.length) { alert('Select at least one patient.'); return; }
-      closeBatchModal(); clearLogs(); appendLog(`🚀 Batch: ${sel.length} patients…`);
+      const rows = [...document.querySelectorAll('#batch-patient-rows tr')];
+      const selectedRows = rows.filter(r => r.querySelector('.batch-select')?.checked);
+      if (!selectedRows.length) { alert('Select at least one patient.'); return; }
+      closeBatchModal(); clearLogs(); appendLog(`🚀 Batch: ${selectedRows.length} patients…`);
       document.getElementById('log-dot').style.background = '#3b82f6';
 
       // Set Cancel state on main button
@@ -1159,12 +1216,29 @@
       btn.classList.replace('bg-gray-900', 'bg-red-600');
       document.getElementById('gen-icon').textContent = 'close';
       document.getElementById('gen-label').textContent = 'Cancel Batch';
+      const defaultFeedback = document.getElementById('feedback-input').value;
+      const defaultMode = {
+        persona: document.getElementById('chk-batch-persona').checked,
+        reports: document.getElementById('chk-batch-reports').checked,
+        summary: document.getElementById('chk-batch-summary').checked
+      };
+      const patients = selectedRows.map(row => {
+        const patientId = row.getAttribute('data-patient-id');
+        const feedback = (row.querySelector('.batch-feedback')?.value || '').trim() || defaultFeedback;
+        return {
+          patient_id: patientId,
+          feedback,
+          generation_mode: {
+            persona: row.querySelector('.batch-persona')?.checked ?? defaultMode.persona,
+            reports: row.querySelector('.batch-reports')?.checked ?? defaultMode.reports,
+            summary: row.querySelector('.batch-summary')?.checked ?? defaultMode.summary
+          }
+        };
+      });
       const body = {
-        patient_ids: sel, feedback: document.getElementById('feedback-input').value,
-        generation_mode: {
-          persona: document.getElementById('chk-batch-persona').checked,
-          reports: document.getElementById('chk-batch-reports').checked, summary: document.getElementById('chk-batch-summary').checked
-        }
+        patients,
+        feedback: defaultFeedback,
+        generation_mode: defaultMode
       };
       try {
         const r = await fetch(`${API}/api/generate_all`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
