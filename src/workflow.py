@@ -57,6 +57,33 @@ def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
         return updated
     return case_details
 
+
+def _apply_insurance_overrides(persona, patient_state: dict | None):
+    """
+    Ensure payer details in persona align with patient_state.insurance.
+    """
+    if not persona or not patient_state:
+        return
+    insurance = (patient_state or {}).get("insurance") or {}
+    if not insurance:
+        return
+    payer = getattr(persona, "payer", None)
+    if not payer:
+        return
+
+    for field in (
+        "payer_id",
+        "payer_name",
+        "plan_name",
+        "plan_type",
+        "provider_abbreviation",
+        "provider_policy_url",
+        "plan_id",
+        "plan_policy_url",
+    ):
+        if field in insurance:
+            setattr(payer, field, insurance.get(field) or "")
+
 def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | None = None) -> str:
     """
     If feedback is a JSON risk assessment payload, extract key issues and
@@ -328,6 +355,9 @@ def process_patient_workflow(
     if len(filtered_documents) != len(documents_all):
         removed = len(documents_all) - len(filtered_documents)
         print(f"   🧹 Removed {removed} payer policy criteria document(s) from output.")
+
+    # Ensure payer fields reflect patient_state insurance config/selection
+    _apply_insurance_overrides(result.patient_persona, patient_state)
 
     # ── 6. SAVE PATIENT PERSONA TO DB ─────────────────────────────────────────
     p_full_name = None
@@ -773,6 +803,14 @@ def render_patient_pdfs_from_content(
         case_data = data_loader.load_patient_case(patient_id)
     except Exception:
         pass
+
+    # Apply insurance overrides even when rendering from existing persona
+    patient_state = None
+    try:
+        patient_state = state_manager.build_patient_state(patient_id, case_data or {})
+    except Exception:
+        patient_state = None
+    _apply_insurance_overrides(persona_obj, patient_state)
 
     p_full_name = (
         f"{persona_obj.first_name} {persona_obj.last_name}" if persona_obj

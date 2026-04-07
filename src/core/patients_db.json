@@ -13990,7 +13990,12 @@
       "temperature": "98.3\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "PSA screening discussed with PCP; most recent PSA 1.3 ng/mL (2025-11-14). No history of prostate cancer. Reports mild nocturia 1x/night without dysuria or hematuria; no urology referral documented."
+    "gender_specific_history": "PSA screening discussed with PCP; most recent PSA 1.3 ng/mL (2025-11-14). No history of prostate cancer. Reports mild nocturia 1x/night without dysuria or hematuria; no urology referral documented.",
+    "insurance_selection": {
+      "provider_id": "UHC",
+      "plan_type": "EPO",
+      "plan_id": null
+    }
   },
   "211": {
     "first_name": "Maxine",

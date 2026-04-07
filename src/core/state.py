@@ -151,6 +151,10 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
              "payer_name": (selected_provider or {}).get("name", "Unknown"),
              "plan_name": (plan or {}).get("plan_name", "Unknown Plan"),
              "plan_type": (plan or {}).get("plan_type", selected_plan_type or "Unknown"),
+             "provider_abbreviation": (selected_provider or {}).get("abbreviation", ""),
+             "provider_policy_url": (selected_provider or {}).get("policy_url", ""),
+             "plan_id": (plan or {}).get("plan_id", ""),
+             "plan_policy_url": (plan or {}).get("policy_url", ""),
              "member_id": identifiers["insurance_member_id"],
              "policy_number": identifiers["policy_number"]
         }

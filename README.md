@@ -58,6 +58,23 @@ python remove_persona.py <Patient_ID>
 python remove_persona.py -f <Patient_ID>
 ```
 
+#### Patient Data Compaction CLI
+
+To reduce token-heavy history/context/feedback and shrink patient DB text fields, run:
+
+```bash
+python compact_patient_data.py --patient-id 225
+# Compact all patients and keep only the last 3 history entries:
+python compact_patient_data.py --all --history-entries 3
+# Dry run (no files written):
+python compact_patient_data.py --patient-id 225 --dry-run
+```
+
+Defaults:
+- Truncates long text fields in `patients_db.json` (including `bio_narrative`)
+- Keeps the last 5 history entries in `archive/log/<id>.txt`
+- Trims feedback blocks in `<id>-record.txt`
+
 ---
 
 ## 🖥️ Web UI — 3-Silo Layout
@@ -302,6 +319,7 @@ pdgenerator/
 │
 ├── api_server.py               # Flask REST API (serves the UI)
 ├── run.py                      # CLI launcher (recommended)
+├── compact_patient_data.py     # CLI tool to compact DB/context/feedback
 ├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher

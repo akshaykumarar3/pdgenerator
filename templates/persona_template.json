@@ -23,9 +23,16 @@
         "weight": "patient_state.demographics.weight"
     },
     "insurance": {
-        "payer": "patient_state.insurance.payer",
-        "plan": "patient_state.insurance.plan",
-        "member_id": "patient_state.identifiers.insurance_member_id"
+        "payer_id": "patient_state.insurance.payer_id",
+        "payer_name": "patient_state.insurance.payer_name",
+        "provider_abbreviation": "patient_state.insurance.provider_abbreviation",
+        "provider_policy_url": "patient_state.insurance.provider_policy_url",
+        "plan_id": "patient_state.insurance.plan_id",
+        "plan_name": "patient_state.insurance.plan_name",
+        "plan_type": "patient_state.insurance.plan_type",
+        "plan_policy_url": "patient_state.insurance.plan_policy_url",
+        "member_id": "patient_state.identifiers.insurance_member_id",
+        "policy_number": "patient_state.insurance.policy_number"
     },
     "providers": "patient_state.providers",
     "medical_history": {

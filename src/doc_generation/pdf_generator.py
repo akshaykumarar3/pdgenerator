@@ -932,8 +932,12 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         data_payer.extend([
             ["Payer ID:", getattr(payer, 'payer_id', 'N/A')],
             ["Payer Name:", getattr(payer, 'payer_name', 'N/A')],
+            ["Provider Abbrev:", getattr(payer, 'provider_abbreviation', 'N/A')],
+            ["Provider Policy URL:", getattr(payer, 'provider_policy_url', 'N/A')],
             ["Plan Name:", getattr(payer, 'plan_name', 'N/A')],
             ["Plan Type:", getattr(payer, 'plan_type', 'N/A')],
+            ["Plan ID:", getattr(payer, 'plan_id', 'N/A')],
+            ["Plan Policy URL:", getattr(payer, 'plan_policy_url', 'N/A')],
             ["Member ID:", getattr(payer, 'member_id', 'N/A')],
             ["Policy Number:", getattr(payer, 'policy_number', 'N/A')],
             ["Effective Date:", getattr(payer, 'effective_date', 'N/A')],

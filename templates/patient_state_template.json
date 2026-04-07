@@ -21,8 +21,16 @@
         "zip": ""
     },
     "insurance": {
-        "payer": "",
-        "plan": ""
+        "payer_id": "",
+        "payer_name": "",
+        "provider_abbreviation": "",
+        "provider_policy_url": "",
+        "plan_id": "",
+        "plan_name": "",
+        "plan_type": "",
+        "plan_policy_url": "",
+        "member_id": "",
+        "policy_number": ""
     },
     "providers": [
         {

@@ -9,11 +9,58 @@ _CONFIG_PATH = os.path.join(_PROJECT_ROOT, "core", "insurance_config.json")
 _cached_config: Optional[Dict[str, Any]] = None
 
 
+def _normalize_config(cfg: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize provider/plan shapes to list-based structures."""
+    normalized = dict(cfg or {})
+
+    providers = normalized.get("providers")
+    providers_list: List[Dict[str, Any]] = []
+    if isinstance(providers, dict):
+        for provider_id, provider in providers.items():
+            if not isinstance(provider, dict):
+                continue
+            p = dict(provider)
+            p.setdefault("provider_id", provider_id)
+            providers_list.append(p)
+    elif isinstance(providers, list):
+        providers_list = [p for p in providers if isinstance(p, dict)]
+
+    # Normalize plans for each provider
+    for provider in providers_list:
+        plans = provider.get("plans")
+        plans_list: List[Dict[str, Any]] = []
+        if isinstance(plans, dict):
+            for key, val in plans.items():
+                if isinstance(val, list):
+                    for item in val:
+                        if not isinstance(item, dict):
+                            continue
+                        plan = dict(item)
+                        if plan.get("plan_id") is None and isinstance(key, str):
+                            plan["plan_id"] = key
+                        if plan.get("plan_type") is None and isinstance(key, str):
+                            plan["plan_type"] = key
+                        plans_list.append(plan)
+                elif isinstance(val, dict):
+                    plan = dict(val)
+                    if plan.get("plan_id") is None and isinstance(key, str):
+                        plan["plan_id"] = key
+                    plans_list.append(plan)
+        elif isinstance(plans, list):
+            plans_list = [p for p in plans if isinstance(p, dict)]
+
+        provider["plans"] = plans_list
+
+    normalized["providers"] = providers_list
+    return normalized
+
+
 def _load_config() -> Dict[str, Any]:
     if not os.path.exists(_CONFIG_PATH):
         return {"default_provider_id": None, "providers": []}
     with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+        raw = json.load(f)
+    return _normalize_config(raw)
 
 
 def get_config(force_reload: bool = False) -> Dict[str, Any]:

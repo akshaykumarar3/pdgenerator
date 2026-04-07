@@ -195,8 +195,12 @@ class PayerDetails(BaseModel):
     """Insurance/Payer information - ALL fields required."""
     payer_id: str = Field(default="J1113", description="Payer identifier e.g. 'J1113', 'UHC-001'")
     payer_name: str = Field(default="UnitedHealthcare", description="Full payer name e.g. 'UnitedHealthcare', 'Blue Cross Blue Shield', 'Aetna'")
+    provider_abbreviation: str = Field(default="", description="Short provider abbreviation e.g. 'UHC', 'BCBS'")
+    provider_policy_url: str = Field(default="", description="Provider policy URL")
     plan_name: str = Field(default="Choice Plus", description="Plan name e.g. 'Gold PPO', 'Choice Plus', 'Medicare Advantage'")
     plan_type: str = Field(default="PPO", description="Plan type: 'PPO', 'HMO', 'EPO', 'POS', 'Medicare', 'Medicaid'")
+    plan_id: str = Field(default="", description="Plan identifier from configuration e.g. 'UHC_TX_MA'")
+    plan_policy_url: str = Field(default="", description="Plan policy URL")
     member_id: str = Field(default="MBR-999999", description="Member ID on insurance card e.g. 'MBR-123456789'")
     policy_number: str = Field(default="POL-99999", description="Policy number e.g. 'POL-2025-001234'")
     effective_date: str = Field(default="2024-01-01", description="Coverage start date YYYY-MM-DD")

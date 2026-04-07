@@ -220,6 +220,8 @@ Persistent storage of generated personas in `src/core/patients_db.json` to prese
 
 Legacy `core/patients_db.json` is automatically migrated into `src/core/patients_db.json` on first load.
 
+Use `compact_patient_data.py` to truncate long patient DB fields and trim per-patient history/feedback logs for smaller context sizes.
+
 ### UI Layer (`ui/`)
 
 | File | Theme | Description |
@@ -257,6 +259,7 @@ pdgenerator/
 │   └── workflow.py              # Orchestration layer
 ├── api_server.py                # Flask REST API (port 410)
 ├── run.py                       # CLI launcher (recommended)
+├── compact_patient_data.py      # Compact DB/context/feedback utility
 └── remove_persona.py            # Deep persona removal utility
 ```
 
