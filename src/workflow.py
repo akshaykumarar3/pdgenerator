@@ -277,7 +277,8 @@ def process_patient_workflow(
 
     # ── 3. LOAD EXISTING PATIENT RECORD ───────────────────────────────────────
     existing_patient = patient_db.load_patient(patient_id)
-    if existing_patient:
+    has_persona = bool(existing_patient and (existing_patient.get("first_name") or existing_patient.get("last_name")))
+    if has_persona:
         print(f"   🔄 Existing record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
 
     # ── 4. BUILD PATIENT STATE & DOCUMENT PLAN ─────────────────────────────────
@@ -306,7 +307,7 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_persona=existing_patient,
+            existing_persona=existing_patient if has_persona else None,
         )
         
         from .doc_generation.validator import validate_npi_consistency
@@ -651,6 +652,7 @@ def preview_patient_generation(
 
     history_txt = history_manager.get_history(patient_id)
     existing_patient = patient_db.load_patient(patient_id)
+    has_persona = bool(existing_patient and (existing_patient.get("first_name") or existing_patient.get("last_name")))
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
 
@@ -666,7 +668,7 @@ def preview_patient_generation(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_persona=existing_patient,
+            existing_persona=existing_patient if has_persona else None,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")

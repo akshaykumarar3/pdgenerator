@@ -30,7 +30,7 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 4. Output valid, JSON-structured data.
 5. **No SQL**: Do not generate SQL. Focus on the Object Model.
 6. **Medical Coding**: Use REAL, medically appropriate ICD-10 CM codes that support medical necessity for the requested CPT procedure.
-7. **Insurance Standardization**: ALL patients must have UnitedHealthcare (UHC) insurance plans with realistic plan details.
+7. **Insurance Standardization**: The `payer` section MUST match the `patient_state.insurance` details (payer_name, plan_name, plan_type, payer_id). Do NOT invent new payer info.
 8. **No Coverage/Sufficiency Judgments**: Do NOT include explicit approval/denial recommendations or judgments about sufficiency of evidence (e.g., "not indicated", "not medically necessary", "lacks rationale", "meets criteria", "insufficient evidence"). Present clinical facts and findings only.
 9. **Avoid the Word "Justification"**: Do not use the word "justification" in narrative text. Use factual clinical findings and prior treatment history instead.
 10. **Positive Evidence Emphasis**: Clinical narratives should emphasize positive, factual evidence (symptoms, findings, prior treatments, objective data) that supports the requested procedure without stating sufficiency or correctness.
@@ -120,7 +120,7 @@ B. **Clinical Status**:
    - Target Procedure must be 'requested'. Historical Procedures 'completed'.
 C. **NO AI RESIDUE**: No "[Redacted]" or "Jane Doe". Use Pop Culture character names.
 D. **NAMING CONVENTION**: Use names from: Friends, Marvel, Star Wars, etc.
-E. **INSURANCE**: ALWAYS "UnitedHealthcare", Plan: "Medicare Advantage".
+E. **INSURANCE**: MUST match `patient_state.insurance` (payer_name, plan_name, plan_type).
 F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
    - ALL patients MUST be in **Texas, USA**.
    - Addresses: real TX cities (Houston, Dallas, San Antonio, Austin, etc.).
@@ -350,12 +350,10 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
            - `procedure_requested`: Full procedure name
            - `procedure_facility`: FacilityDetails object (name, address, city, state, ZIP, department)
            - `pa_request`: PARequestDetails object (all PA form fields)
-         - **payer (MANDATORY - UnitedHealthcare ONLY)**:
-           - `payer_name`: "UnitedHealthcare"
-           - `plan_name`: "Medicare Advantage"
-           - `plan_type`: "Medicare Advantage"
-           - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
-           - All other payer fields (deductible, copay, effective_date)
+        - **payer (MANDATORY - MUST MATCH patient_state.insurance)**:
+          - `payer_id`, `payer_name`, `plan_name`, `plan_type` MUST match `patient_state.insurance`
+          - `policy_number`: Format "POL-YYYY-XXXXXX" (year + 6 digits)
+          - All other payer fields (deductible, copay, effective_date)
         - **Bio Narrative (PLAIN TEXT)**:
           - Rich multi-paragraph history (Personality, HPI, Social). NO Markdown.
           - MUST reference the diagnosis codes and clinical history established in the persona.

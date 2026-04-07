@@ -23,6 +23,7 @@ load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 
 from src.data import loader as data_loader
 from src.core import patient_db
+from src.core import insurance_config
 
 # Refresh CPT code mapping from UAT Plan on server startup
 try:
@@ -578,6 +579,51 @@ def api_get_patient(patient_id: str):
             "case_details": case_details,
         })
     return jsonify({"found": False, "data": None, "case_details": None})
+
+
+@app.route("/api/insurance/config")
+def api_insurance_config():
+    """Return insurance configuration for UI selection."""
+    return jsonify(insurance_config.get_config())
+
+
+@app.route("/api/patient/<patient_id>/insurance", methods=["POST"])
+def api_update_patient_insurance(patient_id: str):
+    """Update patient-level insurance selection."""
+    body = request.get_json(force=True) or {}
+    provider_id = str(body.get("provider_id", "")).strip()
+    plan_type = str(body.get("plan_type", "")).strip()
+    plan_id = str(body.get("plan_id", "")).strip() if body.get("plan_id") else None
+
+    provider = insurance_config.get_provider_by_id(provider_id)
+    if not provider:
+        return jsonify({"error": "Invalid provider_id"}), 400
+
+    if plan_type:
+        valid_types = {p.get("plan_type") for p in (provider.get("plans") or [])}
+        if plan_type not in valid_types:
+            return jsonify({"error": "Invalid plan_type for provider"}), 400
+
+    record = patient_db.load_patient(patient_id) or {}
+    record["insurance_selection"] = {
+        "provider_id": provider_id,
+        "plan_type": plan_type or None,
+        "plan_id": plan_id or None,
+    }
+    patient_db.save_patient(patient_id, record)
+    return jsonify({"ok": True, "insurance_selection": record["insurance_selection"]})
+
+
+@app.route("/api/patient/<patient_id>/insurance", methods=["DELETE"])
+def api_clear_patient_insurance(patient_id: str):
+    """Clear patient-level insurance selection."""
+    record = patient_db.load_patient(patient_id) or {}
+    if "insurance_selection" in record:
+        del record["insurance_selection"]
+    if "payer" in record:
+        del record["payer"]
+    patient_db.save_patient(patient_id, record)
+    return jsonify({"ok": True})
 
 
 @app.route("/api/generate", methods=["POST"])

@@ -231,6 +231,32 @@
               </select>
             </div>
             <div id="info-provider" class="text-xs mt-0.5 truncate">—</div>
+            <div id="info-plan" class="text-[10px] text-gray-500 mt-0.5">—</div>
+          </div>
+          <div class="col-span-2 bg-gray-50 p-2 rounded">
+            <div class="text-[9px] text-gray-400 uppercase mb-1">Insurance Selection</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <div class="text-[9px] text-gray-400 uppercase">Provider</div>
+                <select id="insurance-provider-select" class="w-full text-[11px] border border-gray-200 rounded px-2 py-1 bg-white">
+                  <option value="">Loading…</option>
+                </select>
+              </div>
+              <div>
+                <div class="text-[9px] text-gray-400 uppercase">Plan Type</div>
+                <select id="insurance-plan-type-select" class="w-full text-[11px] border border-gray-200 rounded px-2 py-1 bg-white">
+                  <option value="">—</option>
+                </select>
+              </div>
+              <div class="col-span-2">
+                <div class="text-[9px] text-gray-400 uppercase">Plan Name</div>
+                <div id="insurance-plan-name" class="text-[11px] mt-0.5 text-gray-700">—</div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-1">
+              <div class="text-[9px] text-gray-400">Auto-saved per patient</div>
+              <button id="insurance-clear-btn" class="text-[9px] text-gray-500 underline">Clear</button>
+            </div>
           </div>
         </div>
       </div>
@@ -559,12 +585,40 @@
     const API = 'http://localhost:410';
     let currentPatientId = null, currentPatientData = null, allFiles = [], activeDocTab = 'all', activeClinicalTab = 'meds';
     let currentJobId = null, pollTimer = null, logOffset = 0, allPatientIds = [], batchSelectAll = true;
+    let insuranceConfig = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       checkServer(); loadPatients();
       document.getElementById('patient-select').addEventListener('change', onPatientChange);
       document.getElementById('info-provider-mode')?.addEventListener('change', () => {
         if (currentPatientData) updateProviderDisplay(currentPatientData);
+      });
+      document.getElementById('insurance-provider-select')?.addEventListener('change', () => {
+        const providerId = document.getElementById('insurance-provider-select').value;
+        const provider = getProviderById(providerId);
+        const planTypeSelect = document.getElementById('insurance-plan-type-select');
+        const planNameEl = document.getElementById('insurance-plan-name');
+        if (planTypeSelect) {
+          const types = getProviderPlanTypes(provider);
+          planTypeSelect.innerHTML = types.map(t => `<option value="${t}">${t}</option>`).join('');
+          planTypeSelect.value = types[0] || '';
+        }
+        if (planNameEl) {
+          planNameEl.textContent = resolvePlanName(provider, planTypeSelect?.value);
+        }
+        saveInsuranceSelection();
+      });
+      document.getElementById('insurance-plan-type-select')?.addEventListener('change', () => {
+        const providerId = document.getElementById('insurance-provider-select').value;
+        const provider = getProviderById(providerId);
+        const planNameEl = document.getElementById('insurance-plan-name');
+        const planType = document.getElementById('insurance-plan-type-select').value;
+        if (planNameEl) planNameEl.textContent = resolvePlanName(provider, planType);
+        saveInsuranceSelection();
+      });
+      document.getElementById('insurance-clear-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        clearInsuranceSelection();
       });
       document.getElementById('batch-modal').addEventListener('click', function (e) { if (e.target === this) closeBatchModal(); });
       document.getElementById('purge-modal').addEventListener('click', function (e) { if (e.target === this) closePurgeModal(); });
@@ -613,6 +667,7 @@
       try {
         const r = await fetch(`${API}/api/patient/${currentPatientId}`); const d = await r.json();
         currentPatientData = d.data; populateIdentity(d.data, d.case_details); populateCaseInfo(d.case_details);
+        populateInsuranceSelectors(d.data || {});
       }
       catch (e) { console.error(e); clearDossier(); }
       switchClinicalTab(activeClinicalTab);
@@ -626,6 +681,88 @@
       return (p?.bio_narrative || p?.pa_request?.clinical_justification || p?.procedure_requested || c?.details || '—');
     }
 
+    async function loadInsuranceConfig() {
+      if (insuranceConfig) return insuranceConfig;
+      try {
+        const r = await fetch(`${API}/api/insurance/config`);
+        insuranceConfig = await r.json();
+      } catch (_) {
+        insuranceConfig = { default_provider_id: null, providers: [] };
+      }
+      return insuranceConfig;
+    }
+
+    function getProviderById(providerId) {
+      return (insuranceConfig?.providers || []).find(p => p.provider_id === providerId) || null;
+    }
+
+    function getProviderPlanTypes(provider) {
+      const types = (provider?.plans || []).map(p => p.plan_type).filter(Boolean);
+      return [...new Set(types)];
+    }
+
+    function resolvePlanName(provider, planType) {
+      if (!provider) return '—';
+      const plans = provider.plans || [];
+      let match = plans.find(p => p.plan_type === planType && p.is_default);
+      if (!match) match = plans.find(p => p.plan_type === planType);
+      if (!match) match = plans.find(p => p.is_default) || plans[0];
+      return match ? match.plan_name : '—';
+    }
+
+    async function populateInsuranceSelectors(p) {
+      await loadInsuranceConfig();
+      const providerSelect = document.getElementById('insurance-provider-select');
+      const planTypeSelect = document.getElementById('insurance-plan-type-select');
+      const planNameEl = document.getElementById('insurance-plan-name');
+      if (!providerSelect || !planTypeSelect || !planNameEl) return;
+
+      providerSelect.innerHTML = (insuranceConfig.providers || []).map(pr => `<option value="${pr.provider_id}">${pr.name}</option>`).join('');
+
+      const selection = p?.insurance_selection || {};
+      const defaultProviderId = insuranceConfig.default_provider_id || (insuranceConfig.providers[0] && insuranceConfig.providers[0].provider_id);
+      const providerId = selection.provider_id || defaultProviderId || '';
+      providerSelect.value = providerId;
+
+      const provider = getProviderById(providerId);
+      const types = getProviderPlanTypes(provider);
+      planTypeSelect.innerHTML = types.map(t => `<option value="${t}">${t}</option>`).join('');
+
+      const planType = selection.plan_type || (types[0] || '');
+      planTypeSelect.value = planType;
+      planNameEl.textContent = resolvePlanName(provider, planType);
+    }
+
+    async function saveInsuranceSelection() {
+      if (!currentPatientId) return;
+      const providerSelect = document.getElementById('insurance-provider-select');
+      const planTypeSelect = document.getElementById('insurance-plan-type-select');
+      if (!providerSelect || !planTypeSelect) return;
+      const body = {
+        provider_id: providerSelect.value,
+        plan_type: planTypeSelect.value
+      };
+      try {
+        await fetch(`${API}/api/patient/${currentPatientId}/insurance`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        // Refresh patient data to reflect payer in identity display
+        if (currentPatientId) onPatientChange();
+      } catch (_) {}
+    }
+
+    async function clearInsuranceSelection() {
+      if (!currentPatientId) return;
+      const ok = confirm('Clear insurance selection and reset payer fields for this patient?');
+      if (!ok) return;
+      try {
+        await fetch(`${API}/api/patient/${currentPatientId}/insurance`, { method: 'DELETE' });
+        if (currentPatientId) onPatientChange();
+      } catch (_) {}
+    }
+
     function updateProviderDisplay(p) {
       const mode = document.getElementById('info-provider-mode')?.value || 'provider';
       let val = '—';
@@ -637,6 +774,10 @@
         val = get(p, 'payer', 'plan_type') || '—';
       }
       document.getElementById('info-provider').textContent = val || '—';
+      const planName = get(p, 'payer', 'plan_name') || '—';
+      const planType = get(p, 'payer', 'plan_type') || '—';
+      const planEl = document.getElementById('info-plan');
+      if (planEl) planEl.textContent = `Plan: ${planName} · ${planType}`;
     }
 
     function populateIdentity(p, c) {
@@ -673,13 +814,13 @@
     }
 
     function clearDossier() {
-      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-dx', 'info-summary', 'case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => {
+      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary', 'case-num', 'case-dept', 'case-cpt', 'case-outcome', 'case-details-text'].forEach(id => {
         if (document.getElementById(id)) document.getElementById(id).textContent = '—';
       });
     }
 
     function clearIdentityOnly() {
-      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-dx', 'info-summary'].forEach(id => {
+      ['info-name', 'info-mrn', 'info-dob', 'info-gender', 'info-provider', 'info-plan', 'info-dx', 'info-summary'].forEach(id => {
         if (document.getElementById(id)) document.getElementById(id).textContent = '—';
       });
     }
