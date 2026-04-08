@@ -311,11 +311,11 @@ pdgenerator/
 │   └── summary_template.json   # Clinical summary PDF layout
 │
 ├── generated_output/           # Generated files (gitignored)
-│   └── patient-data/<ID - Name>/ # Per-patient outputs (all files in root)
-│       ├── *.pdf               # Persona, reports, summaries
-│       ├── *-record.txt        # Patient text record
-│       └── archive/
-│           └── log/            # Logs + archived files
+│   ├── patient-data/<ID - Name - CPT - Outcome>/ # Per-patient documents
+│   │   └── *.pdf               # Persona, reports, summaries ONLY (latest generated)
+│   ├── archive/                # Archived/past generated versions
+│   ├── metadata/               # Patient text records (-record.txt)
+│   └── logs/                   # Generation logs and history tracking
 │
 ├── api_server.py               # Flask REST API (serves the UI)
 ├── run.py                      # CLI launcher (recommended)
@@ -330,7 +330,7 @@ pdgenerator/
 ```
 
 **Patient DB:** The active database lives at `src/core/patients_db.json`. If a legacy `core/patients_db.json` exists, it is automatically migrated on first load.
-**Feedback history:** Per-patient feedback/history is stored under `generated_output/patient-data/<ID - Name>/archive/log`.
+**Feedback history:** Per-patient feedback/history is stored under `generated_output/logs/<ID - Name - CPT - Outcome>...`.
 
 ### Key Files to Customize
 

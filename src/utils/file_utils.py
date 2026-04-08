@@ -7,6 +7,7 @@ import datetime
 from ..core.config import (
     get_patient_report_folder,
     get_patient_logs_folder,
+    get_patient_archive_folder,
 )
 
 def get_persona_version(patient_id: str) -> int:
@@ -45,7 +46,7 @@ def _archive_files_in_dir(folder: str, patient_id: str, prefix_patterns: list[st
     if not os.path.isdir(folder):
         return
 
-    archive_dir = get_patient_logs_folder(patient_id)
+    archive_dir = get_patient_archive_folder(patient_id)
     os.makedirs(archive_dir, exist_ok=True)
     token_prefix = f"{archive_token}__" if archive_token else f"archived_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}__"
 
@@ -115,7 +116,7 @@ def restore_patient_files(patient_id: str, generation_mode: dict, archive_token:
                 pass
 
     # 2. Move archived files back
-    archive_dir = get_patient_logs_folder(patient_id)
+    archive_dir = get_patient_archive_folder(patient_id)
     token_prefix = f"{archive_token}__"
     if os.path.isdir(archive_dir):
         for fname in os.listdir(archive_dir):

@@ -49,14 +49,28 @@ def find_patient_folder(patient_id: str) -> str | None:
     return None
 
 def get_patient_root(patient_id: str, patient_name: str | None = None, prefer_name: bool = False) -> str:
-    """Root output folder for a patient (patient_id - name)."""
+    """Root output folder for a patient (patient_id - name - cpt - outcome)."""
     if not prefer_name:
         existing = find_patient_folder(patient_id)
         if existing:
             return existing
     resolved_name = _resolve_patient_name(patient_id, patient_name)
     safe_name = _safe_folder_component(resolved_name)
-    folder_name = f"{patient_id} - {safe_name}"
+    
+    # Extract CPT Code and Outcome
+    try:
+        from ..data import loader as data_loader
+        case_data = data_loader.get_case_details(patient_id) or {}
+        cpt_code = str(case_data.get("cpt_code", "Unknown")).strip() or "Unknown"
+        outcome = str(case_data.get("outcome", "Unknown")).strip() or "Unknown"
+    except Exception:
+        cpt_code = "Unknown"
+        outcome = "Unknown"
+        
+    safe_cpt = _safe_folder_component(cpt_code)
+    safe_outcome = _safe_folder_component(outcome)
+
+    folder_name = f"{patient_id} - {safe_name} - {safe_cpt} - {safe_outcome}"
     return os.path.join(PATIENT_DATA_DIR, folder_name)
 
 def get_patient_persona_folder(patient_id: str, patient_name: str | None = None) -> str:
@@ -73,15 +87,21 @@ def get_patient_summary_folder(patient_id: str, patient_name: str | None = None)
 
 def get_patient_archive_folder(patient_id: str, patient_name: str | None = None) -> str:
     """Archive folder for a patient."""
-    return os.path.join(get_patient_root(patient_id, patient_name), "_meta", "archive")
+    p_root = get_patient_root(patient_id, patient_name)
+    folder_name = os.path.basename(p_root)
+    return os.path.join(OUTPUT_DIR, "archive", folder_name)
 
 def get_patient_logs_folder(patient_id: str, patient_name: str | None = None) -> str:
-    """Logs folder for a patient (archive/log)."""
-    return os.path.join(get_patient_archive_folder(patient_id, patient_name), "log")
+    """Logs folder for a patient."""
+    p_root = get_patient_root(patient_id, patient_name)
+    folder_name = os.path.basename(p_root)
+    return os.path.join(OUTPUT_DIR, "logs", folder_name)
 
 def get_patient_records_folder(patient_id: str, patient_name: str | None = None) -> str:
-    """Text record folder for a patient (root)."""
-    return os.path.join(get_patient_root(patient_id, patient_name), "_meta")
+    """Text record folder containing metadata."""
+    p_root = get_patient_root(patient_id, patient_name)
+    folder_name = os.path.basename(p_root)
+    return os.path.join(OUTPUT_DIR, "metadata", folder_name)
 
 
 __all__ = [

@@ -242,10 +242,11 @@ pdgenerator/
 ├── config/                     # Externalized rules & patterns
 ├── templates/                  # PDF and Document templates
 ├── generated_output/           # Final artifacts
-│   └── patient-data/<ID - Name>/
-│       ├── *.pdf               # Persona, reports, summaries
-│       ├── *-record.txt        # Patient text record
-│       └── archive/log/        # Logs + archived files
+│   ├── patient-data/<ID - Name - CPT - Outcome>/
+│   │   └── *.pdf               # Persona, reports, summaries ONLY (latest generated)
+│   ├── archive/                # Archived/past generated versions
+│   ├── metadata/               # Patient text records
+│   └── logs/                   # Generation logs and history tracking
 ├── ui/
 │   ├── index.html              # Dark UI (Material You)
 │   └── index2.html             # Light UI (Command Center)

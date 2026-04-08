@@ -372,22 +372,25 @@ the `structured_documents` array in responses.
 
 ---
 
-# File Naming Conventions
+# Folder & File Naming Conventions
 
-Documents
+**Folders (Decoupled Architecture from v5.2)**:
+* Active Documents: `generated_output/patient-data/<Patient_ID> - <Patient_Name> - <CPT_Code> - <PA_Outcome>/`
+* Metadata tracking: `generated_output/metadata/<Folder_Name>`
+* Generation logs: `generated_output/logs/<Folder_Name>`
+* Historical archives: `generated_output/archive/<Folder_Name>`
 
+**Documents**:
 ```
 DOC-{patient_id}-{seq}-{title}.pdf
 ```
 
-Persona
-
+**Persona**:
 ```
 {patient_id}-{name}-persona.pdf
 ```
 
-Summary
-
+**Summary**:
 ```
 Clinical_Summary_Patient_{id}.pdf
 ```
@@ -449,6 +452,11 @@ Workflow continues gracefully.
 ---
 
 # Maintenance & Updates
+
+### v5.2 Directory Restructuring (2026-04-08)
+* **Decoupled Architecture**: `logs/`, `metadata/`, and `archive/` data have been entirely moved out of the `patient-data/` folder and decoupled to reside top-level inside `generated_output/`.
+* **Dynamic Folder Naming**: Patient folders dynamically append `CPT Code` and `PA Outcome` attributes (e.g. `101 - Sandor - 12345 - PA Approval`). 
+* **Granular Archiving**: Document overrides automatically and specifically archive (rather than delete) older PDFs (i.e. replacing *only* personas vs all files) during new generation loops into `generated_output/archive/...`
 
 ### v4.1 Robustness Improvements (2026-04-07)
 * **Indentation Fix**: Resolved `IndentationError` in `src/workflow.py` causing server startup failures.

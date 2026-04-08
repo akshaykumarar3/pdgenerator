@@ -9,6 +9,8 @@ from ..core.config import (
     PATIENT_DATA_DIR,
     get_patient_root,
     get_patient_logs_folder,
+    get_patient_records_folder,
+    get_patient_archive_folder,
 )
 DB_PATH = patient_db.DB_PATH
 
@@ -21,7 +23,7 @@ def confirm_action(message: str, force: bool = False) -> bool:
 
 
 def _archive_dir_for_patient(patient_id: str) -> str:
-    archive_dir = get_patient_logs_folder(patient_id)
+    archive_dir = get_patient_archive_folder(patient_id)
     os.makedirs(archive_dir, exist_ok=True)
     return archive_dir
 
@@ -114,7 +116,8 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
 
     # Records
     if "records" in targets:
-        record_file = os.path.join(p_root, f"{patient_id}-record.txt")
+        record_dir = get_patient_records_folder(patient_id)
+        record_file = os.path.join(record_dir, f"{patient_id}-record.txt")
         if os.path.exists(record_file):
             if mode == "archive":
                 _archive_files_for_patient([record_file], patient_id, f"{patient_id}_records")
@@ -177,8 +180,12 @@ def purge_all(force: bool = False):
     except IOError:
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
-    # 6. Records (under patient-data)
-    # Nothing additional to do; patient-data was already removed.
+    # 2. Additional Folders
+    for d in ["logs", "metadata", "archive", "debug"]:
+        target_dir = os.path.join(OUTPUT_DIR, d)
+        if os.path.exists(target_dir):
+            shutil.rmtree(target_dir)
+            print(f"      ✅ Deleted: {target_dir}/")
 
     print("\n   ✨ Purge Complete.")
 
@@ -293,10 +300,9 @@ def purge_reports_and_summaries(force: bool = False):
                 os.remove(f)
             for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
                 os.remove(f)
-            logs_dir = os.path.join(p_root, "archive", "log")
-            if os.path.exists(logs_dir):
-                shutil.rmtree(logs_dir)
-        print(f"      ✅ Deleted: reports + summaries + logs under {PATIENT_DATA_DIR}/")
+            
+            # Clean up decoupled archive, config...
+        print(f"      ✅ Deleted: reports + summaries under {PATIENT_DATA_DIR}/")
     
     print("\n   ✨ Reports and Summaries Purged.")
 

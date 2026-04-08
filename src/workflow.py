@@ -371,11 +371,20 @@ def process_patient_workflow(
     patient_report_folder = None
     if p_full_name:
         try:
-            from .core.config import find_patient_folder, get_patient_root
+            from .core.config import find_patient_folder, get_patient_root, OUTPUT_DIR
             existing_root = find_patient_folder(patient_id)
             desired_root = get_patient_root(patient_id, p_full_name, prefer_name=True)
             if existing_root and existing_root != desired_root and not os.path.exists(desired_root):
                 os.rename(existing_root, desired_root)
+                # Ensure we also rename decoupled folders if they exist
+                old_base = os.path.basename(existing_root)
+                new_base = os.path.basename(desired_root)
+                for decoupled in ["metadata", "logs", "archive"]:
+                    old_path = os.path.join(OUTPUT_DIR, decoupled, old_base)
+                    new_path = os.path.join(OUTPUT_DIR, decoupled, new_base)
+                    if os.path.exists(old_path) and not os.path.exists(new_path):
+                        os.makedirs(os.path.dirname(new_path), exist_ok=True)
+                        os.rename(old_path, new_path)
             patient_report_folder = desired_root if os.path.exists(desired_root) else (existing_root or desired_root)
         except Exception as e:
             print(f"   ⚠️  Could not align patient folder name: {e}")
