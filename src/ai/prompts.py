@@ -140,7 +140,29 @@ F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
 # - Document Formatting: Critical for validation - do not change markers
 # - Persona Requirements: Add/remove required patient fields
 
-def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "", 
+
+def _build_clinical_logic_instruction(case_details: dict) -> str:
+    """
+    Build the Clinical Logic Application instruction (prompt instruction #2).
+
+    For approval outcomes: returns a standard strong-evidence directive.
+    For denial/rejection outcomes: samples multi-dimensional gap archetypes
+    and returns a sophisticated injection block designed to embed nuanced,
+    cross-referential inconsistencies rather than obvious surface-level gaps.
+    """
+    import re as _re
+    outcome = str(case_details.get("outcome", "") or "")
+    if _re.search(r"(reject|rejection|deny|denial|low\s+probability)", outcome, _re.IGNORECASE):
+        return get_rejection_gap_instruction(case_details)
+    return (
+        "If Target is Approval or High Probability → ENSURE strong supporting evidence exists. "
+        "Generate comprehensive clinical documentation with clear medical necessity, detailed "
+        "diagnostic workup, and explicit treatment rationale. Every finding must positively "
+        "corroborate the requested procedure."
+    )
+
+
+def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "",
                              history_context: str = "", existing_persona: dict = None) -> str:
     """
     Generates the main prompt for clinical data generation.
@@ -210,8 +232,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - Maintain strict patient identity if provided.
        - Ensure all documents match the patient demographics.
     2. **Clinical Logic Application**:
-       - If Target is Denial/Low Probability -> REMOVE supporting evidence or make findings ambiguous/normal.
-       - If Target is Approval -> ENSURE strong supporting evidence exists.
+       {_build_clinical_logic_instruction(case_details)}
     3. **Clinical Status**:
        - The *Target Procedure* ({case_details['procedure']}) Status: 'requested'.
        - All *historical* procedures must be implied as 'completed'.
@@ -982,6 +1003,403 @@ Return a structured JSON object with the following schema:
 5. Make it easy for annotators to validate the data quality
 6. If documents are not available, clearly indicate pending status
 """
+
+
+# ============================================================================
+# REJECTION / DENIAL GAP INJECTION SYSTEM
+# ============================================================================
+# Architecture:
+#   GAP_ARCHETYPE_POOL   → 20 curated gap archetypes across 5 clinical dimensions
+#   _select_gap_archetypes() → weighted sampler that guarantees depth + variety
+#   get_rejection_gap_instruction() → builds the prompt block for denial cases
+#
+# Design principles enforced at the prompt level:
+#   • Gaps must span ≥2 documents/sections to be detectable
+#   • No section is entirely blank/missing — gaps are EMBEDDED in otherwise valid data
+#   • At least 1 high-impact gap per case (Treatment Escalation or Policy-Criteria type)
+#   • Gap position, type, and combination vary across runs — no predictable signature
+#   • Models cannot detect gaps from a single document read-through
+
+GAP_ARCHETYPE_POOL: list[dict] = [
+    # ─── Dimension A: Profile ↔ Behavior Contradictions ───────────────────────
+    {
+        "id": "PB-001",
+        "dimension": "Profile-Behavior",
+        "criticality": "medium",
+        "name": "Tobacco Denial Contradiction",
+        "injection_instruction": (
+            "In social_history set tobacco_use to 'Never'. "
+            "Within one pulmonologist or respiratory encounter note (doctor_note or observations), "
+            "include a passing clinical reference such as 'per prior records, patient has a remote "
+            "smoking history' or document SpO2 readings consistently at 93–94% without documented cause. "
+            "Do NOT explain the discrepancy anywhere. The contradiction must emerge only when comparing "
+            "the social history against the encounter notes side by side."
+        ),
+    },
+    {
+        "id": "PB-002",
+        "dimension": "Profile-Behavior",
+        "criticality": "medium",
+        "name": "Alcohol Use Underreporting",
+        "injection_instruction": (
+            "In social_history set alcohol_use to 'Social' and alcohol_frequency to 'Occasional'. "
+            "In the lab reports section (reports list or lab document), include a comprehensive metabolic "
+            "panel where GGT is elevated (2–3× ULN), AST/ALT ratio > 2:1, and MCV is borderline high "
+            "(96–100 fL). Do not flag these values as abnormal in the clinical impression. The pattern "
+            "becomes significant only when the social history alcohol claim is cross-referenced with the "
+            "lab panel."
+        ),
+    },
+    {
+        "id": "PB-003",
+        "dimension": "Profile-Behavior",
+        "criticality": "medium",
+        "name": "BMI-Dosing Discrepancy",
+        "injection_instruction": (
+            "Set the patient's documented weight to a value that places BMI above 35 kg/m². "
+            "In the medication list, include a weight-dependent drug (e.g., anticoagulant, "
+            "chemotherapy agent, or antibiotic) prescribed at a standard dose (not adjusted for obesity). "
+            "Do not flag this in any clinical note. The mismatch is only detectable by cross-referencing "
+            "the patient's biometrics with the prescription details."
+        ),
+    },
+    {
+        "id": "PB-004",
+        "dimension": "Profile-Behavior",
+        "criticality": "low",
+        "name": "Exercise Claim vs. Resting Physiology",
+        "injection_instruction": (
+            "In social_history set exercise_habits to a highly active pattern (e.g., '5 days/week, "
+            "moderate to vigorous aerobic exercise'). In vital_signs_current and within at least two "
+            "encounter vital_signs blocks, set resting heart_rate consistently between 92–100 bpm. "
+            "No explanation for the elevated resting HR should be documented. The physiologic "
+            "inconsistency is only apparent when the exercise claim and HR trend are analyzed together."
+        ),
+    },
+    # ─── Dimension B: Temporal Sequence Violations ─────────────────────────────
+    {
+        "id": "TS-001",
+        "dimension": "Temporal-Sequence",
+        "criticality": "medium",
+        "name": "Lab Result Predates Ordering Encounter",
+        "injection_instruction": (
+            "Generate a lab report event in the reports list with a date that is 3–7 days BEFORE "
+            "the encounter whose doctor_note references ordering that lab ('ordered CBC and comprehensive "
+            "panel'). The ordering encounter must be clearly dated AFTER the lab result. "
+            "This violation is only visible when the encounter timeline is mapped against the lab dates."
+        ),
+    },
+    {
+        "id": "TS-002",
+        "dimension": "Temporal-Sequence",
+        "criticality": "medium",
+        "name": "Imaging Referenced Before It Was Performed",
+        "injection_instruction": (
+            "In an early encounter (not the most recent), include a clinical note that references "
+            "findings from a specific imaging study (e.g., 'per the MRI from last month, there is...') "
+            "but date the actual imaging entry in the images list AFTER that encounter date. "
+            "The forward-reference is only detectable by comparing the encounter date against the imaging date."
+        ),
+    },
+    {
+        "id": "TS-003",
+        "dimension": "Temporal-Sequence",
+        "criticality": "high",
+        "name": "Active Medication Discontinued in Prior Encounter",
+        "injection_instruction": (
+            "In the medications list, mark one medication as status 'current' with an active start_date. "
+            "In an encounter that predates the current run but is documented in encounter history, "
+            "include a note in doctor_note or medications_prescribed explicitly stating this drug was "
+            "discontinued due to [adverse reaction / inefficacy / patient preference]. "
+            "The medication persists as 'current' in the persona. There must be no reconciliation note "
+            "or re-initiation note. Detection requires comparing the medication list against encounter notes."
+        ),
+    },
+    {
+        "id": "TS-004",
+        "dimension": "Temporal-Sequence",
+        "criticality": "medium",
+        "name": "Mandated Follow-Up Never Occurred",
+        "injection_instruction": (
+            "In one encounter's follow_up_instructions, explicitly state a time-bound follow-up "
+            "(e.g., 'return in 4 weeks for repeat evaluation and decision on proceeding'). "
+            "Ensure no subsequent encounter in the encounters list falls within that window or addresses "
+            "the follow-up. The next documented encounter (if any) should be unrelated. "
+            "The gap only surfaces when follow-up instructions are mapped against the encounter timeline."
+        ),
+    },
+    # ─── Dimension C: Treatment Escalation Gaps ────────────────────────────────
+    {
+        "id": "TE-001",
+        "dimension": "Treatment-Escalation",
+        "criticality": "high",
+        "name": "Step Therapy Duration Shortfall",
+        "injection_instruction": (
+            "In the therapies or medications list, document a conservative first-line therapy "
+            "(e.g., physical therapy, NSAIDs trial, dietary intervention) with a start and end date "
+            "spanning only 10–14 days. Clinical guidelines and PA criteria for this procedure category "
+            "typically require 6–12 weeks of documented conservative management. "
+            "The PA request form should cite 'failure of conservative management' without specifying "
+            "the duration. Reviewers must manually check the therapy dates to identify the shortfall."
+        ),
+    },
+    {
+        "id": "TE-002",
+        "dimension": "Treatment-Escalation",
+        "criticality": "high",
+        "name": "Single-Line Step Therapy Claimed as Multiple",
+        "injection_instruction": (
+            "In the PA request's previous_treatments field, write a phrase implying multiple "
+            "conservative therapies were attempted (e.g., 'including pharmacologic and non-pharmacologic "
+            "approaches'). In the actual therapies and medication lists, document only one distinct "
+            "conservative treatment. The therapies list must contain exactly one entry relevant to the "
+            "condition. Detection requires comparing the PA narrative claim against the documented therapy history."
+        ),
+    },
+    {
+        "id": "TE-003",
+        "dimension": "Treatment-Escalation",
+        "criticality": "medium",
+        "name": "Therapy Completion Without Outcome Documentation",
+        "injection_instruction": (
+            "Add a completed therapy entry (status: 'Completed') for a relevant modality "
+            "(physical therapy, occupational therapy, or cardiac rehab). "
+            "Ensure there is NO corresponding discharge summary, outcome measure score, "
+            "functional assessment, or provider note documenting the result of that therapy. "
+            "Clinical encounters following the therapy end date should not reference its outcomes. "
+            "The missing outcome is only apparent when the therapy record is compared against encounters."
+        ),
+    },
+    {
+        "id": "TE-004",
+        "dimension": "Treatment-Escalation",
+        "criticality": "high",
+        "name": "Specialist Referral Deficit",
+        "injection_instruction": (
+            "The PA request form should reference specialist evaluation as part of the clinical "
+            "justification. In the encounters list, include only GP and primary care visits — no "
+            "specialist consult note (no cardiology, orthopedics, gastroenterology, etc.). "
+            "If the procedure type typically requires a specialist recommendation, the absence creates "
+            "a critical gap. This is detectable only by mapping the PA claim against the encounter "
+            "provider specialty records."
+        ),
+    },
+    # ─── Dimension D: Cross-Document Contradictions ────────────────────────────
+    {
+        "id": "CD-001",
+        "dimension": "Cross-Document",
+        "criticality": "medium",
+        "name": "Diagnosis Severity Drift",
+        "injection_instruction": (
+            "Select the primary ICD-10 code and use a 'mild' or 'moderate' severity variant "
+            "(e.g., use the non-severe modifier or a code that maps to minimal impairment). "
+            "In the PA request's clinical_justification and expected_outcome fields, use language "
+            "describing a severe, functionally limiting condition that significantly impacts daily "
+            "activities. Do not reconcile these severity levels anywhere in the documentation. "
+            "Detection requires comparing the coded severity against the clinical narrative language."
+        ),
+    },
+    {
+        "id": "CD-002",
+        "dimension": "Cross-Document",
+        "criticality": "medium",
+        "name": "Provider Name Fragmentation",
+        "injection_instruction": (
+            "In the encounters list, reference a key provider with a slightly different name spelling "
+            "or credential format in two separate encounters (e.g., 'Dr. Sarah J. Williams, MD' vs "
+            "'Dr. S. Williams'). In one of those encounters, assign a NPI that differs by one digit from "
+            "the NPI in the persona's provider record. Do not use an obviously fabricated NPI — make it "
+            "a plausible 10-digit number that is simply different. This creates identity ambiguity that "
+            "only surfaces when provider identifiers are cross-checked."
+        ),
+    },
+    {
+        "id": "CD-003",
+        "dimension": "Cross-Document",
+        "criticality": "low",
+        "name": "Imaging Facility State Inconsistency",
+        "injection_instruction": (
+            "Add one imaging study in the images list performed at a facility located in a different "
+            "state than the patient's home address and the procedure facility. Do not include any "
+            "transfer-of-care notes, referral letter, or travel documentation explaining why imaging "
+            "occurred out of state. The inconsistency is detectable only when the imaging facility "
+            "location is compared against patient's documented address and procedure facility state."
+        ),
+    },
+    {
+        "id": "CD-004",
+        "dimension": "Cross-Document",
+        "criticality": "high",
+        "name": "Active vs. Discontinued Medication Contradiction",
+        "injection_instruction": (
+            "Include a specific medication in the medications list with status 'current'. "
+            "In a separate clinical document (consult note or PA request's previous_treatments section), "
+            "reference this same medication using past tense and imply it was tried and discontinued "
+            "(e.g., 'previously tried [drug] without benefit' or 'patient was unable to tolerate [drug]'). "
+            "No reconciliation or re-initiation note should exist. The active vs. discontinued discrepancy "
+            "only surfaces when the medication list is cross-referenced against clinical notes."
+        ),
+    },
+    # ─── Dimension E: Policy / Criteria Edge Cases ─────────────────────────────
+    {
+        "id": "PC-001",
+        "dimension": "Policy-Criteria",
+        "criticality": "high",
+        "name": "Authorization Type Mismatch",
+        "injection_instruction": (
+            "Set the PA request urgency_level to 'Pre-Service Routine' (standard label). "
+            "In the clinical_justification field, include language that conveys clinical urgency "
+            "(e.g., 'time-sensitive evaluation', 'risk of irreversible deterioration', "
+            "'urgent intervention warranted based on progression'). "
+            "The contradiction between routine filing and urgent clinical language requires policy "
+            "knowledge about authorization type definitions to detect — it is not obvious on a "
+            "single-document review."
+        ),
+    },
+    {
+        "id": "PC-002",
+        "dimension": "Policy-Criteria",
+        "criticality": "high",
+        "name": "Units-Requested vs. Treatment Plan Mismatch",
+        "injection_instruction": (
+            "In the PA request, set units_requested to a specific session count (e.g., '24 sessions'). "
+            "In the therapy plan documented within clinical notes or the therapies list, reference a "
+            "different session frequency and duration that would yield a different total "
+            "(e.g., 2x/week for 8 weeks = 16 sessions). The discrepancy between the authorized "
+            "unit count and the documented plan requires both the PA form and the therapy notes "
+            "to be read and calculated together."
+        ),
+    },
+    {
+        "id": "PC-003",
+        "dimension": "Policy-Criteria",
+        "criticality": "medium",
+        "name": "Diagnosis-CPT Medical Necessity Misalignment",
+        "injection_instruction": (
+            "Use ICD-10 codes where the primary code correctly maps to the general condition "
+            "but omit a required specificity modifier or comorbidity code that payers typically "
+            "require to establish medical necessity for this CPT. For example, if the CPT requires "
+            "documentation of failed pharmacotherapy, do not include the ICD-10 code for drug "
+            "resistance or treatment failure — only include the base condition code. "
+            "This gap requires knowledge of payer-specific coverage criteria to identify."
+        ),
+    },
+    {
+        "id": "PC-004",
+        "dimension": "Policy-Criteria",
+        "criticality": "medium",
+        "name": "Functional Status Documentation Gap",
+        "injection_instruction": (
+            "For procedures requiring documented functional impairment (e.g., joint replacement, "
+            "bariatric surgery, spinal procedures), include clinical notes that describe subjective "
+            "symptoms but omit standardized functional assessment scores (e.g., KOOS, WOMAC, ODI, "
+            "SF-36, mMRC dyspnea scale). The PA justification should reference 'significant functional "
+            "limitation' without citing a validated instrument score. Many payer policies require "
+            "objective functional scores — their absence is not obvious without policy knowledge."
+        ),
+    },
+]
+
+
+def _select_gap_archetypes(n: int = 3) -> list[dict]:
+    """
+    Select n gap archetypes from GAP_ARCHETYPE_POOL ensuring:
+      - At least 1 high-criticality archetype (Treatment-Escalation or Policy-Criteria)
+      - At least 2 different dimensions are represented
+      - No two archetypes share the same 'id'
+      - Total n is randomized between 2 and 4 unless explicitly overridden
+    """
+    import random as _random
+
+    pool = GAP_ARCHETYPE_POOL
+    n = _random.randint(2, 4)
+
+    # Must-have: one high-impact archetype from TE or PC dimensions
+    high_impact = [a for a in pool if a["dimension"] in ("Treatment-Escalation", "Policy-Criteria")]
+    must_have = _random.choice(high_impact)
+
+    remaining_pool = [a for a in pool if a["id"] != must_have["id"]]
+    fill_count = n - 1
+
+    # Try to get at least one from a different dimension than must_have
+    diff_dim = [a for a in remaining_pool if a["dimension"] != must_have["dimension"]]
+    if len(diff_dim) >= fill_count:
+        fill = _random.sample(diff_dim, fill_count)
+    else:
+        fill = _random.sample(remaining_pool, fill_count)
+
+    selected = [must_have] + fill
+    _random.shuffle(selected)
+    return selected
+
+
+def get_rejection_gap_instruction(case_details: dict) -> str:
+    """
+    Build a sophisticated multi-dimensional gap injection instruction for denial/rejection cases.
+
+    Called by _build_clinical_logic_instruction() when the outcome is Denial/Rejection.
+
+    Design goals:
+    - Each run selects 2–4 archetypes from different dimensions
+    - Gaps are embedded within otherwise complete, realistic clinical data
+    - No gap is detectable from a single document — all require cross-referencing ≥2 sections
+    - Anti-pattern guards prevent obvious, predictable, or labeled gaps
+    """
+    selected = _select_gap_archetypes()
+    archetype_ids = ", ".join(a["id"] for a in selected)
+    dimension_labels = ", ".join(sorted({a["dimension"] for a in selected}))
+
+    injection_blocks = []
+    for i, archetype in enumerate(selected, 1):
+        injection_blocks.append(
+            f"  [{i}] {archetype['name']} (ID: {archetype['id']} | Dim: {archetype['dimension']} | "
+            f"Criticality: {archetype['criticality'].upper()}):\n"
+            f"     {archetype['injection_instruction']}"
+        )
+
+    injection_text = "\n\n".join(injection_blocks)
+
+    return f"""This is a DENIAL / REJECTION scenario. You MUST generate clinically realistic,
+complete-looking documentation that contains precisely embedded deficiencies designed to require
+multi-step cross-referential reasoning to identify.
+
+=== REJECTION GAP INJECTION PROTOCOL ===
+
+Active archetypes this run: [{archetype_ids}]
+Dimensions covered: [{dimension_labels}]
+
+CRITICAL REQUIREMENT: The document set must appear thorough and professionally prepared on
+first read. Gaps must only become detectable when an investigator actively cross-references
+≥2 separate sections, documents, or data dimensions.
+
+--- ARCHETYPE INJECTION INSTRUCTIONS ---
+
+{injection_text}
+
+--- MANDATORY ANTI-PATTERN GUARDS (VIOLATIONS WILL DISQUALIFY THE OUTPUT) ---
+
+❌ DO NOT remove entire document sections or leave required fields blank/null.
+❌ DO NOT use placeholder text like "[MISSING]", "N/A", "To be determined", or "Not documented".
+❌ DO NOT create a single, obviously incorrect value (e.g., HR of 300 bpm, impossible lab results).
+❌ DO NOT place all gaps in the same document — gaps MUST be distributed across ≥2 documents.
+❌ DO NOT explain or flag the gaps anywhere in the generated content.
+❌ DO NOT omit clinical details that would make the gap immediately obvious on first read.
+❌ DO NOT use clinical language that signals incompleteness (e.g., "further evaluation needed").
+
+--- GENERATION STRATEGY ---
+
+Step 1: Generate a complete, fully-populated clinical persona and document set as if building
+        a strong approval case. Every section must contain realistic, specific clinical detail.
+
+Step 2: Apply each archetype injection instruction above as a targeted, silent modification.
+        The modification must preserve the overall clinical plausibility of the document.
+
+Step 3: Verify that no single document reveals a gap in isolation — gaps must require
+        comparing against at least one other data source to become apparent.
+
+Outcome: A documentation set that appears credible to a surface-level review but contains
+{len(selected)} embedded deficiencies that a rigorous cross-referential analysis will uncover."""
+
 
 # ============================================================================
 # CHARACTER UNIVERSES - For Patient Name Diversity

@@ -10,11 +10,12 @@ load_dotenv(_env_path)
 
 OUTPUT_DIR = os.getenv("OUTPUT_DIR") or os.path.join(_project_root, "generated_output")
 PATIENT_DATA_DIR = os.path.join(OUTPUT_DIR, "patient-data")
+DEBUG_DIR = os.path.join(OUTPUT_DIR, "debug")
 
 
 def ensure_output_dirs():
     """Create all required output directories if they do not exist."""
-    for d in [OUTPUT_DIR, PATIENT_DATA_DIR]:
+    for d in [OUTPUT_DIR, PATIENT_DATA_DIR, DEBUG_DIR]:
         os.makedirs(d, exist_ok=True)
 
 def _safe_folder_component(name: str) -> str:
@@ -103,6 +104,12 @@ def get_patient_records_folder(patient_id: str, patient_name: str | None = None)
     folder_name = os.path.basename(p_root)
     return os.path.join(OUTPUT_DIR, "metadata", folder_name)
 
+def get_patient_debug_folder(patient_id: str, patient_name: str | None = None) -> str:
+    """Debug state folder for a patient."""
+    p_root = get_patient_root(patient_id, patient_name)
+    folder_name = os.path.basename(p_root)
+    return os.path.join(DEBUG_DIR, folder_name)
+
 
 __all__ = [
     "OUTPUT_DIR",
@@ -116,4 +123,6 @@ __all__ = [
     "get_patient_archive_folder",
     "get_patient_logs_folder",
     "get_patient_records_folder",
+    "DEBUG_DIR",
+    "get_patient_debug_folder",
 ]

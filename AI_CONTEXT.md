@@ -379,6 +379,7 @@ the `structured_documents` array in responses.
 * Metadata tracking: `generated_output/metadata/<Folder_Name>`
 * Generation logs: `generated_output/logs/<Folder_Name>`
 * Historical archives: `generated_output/archive/<Folder_Name>`
+* Debug & Internal State: `generated_output/debug/`
 
 **Documents**:
 ```
@@ -453,8 +454,16 @@ Workflow continues gracefully.
 
 # Maintenance & Updates
 
+### v5.3 Gap Injection System Overhaul (2026-04-09)
+* **Multi-Dimensional Gap Archetypes**: Added `GAP_ARCHETYPE_POOL` in `src/ai/prompts.py` — 20 archetypes across 5 clinical dimensions (Profile-Behavior, Temporal-Sequence, Treatment-Escalation, Cross-Document, Policy-Criteria).
+* **Weighted Selector**: `_select_gap_archetypes()` randomizes 2–4 archetypes per run, guaranteeing ≥2 distinct dimensions and ≥1 high-impact (TE or PC) archetype per denial case.
+* **Sophisticated Gap Builder**: `get_rejection_gap_instruction()` produces a self-contained prompt block with per-archetype injection instructions and mandatory anti-pattern guards.
+* **Approval/Denial Dispatch**: `_build_clinical_logic_instruction()` replaces the old single-line blunt directive — approval cases get strong-evidence instructions; denial cases get the gap injection protocol.
+* **Anti-Pattern Guards**: Explicitly prohibit blank sections, `[MISSING]` labels, single-obvious-value errors, and gap concentration in one document.
+* **Design Goal**: Gaps are detectable only by cross-referencing ≥2 data dimensions; no gap is visible from a single document read-through.
+
 ### v5.2 Directory Restructuring (2026-04-08)
-* **Decoupled Architecture**: `logs/`, `metadata/`, and `archive/` data have been entirely moved out of the `patient-data/` folder and decoupled to reside top-level inside `generated_output/`.
+* **Decoupled Architecture**: `logs/`, `metadata/`, `archive/`, and `debug/` data have been entirely moved out of the `patient-data/` folder and decoupled to reside top-level inside `generated_output/`.
 * **Dynamic Folder Naming**: Patient folders dynamically append `CPT Code` and `PA Outcome` attributes (e.g. `101 - Sandor - 12345 - PA Approval`). 
 * **Granular Archiving**: Document overrides automatically and specifically archive (rather than delete) older PDFs (i.e. replacing *only* personas vs all files) during new generation loops into `generated_output/archive/...`
 

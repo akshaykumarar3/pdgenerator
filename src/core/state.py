@@ -7,9 +7,7 @@ from typing import Dict, Any
 
 from . import patient_db
 from . import insurance_config
-
-_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
+from .config import DEBUG_DIR
 
 def ensure_debug_dir():
     os.makedirs(DEBUG_DIR, exist_ok=True)

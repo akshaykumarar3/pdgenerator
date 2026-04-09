@@ -191,8 +191,8 @@ def _extract_report_metadata(content: str) -> dict:
     return metadata
 
 
-def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = "documents", image_path: str = None, version: int = 1):
-    patient_folder = base_output_folder
+def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = None, image_path: str = None, version: int = 1):
+    patient_folder = base_output_folder or "documents"
     _ensure_folder(patient_folder)
 
     if doc_type.startswith("DOC-"):
@@ -331,7 +331,8 @@ def get_clinical_image(doc_title: str):
 
 def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: int = 1):
     if output_folder is None:
-        output_folder = os.path.join("generated_output", "summary")
+        from ..core.config import OUTPUT_DIR
+        output_folder = os.path.join(OUTPUT_DIR, "summary")
 
     os.makedirs(output_folder, exist_ok=True)
 
@@ -629,7 +630,8 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     if output_folder:
         output_dir = output_folder
     else:
-        output_dir = f"documents/{patient_id}"
+        from ..core.config import OUTPUT_DIR
+        output_dir = os.path.join(OUTPUT_DIR, "summary")
         
     _ensure_folder(output_dir)
 

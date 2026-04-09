@@ -164,7 +164,34 @@ A `vertex_doc_reminder` CRITICAL instruction is always prepended to Vertex promp
 - **Bio narrative is enforced non-empty**: if the LLM returns a blank or too-short `bio_narrative`, it is backfilled from persona data, encounters, diagnoses, and case details.
 - **Report medical history is enforced**: if a document includes `past_medical_history` but it is blank, it is backfilled using supporting diagnoses or case context.
 - **No coverage/sufficiency judgments in clinical text**: documents are sanitized to remove explicit appropriateness/coverage or evidence-sufficiency language (e.g., "not indicated", "not medically necessary", "meets criteria", "insufficient evidence").
-- **Rejection/Approval Handling**: For default positive outcomes, the system forces approval document generation. However, when `generate_rejection_docs` is explicitly set, the system bypasses this and instructs the AI to generate clinically deficient documents (e.g. missing tests, failed criteria) to test denial workflows.
+- **Rejection/Approval Handling**: For default positive outcomes, the system forces approval document generation. When `generate_rejection_docs` is set, the outcome is passed as-is (Denial) and the prompt's gap injection protocol activates.
+
+### Gap Injection System (`src/ai/prompts.py`)
+
+Activated when the case outcome is Denial / Rejection. Replaces the legacy single-line "remove evidence" directive with a multi-dimensional, probabilistic gap injection framework.
+
+| Component | Role |
+|-----------|------|
+| `GAP_ARCHETYPE_POOL` | 20 curated gap archetypes across 5 dimensions |
+| `_select_gap_archetypes()` | Samples 2–4 archetypes per run; guarantees ≥2 dimensions and ≥1 high-impact gap |
+| `get_rejection_gap_instruction()` | Builds the full prompt block with per-archetype injection instructions + anti-pattern guards |
+| `_build_clinical_logic_instruction()` | Dispatches approval vs. denial logic at prompt-build time |
+
+**Five Gap Dimensions:**
+
+| Dimension | Example Patterns |
+|-----------|------------------|
+| Profile-Behavior | Tobacco denial vs. encounter notes; BMI vs. drug dosing |
+| Temporal-Sequence | Lab predates ordering encounter; imaging referenced before it was performed |
+| Treatment-Escalation | Step therapy lasted 10 days (requires 6–12 weeks); single therapy claimed as multiple |
+| Cross-Document | ICD-10 mild-severity vs. PA "severe" narrative; active vs. discontinued medication |
+| Policy-Criteria | Auth type mismatch; missing functional assessment scores required by payer |
+
+**Core Design Invariants:**
+- Every gap requires comparing ≥2 documents or dimensions to detect
+- No gap is visible from a single document read-through
+- No section is left blank or null; gaps live inside otherwise complete, realistic data
+- Anti-pattern guards embedded in the prompt prohibit`[MISSING]` labels, impossible values, and section-level omissions
 
 ---
 
@@ -242,11 +269,11 @@ pdgenerator/
 ├── config/                     # Externalized rules & patterns
 ├── templates/                  # PDF and Document templates
 ├── generated_output/           # Final artifacts
-│   ├── patient-data/<ID - Name - CPT - Outcome>/
-│   │   └── *.pdf               # Persona, reports, summaries ONLY (latest generated)
+│   ├── patient-data/           # Main document storage
 │   ├── archive/                # Archived/past generated versions
-│   ├── metadata/               # Patient text records
-│   └── logs/                   # Generation logs and history tracking
+│   ├── logs/                   # Generation logs
+│   ├── metadata/               # Patient text records & tracker records
+│   └── debug/                  # Internal patient_state JSON states
 ├── ui/
 │   ├── index.html              # Dark UI (Material You)
 │   └── index2.html             # Light UI (Command Center)

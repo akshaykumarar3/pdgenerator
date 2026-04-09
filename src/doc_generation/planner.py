@@ -2,9 +2,9 @@ import os
 import json
 import re
 from typing import List, Dict
+from ..core.config import DEBUG_DIR
 
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
 RULES_PATH = os.path.join(_BASE_DIR, "templates", "document_plan_rules.json")
 
 def ensure_debug_dir():

@@ -11,6 +11,7 @@ from ..core.config import (
     get_patient_logs_folder,
     get_patient_records_folder,
     get_patient_archive_folder,
+    DEBUG_DIR,
 )
 DB_PATH = patient_db.DB_PATH
 
@@ -106,7 +107,7 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
 
     # Debug state
     if "debug" in targets:
-        debug_state = os.path.join(OUTPUT_DIR, "debug", f"patient_state_{patient_id}.json")
+        debug_state = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
         if os.path.exists(debug_state):
             if mode == "archive":
                 _archive_files_for_patient([debug_state], patient_id, f"{patient_id}_debug")
@@ -181,11 +182,15 @@ def purge_all(force: bool = False):
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
     # 2. Additional Folders
-    for d in ["logs", "metadata", "archive", "debug"]:
+    for d in ["logs", "metadata", "archive"]:
         target_dir = os.path.join(OUTPUT_DIR, d)
         if os.path.exists(target_dir):
             shutil.rmtree(target_dir)
             print(f"      ✅ Deleted: {target_dir}/")
+    
+    if os.path.exists(DEBUG_DIR):
+        shutil.rmtree(DEBUG_DIR)
+        print(f"      ✅ Deleted: {DEBUG_DIR}/")
 
     print("\n   ✨ Purge Complete.")
 
