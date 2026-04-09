@@ -399,6 +399,19 @@ Clinical_Summary_Patient_{id}.pdf
 
 ---
 
+# Maintenance & Utilities
+
+**Compaction Management**:
+* `compact_patient_data.py`: Prunes and truncates verbose logs and patient records.
+* Logic: Uses section-aware parsing to truncate history and generation feedback while preserving current clinical context.
+* Execution: Always run with project venv: `./venv/bin/python3 compact_patient_data.py`.
+
+**Purge Management**:
+* Utilities: `src/utils/purge_manager.py` (CLI entrypoints via `run.py`).
+* Coverage: Global wipes (`all`, `summaries`, `logs`) and selective patient purging.
+
+---
+
 # Modification Guidelines
 
 ## Modify AI Prompts
