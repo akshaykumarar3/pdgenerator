@@ -273,6 +273,7 @@ pdgenerator/
 │   ├── archive/                # Archived/past generated versions
 │   ├── logs/                   # Generation logs
 │   ├── metadata/               # Patient text records & tracker records
+│   ├── summary/                # Dedicated clinical summary PDFs (flat structure)
 │   └── debug/                  # Internal patient_state JSON states
 ├── ui/
 │   ├── index.html              # Dark UI (Material You)

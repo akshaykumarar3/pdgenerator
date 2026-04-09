@@ -7,10 +7,11 @@ from ..core import patient_db
 from ..core.config import (
     OUTPUT_DIR,
     PATIENT_DATA_DIR,
-    get_patient_root,
+    get_patient_summary_folder,
     get_patient_logs_folder,
     get_patient_records_folder,
     get_patient_archive_folder,
+    SUMMARY_DIR,
     DEBUG_DIR,
 )
 DB_PATH = patient_db.DB_PATH
@@ -60,6 +61,7 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
     print(f"\n   🗑️  Purging Patient {patient_id} ({mode})...")
 
     p_root = get_patient_root(patient_id)
+    p_summary = get_patient_summary_folder(patient_id)
 
     # Reports
     if "reports" in targets:
@@ -83,13 +85,21 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
 
     # Summaries
     if "summary" in targets:
+        # Search both root (legacy) and dedicated summary folder
         summary_files = glob.glob(os.path.join(p_root, f"Clinical_Summary_Patient_{patient_id}*.pdf"))
+        if os.path.exists(p_summary):
+            summary_files.extend(glob.glob(os.path.join(p_summary, f"Clinical_Summary_Patient_{patient_id}*.pdf")))
+        
         if mode == "archive":
             _archive_files_for_patient(summary_files, patient_id, f"{patient_id}_summary")
         else:
             for f in summary_files:
-                os.remove(f)
-                print(f"      ✅ Deleted: {os.path.basename(f)}")
+                try:
+                    os.remove(f)
+                    print(f"      ✅ Deleted: {os.path.basename(f)}")
+                except Exception:
+                    pass
+                    pass
 
     # Logs
     if "logs" in targets:
@@ -182,7 +192,7 @@ def purge_all(force: bool = False):
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
     # 2. Additional Folders
-    for d in ["logs", "metadata", "archive"]:
+    for d in ["logs", "metadata", "archive", "summary"]:
         target_dir = os.path.join(OUTPUT_DIR, d)
         if os.path.exists(target_dir):
             shutil.rmtree(target_dir)
@@ -237,11 +247,15 @@ def purge_documents(force: bool = False):
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
-            for f in glob.glob(os.path.join(p_root, "DOC-*.pdf")):
-                os.remove(f)
             for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
                 os.remove(f)
-        print(f"      ✅ Cleared reports + summaries under {PATIENT_DATA_DIR}/")
+        
+        # Also clear dedicated summary folder
+        if os.path.exists(SUMMARY_DIR):
+            shutil.rmtree(SUMMARY_DIR)
+            os.makedirs(SUMMARY_DIR)
+            
+        print(f"      ✅ Cleared reports + summaries.")
     
     print("\n   ✨ Documents Purged.")
 
@@ -256,13 +270,20 @@ def purge_summaries_only(force: bool = False):
     print("\n   🗑️  Purging Summaries Only...")
     
     count = 0
+    # 1. Clear summary PDFs inside patient folders (legacy)
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
             for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
                 os.remove(f)
                 count += 1
-                print(f"      ✅ Deleted: {os.path.basename(f)}")
+                print(f"      ✅ Deleted (legacy): {os.path.basename(f)}")
+    
+    # 2. Clear dedicated summary folder
+    if os.path.exists(SUMMARY_DIR):
+        shutil.rmtree(SUMMARY_DIR)
+        os.makedirs(SUMMARY_DIR)
+        print(f"      ✅ Wiped dedicated summary folder: {SUMMARY_DIR}/")
     
     print(f"\n   ✨ Deleted {count} summary file(s).")
 
@@ -301,13 +322,15 @@ def purge_reports_and_summaries(force: bool = False):
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
-            for f in glob.glob(os.path.join(p_root, "DOC-*.pdf")):
-                os.remove(f)
             for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
                 os.remove(f)
+        
+        # Also clear dedicated summary folder
+        if os.path.exists(SUMMARY_DIR):
+            shutil.rmtree(SUMMARY_DIR)
+            os.makedirs(SUMMARY_DIR)
             
-            # Clean up decoupled archive, config...
-        print(f"      ✅ Deleted: reports + summaries under {PATIENT_DATA_DIR}/")
+        print(f"      ✅ Deleted: reports + summaries.")
     
     print("\n   ✨ Reports and Summaries Purged.")
 

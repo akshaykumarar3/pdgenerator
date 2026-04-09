@@ -377,6 +377,7 @@ the `structured_documents` array in responses.
 **Folders (Decoupled Architecture from v5.2)**:
 * Active Documents: `generated_output/patient-data/<Patient_ID> - <Patient_Name> - <CPT_Code> - <PA_Outcome>/`
 * Metadata tracking: `generated_output/metadata/<Folder_Name>`
+* Summary documents: `generated_output/summary/` (Flat structure)
 * Generation logs: `generated_output/logs/<Folder_Name>`
 * Historical archives: `generated_output/archive/<Folder_Name>`
 * Debug & Internal State: `generated_output/debug/`

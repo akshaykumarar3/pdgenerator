@@ -6,6 +6,7 @@ import datetime
 
 from ..core.config import (
     get_patient_report_folder,
+    get_patient_summary_folder,
     get_patient_logs_folder,
     get_patient_archive_folder,
 )
@@ -25,7 +26,10 @@ def get_persona_version(patient_id: str) -> int:
         f"Clinical_Summary_Patient_{patient_id}",
     ]
     
-    dirs_to_check = [get_patient_report_folder(patient_id)]
+    dirs_to_check = [
+        get_patient_report_folder(patient_id),
+        get_patient_summary_folder(patient_id)
+    ]
     
     for d in dirs_to_check:
         if os.path.isdir(d):
@@ -85,8 +89,13 @@ def archive_patient_files(patient_id: str, generation_mode: dict, archive_token:
         prefix_patterns.append(f"Clinical_Summary_Patient_{patient_id}")
 
     if prefix_patterns:
+        # 1. Root folder (Persona + Reports)
         root_folder = get_patient_report_folder(patient_id)
         _archive_files_in_dir(root_folder, patient_id, prefix_patterns, archive_token=archive_token)
+        
+        # 2. Summary folder (Summaries)
+        summary_folder = get_patient_summary_folder(patient_id)
+        _archive_files_in_dir(summary_folder, patient_id, prefix_patterns, archive_token=archive_token)
 
 def restore_patient_files(patient_id: str, generation_mode: dict, archive_token: str):
     """Restore files from archive/<archive_token> and delete current outputs."""
@@ -123,8 +132,14 @@ def restore_patient_files(patient_id: str, generation_mode: dict, archive_token:
             if not fname.endswith(".pdf") or not fname.startswith(token_prefix):
                 continue
             orig = fname[len(token_prefix):]
+            # Try to move back to either report or summary folder depending on filename
+            dst_folder = folder
+            if orig.startswith("Clinical_Summary"):
+                dst_folder = get_patient_summary_folder(patient_id)
+                os.makedirs(dst_folder, exist_ok=True)
+                
             try:
-                shutil.move(os.path.join(archive_dir, fname), os.path.join(folder, orig))
+                shutil.move(os.path.join(archive_dir, fname), os.path.join(dst_folder, orig))
             except Exception:
                 pass
 

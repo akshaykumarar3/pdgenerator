@@ -315,6 +315,7 @@ pdgenerator/
 │   │   └── *.pdf               # Persona, reports, summaries ONLY (latest generated)
 │   ├── archive/                # Archived/past generated versions
 │   ├── metadata/               # Patient text records (-record.txt)
+│   ├── summary/                # Clinical summary PDFs (flat structure)
 │   └── logs/                   # Generation logs and history tracking
 │
 ├── api_server.py               # Flask REST API (serves the UI)
