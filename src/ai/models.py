@@ -3,8 +3,8 @@ from typing import Optional, List, Dict, Any
 
 class PatientContactPeriod(BaseModel):
     """Period during which contact is valid."""
-    start: str = Field(..., description="Start date YYYY-MM-DD")
-    end: str = Field(..., description="End date YYYY-MM-DD or 'ongoing'")
+    start: str = Field(..., description="Start date MM-DD-YYYY")
+    end: str = Field(..., description="End date MM-DD-YYYY or 'ongoing'")
 
 class PatientContact(BaseModel):
     """Emergency contact or guardian - ALL fields required."""
@@ -14,7 +14,7 @@ class PatientContact(BaseModel):
     address: str = Field(..., description="Full address of contact")
     gender: str = Field(..., description="'male', 'female', 'other'")
     organization: str = Field("N/A", description="Organization name if contact is institutional, else 'N/A'")
-    period_start: str = Field(..., description="Date contact relationship started (YYYY-MM-DD)")
+    period_start: str = Field(..., description="Date contact relationship started (MM-DD-YYYY)")
     period_end: str = Field("ongoing", description="Date contact relationship ended or 'ongoing'")
 
 class FacilityDetails(BaseModel):
@@ -67,8 +67,8 @@ class MedicationEntry(BaseModel):
     qty: str = Field(..., description="Quantity dispensed e.g. '30 tablets', '90 day supply'")
     prescribed_by: str = Field(..., description="Prescribing physician e.g. 'Dr. Jane Smith, MD'")
     status: str = Field(..., description="'current', 'past', or 'ongoing'")
-    start_date: str = Field(..., description="Start date YYYY-MM-DD")
-    end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
+    start_date: str = Field(..., description="Start date MM-DD-YYYY")
+    end_date: str = Field("ongoing", description="End date MM-DD-YYYY or 'ongoing'")
     reason: str = Field(..., description="Clinical reason/indication for this medication")
 
 
@@ -78,14 +78,14 @@ class AllergyEntry(BaseModel):
     allergy_type: str = Field(..., description="'Drug', 'Food', 'Environmental', 'Latex', 'Other'")
     reaction: str = Field(..., description="Allergic reaction description e.g. 'Hives', 'Anaphylaxis', 'Rash'")
     severity: str = Field(..., description="'Mild', 'Moderate', 'Severe', 'Life-threatening'")
-    onset_date: str = Field(default="Unknown", description="Date allergy was first recorded YYYY-MM-DD or 'Unknown'")
+    onset_date: str = Field(default="Unknown", description="Date allergy was first recorded MM-DD-YYYY or 'Unknown'")
 
 
 class VaccinationEntry(BaseModel):
     """A single vaccination record."""
     vaccine_name: str = Field(..., description="Vaccine name e.g. 'Influenza', 'COVID-19 BNT162b2', 'Hepatitis B'")
     vaccine_type: str = Field(..., description="Vaccine platform: 'Inactivated', 'mRNA', 'Live-attenuated', 'Toxoid', 'Subunit', 'Viral vector', 'Other'")
-    date_administered: str = Field(..., description="Date administered YYYY-MM-DD")
+    date_administered: str = Field(..., description="Date administered MM-DD-YYYY")
     administered_by: str = Field(..., description="Administering provider or facility e.g. 'Dr. Smith', 'CVS Pharmacy'")
     dose_number: str = Field(default="1", description="Dose number e.g. '1', '2', 'Booster'")
     reason: str = Field(..., description="Reason for vaccination: 'Routine Immunization', 'Travel', 'Occupational', 'Post-exposure Prophylaxis', 'Catch-up', 'Other'")
@@ -105,8 +105,8 @@ class TherapyEntry(BaseModel):
     provider: str = Field(..., description="Therapist/provider name e.g. 'Dr. Amy Reed, PT'")
     provider_npi: str = Field(default="", description="Provider NPI: 10 digits starting with 1–4 (CMS rule), or empty string if unknown")
     facility: str = Field(..., description="Facility or clinic name")
-    start_date: str = Field(..., description="Start date YYYY-MM-DD")
-    end_date: str = Field("ongoing", description="End date YYYY-MM-DD or 'ongoing'")
+    start_date: str = Field(..., description="Start date MM-DD-YYYY")
+    end_date: str = Field("ongoing", description="End date MM-DD-YYYY or 'ongoing'")
     frequency: str = Field(..., description="Frequency e.g. '2x/week', 'Weekly', 'Daily'")
     status: str = Field(..., description="'Active', 'Completed', 'Discontinued'")
     reason: str = Field(..., description="Clinical reason/referral justification")
@@ -115,7 +115,7 @@ class TherapyEntry(BaseModel):
 class ImagingEntry(BaseModel):
     """A single imaging study record."""
     type: str = Field(..., description="Type of imaging e.g., 'CT Abdomen W/O Contrast', 'MRI Brain'")
-    date: str = Field(..., description="Date of study (YYYY-MM-DD)")
+    date: str = Field(..., description="Date of study (MM-DD-YYYY)")
     provider: str = Field(default="", description="Ordering provider")
     facility: str = Field(default="", description="Facility where imaging was performed")
     findings: str = Field(..., description="Impression and clinical findings")
@@ -123,7 +123,7 @@ class ImagingEntry(BaseModel):
 class ReportEntry(BaseModel):
     """A single lab or pathology report record."""
     type: str = Field(..., description="Type of report e.g., 'CBC', 'CMP', 'Biopsy'")
-    date: str = Field(..., description="Date of report (YYYY-MM-DD)")
+    date: str = Field(..., description="Date of report (MM-DD-YYYY)")
     provider: str = Field(default="", description="Ordering provider")
     results: str = Field(..., description="Key results or values")
     notes: str = Field(default="", description="Additional clinical notes")
@@ -131,7 +131,7 @@ class ReportEntry(BaseModel):
 class ProcedureEntry(BaseModel):
     """A single clinical procedure record."""
     name: str = Field(..., description="Procedure name e.g., 'Appendectomy', 'Colonoscopy'")
-    date: str = Field(..., description="Date performed (YYYY-MM-DD)")
+    date: str = Field(..., description="Date performed (MM-DD-YYYY)")
     provider: str = Field(default="", description="Performing provider or surgeon")
     facility: str = Field(default="", description="Facility where procedure was performed")
     reason: str = Field(default="", description="Indication or reason for procedure")
@@ -140,7 +140,7 @@ class ProcedureEntry(BaseModel):
 
 class VitalSigns(BaseModel):
     """Patient vital signs at a point in time. Fields may be null if not recorded."""
-    recorded_date: str = Field(..., description="Date vitals were recorded YYYY-MM-DD")
+    recorded_date: str = Field(..., description="Date vitals were recorded MM-DD-YYYY")
     blood_pressure: Optional[str] = Field(None, description="e.g. '130/85 mmHg' or null if not recorded")
     heart_rate: Optional[str] = Field(None, description="e.g. '78 bpm' or null")
     blood_sugar_fasting: Optional[str] = Field(None, description="e.g. '95 mg/dL' or null")
@@ -159,7 +159,7 @@ class SocialHistory(BaseModel):
     alcohol_frequency: Optional[str] = Field(None, description="e.g. '2-3 beers on weekends', or null")
     illicit_drug_use: Optional[str] = Field(None, description="'None', 'Former - substance, quit YYYY', 'Current - substance', or null")
     substance_history: Optional[str] = Field(None, description="Past substance use disorder or treatment history, or null")
-    last_medical_visit: Optional[str] = Field(None, description="Date of last appointment YYYY-MM-DD, or null")
+    last_medical_visit: Optional[str] = Field(None, description="Date of last appointment MM-DD-YYYY, or null")
     last_visit_reason: Optional[str] = Field(None, description="Reason for last visit, or null")
     missed_appointment: Optional[bool] = Field(None, description="True if patient recently missed an appointment, or null")
     missed_appointment_reason: Optional[str] = Field(None, description="Reason appointment was missed, or null")
@@ -173,7 +173,7 @@ class SocialHistory(BaseModel):
 
 class EncounterRecord(BaseModel):
     """A single clinical encounter with full documentation."""
-    encounter_date: str = Field(..., description="Date of encounter YYYY-MM-DD — must follow temporal timeline")
+    encounter_date: str = Field(..., description="Date of encounter MM-DD-YYYY — must follow temporal timeline")
     encounter_type: str = Field(..., description="'Office Visit', 'ER Visit', 'Telehealth', 'Follow-up', 'Specialist Consult', 'Pre-op Evaluation'")
     purpose_of_visit: str = Field(..., description="Primary reason patient came in — concise 1-2 sentence statement")
     provider: str = Field(..., description="Full name and credentials of encounter provider")
@@ -203,7 +203,7 @@ class PayerDetails(BaseModel):
     plan_policy_url: str = Field(default="", description="Plan policy URL")
     member_id: str = Field(default="MBR-999999", description="Member ID on insurance card e.g. 'MBR-123456789'")
     policy_number: str = Field(default="POL-99999", description="Policy number e.g. 'POL-2025-001234'")
-    effective_date: str = Field(default="2024-01-01", description="Coverage start date YYYY-MM-DD")
+    effective_date: str = Field(default="2024-01-01", description="Coverage start date MM-DD-YYYY")
     termination_date: str = Field("ongoing", description="Coverage end date or 'ongoing'")
     copay_amount: str = Field(default="$25", description="Copay amount e.g. '$25', '$50'")
     deductible_amount: str = Field(default="$500", description="Annual deductible e.g. '$500', '$1500'")
@@ -214,7 +214,7 @@ class PatientPersona(BaseModel):
     first_name: str = Field(..., description="Patient first name")
     last_name: str = Field(..., description="Patient last name")
     gender: str = Field(..., description="'male', 'female', 'other'")
-    dob: str = Field(..., description="Date of birth YYYY-MM-DD")
+    dob: str = Field(..., description="Date of birth MM-DD-YYYY")
     address: str = Field(..., description="Full home address with city, state, ZIP")
     telecom: str = Field(..., description="Main phone number e.g. '555-555-5555'")
     
@@ -241,7 +241,7 @@ class PatientPersona(BaseModel):
     payer: PayerDetails = Field(..., description="Insurance/Payer details - MUST populate ALL fields including subscriber")
     
     # NEW: Procedure Scheduling & Location
-    expected_procedure_date: str = Field(..., description="Expected date for the procedure (YYYY-MM-DD format, MUST be 7-90 days in the FUTURE from today)")
+    expected_procedure_date: str = Field(..., description="Expected date for the procedure (MM-DD-YYYY format, MUST be 7-90 days in the FUTURE from today)")
     procedure_requested: str = Field(..., description="Full name of the procedure being requested (e.g., 'Coronary Artery Bypass Graft')")
     procedure_facility: FacilityDetails = Field(..., description="Healthcare facility where procedure will be performed - MUST be in same state as patient address")
     
@@ -313,7 +313,7 @@ class StructuredClinicalDoc(BaseModel):
     doc_id: str = Field(..., description="Document ID (e.g. 'DOC-101').")
     doc_type: str = Field(..., description="Type: 'CONSULT', 'IMAGING', 'LAB', 'DISCHARGE', 'ER_VISIT'.")
     title: str = Field(..., description="Descriptive title e.g. 'Cardiology_Consult'.")
-    service_date: str = Field(..., description="YYYY-MM-DD")
+    service_date: str = Field(..., description="MM-DD-YYYY")
     facility: str = Field(..., description="Facility Name")
     provider: str = Field(..., description="Provider Name")
     

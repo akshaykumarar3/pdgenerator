@@ -1936,37 +1936,41 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Turk Turkleton",
-      "telecom": "555-222-7788",
-      "address": "4100 Maple Ave, Dallas, TX 75219",
+      "telecom": "555-222-9898",
+      "address": "4100 Lemmon Ave, Dallas, TX 75219",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2010-06-01",
+      "period_start": "2015-06-01",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Bob Kelso, MD",
       "formatted_npi": "2045678912",
       "managingOrganization": "Sacred Heart Hospital",
-      "address": "1234 Sacred Heart Drive, Dallas, TX 75201",
-      "phone": "214-555-0100"
+      "address": "7777 Forest Ln, Dallas, TX 75230",
+      "phone": "214-555-0110"
     },
     "link": {
       "other_patient": "N/A",
       "link_type": "N/A"
     },
     "payer": {
-      "payer_id": "UHC-TX-019",
-      "payer_name": "UnitedHealthcare",
-      "plan_name": "Medicare Advantage",
-      "plan_type": "Medicare Advantage",
+      "payer_id": "TRAD_MEDICARE",
+      "payer_name": "Traditional Medicare (CMS)",
+      "provider_abbreviation": "CMS",
+      "provider_policy_url": "https://www.cms.gov/",
+      "plan_name": "Traditional Medicare (Parts A & B)",
+      "plan_type": "Traditional Medicare",
+      "plan_id": "TRAD_MEDICARE_NATIONAL",
+      "plan_policy_url": "https://www.cms.gov/medicare/payment/",
       "member_id": "MBR-964990",
       "policy_number": "POL-2026-1525",
       "effective_date": "2024-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$35",
-      "deductible_amount": "$750"
+      "copay_amount": "$0",
+      "deductible_amount": "$240"
     },
-    "expected_procedure_date": "2026-04-22",
+    "expected_procedure_date": "2026-05-15",
     "procedure_requested": "Cardiac CT Angiography (CTA)",
     "procedure_facility": {
       "facility_name": "UT Southwestern Medical Center - Radiology",
@@ -1974,23 +1978,23 @@
       "city": "Dallas",
       "state": "TX",
       "zip_code": "75390",
-      "department": "Cardiothoracic Imaging"
+      "department": "Cardiac CT / Radiology"
     },
     "pa_request": {
       "requesting_provider": "Dr. Bob Kelso, MD",
-      "urgency_level": "Routine",
-      "clinical_justification": "Patient has recurrent intermittent chest pain (R07.9) with documented concern for a possible coronary artery anomaly (Q24.5) and cardiovascular risk factors including hyperlipidemia (E78.5). Cardiac CT angiography (CPT 75574) is requested to directly evaluate coronary artery origin/course and assess coronary plaque/stenosis in the absence of stress testing to guide ongoing medical management and follow-up planning.",
+      "urgency_level": "Pre-Service Routine",
+      "clinical_justification": "Intermittent exertional chest tightness (R07.89) persists despite medical therapy, and a suspected coronary vessel anomaly (Q24.5) is documented in specialist assessment. Cardiac CTA (CPT 75574) is requested to delineate coronary origins/course and assess coronary plaque in the presence of essential hypertension (I10) and hyperlipidemia (E78.5).",
       "supporting_diagnoses": [
+        "R07.89 - Other chest pain",
         "Q24.5 - Malformation of coronary vessels",
-        "R07.9 - Chest pain, unspecified",
-        "E78.5 - Hyperlipidemia, unspecified",
         "I10 - Essential (primary) hypertension",
-        "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+        "E78.5 - Hyperlipidemia, unspecified"
       ],
-      "previous_treatments": "Metoprolol tartrate 50 mg twice daily for symptom/heart-rate control, aspirin 81 mg daily, atorvastatin 20 mg daily, participation in cardiac rehabilitation 2x/week, and lifestyle/risk-factor modification.",
-      "expected_outcome": "Anatomic confirmation or exclusion of coronary artery anomaly and characterization of coronary plaque/stenosis to inform medication optimization and follow-up planning."
+      "previous_treatments": "Metoprolol, aspirin, losartan, atorvastatin, PRN nitroglycerin; past trial of famotidine for possible reflux contribution; ongoing cardiac rehab.",
+      "expected_outcome": "Coronary anatomy characterization and assessment for coronary atherosclerosis to guide management and activity recommendations.",
+      "units_requested": "1"
     },
-    "bio_narrative": "J.D. Dorian is a 44-year-old male living in Dallas, Texas who works in a high-demand hospital environment and reports long, irregular hours with frequent acute stress. Over the last several months he has experienced intermittent episodes of chest discomfort described as mid-sternal tightness or pressure lasting 5\u201315 minutes. Episodes occur most often with exertion (climbing stairs, brisk walking) and during periods of significant work stress, and are sometimes accompanied by palpitations and mild shortness of breath. He denies syncope, persistent resting pain, or infectious symptoms. He has remained engaged in regular exercise and participates in cardiac rehabilitation twice weekly, but notes that stress and sleep disruption often precede his symptoms. His cardiovascular risk profile includes hyperlipidemia (E78.5) treated with atorvastatin and essential hypertension (I10) treated with metoprolol. He also takes aspirin daily. He reports strong social support from close colleagues and friends and maintains a generally balanced diet; he does not smoke and drinks alcohol socially. Family history is notable for ischemic heart disease in a first-degree relative (Z82.49), which has increased his concern about the meaning of his symptoms. Initial diagnostic evaluation included a transthoracic echocardiogram on 2026-01-15 that showed preserved left ventricular function in follow-up documentation, without significant valvular disease to explain his episodes. At an office visit on 2026-01-20 for recurrent chest pain (R07.9), medications were reviewed and ongoing risk-factor management reinforced. A lipid panel on 2026-02-20 showed persistent dyslipidemia despite statin therapy. A prior CT chest without contrast from 2025-06-15 did not evaluate coronary artery origins or stenosis. Given ongoing symptoms and the need to evaluate coronary origins/course as well as plaque burden, Cardiac CT Angiography (CPT 75574) has been requested. Pre-procedure evaluation has focused on heart-rate control, renal function assessment for contrast use, and clear instructions to support safe outpatient imaging and subsequent treatment planning.",
+    "bio_narrative": "J.D. Dorian is a 44-year-old male living in Dallas, Texas who works in a high-demand hospital environment with long shifts and intermittent sleep disruption. Over the past several months he has experienced episodes of chest tightness that are most noticeable with exertion (walking quickly between units, climbing stairs) and during periods of heightened stress. The discomfort is described as a pressure-like tightness, typically lasting a few minutes and improving with rest; on several occasions he has taken sublingual nitroglycerin with improvement. He has not undergone a stress test during this episode of care, but the persistence of symptoms has led to continued cardiovascular evaluation. His cardiovascular risk profile includes essential hypertension (I10) and hyperlipidemia (E78.5), treated with losartan and atorvastatin, along with daily low-dose aspirin for prophylaxis. Metoprolol tartrate has been used for symptom control and heart-rate moderation, and he carries Nitrostat for intermittent chest pain episodes. A prior trial of famotidine for possible reflux contribution was used in the past; symptoms persisted intermittently, which prompted continued cardiac-focused evaluation. He participates in active cardiac rehabilitation twice weekly, focusing on conditioning, monitoring of exertional symptoms, and risk-factor counseling. A transthoracic echocardiogram performed on 2026-01-15 was part of the initial workup and was reviewed alongside subsequent clinical assessments. During cardiology specialist consultation, concern was documented for a possible coronary vessel malformation/anomalous coronary anatomy (Q24.5) in the differential for his exertional symptoms (R07.89). Because anatomic definition of coronary origins and course is important for exercise guidance and downstream management decisions, a cardiac CT angiography (CPT 75574) was scheduled at UT Southwestern Medical Center - Radiology. Pre-procedure evaluation included a baseline ECG and renal function testing to support safe use of iodinated contrast. Socially, he reports regular exercise efforts through rehab and independent activity, a generally balanced diet with attention to cholesterol and blood pressure, no tobacco use, and social alcohol use. He has strong social supports through close colleagues and friends. Family history is notable for premature coronary disease in a first-degree relative, which heightens concern when symptoms recur despite medical therapy. The planned CTA is intended to clarify coronary anatomy and assess for coronary atherosclerosis to guide ongoing medical management and activity recommendations.",
     "medications": [
       {
         "brand": "Metoprolol",
@@ -2010,7 +2014,7 @@
         "qty": "90 tablets (90-day supply)",
         "prescribed_by": "Dr. Perry Cox, MD",
         "status": "current",
-        "start_date": "2025-11-10",
+        "start_date": "2026-02-01",
         "end_date": "ongoing",
         "reason": "Hyperlipidemia control."
       },
@@ -2021,7 +2025,7 @@
         "qty": "90 tablets (90-day supply)",
         "prescribed_by": "Dr. Bob Kelso, MD",
         "status": "ongoing",
-        "start_date": "2025-12-01",
+        "start_date": "2026-01-20",
         "end_date": "ongoing",
         "reason": "Cardiovascular prophylaxis."
       },
@@ -2032,7 +2036,7 @@
         "qty": "25 tablets",
         "prescribed_by": "Dr. Perry Cox, MD, FACC",
         "status": "current",
-        "start_date": "2026-03-12",
+        "start_date": "2026-01-20",
         "end_date": "ongoing",
         "reason": "PRN treatment plan for intermittent chest pain episodes."
       },
@@ -2040,10 +2044,10 @@
         "brand": "Cozaar",
         "generic_name": "Losartan 25 mg",
         "dosage": "Once daily",
-        "qty": "30 tablets (30-day supply)",
+        "qty": "90 tablets (90-day supply)",
         "prescribed_by": "Dr. Bob Kelso, MD",
         "status": "ongoing",
-        "start_date": "2026-02-25",
+        "start_date": "2026-01-20",
         "end_date": "ongoing",
         "reason": "Blood pressure control in essential hypertension."
       },
@@ -2054,8 +2058,8 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Elliot Reid, MD",
         "status": "past",
-        "start_date": "2025-06-16",
-        "end_date": "2025-08-15",
+        "start_date": "2025-12-10",
+        "end_date": "2026-01-10",
         "reason": "Trial for possible reflux contribution to chest discomfort; symptoms persisted intermittently."
       }
     ],
@@ -2065,7 +2069,7 @@
         "allergy_type": "Drug",
         "reaction": "Rash",
         "severity": "Moderate",
-        "onset_date": "1993-04-10"
+        "onset_date": "2001-08-01"
       }
     ],
     "vaccinations": [
@@ -2089,8 +2093,8 @@
         "vaccine_name": "Tetanus toxoid",
         "vaccine_type": "Toxoid",
         "date_administered": "2025-05-20",
-        "administered_by": "CVS Pharmacy - Dallas, TX",
-        "dose_number": "Booster",
+        "administered_by": "CVS Pharmacy - Dallas",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
@@ -2108,19 +2112,19 @@
         "cpt_code": "93798",
         "cpt_description": "Physician or other qualified health care professional services for outpatient cardiac rehabilitation; with continuous ECG monitoring (per session)",
         "icd10_codes": [
-          "R07.9 - Chest pain, unspecified",
+          "R07.89 - Other chest pain",
           "I10 - Essential (primary) hypertension",
           "E78.5 - Hyperlipidemia, unspecified"
         ],
         "provider": "Dr. Neil Flynn, MD",
-        "provider_npi": "3234567890",
-        "facility": "Sacred Heart Hospital - Cardiac Rehabilitation Center",
-        "start_date": "2026-02-01",
+        "provider_npi": "2896543210",
+        "facility": "Sacred Heart Hospital - Cardiac Rehabilitation",
+        "start_date": "2026-02-05",
         "end_date": "ongoing",
         "frequency": "2x/week",
         "status": "Active",
-        "reason": "Supervised exercise conditioning and risk-factor modification for intermittent chest pain symptoms and cardiovascular risk reduction while awaiting anatomic coronary evaluation.",
-        "notes": "Patient tolerates moderate-intensity aerobic activity with occasional mild chest tightness during higher workloads; sessions emphasize symptom awareness, pacing, and BP control. Rehab notes are referenced in the pre-CTA planning to document exertional symptom pattern in the absence of formal stress testing."
+        "reason": "Structured conditioning and symptom monitoring in the setting of recurrent chest tightness and cardiovascular risk-factor management while CTA is being arranged.",
+        "notes": "Monitors exertional symptoms and BP response; provides exercise prescription and lifestyle counseling coordinated with cardiology plan."
       }
     ],
     "behavioral_notes": "J.D. is generally adherent to medication and maintains a balanced lifestyle, making sure to engage in physical exercise regularly. He refrains from smoking and drinks alcohol socially. Despite being diligent with health check-ups, his elevated stress levels due to professional demands could be impacting his cardiac health. J.D. has no known history of mental health disorders, but he does seek camaraderie and support through strong relationships with colleagues and friends.",
@@ -2128,14 +2132,14 @@
       {
         "encounter_date": "2026-01-20",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "I've been having chest pain on and off recently.",
-        "provider": "Dr. Elliot Reid, MD",
-        "provider_npi": "1678901234",
-        "facility": "Sacred Heart Hospital - Internal Medicine Clinic",
+        "purpose_of_visit": "Evaluation of intermittent chest pain episodes and review of recent echocardiogram results.",
+        "provider": "Dr. Bob Kelso, MD",
+        "provider_npi": "2045678912",
+        "facility": "Sacred Heart Hospital",
         "vital_signs": {
           "recorded_date": "2026-01-20",
           "blood_pressure": "138/86 mmHg",
-          "heart_rate": "72 bpm",
+          "heart_rate": "74 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "23.1 kg/m\u00b2",
@@ -2144,180 +2148,203 @@
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I've been having chest pain on and off recently.",
-        "doctor_note": "HPI: Patient is a 44-year-old male with intermittent chest discomfort for several weeks, described as central tightness that comes and goes, sometimes with exertion and sometimes during stressful work shifts. Episodes last minutes and resolve with rest; denies syncope. He reports no fever, cough, or pleuritic component. He is concerned due to family history of heart disease.\n\nReview of Systems: Positive for intermittent chest tightness and occasional palpitations. Denies persistent shortness of breath at rest, orthopnea, leg swelling, or calf pain. Denies nausea/vomiting or diaphoresis with most episodes.\n\nPhysical Exam: Well appearing, no distress. CV: regular rate/rhythm, no murmurs. Lungs clear. No chest wall tenderness. Extremities without edema.\n\nAssessment: Intermittent chest pain (R07.9) with cardiovascular risk factors including hyperlipidemia (E78.5) and elevated blood pressure (I10). Family history of ischemic heart disease (Z82.49). Needs further cardiac evaluation.\n\nPlan: Continue metoprolol tartrate 50 mg BID for symptom control/HR management. Continue aspirin 81 mg daily. Continue atorvastatin 20 mg daily; reinforce diet and exercise. Order echocardiogram (completed subsequently) and refer to cardiology for further evaluation, with consideration of anatomic coronary imaging if concern for coronary anomaly persists. ER precautions for prolonged chest pain or associated dyspnea/syncope.",
+        "doctor_note": "HPI: Patient reports intermittent chest tightness over the last several weeks, sometimes with exertion and sometimes during stress. Episodes last minutes and improve with rest; denies syncope. He reviewed a recent echocardiogram performed earlier this month. \nReview of Systems: Positive for episodic chest tightness. Denies fever, cough, pleuritic pain, calf swelling, or focal neurologic deficits. \nPhysical Exam: Well-appearing male, normal heart sounds without murmur, lungs clear, no edema, normal peripheral pulses. \nAssessment: Intermittent chest pain (R07.89) in the setting of hypertension (I10) and hyperlipidemia (E78.5); concern for possible coronary etiology and need for further evaluation. \nPlan: Continue aspirin and atorvastatin. Start/continue metoprolol for symptom control and prescribe PRN nitroglycerin with clear ER precautions. Continue losartan for BP control. Refer to cardiology for further assessment and consideration of anatomic coronary evaluation (CTA) given concern for coronary anomaly (Q24.5).",
         "observations": [
-          "Intermittent exertional and stress-associated chest discomfort reported.",
-          "No reproducible chest wall tenderness on exam.",
-          "Normal oxygen saturation and no signs of heart failure."
+          "Intermittent exertional/stress-related chest tightness",
+          "No respiratory distress at rest",
+          "BP mildly elevated in clinic"
         ],
         "procedures_performed": [
           "CPT 99214 - Office or other outpatient visit, established patient, level 4"
         ],
         "diagnoses": [
-          "R07.9 - Chest pain, unspecified",
-          "E78.5 - Hyperlipidemia, unspecified",
+          "R07.89 - Other chest pain",
           "I10 - Essential (primary) hypertension",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "E78.5 - Hyperlipidemia, unspecified"
         ],
         "medications_prescribed": [
-          "Metoprolol Tartrate 50mg - continue twice daily",
-          "Aspirin 81mg - continue once daily",
-          "Atorvastatin 20 mg - continue once daily"
+          "Metoprolol Tartrate 50mg twice daily",
+          "Nitroglycerin 0.4 mg SL PRN chest pain"
         ],
         "care_team": [
-          "Dr. Elliot Reid, MD",
-          "Sacred Heart Hospital Nursing Staff"
+          "Dr. Bob Kelso, MD (PCP)",
+          "Dr. Elliot Reid, MD"
         ],
-        "progress_notes": "Symptoms present intermittently; initial evaluation focused on risk stratification and baseline testing. Patient motivated and adherent; cardiology workup initiated.",
-        "follow_up_instructions": "Follow up in 4-6 weeks or sooner if symptoms worsen. Seek emergency care for chest pain lasting >15 minutes, new shortness of breath, syncope, or diaphoresis."
+        "progress_notes": "Symptoms ongoing but episodic; no red-flag features today. Initiated stepped-up antianginal plan and arranged cardiology evaluation for continued workup.",
+        "follow_up_instructions": "Follow up with cardiology within 4-6 weeks. Go to ER for chest pain lasting >10 minutes, shortness of breath, or syncope."
       },
       {
         "encounter_date": "2026-02-25",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Preparing for the upcoming Cardiac CT Angiography.",
+        "purpose_of_visit": "Pre-procedure evaluation for scheduled cardiac CT angiography including medication review and safety screening.",
         "provider": "Dr. Bob Kelso, MD",
         "provider_npi": "2045678912",
-        "facility": "Sacred Heart Hospital - Pre-Procedure Clinic",
+        "facility": "Sacred Heart Hospital",
         "vital_signs": {
           "recorded_date": "2026-02-25",
-          "blood_pressure": "130/82 mmHg",
+          "blood_pressure": "132/82 mmHg",
           "heart_rate": "68 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "23.0 kg/m\u00b2",
-          "oxygen_saturation": "98%",
+          "oxygen_saturation": "99%",
           "temperature": "98.2\u00b0F",
           "respiratory_rate": "14 breaths/min"
         },
         "chief_complaint": "I'm here to get cleared and know what to expect for my cardiac CTA.",
-        "doctor_note": "HPI: 44-year-old male scheduled for Cardiac CT Angiography (CPT 75574) for evaluation of intermittent chest pain (R07.9) and concern for possible coronary vessel anomaly (Q24.5) per cardiology discussion. Patient reports episodes are ongoing but not increasing in severity; last episode was 3 days ago with brisk walking, resolved with rest. No prior contrast reactions; no kidney disease history.\n\nReview of Systems: Cardiovascular positive for intermittent chest discomfort and palpitations; negative for syncope, edema. Respiratory negative for resting dyspnea. GI negative for bleeding.\n\nPhysical Exam: Stable vitals. CV exam normal rhythm, no murmurs. Lungs clear. No edema.\n\nAssessment: Patient appropriate for outpatient CTA planning. Indications remain chest pain (R07.9) with suspected coronary anomaly (Q24.5) and risk factors (E78.5, I10, Z82.49).\n\nPlan: Review medications and allergies; continue metoprolol with potential additional pre-scan dosing per radiology. Continue aspirin and atorvastatin. Order renal function labs within 30 days of scan. Provide contrast hydration instructions and caffeine avoidance prior to scan. Reinforce ER precautions and schedule cardiology follow-up after CTA results.",
+        "doctor_note": "HPI: Patient presents for pre-procedure evaluation ahead of planned cardiac CTA for recurrent chest tightness. He reports continued intermittent episodes but no prolonged pain. No known prior contrast reactions; penicillin allergy only. \nReview of Systems: Positive for episodic chest tightness; negative for orthopnea, leg swelling, or wheezing. \nPhysical Exam: Normal cardiovascular and pulmonary exam; no edema; oriented and cooperative. \nAssessment: Pre-procedural evaluation for requested cardiac CTA (CPT 75574) for chest tightness (R07.89) with suspected coronary vessel malformation (Q24.5) and comorbid hypertension and hyperlipidemia. \nPlan: Confirm schedule and facility. Order BMP/creatinine within 30 days of CTA; obtain baseline ECG. Review heart-rate control plan (continue metoprolol). Reinforce nitroglycerin instructions and ER precautions. Concurrent Care Reference: Patient is actively enrolled in cardiac rehabilitation 2x/week under Dr. Neil Flynn, MD; continue rehab unless symptoms worsen.",
         "observations": [
-          "No history of contrast reaction reported; penicillin allergy only.",
-          "Stable BP and HR on metoprolol.",
-          "No clinical signs of decompensated cardiopulmonary disease."
+          "No evidence of decompensated heart failure",
+          "No prior contrast allergy history reported",
+          "Actively attending cardiac rehab"
         ],
         "procedures_performed": [
           "CPT 99214 - Office or other outpatient visit, established patient, level 4"
         ],
         "diagnoses": [
+          "R07.89 - Other chest pain",
           "Q24.5 - Malformation of coronary vessels",
-          "R07.9 - Chest pain, unspecified",
-          "E78.5 - Hyperlipidemia, unspecified",
           "I10 - Essential (primary) hypertension",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "E78.5 - Hyperlipidemia, unspecified"
         ],
-        "medications_prescribed": [
-          "Losartan 25 mg - start once daily",
-          "Continue Metoprolol Tartrate 50mg BID",
-          "Continue Aspirin 81mg daily",
-          "Continue Atorvastatin 20 mg daily"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Bob Kelso, MD",
-          "Sacred Heart Pre-Procedure RN"
+          "Dr. Neil Flynn, MD (Cardiac Rehab)"
         ],
-        "progress_notes": "Patient remains symptomatic intermittently; planning focuses on safe contrast imaging and adequate heart-rate control. Lab screening and cardiology input coordinated.",
-        "follow_up_instructions": "Complete CMP/creatinine 1-4 weeks prior to CTA. Avoid caffeine 12 hours before. Hydrate well day prior and day of scan unless otherwise directed. Follow up with cardiology after imaging."
+        "progress_notes": "Stable since last visit with intermittent symptoms; moving forward with planned anatomic evaluation. Pre-contrast lab and ECG ordered to prepare for CTA.",
+        "follow_up_instructions": "Complete ECG and BMP/creatinine as ordered. Continue medications as prescribed. Contact clinic if symptoms increase in frequency or severity."
       },
       {
         "encounter_date": "2026-03-12",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Cardiology evaluation of intermittent chest pain and suspected coronary anomaly; imaging plan for CTA without stress test.",
+        "purpose_of_visit": "Cardiology evaluation for persistent exertional chest tightness and planning for coronary anatomic imaging.",
         "provider": "Dr. Perry Cox, MD, FACC",
-        "provider_npi": "1456789012",
-        "facility": "Baylor University Medical Center - Cardiology Clinic",
+        "provider_npi": "3124567890",
+        "facility": "Sacred Heart Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-12",
-          "blood_pressure": "132/84 mmHg",
-          "heart_rate": "66 bpm",
+          "blood_pressure": "128/78 mmHg",
+          "heart_rate": "64 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "23.1 kg/m\u00b2",
           "oxygen_saturation": "98%",
           "temperature": "98.1\u00b0F",
-          "respiratory_rate": "14 breaths/min"
+          "respiratory_rate": "15 breaths/min"
         },
         "chief_complaint": "I still get chest tightness sometimes, especially when I'm stressed or pushing myself.",
-        "doctor_note": "HPI: Patient returns for cardiology consultation for intermittent chest tightness occurring with exertion and high stress, lasting 5\u201315 minutes and resolving with rest. He reports occasional palpitations and mild dyspnea during episodes; no syncope. He is compliant with metoprolol, aspirin, and atorvastatin; enrolled in cardiac rehab 2x/week. No stress test has been performed; patient and provider prefer anatomic imaging due to concern for possible coronary artery anomaly.\n\nReview of Systems: Positive for intermittent chest pain and palpitations. Denies orthopnea/PND, leg swelling, cough, fever, or neurologic deficits.\n\nPhysical Exam: Normal cardiac and pulmonary exam; no edema. HR controlled.\n\nAssessment: Chest pain, unspecified (R07.9) with suspected malformation of coronary vessels (Q24.5) and CAD risk factors including hyperlipidemia (E78.5), hypertension (I10), and family history (Z82.49).\n\nPlan: Proceed with requested Cardiac CTA (CPT 75574). Order CMP/creatinine to confirm renal function for contrast. Prescribe nitroglycerin SL for PRN use with clear ER precautions. Continue current preventive medications and rehab. Discuss heart-rate targets for CTA and potential additional beta-blockade per protocol.",
+        "doctor_note": "HPI: Patient with ongoing episodic chest tightness with exertion/stress. Symptoms improve with rest; rare use of nitroglycerin. No stress test has been performed. Discussed concern for possible anatomic coronary issue and need for anatomic assessment. \nReview of Systems: Positive for exertional chest tightness; denies syncope or palpitations at rest. \nPhysical Exam: Regular rate/rhythm; no murmurs; lungs clear; no edema. \nAssessment: Chest tightness (R07.89) with clinical concern for malformation of coronary vessels (Q24.5) in the setting of hypertension (I10) and hyperlipidemia (E78.5). \nPlan: Recommend proceeding with coronary CTA (CPT 75574). Continue metoprolol, losartan, atorvastatin, and aspirin; continue PRN nitroglycerin. Ensure ECG and BMP/creatinine are obtained within 30 days prior to CTA. Continue cardiac rehab with symptom-guided adjustments.",
         "observations": [
-          "Symptom pattern includes exertional/stress component; episodes self-limited.",
-          "Patient engaged in rehab and adherent to medication regimen.",
-          "No signs of heart failure or unstable angina on exam."
+          "Symptoms triggered by exertion and stress",
+          "No abnormal exam findings today",
+          "Discussed diagnostic pathway without prior stress test"
         ],
         "procedures_performed": [
-          "CPT 99244 - Office consultation for a new or established patient, moderate complexity"
+          "CPT 99244 - Office consultation for a new or established patient, level 4"
         ],
         "diagnoses": [
+          "R07.89 - Other chest pain",
           "Q24.5 - Malformation of coronary vessels",
-          "R07.9 - Chest pain, unspecified",
-          "E78.5 - Hyperlipidemia, unspecified",
           "I10 - Essential (primary) hypertension",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "E78.5 - Hyperlipidemia, unspecified"
         ],
-        "medications_prescribed": [
-          "Nitroglycerin 0.4 mg SL - PRN chest pain",
-          "Continue Metoprolol Tartrate 50mg BID",
-          "Continue Aspirin 81mg daily",
-          "Continue Atorvastatin 20 mg daily",
-          "Continue Losartan 25 mg daily"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Perry Cox, MD, FACC",
-          "Cardiology MA/RN"
+          "Dr. Bob Kelso, MD",
+          "Sacred Heart Cardiac Rehab Team"
         ],
-        "progress_notes": "Despite risk-factor therapy, intermittent symptoms persist; cardiology prioritized CTA to define coronary anatomy given suspected coronary anomaly and no stress test performed. Pre-contrast lab screening ordered.",
-        "follow_up_instructions": "Complete labs within 30 days of CTA; bring medication list to imaging appointment. Use nitroglycerin for chest pain per instructions; seek emergency care for persistent pain or associated dyspnea/syncope. Schedule follow-up visit 1-2 weeks after CTA for results review."
+        "progress_notes": "Persistent but stable symptoms; agreed on anatomic coronary evaluation via CTA due to suspected anomaly and ongoing exertional symptoms.",
+        "follow_up_instructions": "Schedule cardiac CTA. Obtain ordered labs/ECG. Seek emergency care for chest pain not relieved by rest or nitroglycerin."
       },
       {
         "encounter_date": "2026-03-21",
         "encounter_type": "Follow-up",
-        "purpose_of_visit": "Final pre-procedure follow-up to review labs, ECG, and CTA preparation steps.",
+        "purpose_of_visit": "Pre-CTA follow-up to confirm testing, medication plan, and review of preparatory steps.",
         "provider": "Dr. Bob Kelso, MD",
         "provider_npi": "2045678912",
-        "facility": "Sacred Heart Hospital - Pre-Procedure Clinic",
+        "facility": "Sacred Heart Hospital",
         "vital_signs": {
           "recorded_date": "2026-03-21",
-          "blood_pressure": "128/80 mmHg",
-          "heart_rate": "64 bpm",
+          "blood_pressure": "126/80 mmHg",
+          "heart_rate": "66 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "23.0 kg/m\u00b2",
           "oxygen_saturation": "99%",
-          "temperature": "98.0\u00b0F",
+          "temperature": "98.3\u00b0F",
           "respiratory_rate": "14 breaths/min"
         },
         "chief_complaint": "I want to make sure everything is set for the CTA and that my labs are okay.",
-        "doctor_note": "HPI: Patient presents for follow-up pre-procedure review prior to requested Cardiac CTA (CPT 75574). He reports one brief episode of chest tightness earlier this week during a brisk walk, resolved with rest; has not needed nitroglycerin. He completed CMP for renal function screening and is here to review results and instructions.\n\nReview of Systems: Cardiovascular positive for intermittent chest discomfort; negative for syncope, edema. Respiratory negative for resting dyspnea. No allergic symptoms.\n\nPhysical Exam: Vitals stable; HR controlled on metoprolol. CV exam normal; lungs clear.\n\nAssessment: Ongoing intermittent chest pain (R07.9) with suspected coronary anomaly (Q24.5). Renal function acceptable for contrast per recent labs. Patient optimized for outpatient imaging and understands preparation steps.\n\nPlan: Review CMP (creatinine 0.92, eGFR 103) and baseline ECG showing sinus rhythm, supporting CTA planning. Continue metoprolol and follow radiology instructions for pre-scan dosing; avoid caffeine and nicotine (patient is nonsmoker) prior to scan. Maintain hydration. Continue aspirin, atorvastatin, and losartan. Confirm imaging location and arrival time; arrange cardiology follow-up after CTA completion.",
+        "doctor_note": "HPI: Patient returns to ensure all pre-CTA requirements are in place. He reports intermittent chest tightness continues but no prolonged episodes. Has been attending cardiac rehab and taking medications consistently. \nReview of Systems: Positive for episodic exertional chest tightness; negative for new dyspnea or leg swelling. \nPhysical Exam: Normal heart and lung exam; no edema; stable vitals. \nAssessment: Ongoing chest tightness (R07.89) with suspected coronary vessel malformation (Q24.5); preparing for coronary CTA (CPT 75574). \nPlan: Confirm ECG and BMP/creatinine scheduling; review nitroglycerin use and ER precautions; continue metoprolol and other cardiac medications. Provide written instructions for day-of study (hydrate, avoid caffeine per facility protocol).",
         "observations": [
-          "Renal function within normal range for contrast administration.",
-          "Baseline ECG without acute ischemic changes; HR appropriate for CTA acquisition.",
-          "Patient reports intermittent symptoms but stable overall pattern."
+          "Adherent with meds and rehab",
+          "No acute distress",
+          "Preparing for contrast-based imaging"
         ],
         "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit, established patient, level 4",
-          "CPT 93000 - Electrocardiogram, routine ECG with at least 12 leads; with interpretation and report"
+          "CPT 99213 - Office or other outpatient visit, established patient, level 3"
         ],
         "diagnoses": [
+          "R07.89 - Other chest pain",
           "Q24.5 - Malformation of coronary vessels",
-          "R07.9 - Chest pain, unspecified",
-          "E78.5 - Hyperlipidemia, unspecified",
           "I10 - Essential (primary) hypertension",
-          "Z82.49 - Family history of ischemic heart disease and other diseases of the circulatory system"
+          "E78.5 - Hyperlipidemia, unspecified"
         ],
-        "medications_prescribed": [
-          "Continue Metoprolol Tartrate 50mg BID",
-          "Continue Aspirin 81mg daily",
-          "Continue Atorvastatin 20 mg daily",
-          "Continue Losartan 25 mg daily",
-          "Nitroglycerin 0.4 mg SL PRN - continue"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Bob Kelso, MD",
-          "Pre-Procedure RN",
-          "Radiology scheduling coordinator"
+          "Dr. Perry Cox, MD, FACC",
+          "Dr. Neil Flynn, MD"
         ],
-        "progress_notes": "Pre-procedure workup completed with stable vitals, normal renal function labs, and baseline ECG documented; patient prepared for outpatient CTA. Symptoms remain intermittent without escalation.",
-        "follow_up_instructions": "Proceed to UT Southwestern Radiology on scheduled date; arrive 60 minutes early. Avoid caffeine 12 hours prior. Hydrate well unless otherwise directed. Follow up with cardiology 1-2 weeks after CTA for results review; seek urgent care for worsening or persistent chest pain."
+        "progress_notes": "Pre-CTA steps reviewed; patient stable on current regimen with intermittent symptoms. Reinforced completion of pre-procedure labs/ECG and continued rehab participation.",
+        "follow_up_instructions": "Complete ECG/BMP within 30 days of CTA. Continue current meds. Follow up after CTA to review results."
+      },
+      {
+        "encounter_date": "2026-04-02",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Completion of pre-CTA diagnostic workup (ECG and labs) and interval symptom check prior to scheduled cardiac CTA.",
+        "provider": "Dr. Bob Kelso, MD",
+        "provider_npi": "2045678912",
+        "facility": "Sacred Heart Hospital",
+        "vital_signs": {
+          "recorded_date": "2026-04-02",
+          "blood_pressure": "124/78 mmHg",
+          "heart_rate": "62 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "23.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "14 breaths/min"
+        },
+        "chief_complaint": "I'm here to get my EKG and labs done for the CTA.",
+        "doctor_note": "HPI: Patient presents to complete ordered ECG and BMP/creatinine for the scheduled cardiac CTA. He continues to note intermittent exertional chest tightness but denies prolonged pain, syncope, or new dyspnea. Reports medication adherence and ongoing cardiac rehab attendance. \nReview of Systems: Positive for episodic chest tightness. Denies fever, cough, orthopnea, or leg swelling. \nPhysical Exam: Well appearing; RRR without murmurs; lungs clear; no edema; pulses intact. \nAssessment: Chest tightness (R07.89) with suspected coronary vessel malformation (Q24.5), preparing for coronary CTA (CPT 75574); comorbid essential hypertension (I10) and hyperlipidemia (E78.5). \nPlan: Perform ECG today and draw BMP/creatinine; results to be routed to UT Southwestern Radiology prior to CTA date. Continue current meds including metoprolol for rate control. Continue ER precautions and symptom-limited activity. Confirm CTA scheduling and provide hydration guidance.",
+        "observations": [
+          "Stable vitals with controlled heart rate",
+          "No acute cardiopulmonary findings",
+          "Testing obtained to support pre-contrast safety evaluation"
+        ],
+        "procedures_performed": [
+          "CPT 93000 - Electrocardiogram, routine ECG with at least 12 leads; with interpretation and report",
+          "CPT 36415 - Collection of venous blood by venipuncture",
+          "CPT 99213 - Office or other outpatient visit, established patient, level 3"
+        ],
+        "diagnoses": [
+          "R07.89 - Other chest pain",
+          "Q24.5 - Malformation of coronary vessels",
+          "I10 - Essential (primary) hypertension",
+          "E78.5 - Hyperlipidemia, unspecified"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Bob Kelso, MD",
+          "Sacred Heart Hospital Laboratory",
+          "Sacred Heart EKG Technician"
+        ],
+        "progress_notes": "Pre-CTA tests completed; patient remains stable with intermittent exertional symptoms and continues rehab. Await CTA for anatomic evaluation.",
+        "follow_up_instructions": "Proceed with CTA on scheduled date; continue meds as directed; maintain hydration and follow facility prep instructions. Follow up 1-2 weeks after CTA for results review."
       }
     ],
     "images": [
@@ -2325,8 +2352,8 @@
         "type": "CT Chest without contrast",
         "date": "2025-06-15",
         "provider": "Dr. Elliot Reid, MD",
-        "facility": "Baylor Scott & White Medical Center \u2013 Dallas - Radiology",
-        "findings": "No acute intrathoracic abnormality on noncontrast CT. Coronary artery anatomy and stenosis assessment are limited without contrast; coronary artery origins and proximal course are not visualized to a diagnostic degree."
+        "facility": "UT Southwestern Medical Center - Radiology",
+        "findings": "Noncontrast CT chest for noncardiac evaluation. No acute pulmonary consolidation or pleural effusion. Cardiomediastinal silhouette within expected limits; coronary artery origins are not reliably assessed without dedicated cardiac gating and iodinated contrast. No pericardial effusion noted."
       }
     ],
     "reports": [
@@ -2334,18 +2361,25 @@
         "type": "Lipid Panel",
         "date": "2026-02-20",
         "provider": "Dr. Perry Cox, MD",
-        "results": "Total cholesterol 212 mg/dL; LDL-C 138 mg/dL; HDL-C 44 mg/dL; triglycerides 168 mg/dL; non-HDL cholesterol 168 mg/dL.",
-        "notes": "Persistent dyslipidemia while on atorvastatin 20 mg daily; supports continued CAD risk assessment in the workup leading to requested Cardiac CTA (CPT 75574)."
+        "results": "Total cholesterol 198 mg/dL, LDL-C 112 mg/dL, HDL-C 48 mg/dL, Triglycerides 162 mg/dL.",
+        "notes": "Reviewed in context of hyperlipidemia (E78.5) and cardiovascular risk reduction. Continued atorvastatin 20 mg daily and lifestyle measures; labs referenced during CTA planning to contextualize risk factors."
+      },
+      {
+        "type": "Basic Metabolic Panel",
+        "date": "2026-04-02",
+        "provider": "Dr. Bob Kelso, MD",
+        "results": "Creatinine 0.96 mg/dL, eGFR 98 mL/min/1.73m\u00b2; electrolytes within reference range.",
+        "notes": "Obtained as pre-contrast renal function evaluation prior to requested cardiac CTA (CPT 75574)."
       }
     ],
     "procedures": [
       {
         "name": "Echocardiogram",
         "date": "2026-01-15",
-        "provider": "Sacred Heart Hospital Cardiology Diagnostics",
+        "provider": "Sacred Heart Hospital Echo Lab",
         "facility": "Sacred Heart Hospital",
-        "reason": "Evaluation of intermittent chest pain and palpitations to assess cardiac structure and function prior to advanced coronary imaging.",
-        "notes": "Transthoracic echo referenced in follow-up documentation as showing preserved LV systolic function and no significant valvular disease; did not define coronary artery anatomy, prompting CTA request."
+        "reason": "Initial evaluation of intermittent chest tightness (R07.89) to assess cardiac structure and function prior to further coronary evaluation.",
+        "notes": "Left ventricular size and systolic function reported within expected range; no significant valvular disease documented in summary. Used as baseline test prior to planning coronary CTA."
       }
     ],
     "social_history": {
@@ -2355,29 +2389,35 @@
       "alcohol_frequency": "1-2 drinks on weekends",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-03-21",
-      "last_visit_reason": "Pre-procedure follow-up for requested Cardiac CT Angiography (CTA)",
+      "last_medical_visit": "2026-04-02",
+      "last_visit_reason": "Pre-CTA ECG and lab work",
       "missed_appointment": false,
       "missed_appointment_reason": null,
       "early_visit_reason": null,
       "mental_health_history": null,
       "mental_health_current": null,
-      "exercise_habits": "Cardiac rehab 2x/week plus light jogging/walking 2-3x/week as tolerated",
-      "diet_notes": "Attempts heart-healthy diet; meal timing variable due to work schedule; limits fast food to a few times per month",
-      "family_history_relevant": "Family history of ischemic heart disease (Z82.49) reported in a first-degree relative; patient notes early cardiac events in family prompting heightened concern."
+      "exercise_habits": "Cardiac rehab 2x/week; additional light aerobic activity on off-days as tolerated",
+      "diet_notes": "Attempts heart-healthy diet; limits saturated fat and added salt; variable adherence during busy workweeks",
+      "family_history_relevant": "Father with myocardial infarction in early 50s; mother with hyperlipidemia."
     },
     "vital_signs_current": {
-      "recorded_date": "2026-03-21",
-      "blood_pressure": "128/80 mmHg",
-      "heart_rate": "64 bpm",
+      "recorded_date": "2026-04-02",
+      "blood_pressure": "124/78 mmHg",
+      "heart_rate": "62 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "23.0 kg/m\u00b2",
-      "oxygen_saturation": "99%",
+      "bmi": "23.1 kg/m\u00b2",
+      "oxygen_saturation": "98%",
       "temperature": "98.0\u00b0F",
       "respiratory_rate": "14 breaths/min"
     },
-    "gender_specific_history": "PSA 0.7 ng/mL (screening on 2025-11-18). No history of prostate cancer. Denies dysuria, hematuria, or obstructive urinary symptoms; no prior urologic procedures."
+    "gender_specific_history": "PSA screening discussed at annual physical; last PSA 0.8 ng/mL on 2025-11-18. No lower urinary tract symptoms; no known urologic history.",
+    "insurance_selection": {
+      "provider_id": "TRAD_MEDICARE",
+      "plan_type": "Traditional Medicare",
+      "plan_id": "TRAD_MEDICARE_NATIONAL"
+    },
+    "has_fit_fobt_result": null
   },
   "213": {
     "first_name": "Chandler",
@@ -13681,18 +13721,18 @@
     "contact": {
       "relationship": "Spouse",
       "name": "Angela Martinez",
-      "telecom": "214-555-0144",
+      "telecom": "214-555-0122",
       "address": "4123 Greenville Ave, Apt 807, Dallas, TX 75206",
       "gender": "female",
       "organization": "N/A",
-      "period_start": "1988-05-21",
+      "period_start": "1986-06-14",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Karen Fields, MD",
       "formatted_npi": "1356927408",
       "managingOrganization": "UT Southwestern Medical Center, Family Medicine",
-      "address": "5323 Harry Hines Blvd, Dallas, TX 75390",
+      "address": "UT Southwestern Medical Center, Family Medicine, 5323 Harry Hines Blvd, Dallas, TX 75390",
       "phone": "214-645-8300"
     },
     "link": {
@@ -13715,11 +13755,11 @@
       "copay_amount": "$35",
       "deductible_amount": "$0"
     },
-    "expected_procedure_date": "2026-05-15",
+    "expected_procedure_date": "2026-05-14",
     "procedure_requested": "Myocardial Perfusion Imaging (SPECT)",
     "procedure_facility": {
-      "facility_name": "UT Southwestern Medical Center, Nuclear Cardiology Lab",
-      "street_address": "5323 Harry Hines Blvd",
+      "facility_name": "UT Southwestern University Hospitals - Nuclear Cardiology",
+      "street_address": "6201 Harry Hines Blvd",
       "city": "Dallas",
       "state": "TX",
       "zip_code": "75390",
@@ -13728,7 +13768,7 @@
     "pa_request": {
       "requesting_provider": "Dr. Priya Narang, MD, FACC",
       "urgency_level": "Pre-Service Routine",
-      "clinical_justification": "Intermittent exertional chest pressure and dyspnea (R07.9, R06.02) in a patient with hypertension, diabetes, hyperlipidemia, and obesity (I10, E11.9, E78.5, E66.9). SPECT myocardial perfusion imaging is requested to evaluate for inducible ischemia and guide subsequent diagnostic and medication management decisions.",
+      "clinical_justification": "Exertional chest pressure and dyspnea (R07.9, R06.02) with significant ASCVD risk factors (I10, E11.9, E78.5, E66.9). SPECT MPI (CPT 78452) is requested to assess for inducible ischemia and to guide ongoing medication management and follow-up planning.",
       "supporting_diagnoses": [
         "R07.9 - Chest pain, unspecified",
         "R06.02 - Shortness of breath",
@@ -13737,12 +13777,12 @@
         "E78.5 - Hyperlipidemia, unspecified",
         "E66.9 - Obesity, unspecified"
       ],
-      "previous_treatments": "Ongoing therapy with metoprolol and PRN nitroglycerin for symptoms; aspirin and statin for cardiovascular risk reduction; lifestyle counseling with nutrition visit.",
-      "expected_outcome": "Rest/stress perfusion assessment to assist risk stratification and guide next steps in management.",
+      "previous_treatments": "Medical therapy with metoprolol, amlodipine, aspirin, atorvastatin; nitroglycerin PRN. Lifestyle changes (reduced sodium, gradual walking as tolerated) limited by knee osteoarthritis (M17.11).",
+      "expected_outcome": "Perfusion and functional assessment under stress to inform ischemic risk stratification and management decisions.",
       "units_requested": "1"
     },
-    "bio_narrative": "Oscar Martinez is a 69-year-old Hispanic male living in Dallas, Texas, who follows closely with Dr. Karen Fields at UT Southwestern Family Medicine. He is generally meticulous about his health routines and brings written logs of home blood pressure and fasting glucose to visits. Over the past several weeks, he has noticed a recurring tight pressure in the center of his chest when climbing stairs or walking quickly (R07.9). The sensation is typically accompanied by shortness of breath (R06.02) and improves within minutes of resting. He reports intermittent episodes several times per week, which has made him more cautious about exertion. He has hypertension (I10), type 2 diabetes mellitus (E11.9), hyperlipidemia (E78.5), and obesity (E66.9), and he is aware these conditions increase cardiovascular risk. His activity level has also been limited by chronic right knee osteoarthritis (M17.11). He completed a course of physical therapy earlier in 2026 focused on strengthening and gait mechanics, and he continues a home exercise program, but flare-ups still reduce his ability to walk for longer distances. This limitation has complicated his ability to \u201cpush himself\u201d to reproduce symptoms in a controlled manner. In mid-March 2026, his symptoms prompted an emergency department evaluation where serial high-sensitivity troponin T remained within reference range, and a chest X-ray showed no acute cardiopulmonary process. He was discharged with instructions for close outpatient follow-up. At cardiology consultation on 2026-03-25 with Dr. Priya Narang, the focus was on evaluating exertional symptoms in the context of his risk-factor profile. A transthoracic echocardiogram (complete) on 2026-04-01 documented preserved left ventricular systolic function and mild concentric hypertrophy consistent with hypertension. Because resting echocardiography does not assess for stress-induced perfusion abnormalities, the next planned step is myocardial perfusion imaging with SPECT (CPT 78452) to evaluate for inducible ischemia and assist with risk stratification and treatment planning. Socially, he is a former smoker and drinks alcohol socially on weekends; he denies illicit drug use. He has been working on dietary changes, including lower sodium intake and fewer sugary beverages, after a one-time dietitian visit, though he notes stress-related snacking. Family history is notable for cardiovascular risk factors in older relatives, which reinforces his preference for clear, written plans and stepwise testing. The current referral for SPECT myocardial perfusion imaging reflects ongoing exertional symptoms (R07.9, R06.02) despite medical therapy and the need for physiologic assessment to guide next management steps in a patient with I10, E11.9, E78.5, and E66.9.",
-    "has_fit_fobt_result": false,
+    "bio_narrative": "Oscar Martinez is a 67-year-old Hispanic male living in Dallas, Texas, followed at UT Southwestern Family Medicine by Dr. Karen Fields, MD for chronic cardiometabolic conditions including essential hypertension (I10), type 2 diabetes mellitus without complications (E11.9), hyperlipidemia (E78.5), and obesity (E66.9). He is highly organized with medications and home monitoring, using a pill organizer and recording blood pressure and fasting glucose several times weekly. Over the last several months, his ability to exercise consistently has been limited by chronic right knee osteoarthritis (M17.11), for which he completed a course of physical therapy and uses topical diclofenac and acetaminophen as needed. In early March 2026, he began noticing intermittent tight chest pressure when climbing stairs or walking quickly, often accompanied by shortness of breath (R07.9, R06.02). The symptoms are exertional rather than at rest and have prompted him to slow down, take breaks, and occasionally use sublingual nitroglycerin. He presented to his primary care clinic on 03/12/2026 and later sought emergency evaluation on 03/18/2026 when the exertional pattern persisted. Emergency workup included chest radiography and laboratory testing, and he subsequently saw cardiology for ongoing symptom assessment. A transthoracic echocardiogram (CPT 93306) on 04/01/2026 showed preserved left ventricular systolic function and no significant valvular disease, providing baseline structural information but not addressing inducible ischemia. Oscar\u2019s social history includes former cigarette smoking and current alcohol use described as social and occasional; he denies illicit drug use. He has been working on diet changes such as reducing sodium and cutting back on sugary beverages, though he reports stress-related snacking. Family history is notable for a father with myocardial infarction in his early 60s and a sister with type 2 diabetes, reinforcing concern for atherosclerotic cardiovascular risk. Given persistent exertional chest pressure and dyspnea in the setting of diabetes, hypertension, hyperlipidemia, and obesity, his cardiology team scheduled myocardial perfusion imaging with SPECT (CPT 78452) at UT Southwestern University Hospitals - Nuclear Cardiology on 05/14/2026. The goal is to objectively assess myocardial perfusion under stress conditions to guide risk stratification, future follow-up planning, and optimization of medical therapy.",
+    "has_fit_fobt_result": null,
     "medications": [
       {
         "brand": "Toprol-XL",
@@ -13751,7 +13791,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "current",
-        "start_date": "2026-03-12",
+        "start_date": "2025-11-01",
         "end_date": "ongoing",
         "reason": "Blood pressure control and symptom control for exertional chest pressure (I10, R07.9)."
       },
@@ -13762,7 +13802,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "ongoing",
-        "start_date": "2025-07-01",
+        "start_date": "2024-08-15",
         "end_date": "ongoing",
         "reason": "Hypertension management (I10)."
       },
@@ -13773,7 +13813,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "current",
-        "start_date": "2024-11-15",
+        "start_date": "2023-05-10",
         "end_date": "ongoing",
         "reason": "Hyperlipidemia and ASCVD risk reduction (E78.5, E11.9)."
       },
@@ -13784,7 +13824,7 @@
         "qty": "180 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "ongoing",
-        "start_date": "2020-02-10",
+        "start_date": "2021-09-03",
         "end_date": "ongoing",
         "reason": "Type 2 diabetes management (E11.9)."
       },
@@ -13817,7 +13857,7 @@
         "qty": "100 g tube",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "ongoing",
-        "start_date": "2025-09-05",
+        "start_date": "2025-06-01",
         "end_date": "ongoing",
         "reason": "Right knee osteoarthritis pain limiting mobility (M17.11)."
       },
@@ -13828,7 +13868,7 @@
         "qty": "60 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "current",
-        "start_date": "2025-09-05",
+        "start_date": "2025-10-15",
         "end_date": "ongoing",
         "reason": "Pain control for osteoarthritis to improve activity tolerance (M17.11)."
       },
@@ -13836,11 +13876,11 @@
         "brand": "Naprosyn",
         "generic_name": "Naproxen 500 mg",
         "dosage": "1 tablet by mouth twice daily with food",
-        "qty": "30 tablets",
+        "qty": "28 tablets",
         "prescribed_by": "Dr. Karen Fields, MD",
         "status": "past",
         "start_date": "2025-12-01",
-        "end_date": "2025-12-20",
+        "end_date": "2025-12-14",
         "reason": "Short trial for knee osteoarthritis pain (M17.11); stopped due to worsening reflux symptoms."
       }
     ],
@@ -13857,14 +13897,14 @@
         "allergy_type": "Food",
         "reaction": "Lip swelling and urticaria",
         "severity": "Severe",
-        "onset_date": "2006-08-14"
+        "onset_date": "2005-07-18"
       },
       {
         "allergen": "Ragweed pollen",
         "allergy_type": "Environmental",
         "reaction": "Sneezing, watery eyes",
         "severity": "Mild",
-        "onset_date": "2015-09-01"
+        "onset_date": "2010-09-01"
       }
     ],
     "vaccinations": [
@@ -13873,7 +13913,7 @@
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-05",
         "administered_by": "UT Southwestern Family Medicine Clinic",
-        "dose_number": "1",
+        "dose_number": "Annual",
         "reason": "Routine Immunization"
       },
       {
@@ -13921,19 +13961,19 @@
       {
         "therapy_type": "Physical",
         "cpt_code": "97110",
-        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility, each 15 minutes",
+        "cpt_description": "Therapeutic exercises to develop strength and endurance, range of motion and flexibility",
         "icd10_codes": [
           "M17.11 - Unilateral primary osteoarthritis, right knee"
         ],
         "provider": "Dr. Hannah Cho, DPT",
-        "provider_npi": "1588123406",
-        "facility": "UT Southwestern Physical Medicine & Rehabilitation",
+        "provider_npi": "1831654027",
+        "facility": "UT Southwestern Outpatient Rehabilitation",
         "start_date": "2026-02-10",
         "end_date": "2026-03-05",
         "frequency": "2x/week",
         "status": "Completed",
-        "reason": "Right knee osteoarthritis pain limiting mobility and exercise tolerance (M17.11).",
-        "notes": "Focus on quadriceps/hip strengthening, gait mechanics, and home exercise program to improve tolerance for walking and stairs."
+        "reason": "Right knee osteoarthritis pain limiting walking tolerance and stair climbing (M17.11).",
+        "notes": "Focus on quadriceps/hip strengthening, gait training, and home exercise program."
       },
       {
         "therapy_type": "Other",
@@ -13945,14 +13985,34 @@
           "E78.5 - Hyperlipidemia, unspecified"
         ],
         "provider": "Elena Ruiz, RD, LD",
-        "provider_npi": "1467982035",
-        "facility": "UT Southwestern Clinical Nutrition Services",
-        "start_date": "2026-01-22",
-        "end_date": "2026-01-22",
+        "provider_npi": "1467849301",
+        "facility": "UT Southwestern Nutrition Services",
+        "start_date": "2026-02-20",
+        "end_date": "2026-02-20",
         "frequency": "One-time visit",
         "status": "Completed",
-        "reason": "Dietary counseling for diabetes, weight management, and lipid control (E11.9, E66.9, E78.5).",
-        "notes": "Counseled on carbohydrate distribution, limiting sugar-sweetened beverages, portion control, and sodium reduction; patient requested written meal examples."
+        "reason": "Diet counseling for diabetes, weight, and lipid management (E11.9, E66.9, E78.5).",
+        "notes": "Reviewed plate method, reducing sugary beverages, and heart-healthy fats."
+      },
+      {
+        "therapy_type": "Cardiac Rehab",
+        "cpt_code": "93798",
+        "cpt_description": "Physician or other qualified health care professional services for outpatient cardiac rehabilitation; with continuous ECG monitoring (per session)",
+        "icd10_codes": [
+          "R07.9 - Chest pain, unspecified",
+          "I10 - Essential (primary) hypertension",
+          "E11.9 - Type 2 diabetes mellitus without complications",
+          "E78.5 - Hyperlipidemia, unspecified"
+        ],
+        "provider": "Mark Renner, MS, ACSM-CEP",
+        "provider_npi": "1609347281",
+        "facility": "UT Southwestern Cardiac Rehabilitation Program",
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-22",
+        "frequency": "2x/week",
+        "status": "Completed",
+        "reason": "Supervised exercise and education while evaluating exertional symptoms and risk factors (R07.9, I10, E11.9, E78.5).",
+        "notes": "Education sessions covered BP monitoring, perceived exertion, and home walking plan; no formal outcome metrics recorded in chart extract."
       }
     ],
     "behavioral_notes": "Patient is highly organized and generally adherent with daily medications, using a pill organizer and logging BP/fasting glucose several times per week. He is motivated to understand test results and asks detailed questions, sometimes becoming anxious when information is vague; he benefits from clear written instructions. Former smoker; drinks alcohol socially (1\u20132 drinks on weekends). No illicit drug use. Diet improved recently (lower sodium, fewer sugary beverages) but he reports stress-related snacking and inconsistent exercise due to knee pain; he has been using PT home exercises and short walks as tolerated.",
@@ -13960,30 +14020,30 @@
       {
         "encounter_date": "2026-03-12",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluation of new exertional chest pressure and increased shortness of breath with stairs.",
+        "purpose_of_visit": "Evaluation of new exertional chest pressure and increasing shortness of breath when climbing stairs.",
         "provider": "Dr. Karen Fields, MD",
         "provider_npi": "1356927408",
         "facility": "UT Southwestern Medical Center, Family Medicine",
         "vital_signs": {
           "recorded_date": "2026-03-12",
-          "blood_pressure": "142/86 mmHg",
-          "heart_rate": "78 bpm",
-          "blood_sugar_fasting": "146 mg/dL",
+          "blood_pressure": "148/86 mmHg",
+          "heart_rate": "74 bpm",
+          "blood_sugar_fasting": "132 mg/dL",
           "blood_sugar_postprandial": null,
-          "bmi": "30.2 kg/m\u00b2",
-          "oxygen_saturation": "98%",
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
           "temperature": "98.4\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I get this tight pressure in my chest when I climb stairs, and I\u2019m more winded lately.",
-        "doctor_note": "HPI: 69-year-old male with history of hypertension (I10), type 2 diabetes (E11.9), hyperlipidemia (E78.5), obesity (E66.9), and right knee osteoarthritis (M17.11) presents with 2\u20133 weeks of intermittent chest tightness/pressure with exertion. Symptoms occur when climbing stairs or walking quickly and improve with rest. He notes associated shortness of breath on exertion (R06.02). No syncope. He is concerned due to risk factors and requests clear next steps.\n\nReview of Systems: Positive for exertional chest pressure and dyspnea on exertion. Denies fever, cough, leg swelling, or recent immobilization. Musculoskeletal: chronic right knee pain with activity.\n\nPhysical Exam: General well-appearing, anxious but cooperative. Cardiovascular regular rate/rhythm, no murmurs appreciated. Lungs clear bilaterally without wheezes. No lower extremity edema. Right knee with mild crepitus and tenderness.\n\nAssessment: (1) Chest pain, unspecified (R07.9) with exertional features and multiple risk factors (I10, E11.9, E78.5, E66.9). (2) Shortness of breath (R06.02) associated with exertion. (3) Hypertension (I10) not at goal today. (4) Diabetes (E11.9). (5) Hyperlipidemia (E78.5). (6) Obesity (E66.9). (7) Right knee osteoarthritis (M17.11).\n\nPlan: Start/continue metoprolol succinate ER 50 mg daily for BP and symptom control; prescribe nitroglycerin SL PRN for chest pressure with ER precautions. Continue amlodipine, metformin, and atorvastatin. Discussed activity modification and risk-factor management; patient interested in further evaluation and cardiology referral placed for ischemia evaluation planning, including discussion of myocardial perfusion imaging (SPECT) CPT 78452 pathway.",
+        "doctor_note": "HPI: 67-year-old male with HTN (I10), T2DM (E11.9), and HLD (E78.5) presents with 2 weeks of intermittent tight chest pressure triggered by climbing stairs or brisk walking. Symptoms last 2\u20135 minutes and improve with rest; he denies syncope. He notes mild shortness of breath with exertion (R06.02). He has knee pain limiting exercise (M17.11). No prior stress test on file.\n\nReview of Systems: Positive for exertional chest pressure and exertional dyspnea. Negative for fever, cough, wheeze, leg swelling, or palpitations. GI: heartburn episodes with NSAIDs; otherwise negative.\n\nPhysical Exam: Well-appearing male, no acute distress. Cardiovascular: regular rate/rhythm, no murmurs appreciated. Lungs clear to auscultation bilaterally. Extremities: no edema. MSK: right knee crepitus with ROM.\n\nAssessment: Exertional chest pain/pressure (R07.9) with dyspnea (R06.02) in patient with multiple ASCVD risk factors (I10, E11.9, E78.5, E66.9). GERD history (K21.9) and knee OA (M17.11) also noted.\n\nPlan: Start/renew nitroglycerin SL PRN; continue metoprolol and amlodipine for BP control; counsel on ER precautions if pain persists at rest or is prolonged. Ordered baseline labs (CBC/CMP, lipids, HbA1c) for cardiometabolic monitoring and to support evaluation pathway leading to planned ischemic assessment. Referral to cardiology for further evaluation and discussion of myocardial perfusion imaging SPECT (CPT 78452).",
         "observations": [
-          "Exertional chest pressure reproducible by stair climbing per history (R07.9).",
-          "Dyspnea with exertion without resting symptoms (R06.02).",
-          "Right knee pain limits exercise tolerance (M17.11)."
+          "Exertional symptoms reproducible with stair climbing per patient report.",
+          "No resting respiratory distress.",
+          "Right knee pain limits activity tolerance."
         ],
         "procedures_performed": [
-          "99214 - Office or other outpatient visit, established patient, level 4"
+          "CPT 99214 - Office or other outpatient visit, established patient, moderate MDM"
         ],
         "diagnoses": [
           "R07.9 - Chest pain, unspecified",
@@ -13992,46 +14052,234 @@
           "E11.9 - Type 2 diabetes mellitus without complications",
           "E78.5 - Hyperlipidemia, unspecified",
           "E66.9 - Obesity, unspecified",
+          "K21.9 - Gastro-esophageal reflux disease without esophagitis",
           "M17.11 - Unilateral primary osteoarthritis, right knee"
         ],
         "medications_prescribed": [
-          "Toprol-XL (Metoprolol succinate ER 50 mg) 1 tablet by mouth daily",
-          "Nitrostat (Nitroglycerin 0.4 mg SL) PRN chest pressure"
+          "Nitrostat (nitroglycerin 0.4 mg SL) PRN chest pressure",
+          "Continue Toprol-XL, Norvasc, Glucophage, Lipitor"
         ],
         "care_team": [
-          "Dr. Karen Fields, MD (Family Medicine)",
-          "Elena Ruiz, RD, LD (Nutrition - prior)"
+          "Dr. Karen Fields, MD (Family Medicine)"
         ],
-        "progress_notes": "New exertional symptoms compared with prior baseline; risk factors reviewed and patient requested stepwise testing plan. Provided written nitroglycerin instructions and ER precautions.",
-        "follow_up_instructions": "Follow up with cardiology within 1\u20132 weeks; go to ER for chest pressure lasting >10 minutes, symptoms at rest, or if nitroglycerin does not relieve after 3 doses."
+        "progress_notes": "New exertional symptoms compared with prior routine chronic-disease visits; BP mildly elevated today. Patient reports adherence to current meds and monitoring; knee pain continues to limit exercise.",
+        "follow_up_instructions": "Follow up in 2-3 weeks or sooner if symptoms worsen. Go to ER for chest pain at rest, persistent pain >10 minutes, or associated diaphoresis/syncope."
       },
       {
         "encounter_date": "2026-03-18",
         "encounter_type": "ER Visit",
-        "purpose_of_visit": "Evaluation of recurrent exertional chest tightness and shortness of breath; rule out acute coronary syndrome.",
-        "provider": "Dr. Michael Levin, MD",
-        "provider_npi": "1689032147",
-        "facility": "UT Southwestern William P. Clements Jr. University Hospital - Emergency Department",
+        "purpose_of_visit": "Acute evaluation of exertional chest tightness with shortness of breath.",
+        "provider": "Dr. Aisha Patel, MD",
+        "provider_npi": "1730482918",
+        "facility": "UT Southwestern University Hospitals - Emergency Department",
         "vital_signs": {
           "recorded_date": "2026-03-18",
-          "blood_pressure": "151/90 mmHg",
-          "heart_rate": "84 bpm",
+          "blood_pressure": "156/90 mmHg",
+          "heart_rate": "80 bpm",
           "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "30.2 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.6\u00b0F",
+          "blood_sugar_postprandial": "168 mg/dL",
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.2\u00b0F",
           "respiratory_rate": "18 breaths/min"
         },
         "chief_complaint": "Chest tightness when I walk fast, and I get short of breath.",
-        "doctor_note": "HPI: 69-year-old male presents with intermittent exertional chest tightness (R07.9) and shortness of breath (R06.02) over the past week, today triggered by walking quickly in a parking lot. Symptoms improved after resting; he did not take nitroglycerin prior to arrival. No syncope. He has known hypertension (I10), diabetes (E11.9), and hyperlipidemia (E78.5).\n\nReview of Systems: Positive for exertional chest tightness and exertional dyspnea. Denies fever, productive cough, hemoptysis, or unilateral leg swelling.\n\nPhysical Exam: Awake, speaking full sentences. Cardiovascular regular rhythm. Lungs clear; no wheezes or rales. Extremities warm, no edema.\n\nAssessment: Exertional chest pain (R07.9) and dyspnea (R06.02) with risk factors. Serial high-sensitivity troponin obtained and within reference range; CBC/CMP without acute abnormalities. Chest X-ray performed without acute cardiopulmonary findings. Patient stable for discharge with close outpatient follow-up.\n\nPlan: Reinforced outpatient cardiology follow-up for further ischemia evaluation including discussion of myocardial perfusion imaging (SPECT) CPT 78452. Continue home meds as prescribed; return precautions provided.",
+        "doctor_note": "HPI: 67-year-old male with HTN (I10), T2DM (E11.9), HLD (E78.5), and obesity (E66.9) presents with intermittent chest tightness brought on by fast walking and stair climbing for about 3 weeks. Today he had a similar episode while walking from parking lot; symptoms improved after resting. He used nitroglycerin once earlier this week with partial relief. No current chest pain at rest.\n\nReview of Systems: Positive for exertional dyspnea (R06.02). Denies fever, cough, pleuritic pain, calf pain, or leg swelling.\n\nPhysical Exam: Alert, conversant. Cardiovascular: regular rate and rhythm, no murmurs. Pulmonary: clear breath sounds. Extremities: no edema. Abdomen: soft, non-tender.\n\nAssessment: Exertional chest pain (R07.9) and shortness of breath (R06.02) with risk factors (I10, E11.9, E78.5, E66.9). No evidence of acute decompensation on exam.\n\nPlan: Obtain chest X-ray and labs including high-sensitivity troponin and metabolic panel; monitor symptoms in ED. Continue outpatient follow-up with cardiology for planned ischemic evaluation including myocardial perfusion imaging SPECT (CPT 78452). Discharge with return precautions if stable and no recurrent symptoms at rest.",
         "observations": [
-          "Symptoms resolved at rest in ED.",
-          "No respiratory distress at rest."
+          "Symptoms exertional and relieved with rest.",
+          "No hypoxia or respiratory distress.",
+          "No lower-extremity edema."
         ],
         "procedures_performed": [
-          "99284 - Emergency department visit, level 4",
-          "71046 - Radiologic examination, chest; 2 views"
+          "CPT 71046 - Radiologic examination, chest; 2 views",
+          "CPT 99284 - Emergency department visit, moderate severity"
+        ],
+        "diagnoses": [
+          "R07.9 - Chest pain, unspecified",
+          "R06.02 - Shortness of breath",
+          "I10 - Essential (primary) hypertension",
+          "E11.9 - Type 2 diabetes mellitus without complications",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "E66.9 - Obesity, unspecified"
+        ],
+        "medications_prescribed": [
+          "Continue home medications including nitroglycerin PRN"
+        ],
+        "care_team": [
+          "Dr. Aisha Patel, MD (Emergency Medicine)"
+        ],
+        "progress_notes": "No ongoing chest pain while in ED; patient remains concerned about exertional symptoms and requests clarity on next diagnostic step.",
+        "follow_up_instructions": "Follow up with cardiology within 1 week. Return to ED for chest pain at rest, worsening dyspnea, syncope, or symptoms not relieved by rest/nitroglycerin."
+      },
+      {
+        "encounter_date": "2026-03-25",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Cardiology consultation for ongoing exertional chest pressure and dyspnea; review risk factors and plan ischemic evaluation.",
+        "provider": "Dr. Priya Narang, MD, FACC",
+        "provider_npi": "1427385609",
+        "facility": "UT Southwestern Medical Center, Cardiology",
+        "vital_signs": {
+          "recorded_date": "2026-03-25",
+          "blood_pressure": "150/84 mmHg",
+          "heart_rate": "72 bpm",
+          "blood_sugar_fasting": "128 mg/dL",
+          "blood_sugar_postprandial": null,
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I still get chest pressure and feel winded with stairs.",
+        "doctor_note": "HPI: 67-year-old male with HTN (I10), T2DM (E11.9), HLD (E78.5), obesity (E66.9) referred for exertional chest pressure (R07.9) and exertional dyspnea (R06.02) ongoing for ~1 month. Episodes occur with stair climbing or brisk walking and improve with rest; he has used nitroglycerin on one occasion. He is limited in baseline exercise by right knee OA (M17.11). Family history: father had MI in early 60s.\n\nReview of Systems: Positive for exertional chest pressure and dyspnea. Denies orthopnea, PND, or leg swelling.\n\nPhysical Exam: BP elevated; otherwise normal exam with regular rhythm and clear lungs. No edema.\n\nAssessment: Symptoms concerning for possible exertional ischemia given risk factor profile (I10, E11.9, E78.5, E66.9) and family history. Differential includes non-cardiac contributors such as GERD (K21.9), but exertional pattern warrants objective perfusion assessment.\n\nPlan: Start aspirin 81 mg daily for risk reduction; continue statin and antihypertensives. Order transthoracic echocardiogram (CPT 93306) for baseline LV/valve assessment prior to planned SPECT myocardial perfusion imaging (CPT 78452). Counsel on medication adherence and nitroglycerin use instructions. Schedule follow-up after echo to review results and finalize nuclear imaging protocol.",
+        "observations": [
+          "Exertional symptom pattern persists over weeks.",
+          "Knee OA limits exercise-based testing options.",
+          "Risk factor clustering (diabetes, HTN, HLD, obesity)."
+        ],
+        "procedures_performed": [
+          "CPT 99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate MDM"
+        ],
+        "diagnoses": [
+          "R07.9 - Chest pain, unspecified",
+          "R06.02 - Shortness of breath",
+          "I10 - Essential (primary) hypertension",
+          "E11.9 - Type 2 diabetes mellitus without complications",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "E66.9 - Obesity, unspecified",
+          "K21.9 - Gastro-esophageal reflux disease without esophagitis",
+          "M17.11 - Unilateral primary osteoarthritis, right knee"
+        ],
+        "medications_prescribed": [
+          "Aspirin 81 mg delayed-release daily"
+        ],
+        "care_team": [
+          "Dr. Priya Narang, MD, FACC (Cardiology)",
+          "Dr. Karen Fields, MD (Family Medicine)"
+        ],
+        "progress_notes": "Symptoms unchanged since ED visit; patient desires a diagnostic plan that accommodates his limited mobility from knee OA.",
+        "follow_up_instructions": "Complete echocardiogram as scheduled. Continue current medications. Use nitroglycerin for exertional chest pressure as instructed and seek urgent care for persistent symptoms at rest."
+      },
+      {
+        "encounter_date": "2026-04-01",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Review transthoracic echocardiogram results and discuss next diagnostic step in chest pain workup.",
+        "provider": "Dr. Priya Narang, MD, FACC",
+        "provider_npi": "1427385609",
+        "facility": "UT Southwestern Medical Center, Cardiology",
+        "vital_signs": {
+          "recorded_date": "2026-04-01",
+          "blood_pressure": "142/82 mmHg",
+          "heart_rate": "70 bpm",
+          "blood_sugar_fasting": "124 mg/dL",
+          "blood_sugar_postprandial": null,
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I want to understand what the echo means and what the next test will show.",
+        "doctor_note": "HPI: Follow-up after transthoracic echocardiogram performed today. Patient continues to report exertional chest pressure and shortness of breath (R07.9, R06.02) with stairs. No new rest symptoms. He continues metoprolol and amlodipine; uses nitroglycerin rarely.\n\nReview of Systems: No syncope, no leg swelling, no cough.\n\nPhysical Exam: Stable vital signs; no edema; heart regular rhythm.\n\nAssessment: Echo demonstrates preserved LV systolic function without significant valvular disease; mild LVH consistent with hypertension (I10). Persistent exertional symptoms in context of diabetes (E11.9), hyperlipidemia (E78.5), and obesity (E66.9) support proceeding with planned SPECT myocardial perfusion imaging (CPT 78452) for ischemia evaluation.\n\nPlan: Schedule MPI SPECT; review test preparation including medication timing, caffeine avoidance, and fasting. Continue aspirin and statin. Reinforce nitroglycerin and ER precautions.",
+        "observations": [
+          "Echo reviewed with patient; questions addressed.",
+          "Symptoms remain exertional.",
+          "No signs of heart failure on exam."
+        ],
+        "procedures_performed": [
+          "CPT 93306 - Transthoracic echocardiography, complete",
+          "CPT 99214 - Office or other outpatient visit, established patient, moderate MDM"
+        ],
+        "diagnoses": [
+          "R07.9 - Chest pain, unspecified",
+          "R06.02 - Shortness of breath",
+          "I10 - Essential (primary) hypertension",
+          "E11.9 - Type 2 diabetes mellitus without complications",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "E66.9 - Obesity, unspecified"
+        ],
+        "medications_prescribed": [
+          "Continue aspirin 81 mg daily",
+          "Continue metoprolol, amlodipine, atorvastatin, metformin"
+        ],
+        "care_team": [
+          "Dr. Priya Narang, MD, FACC (Cardiology)"
+        ],
+        "progress_notes": "Patient remains symptomatic with exertion but stable; he is focused on understanding the role of nuclear imaging compared with echo.",
+        "follow_up_instructions": "Nuclear cardiology will contact to schedule MPI SPECT. Avoid caffeine 24 hours prior. Bring medication list to appointment and follow instructions on morning medications."
+      },
+      {
+        "encounter_date": "2026-04-04",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-procedure assessment and instructions for upcoming nuclear myocardial perfusion imaging SPECT.",
+        "provider": "Dr. Karen Fields, MD",
+        "provider_npi": "1356927408",
+        "facility": "UT Southwestern Medical Center, Family Medicine",
+        "vital_signs": {
+          "recorded_date": "2026-04-04",
+          "blood_pressure": "146/84 mmHg",
+          "heart_rate": "68 bpm",
+          "blood_sugar_fasting": "126 mg/dL",
+          "blood_sugar_postprandial": null,
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.3\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m here to go over what I need to do before the nuclear heart test.",
+        "doctor_note": "HPI: Patient presents for pre-procedure counseling prior to planned myocardial perfusion imaging SPECT (CPT 78452). He reports exertional chest pressure and dyspnea remain intermittent and activity-related (R07.9, R06.02). He denies current rest pain. He is taking metoprolol, amlodipine, aspirin, atorvastatin, and metformin as directed. Knee pain persists and he continues home exercises from prior PT.\n\nReview of Systems: No fever, no cough. No new GI bleeding symptoms; reflux symptoms improved after stopping naproxen (K21.9).\n\nPhysical Exam: No acute distress; heart regular rhythm; lungs clear; no edema. Right knee with mild tenderness and crepitus.\n\nAssessment: Stable chronic conditions (I10, E11.9, E78.5) with ongoing exertional symptoms (R07.9, R06.02). Preparing for nuclear imaging to evaluate for inducible ischemia.\n\nPlan: Reviewed pre-test instructions: fasting after midnight except small sips of water, avoid caffeine/decaf products for 24 hours, wear comfortable clothing. Medication timing: continue aspirin, amlodipine, atorvastatin, and metformin as usual unless nuclear cardiology instructs otherwise. For metoprolol, follow nuclear cardiology instructions on whether to take morning dose on test day. Refilled nitroglycerin as needed. Provided written instructions and encouraged patient to bring glucose log and medication list.",
+        "observations": [
+          "Patient uses pill organizer and asks detailed questions.",
+          "No signs of acute cardiopulmonary compromise on exam.",
+          "Right knee pain continues to limit brisk walking."
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, moderate MDM"
+        ],
+        "diagnoses": [
+          "R07.9 - Chest pain, unspecified",
+          "R06.02 - Shortness of breath",
+          "I10 - Essential (primary) hypertension",
+          "E11.9 - Type 2 diabetes mellitus without complications",
+          "E78.5 - Hyperlipidemia, unspecified",
+          "E66.9 - Obesity, unspecified",
+          "K21.9 - Gastro-esophageal reflux disease without esophagitis",
+          "M17.11 - Unilateral primary osteoarthritis, right knee"
+        ],
+        "medications_prescribed": [
+          "Nitrostat refill (nitroglycerin 0.4 mg SL) PRN chest pressure"
+        ],
+        "care_team": [
+          "Dr. Karen Fields, MD (Family Medicine)",
+          "UT Southwestern Nuclear Cardiology scheduling team"
+        ],
+        "progress_notes": "Patient demonstrates understanding of pre-test preparation and prefers written instructions. Symptoms unchanged; continues to self-limit exertion.",
+        "follow_up_instructions": "Proceed with scheduled nuclear cardiology appointment. Call clinic for medication questions. Seek urgent care for chest pain at rest or worsening shortness of breath."
+      },
+      {
+        "encounter_date": "2026-04-08",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Cardiology follow-up to confirm symptoms and finalize scheduling details for SPECT MPI.",
+        "provider": "Dr. Priya Narang, MD, FACC",
+        "provider_npi": "1427385609",
+        "facility": "UT Southwestern Medical Center, Cardiology",
+        "vital_signs": {
+          "recorded_date": "2026-04-08",
+          "blood_pressure": "144/82 mmHg",
+          "heart_rate": "71 bpm",
+          "blood_sugar_fasting": "129 mg/dL",
+          "blood_sugar_postprandial": null,
+          "bmi": "30.1 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.2\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m still getting pressure if I push myself, and I want to be sure the test is scheduled right.",
+        "doctor_note": "HPI: Patient returns to review ongoing exertional symptoms (R07.9, R06.02) and confirm upcoming myocardial perfusion imaging SPECT (CPT 78452). He reports chest pressure occurs with climbing more than one flight of stairs or walking quickly and resolves with rest; no rest symptoms reported. He continues metoprolol, amlodipine, aspirin, atorvastatin, and metformin; nitroglycerin remains available but he has not needed it in the past week.\n\nReview of Systems: Denies orthopnea, PND, edema, syncope. GI: intermittent reflux controlled with diet.\n\nPhysical Exam: Regular rhythm, no murmurs appreciated; lungs clear; no edema.\n\nAssessment: Persistent exertional symptoms with cardiometabolic comorbidities (I10, E11.9, E78.5, E66.9). Echo provides baseline structural information; proceeding with SPECT MPI remains planned to evaluate perfusion under stress.\n\nPlan: Confirm procedure date and nuclear cardiology preparation. Continue current medications. Encourage gradual activity within symptom limits and continue risk-factor modification counseling. Return to clinic after test for results review.",
+        "observations": [
+          "Symptoms stable, exertional pattern.",
+          "Patient engaged and detail-oriented about scheduling and instructions."
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, moderate MDM"
         ],
         "diagnoses": [
           "R07.9 - Chest pain, unspecified",
@@ -14043,164 +14291,35 @@
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Michael Levin, MD (Emergency Medicine)",
-          "Radiology Department (UT Southwestern)"
-        ],
-        "progress_notes": "No biomarker evidence of myocardial injury during this visit; patient remained hemodynamically stable. Discharged for outpatient diagnostic evaluation pathway.",
-        "follow_up_instructions": "Follow up with cardiology within 7 days. Return to ED for chest pain at rest, worsening shortness of breath, fainting, or persistent symptoms not improving with rest."
-      },
-      {
-        "encounter_date": "2026-03-25",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Cardiology evaluation of exertional chest pressure and dyspnea; plan testing strategy.",
-        "provider": "Dr. Priya Narang, MD, FACC",
-        "provider_npi": "1891325476",
-        "facility": "UT Southwestern Medical Center, Cardiology Clinic",
-        "vital_signs": {
-          "recorded_date": "2026-03-25",
-          "blood_pressure": "140/84 mmHg",
-          "heart_rate": "74 bpm",
-          "blood_sugar_fasting": "139 mg/dL",
-          "blood_sugar_postprandial": null,
-          "bmi": "30.1 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.2\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I still get chest pressure and feel winded with stairs.",
-        "doctor_note": "HPI: 69-year-old male with I10, E11.9, E78.5, E66.9 and exertional chest pressure (R07.9) with dyspnea (R06.02). He reports symptoms occur with stair climbing and brisk walking, improving with rest. Knee osteoarthritis (M17.11) limits walking distance and contributes to reduced exercise capacity.\n\nReview of Systems: Positive for exertional chest pressure and dyspnea. Denies orthopnea or leg swelling.\n\nPhysical Exam: Well-appearing. Cardiac exam regular rhythm. Lungs clear. No edema. Antalgic gait due to right knee pain.\n\nAssessment: Persistent exertional symptoms with multiple risk factors. Needs physiologic assessment for ischemia; baseline structural assessment planned.\n\nPlan: Continue aspirin 81 mg daily and statin; continue BP medications. Order transthoracic echocardiogram (complete) CPT 93306 and request myocardial perfusion imaging (SPECT) CPT 78452 to evaluate for inducible ischemia; consider pharmacologic stress due to M17.11 limiting treadmill exercise. Provide ER precautions and follow up after testing.",
-        "observations": [
-          "Exercise tolerance limited by knee OA (M17.11).",
-          "Symptoms provoked by exertion per history (R07.9, R06.02)."
-        ],
-        "procedures_performed": [
-          "99204 - Office or other outpatient visit, new patient, level 4"
-        ],
-        "diagnoses": [
-          "R07.9 - Chest pain, unspecified",
-          "R06.02 - Shortness of breath",
-          "I10 - Essential (primary) hypertension",
-          "E11.9 - Type 2 diabetes mellitus without complications",
-          "E78.5 - Hyperlipidemia, unspecified",
-          "E66.9 - Obesity, unspecified",
-          "M17.11 - Unilateral primary osteoarthritis, right knee"
-        ],
-        "medications_prescribed": [
-          "Aspirin (Aspirin 81 mg delayed-release) 1 tablet by mouth daily"
-        ],
-        "care_team": [
-          "Dr. Priya Narang, MD, FACC (Cardiology)",
-          "Dr. Karen Fields, MD (PCP)"
-        ],
-        "progress_notes": "Symptoms persist since PCP visit; reviewed ED results. Testing plan outlined with emphasis on perfusion assessment given risk factors and exertional symptoms.",
-        "follow_up_instructions": "Schedule echocardiogram and nuclear perfusion imaging; follow up in cardiology clinic 1\u20132 weeks after completion to review results."
-      },
-      {
-        "encounter_date": "2026-04-01",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Review transthoracic echocardiogram results and discuss next test to evaluate exertional symptoms.",
-        "provider": "Dr. Priya Narang, MD, FACC",
-        "provider_npi": "1891325476",
-        "facility": "UT Southwestern Medical Center, Cardiology Clinic",
-        "vital_signs": {
-          "recorded_date": "2026-04-01",
-          "blood_pressure": "136/80 mmHg",
-          "heart_rate": "70 bpm",
-          "blood_sugar_fasting": "128 mg/dL",
-          "blood_sugar_postprandial": null,
-          "bmi": "30.0 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.0\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I want to understand what the echo means and what the next test will show.",
-        "doctor_note": "HPI: Patient returns to review echocardiogram obtained for exertional chest pressure (R07.9) and shortness of breath (R06.02). He continues to have intermittent symptoms with stairs; no symptoms at rest today. He is eager for clear explanation of test implications.\n\nReview of Systems: Positive for exertional dyspnea and chest pressure. Negative for fever or cough.\n\nPhysical Exam: No acute distress. Cardiovascular regular rhythm. Lungs clear. No edema.\n\nAssessment: TTE shows preserved LV systolic function with mild LV hypertrophy consistent with I10; does not evaluate inducible ischemia.\n\nPlan: Proceed with scheduled myocardial perfusion imaging (SPECT) CPT 78452 to assess rest/stress perfusion. Continue current medications including beta-blocker, amlodipine, aspirin, and statin; counsel on glucose control and weight management (E11.9, E66.9). Provide written test preparation instructions and discuss that knee OA (M17.11) may require pharmacologic stress protocol.",
-        "observations": [
-          "Echo reviewed: preserved EF; mild LVH (I10).",
-          "Symptoms persist with exertion (R07.9, R06.02)."
-        ],
-        "procedures_performed": [
-          "99214 - Office or other outpatient visit, established patient, level 4",
-          "93306 - Echocardiography, transthoracic, complete"
-        ],
-        "diagnoses": [
-          "R07.9 - Chest pain, unspecified",
-          "R06.02 - Shortness of breath",
-          "I10 - Essential (primary) hypertension",
-          "E11.9 - Type 2 diabetes mellitus without complications",
-          "E78.5 - Hyperlipidemia, unspecified",
-          "E66.9 - Obesity, unspecified",
-          "M17.11 - Unilateral primary osteoarthritis, right knee"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Priya Narang, MD, FACC (Cardiology)",
-          "Nuclear Cardiology Scheduling Team"
-        ],
-        "progress_notes": "Echo results reviewed; patient reassured regarding preserved systolic function but informed that perfusion testing evaluates different physiology. Scheduling for SPECT initiated.",
-        "follow_up_instructions": "Complete nuclear perfusion study as scheduled; follow up in cardiology clinic after test to review results; continue ER precautions."
-      },
-      {
-        "encounter_date": "2026-04-04",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-procedure assessment and instructions prior to myocardial perfusion imaging (SPECT).",
-        "provider": "Dr. Karen Fields, MD",
-        "provider_npi": "1356927408",
-        "facility": "UT Southwestern Medical Center, Family Medicine",
-        "vital_signs": {
-          "recorded_date": "2026-04-04",
-          "blood_pressure": "138/82 mmHg",
-          "heart_rate": "72 bpm",
-          "blood_sugar_fasting": "131 mg/dL",
-          "blood_sugar_postprandial": null,
-          "bmi": "30.1 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.1\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I\u2019m here to go over what I need to do before the nuclear heart test.",
-        "doctor_note": "HPI: Patient presents for pre-procedure counseling for planned SPECT myocardial perfusion imaging (CPT 78452). He continues to have intermittent exertional chest pressure (R07.9) and dyspnea (R06.02). He requests written instructions and clarification on medication and diet restrictions.\n\nReview of Systems: Positive for exertional chest pressure and exertional dyspnea. Denies acute symptoms at rest.\n\nPhysical Exam: Well-appearing. Cardiovascular regular rhythm. Lungs clear. No edema. Knee exam consistent with chronic OA.\n\nAssessment: (1) Exertional chest pain and dyspnea (R07.9, R06.02) undergoing further evaluation. (2) Cardiometabolic comorbidities (I10, E11.9, E78.5, E66.9). (3) Right knee OA (M17.11).\n\nPlan: Reviewed pre-test restrictions (caffeine avoidance) and fasting guidance. Reviewed diabetes medication considerations and home glucose monitoring. Continue current meds unless nuclear lab provides alternate instructions. Reinforced nitroglycerin and ER precautions. Confirmed procedure date and location and arranged follow-up to review results.",
-        "observations": [
-          "Patient prefers written pre-test instructions and confirms understanding by teach-back.",
-          "Knee OA limits prolonged walking (M17.11)."
-        ],
-        "procedures_performed": [
-          "99214 - Office or other outpatient visit, established patient, level 4"
-        ],
-        "diagnoses": [
-          "R07.9 - Chest pain, unspecified",
-          "R06.02 - Shortness of breath",
-          "I10 - Essential (primary) hypertension",
-          "E11.9 - Type 2 diabetes mellitus without complications",
-          "E78.5 - Hyperlipidemia, unspecified",
-          "E66.9 - Obesity, unspecified",
-          "M17.11 - Unilateral primary osteoarthritis, right knee"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Karen Fields, MD (Family Medicine)",
           "Dr. Priya Narang, MD, FACC (Cardiology)"
         ],
-        "progress_notes": "Pre-procedure counseling completed; patient continues intermittent exertional symptoms but stable at rest. Written instructions provided to reduce anxiety and improve adherence.",
-        "follow_up_instructions": "Attend nuclear cardiology appointment on 2026-05-15; avoid caffeine for 24 hours before; bring medication list and glucose meter; follow up with cardiology after results are available."
+        "progress_notes": "No interval deterioration; patient remains focused on diagnostic clarity. Medication adherence remains strong by report.",
+        "follow_up_instructions": "Keep nuclear cardiology appointment; avoid caffeine 24 hours prior; bring medication list and glucose log. Schedule cardiology follow-up 1-2 weeks after the test."
       }
     ],
     "images": [
       {
         "type": "Chest X-ray, 2 views",
         "date": "2026-03-18",
-        "provider": "Dr. Michael Levin, MD",
-        "facility": "UT Southwestern William P. Clements Jr. University Hospital - Radiology",
-        "findings": "Cardiomediastinal silhouette within normal size limits. No focal consolidation, pleural effusion, or pneumothorax. Mild thoracic aortic calcification noted. No acute cardiopulmonary abnormality."
+        "provider": "UT Southwestern Emergency Department",
+        "facility": "UT Southwestern University Hospitals - Radiology",
+        "findings": "Cardiomediastinal silhouette normal size. No focal consolidation, pleural effusion, or pneumothorax. Mild basilar atelectasis. No acute cardiopulmonary abnormality."
       }
     ],
     "reports": [
       {
         "type": "High-sensitivity Troponin T, CBC, CMP, Lipid panel, Hemoglobin A1c",
         "date": "2026-03-18",
-        "provider": "Dr. Michael Levin, MD",
-        "results": "Serial hs-TnT 8 ng/L to 9 ng/L (ref <14) without significant delta; CBC within reference range; CMP without acute abnormality, creatinine 1.02 mg/dL, eGFR 79; random glucose 156 mg/dL; lipid panel TC 172, LDL 96, HDL 41, TG 178; A1c 7.3%.",
-        "notes": "Collected during ED evaluation for exertional chest tightness and dyspnea; values support cardiometabolic risk factors (E11.9, E78.5) but do not evaluate inducible ischemia."
+        "provider": "UT Southwestern University Hospitals - Emergency Department",
+        "results": "hs-Troponin T <6 ng/L. CBC: WBC 7.1, Hgb 13.8, Plt 230, MCV 97 fL. CMP: Na 138, K 4.1, Cr 0.95, AST 72, ALT 30, Alk Phos 92, Total bili 0.7, Glucose 164. Lipids: TC 160, LDL 84, HDL 39, TG 185. HbA1c 7.5%.",
+        "notes": "Collected during ED visit for exertional chest tightness and dyspnea (R07.9, R06.02) in diagnostic workup prior to planned SPECT MPI (CPT 78452)."
+      },
+      {
+        "type": "CBC, CMP with GGT",
+        "date": "2026-03-09",
+        "provider": "Dr. Karen Fields, MD",
+        "results": "CBC: WBC 6.8, Hgb 13.6, Plt 224, MCV 98 fL. CMP: Cr 0.96, AST 78, ALT 32, Alk Phos 96, Total bili 0.8, Albumin 4.1. GGT 168 U/L.",
+        "notes": "Baseline labs obtained during symptom evaluation pathway supporting planned myocardial perfusion imaging SPECT (CPT 78452)."
       }
     ],
     "procedures": [
@@ -14208,49 +14327,49 @@
         "name": "Physical therapy evaluation and therapeutic exercise sessions (CPT 97110)",
         "date": "2026-02-10",
         "provider": "Dr. Hannah Cho, DPT",
-        "facility": "UT Southwestern Physical Medicine & Rehabilitation",
-        "reason": "Right knee osteoarthritis limiting mobility (M17.11).",
-        "notes": "Completed multi-visit PT course with home exercise program."
+        "facility": "UT Southwestern Outpatient Rehabilitation",
+        "reason": "Right knee osteoarthritis (M17.11) limiting mobility and exercise tolerance.",
+        "notes": "Completed course; home exercise program provided."
       },
       {
         "name": "Transthoracic echocardiogram (complete) (CPT 93306)",
         "date": "2026-04-01",
         "provider": "Dr. Priya Narang, MD, FACC",
-        "facility": "UT Southwestern Medical Center, Cardiology Diagnostic Lab",
-        "reason": "Assess cardiac structure/function in evaluation of chest pain and dyspnea (R07.9, R06.02) prior to SPECT MPI (CPT 78452).",
-        "notes": "Preserved LV systolic function; mild concentric LVH; no resting wall motion abnormality."
+        "facility": "UT Southwestern Medical Center, Cardiology",
+        "reason": "Baseline LV structure/function assessment in evaluation of exertional chest pressure and dyspnea (R07.9, R06.02) prior to planned SPECT MPI.",
+        "notes": "EF ~60%; mild concentric LVH; no significant valvular disease."
       }
     ],
     "social_history": {
       "tobacco_use": "Former smoker - quit 2008",
-      "tobacco_frequency": "~1 pack/day for 20 years (quit 2008)",
-      "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "1\u20132 drinks on weekends",
+      "tobacco_frequency": "Previously ~1 pack/day for 20 years",
+      "alcohol_use": "Social",
+      "alcohol_frequency": "Occasional",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-04-04",
-      "last_visit_reason": "Pre-procedure counseling for nuclear perfusion test and review of ongoing exertional symptoms",
-      "missed_appointment": false,
-      "missed_appointment_reason": null,
+      "last_visit_reason": "Pre-procedure counseling for nuclear myocardial perfusion imaging (CPT 78452)",
+      "missed_appointment": true,
+      "missed_appointment_reason": "Forgot physical therapy appointment due to work schedule conflict",
       "early_visit_reason": null,
-      "mental_health_history": "Situational anxiety related to health uncertainty; no formal diagnosis recorded",
-      "mental_health_current": "GAD-7: 6 (mild anxiety) on 2026-04-04; denies SI/HI",
-      "exercise_habits": "Short walks and PT home exercises; limited by right knee pain",
-      "diet_notes": "Lower sodium and fewer sugary beverages; stress-related snacking persists",
-      "family_history_relevant": "Father with hypertension and type 2 diabetes; older brother with hyperlipidemia; no confirmed premature coronary events documented in record."
+      "mental_health_history": null,
+      "mental_health_current": "GAD-7 score 6 (mild anxiety) reported during visit; prefers clear written instructions",
+      "exercise_habits": "Short walks 10-15 minutes, 3-4x/week as tolerated; limited by knee pain (M17.11)",
+      "diet_notes": "Lower sodium meals; fewer sugary beverages; reports stress-related snacking",
+      "family_history_relevant": "Father had myocardial infarction in early 60s; sister with type 2 diabetes; mother with hypertension"
     },
     "vital_signs_current": {
-      "recorded_date": "2026-04-04",
-      "blood_pressure": "138/82 mmHg",
-      "heart_rate": "72 bpm",
-      "blood_sugar_fasting": "131 mg/dL",
+      "recorded_date": "2026-04-08",
+      "blood_pressure": "144/82 mmHg",
+      "heart_rate": "71 bpm",
+      "blood_sugar_fasting": "129 mg/dL",
       "blood_sugar_postprandial": null,
       "bmi": "30.1 kg/m\u00b2",
-      "oxygen_saturation": "97%",
-      "temperature": "98.1\u00b0F",
+      "oxygen_saturation": "98%",
+      "temperature": "98.2\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "PSA 1.8 ng/mL on 2025-08-10 per PCP record; reports nocturia 1x/night, no dysuria or hematuria. Last prostate screening discussion at annual visit 2025-08-10; no known history of prostate cancer.",
+    "gender_specific_history": "Male: PSA 1.6 ng/mL measured 2025-06-03 during annual screening; no history of prostate cancer. Reports mild nocturia 1-2x/night without dysuria; no hematuria. Colon cancer screening up to date per patient with colonoscopy in 2019 (details not in current chart extract).",
     "insurance_selection": {
       "provider_id": "UHC",
       "plan_type": "Medicare Advantage",
@@ -16580,20 +16699,20 @@
     },
     "contact": {
       "relationship": "Emergency Contact",
-      "name": "Fiona Fox",
+      "name": "Nick Fury",
       "telecom": "512-555-0199",
-      "address": "1212 S Congress Ave, Austin, TX 78704",
-      "gender": "female",
+      "address": "1401 Lavaca St, Austin, TX 78701",
+      "gender": "male",
       "organization": "N/A",
-      "period_start": "2012-05-01",
+      "period_start": "2019-05-01",
       "period_end": "ongoing"
     },
     "provider": {
-      "generalPractitioner": "Dr. Maya Patel, MD",
+      "generalPractitioner": "Dr. Maya Patel, MD (UT Health Austin - Internal Medicine)",
       "formatted_npi": "2147003581",
-      "managingOrganization": "UT Health Austin - Internal Medicine",
-      "address": "1601 Trinity St, Austin, TX 78712",
-      "phone": "512-555-0100"
+      "managingOrganization": "UT Health Austin",
+      "address": "1600 W 38th St, Suite 200, Austin, TX 78731",
+      "phone": "512-555-0101"
     },
     "link": {
       "other_patient": "N/A",
@@ -16604,22 +16723,22 @@
       "payer_name": "UnitedHealthcare",
       "provider_abbreviation": "UHC",
       "provider_policy_url": "https://www.uhcprovider.com/",
-      "plan_name": "Texas AARP Medicare Advantage Plans",
-      "plan_type": "Medicare Advantage",
-      "plan_id": "UHC_TX_MA",
-      "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-aarp-medcomp-sechorizons.html",
+      "plan_name": "Texas Select HMO (Commercial)",
+      "plan_type": "Commercial/HMO",
+      "plan_id": "UHC_TX_COMM_HMO",
+      "plan_policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html",
       "member_id": "MBR-246360",
       "policy_number": "POL-2026-5662",
-      "effective_date": "2024-01-01",
+      "effective_date": "2026-01-01",
       "termination_date": "ongoing",
-      "copay_amount": "$35",
-      "deductible_amount": "$0"
+      "copay_amount": "$50",
+      "deductible_amount": "$2000"
     },
-    "expected_procedure_date": "2026-05-12",
+    "expected_procedure_date": "2026-05-14",
     "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
     "procedure_facility": {
-      "facility_name": "Ascension Seton Medical Center Austin",
-      "street_address": "1201 W 38th St",
+      "facility_name": "St. David's Medical Center",
+      "street_address": "919 E 32nd St",
       "city": "Austin",
       "state": "TX",
       "zip_code": "78705",
@@ -16628,19 +16747,20 @@
     "pa_request": {
       "requesting_provider": "Dr. Arjun Mehta, MD",
       "urgency_level": "Pre-Service Routine",
-      "clinical_justification": "Patient with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) has progressive fatigue and intermittent nausea (R11.0) with anemia of CKD (D63.1). Tunneled dialysis catheter placement (CPT 36558) is requested to establish dialysis-capable access should renal replacement therapy be initiated given symptom burden and declining renal function.",
+      "clinical_justification": "Patient with advanced chronic kidney disease and progressive uremic symptoms (fatigue, nausea) is being prepared for initiation of hemodialysis access. Due to anticipated near-term need for dialysis and limited immediate availability of permanent access, a tunneled central venous catheter is requested to enable outpatient dialysis initiation while access planning continues. Comorbid hypertensive CKD (I12.9) and anemia of CKD (D63.1) contribute to reduced physiologic reserve and support timely access planning.",
       "supporting_diagnoses": [
-        "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
         "N18.4 - Chronic kidney disease, stage 4 (severe)",
+        "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
         "D63.1 - Anemia in chronic kidney disease",
-        "R11.0 - Nausea"
+        "R11.0 - Nausea",
+        "R53.83 - Other fatigue"
       ],
-      "previous_treatments": "Medication management for hypertension/volume (amlodipine, furosemide), metabolic acidosis (sodium bicarbonate), and anemia (oral iron). Past lisinopril trial discontinued after renal function concern and mild hyperkalemia. Symptomatic nausea treatment with ondansetron as needed. Limited vein mapping completed without definitive AV fistula suitability conclusion.",
-      "expected_outcome": "Dialysis access availability if hemodialysis is initiated; reduced need for repeated peripheral IV attempts during acute care visits.",
-      "units_requested": "1"
+      "previous_treatments": "Blood pressure and volume management with amlodipine and furosemide; metabolic acidosis management with oral sodium bicarbonate; anemia support with oral iron. Prior trial of lisinopril was discontinued after concern for renal function decline and mild hyperkalemia. Symptomatic nausea management with ondansetron as needed.",
+      "expected_outcome": "Placement of tunneled dialysis catheter to allow initiation of hemodialysis and facilitate outpatient management while long-term access planning continues.",
+      "units_requested": "24 sessions"
     },
-    "bio_narrative": "Dina Fox is a 60-year-old woman living in Austin, Texas, followed by Dr. Maya Patel for hypertensive chronic kidney disease. Over the last year she has noticed gradually worsening stamina, and over the past 2\u20133 months she has had more frequent days of pronounced fatigue with intermittent nausea. She works rotating shifts, which has made meal planning and strict low-sodium adherence inconsistent. She uses a weekly pill organizer and generally takes her medications as prescribed, but acknowledges missing occasional doses on long workdays, which adds to her anxiety about her health trajectory. On 2026-03-10, she presented to primary care reporting exhaustion and home blood pressure readings that had been running high. Management focused on blood pressure and volume control for I12.9 and monitoring of stage 4 CKD (N18.4). On 2026-03-24, she went to the emergency department for nausea and feeling \u201cwiped out,\u201d where labs were obtained demonstrating reduced kidney function with anemia consistent with D63.1. Peripheral venous access was difficult, requiring additional time and attempts for IV placement. A renal ultrasound on 2026-03-31 showed chronic medical renal disease without hydronephrosis. She was seen by nephrology on 2026-04-02 to discuss CKD progression and potential renal replacement therapy pathways. Dina reports she has not started dialysis and is unclear on the exact timing for initiation, but she understands that access planning is being discussed as symptoms have become more disruptive. A limited upper extremity venous mapping study was completed on 2026-04-04 for access planning; the available report provides vein diameter measurements but does not include a definitive statement regarding suitability for an AV fistula. Her family history is notable for hypertension in both parents and chronic kidney disease in an older sibling, which heightens her concern about long-term kidney outcomes. She is a former smoker, uses alcohol rarely, and denies illicit drug use. She is actively engaged in psychotherapy every two weeks to manage stress and irritability that increase when plans feel uncertain. The current referral requests insertion of a tunneled central venous catheter for dialysis (CPT 36558) to provide dialysis-capable access as her symptom burden continues in the setting of progressive CKD.",
-    "has_fit_fobt_result": false,
+    "bio_narrative": "Dina Fox is a 60-year-old woman living in Austin, Texas who has been followed for hypertensive chronic kidney disease (I12.9) with progression to chronic kidney disease stage 4 (N18.4). She works long, irregular shifts that make routine meal planning and medication timing challenging, and she has developed a strong preference for clear, rule-based instructions to reduce uncertainty when managing health tasks. Over the past several months she has noticed steadily worsening fatigue (R53.83) that limits her stamina during workdays, along with intermittent nausea (R11.0) that tends to be worse in the mornings. She keeps a weekly pill organizer and generally tracks her medications carefully, but she admits missing occasional doses on particularly long workdays. Her care has centered on slowing progression and managing complications of CKD. She remains on amlodipine and furosemide for blood pressure and volume management, and she takes sodium bicarbonate for metabolic acidosis related to CKD. She also takes oral iron for anemia in chronic kidney disease (D63.1). A prior trial of lisinopril was stopped after concern for worsening renal function and mild hyperkalemia. In late March 2026, her symptoms escalated and she presented to the emergency department with nausea and profound fatigue. Laboratory testing at that time demonstrated anemia and significant azotemia with low bicarbonate, supporting ongoing CKD-related complications. She also experienced difficult peripheral IV placement during that visit, reinforcing the challenges of reliable vascular access. Diagnostic evaluation included an ultrasound of the kidneys and bladder (2026-03-31) showing bilaterally small, echogenic kidneys with mild cortical thinning consistent with chronic medical renal disease. During a nephrology consultation on 2026-04-02, she discussed the increasing impact of fatigue and nausea on daily functioning and reviewed dialysis access planning. Limited upper extremity venous mapping was arranged as part of planning. She then completed a pre-op evaluation on 2026-04-05 for the requested insertion of a tunneled central venous catheter for dialysis (CPT 36558) at St. David's Medical Center in Austin. The referral reflects the anticipated need for hemodialysis access in the near term, with the goal of establishing dependable access to support outpatient dialysis initiation while longer-term access planning proceeds. Socially, she is a former smoker with rare alcohol use and no illicit drug use. She is engaged in psychotherapy every two weeks to manage anxiety symptoms and irritability that increase with uncertainty about medical plans. Family history is notable for hypertension and kidney disease in a first-degree relative, which has influenced her perception of risk and motivated her to seek structured guidance as she prepares for renal replacement therapy planning.",
+    "has_fit_fobt_result": null,
     "medications": [
       {
         "brand": "Norvasc",
@@ -16649,7 +16769,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "current",
-        "start_date": "2024-08-14",
+        "start_date": "2025-08-01",
         "end_date": "ongoing",
         "reason": "Blood pressure control in hypertensive CKD (I12.9)."
       },
@@ -16660,7 +16780,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "current",
-        "start_date": "2025-01-05",
+        "start_date": "2025-09-15",
         "end_date": "ongoing",
         "reason": "Volume and blood pressure management in CKD/HTN (I12.9, N18.4)."
       },
@@ -16668,7 +16788,7 @@
         "brand": "Zofran ODT",
         "generic_name": "Ondansetron 4 mg ODT",
         "dosage": "Dissolve 1 tablet on tongue every 8 hours as needed for nausea",
-        "qty": "20 tablets",
+        "qty": "15 tablets",
         "prescribed_by": "Dr. Colin Reyes, MD",
         "status": "current",
         "start_date": "2026-03-24",
@@ -16682,7 +16802,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "ongoing",
-        "start_date": "2025-09-02",
+        "start_date": "2025-11-20",
         "end_date": "ongoing",
         "reason": "Anemia support in CKD (D63.1)."
       },
@@ -16693,7 +16813,7 @@
         "qty": "180 tablets",
         "prescribed_by": "Dr. Arjun Mehta, MD",
         "status": "current",
-        "start_date": "2026-04-02",
+        "start_date": "2026-02-12",
         "end_date": "ongoing",
         "reason": "Mild metabolic acidosis associated with CKD (N18.4)."
       },
@@ -16704,9 +16824,20 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Maya Patel, MD",
         "status": "past",
-        "start_date": "2025-11-10",
-        "end_date": "2026-02-20",
+        "start_date": "2025-12-01",
+        "end_date": "2026-02-01",
         "reason": "Trial for hypertension/proteinuria; stopped after concern for worsening renal function and mild hyperkalemia in CKD (I12.9, R80.9)."
+      },
+      {
+        "brand": "Eliquis",
+        "generic_name": "Apixaban 5 mg",
+        "dosage": "1 tablet by mouth twice daily",
+        "qty": "60 tablets",
+        "prescribed_by": "Dr. Colin Reyes, MD",
+        "status": "current",
+        "start_date": "2026-03-24",
+        "end_date": "ongoing",
+        "reason": "Thrombosis prophylaxis during periods of reduced mobility and access planning in advanced CKD with fatigue (N18.4, R53.83)."
       }
     ],
     "allergies": [
@@ -16715,14 +16846,14 @@
         "allergy_type": "Drug",
         "reaction": "Hives and itching",
         "severity": "Moderate",
-        "onset_date": "2001-05-12"
+        "onset_date": "2003-05-10"
       },
       {
         "allergen": "Latex",
         "allergy_type": "Latex",
         "reaction": "Contact rash",
         "severity": "Mild",
-        "onset_date": "2015-09-01"
+        "onset_date": "2012-09-01"
       }
     ],
     "vaccinations": [
@@ -16730,8 +16861,8 @@
         "vaccine_name": "Influenza (quadrivalent)",
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-05",
-        "administered_by": "UT Health Austin - Internal Medicine",
-        "dose_number": "Annual",
+        "administered_by": "UT Health Austin",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
@@ -16746,7 +16877,7 @@
         "vaccine_name": "Pneumococcal PCV20",
         "vaccine_type": "Subunit",
         "date_administered": "2025-01-18",
-        "administered_by": "UT Health Austin - Internal Medicine",
+        "administered_by": "UT Health Austin",
         "dose_number": "1",
         "reason": "Routine Immunization"
       },
@@ -16754,7 +16885,7 @@
         "vaccine_name": "Tdap",
         "vaccine_type": "Toxoid",
         "date_administered": "2021-06-22",
-        "administered_by": "Travis County Public Health",
+        "administered_by": "Travis County Health & Human Services",
         "dose_number": "1",
         "reason": "Routine Immunization"
       }
@@ -16765,17 +16896,18 @@
         "cpt_code": "90834",
         "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease"
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)"
         ],
         "provider": "Dr. Simone Harper, PhD",
-        "provider_npi": "1987654321",
-        "facility": "Austin MindCare Clinic",
-        "start_date": "2025-12-03",
+        "provider_npi": "2147006112",
+        "facility": "Austin Anxiety & Behavioral Health Center",
+        "start_date": "2026-01-09",
         "end_date": "ongoing",
         "frequency": "Every 2 weeks",
         "status": "Active",
-        "reason": "Stress and anxiety symptoms related to chronic medical illness management and uncertainty around care plans.",
-        "notes": "Focus on structured routines, coping skills, and adherence strategies; patient prefers clear, rule-based instructions."
+        "reason": "Anxiety and stress management related to chronic illness uncertainty and adherence routines in CKD.",
+        "notes": "Focus on structured routines, coping strategies for uncertainty, and adherence planning around medical appointments and procedures."
       }
     ],
     "behavioral_notes": "Patient is punctual and strongly prefers clear, rule-based instructions; she tracks medications in a weekly pill organizer but admits missing occasional doses on long workdays. Diet adherence is inconsistent due to shift work, though she is attempting lower sodium choices. Former smoker; rare alcohol use; denies illicit drugs. Reports elevated stress and irritability around uncertainty in her medical plan; engaged in psychotherapy and uses structured routines to manage anxiety symptoms.",
@@ -16783,14 +16915,104 @@
       {
         "encounter_date": "2026-03-10",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluation of fatigue and elevated home blood pressure readings in the setting of known hypertensive CKD.",
-        "provider": "Dr. Maya Patel, MD",
+        "purpose_of_visit": "Evaluation of fatigue and elevated home blood pressure readings in the setting of hypertensive CKD and stage 4 CKD.",
+        "provider": "Dr. Maya Patel, MD (UT Health Austin - Internal Medicine)",
         "provider_npi": "2147003581",
-        "facility": "UT Health Austin - Internal Medicine",
+        "facility": "UT Health Austin",
         "vital_signs": {
           "recorded_date": "2026-03-10",
-          "blood_pressure": "158/92 mmHg",
-          "heart_rate": "86 bpm",
+          "blood_pressure": "168/96 mmHg",
+          "heart_rate": "92 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "I\u2019m exhausted and my blood pressure has been high.",
+        "doctor_note": "HPI: Dina Fox reports progressive fatigue over the last month with decreased stamina during long work shifts. She notes elevated home BP readings despite taking amlodipine; she admits missing occasional doses when schedules are unpredictable. She reports intermittent morning nausea without persistent vomiting and is worried due to known CKD.\n\nReview of Systems: Positive for fatigue (R53.83) and intermittent nausea (R11.0). Negative for chest pain, resting dyspnea, fever, dysuria, or focal neurologic deficits.\n\nPhysical Exam: Tired appearing but in no acute distress. Cardiovascular exam regular rate/rhythm; trace ankle edema. Lungs clear to auscultation bilaterally. Abdomen soft and non-tender. No rash.\n\nAssessment: Hypertensive CKD (I12.9) with elevated BP; CKD stage 4 (N18.4) with fatigue and nausea symptoms; anemia in CKD (D63.1) managed with oral iron.\n\nPlan: Continue current medications; reinforce adherence strategies and low sodium diet. Coordinate nephrology for access planning and diagnostic imaging. Discussed dialysis access planning may include tunneled catheter placement (CPT 36558) depending on symptom trajectory.",
+        "observations": [
+          "Medication adherence impacted by shift work; uses pill organizer.",
+          "Trace peripheral edema.",
+          "Reports anxiety when plans are uncertain; in psychotherapy."
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit, established patient, moderate MDM"
+        ],
+        "diagnoses": [
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "R53.83 - Other fatigue",
+          "R11.0 - Nausea",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Maya Patel, MD",
+          "Nephrology referral coordinator"
+        ],
+        "progress_notes": "Symptoms of fatigue and intermittent nausea are more prominent than prior baseline per patient report. Blood pressure remains elevated in clinic, and adherence barriers were reviewed.",
+        "follow_up_instructions": "Return in 6 weeks for BP and symptom recheck or sooner for worsening nausea, decreased intake, shortness of breath, or confusion."
+      },
+      {
+        "encounter_date": "2026-03-24",
+        "encounter_type": "ER Visit",
+        "purpose_of_visit": "Acute evaluation of nausea and profound fatigue in patient with advanced CKD.",
+        "provider": "Dr. Colin Reyes, MD",
+        "provider_npi": "2147007445",
+        "facility": "St. David's Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-03-24",
+          "blood_pressure": "174/98 mmHg",
+          "heart_rate": "94 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "30.2 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "I feel nauseated and wiped out.",
+        "doctor_note": "HPI: Patient presents with 2 days of worsened nausea and generalized fatigue. Reports decreased oral intake and mild orthostatic lightheadedness. No chest pain or resting dyspnea. She notes prior difficult peripheral IV placement and anxiety about repeated needle sticks.\n\nReview of Systems: Positive for nausea (R11.0) and fatigue (R53.83). Denies fever, diarrhea, hematemesis, dysuria, or focal weakness.\n\nPhysical Exam: Mild dehydration by mucous membranes; otherwise benign abdominal exam. Regular cardiac rhythm. Lungs clear. Trace bilateral edema.\n\nAssessment: CKD stage 4 (N18.4) with symptom flare, hypertensive CKD (I12.9), anemia in CKD (D63.1).\n\nPlan: Obtain CBC/CMP; treat nausea with ondansetron; encourage oral hydration within renal diet guidance. Discharge with outpatient nephrology follow-up and discussion that dialysis access planning may include tunneled catheter placement (CPT 36558) as symptoms progress.",
+        "observations": [
+          "Difficult peripheral venous access noted; multiple attempts required.",
+          "Symptomatic improvement after antiemetic."
+        ],
+        "procedures_performed": [
+          "99284 - Emergency department visit, evaluation and management",
+          "36410 - Venipuncture, age 3 years or older, necessitating physician's skill",
+          "CPT 36000 - Introduction of needle or intracatheter, vein (peripheral IV placement; difficult access)"
+        ],
+        "diagnoses": [
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
+          "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue"
+        ],
+        "medications_prescribed": [
+          "Zofran ODT (Ondansetron 4 mg ODT) dissolve 1 tablet on tongue every 8 hours as needed for nausea"
+        ],
+        "care_team": [
+          "Dr. Colin Reyes, MD",
+          "ED nursing team",
+          "Phlebotomy"
+        ],
+        "progress_notes": "Acute nausea improved with ondansetron; patient discharged for outpatient nephrology follow-up. Labs demonstrate ongoing CKD-related abnormalities and anemia.",
+        "follow_up_instructions": "Follow with nephrology within 2 weeks; return to ED for inability to tolerate fluids, shortness of breath, chest pain, confusion, or decreased urine output."
+      },
+      {
+        "encounter_date": "2026-04-02",
+        "encounter_type": "Specialist Consult",
+        "purpose_of_visit": "Nephrology evaluation for progressive fatigue/nausea and dialysis access planning in advanced CKD.",
+        "provider": "Dr. Arjun Mehta, MD",
+        "provider_npi": "2147009126",
+        "facility": "St. David's Medical Center",
+        "vital_signs": {
+          "recorded_date": "2026-04-02",
+          "blood_pressure": "158/90 mmHg",
+          "heart_rate": "82 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "30.2 kg/m\u00b2",
@@ -16798,162 +17020,72 @@
           "temperature": "98.2\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "I\u2019m exhausted and my blood pressure has been high.",
-        "doctor_note": "HPI: 60-year-old female with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents with 6\u20138 weeks of worsening fatigue and higher home BP readings. She reports occasional missed doses on long workdays and inconsistent low-sodium diet due to shift work. Denies chest pain or shortness of breath at rest. Intermittent nausea is present but not daily.\n\nROS: Positive for fatigue. GI positive for intermittent nausea without vomiting. CV negative for chest pain. Resp negative for dyspnea at rest. GU negative for dysuria.\n\nPhysical Exam: Appears tired but in no acute distress. Heart regular rate/rhythm. Lungs clear. Abdomen soft, non-tender. Trace ankle edema.\n\nAssessment: I12.9 hypertensive CKD; N18.4 CKD stage 4; D63.1 anemia in CKD (known history); R11.0 nausea intermittent.\n\nPlan: Continue amlodipine and furosemide. Reinforce medication adherence and low-sodium choices. Ordered follow-up labs and referred to nephrology for CKD progression discussion. Return precautions reviewed.",
-        "observations": [
-          "Fatigue with mild edema noted.",
-          "BP elevated in clinic."
-        ],
-        "procedures_performed": [
-          "99214 - Office or other outpatient visit, established patient, level 4"
-        ],
-        "diagnoses": [
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
-          "N18.4 - Chronic kidney disease, stage 4 (severe)",
-          "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea"
-        ],
-        "medications_prescribed": [
-          "Continue Norvasc (Amlodipine 10 mg) 1 tablet by mouth daily",
-          "Continue Lasix (Furosemide 20 mg) 1 tablet by mouth each morning"
-        ],
-        "care_team": [
-          "Dr. Maya Patel, MD"
-        ],
-        "progress_notes": "Symptoms persisted despite stable antihypertensive regimen; nephrology referral placed for further evaluation.",
-        "follow_up_instructions": "Follow up with nephrology as scheduled. Monitor home BP and bring log. Seek urgent care for worsening nausea/vomiting, confusion, chest pain, shortness of breath, or decreased urination."
-      },
-      {
-        "encounter_date": "2026-03-24",
-        "encounter_type": "ER Visit",
-        "purpose_of_visit": "ED evaluation for nausea and marked fatigue/weakness in a patient with advanced CKD.",
-        "provider": "Dr. Colin Reyes, MD",
-        "provider_npi": "1765432098",
-        "facility": "Ascension Seton Medical Center Austin - Emergency Department",
-        "vital_signs": {
-          "recorded_date": "2026-03-24",
-          "blood_pressure": "166/94 mmHg",
-          "heart_rate": "92 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": null,
-          "oxygen_saturation": "97%",
-          "temperature": "98.5\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "I feel nauseated and wiped out.",
-        "doctor_note": "HPI: 60-year-old female with known hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents with nausea and generalized weakness. She reports poor oral intake earlier today and feels more fatigued than baseline. No chest pain, no shortness of breath at rest. She is not on dialysis. Past history notable for anemia in CKD.\n\nROS: GI positive for nausea; denies persistent vomiting. Constitutional positive for fatigue. CV negative for chest pain. Resp negative for dyspnea.\n\nPhysical Exam: Alert, oriented, dry mucous membranes. Lungs clear. Heart regular. Abdomen soft, non-tender. No focal neurologic deficits.\n\nAssessment: R11.0 nausea, N18.4 CKD stage 4, D63.1 anemia in CKD, I12.9 hypertensive CKD.\n\nPlan: CBC/CMP obtained. Difficult IV access; peripheral IV placed after multiple attempts. Treated symptomatically with ondansetron and oral hydration as tolerated. Discharged with instructions to follow with PCP and nephrology; return for worsening symptoms.",
-        "observations": [
-          "Decreased oral intake noted.",
-          "Peripheral access difficult; required multiple attempts."
-        ],
-        "procedures_performed": [
-          "99284 - Emergency department visit, level 4",
-          "36410 - Venipuncture, age 3 years or older, necessitating physician's skill (separate procedure)"
-        ],
-        "diagnoses": [
-          "R11.0 - Nausea",
-          "N18.4 - Chronic kidney disease, stage 4 (severe)",
-          "D63.1 - Anemia in chronic kidney disease",
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease"
-        ],
-        "medications_prescribed": [
-          "Zofran ODT (Ondansetron 4 mg ODT) dissolve 1 tablet on tongue every 8 hours as needed for nausea"
-        ],
-        "care_team": [
-          "Dr. Colin Reyes, MD",
-          "ED nursing staff"
-        ],
-        "progress_notes": "ED visit highlighted symptom recurrence and limited physiologic reserve with CKD; outpatient follow-up emphasized.",
-        "follow_up_instructions": "Follow up with PCP within 1 week and nephrology as scheduled. Return to ED for persistent vomiting, inability to keep fluids down, chest pain, shortness of breath, confusion, or decreased urine output."
-      },
-      {
-        "encounter_date": "2026-04-02",
-        "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Nephrology consultation for stage 4 CKD symptoms and discussion of renal replacement therapy options and access planning.",
-        "provider": "Dr. Arjun Mehta, MD",
-        "provider_npi": "2315987421",
-        "facility": "Ascension Seton Medical Center Austin",
-        "vital_signs": {
-          "recorded_date": "2026-04-02",
-          "blood_pressure": "154/88 mmHg",
-          "heart_rate": "84 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "30.2 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.1\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
         "chief_complaint": "I\u2019m tired all the time and nauseated on and off.",
-        "doctor_note": "HPI: Patient with I12.9 and N18.4 reports progressive fatigue and intermittent nausea after recent ED visit. She is not on dialysis and is seeking guidance on next steps. She reports adherence is generally good but variable with shift work.\n\nROS: Positive for fatigue and nausea. No chest pain. No dyspnea at rest.\n\nPhysical Exam: Trace edema; otherwise nonfocal exam.\n\nAssessment: N18.4 CKD stage 4; I12.9 hypertensive CKD; D63.1 anemia in CKD; R11.0 nausea.\n\nPlan: Continue current meds. Start sodium bicarbonate for low CO2 noted on ER CMP. Discussed dialysis modalities at a high level; ordered limited venous mapping to inform access planning. Follow up with labs prior to next visit.",
+        "doctor_note": "HPI: Patient with hypertensive CKD (I12.9) and CKD stage 4 (N18.4) reports several weeks of worsening fatigue and intermittent nausea. She continues sodium bicarbonate and diuretic therapy. She notes ED labs on 2026-03-24 showed anemia (D63.1), azotemia, low bicarbonate, and mild hyperkalemia. She reports anxiety about access planning and recalls difficult peripheral IV placement.\n\nReview of Systems: Fatigue and nausea present; no chest pain or fever. No dysuria.\n\nPhysical Exam: Alert, tired appearing. Cardiovascular regular rhythm. Lungs clear. Trace ankle edema.\n\nAssessment: Advanced CKD with symptom burden and CKD complications including anemia and metabolic acidosis. Planning for renal replacement therapy access; tunneled dialysis catheter (CPT 36558) discussed as part of access strategy.\n\nPlan: Continue current meds and renal diet counseling. Ordered limited upper extremity venous mapping for access planning and reviewed renal ultrasound findings consistent with chronic medical renal disease. Proceed with pre-op evaluation for tunneled catheter placement and provide catheter care education.",
         "observations": [
-          "Discussed renal replacement options without documented dialysis start date.",
-          "Access planning initiated with limited vein mapping order."
+          "Trace edema; no respiratory distress.",
+          "Patient uses structured routines to manage anxiety; engaged in psychotherapy."
         ],
         "procedures_performed": [
-          "99204 - Office or other outpatient visit, new patient, level 4"
+          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate MDM"
         ],
         "diagnoses": [
           "N18.4 - Chronic kidney disease, stage 4 (severe)",
           "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
           "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea"
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue"
         ],
-        "medications_prescribed": [
-          "Sodium Bicarbonate (Sodium bicarbonate 650 mg) 1 tablet by mouth twice daily"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Arjun Mehta, MD",
           "Dr. Maya Patel, MD"
         ],
-        "progress_notes": "Nephrology initiated additional medical therapy and began access planning steps; patient remains pre-dialysis.",
-        "follow_up_instructions": "Schedule labs in 2\u20134 weeks before nephrology follow-up. Continue current medications. Call clinic for worsening nausea, vomiting, confusion, shortness of breath, or reduced urine output."
+        "progress_notes": "Symptoms persist but are intermittently controlled with PRN ondansetron; ongoing CKD complication management. Access planning initiated with imaging order and pre-op scheduling.",
+        "follow_up_instructions": "Follow up after imaging and pre-op evaluation; continue current medication regimen and renal diet guidance."
       },
       {
         "encounter_date": "2026-04-05",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-operative evaluation prior to requested tunneled hemodialysis catheter placement (CPT 36558).",
-        "provider": "Dr. Lena Tran, MD",
-        "provider_npi": "3098456712",
-        "facility": "Ascension Seton Medical Center Austin - Pre-Op Clinic",
+        "purpose_of_visit": "Pre-operative clearance for tunneled dialysis catheter placement requested for anticipated hemodialysis initiation.",
+        "provider": "Dr. Maya Patel, MD (UT Health Austin - Internal Medicine)",
+        "provider_npi": "2147003581",
+        "facility": "St. David's Medical Center",
         "vital_signs": {
           "recorded_date": "2026-04-05",
-          "blood_pressure": "150/86 mmHg",
-          "heart_rate": "80 bpm",
+          "blood_pressure": "162/92 mmHg",
+          "heart_rate": "86 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "30.2 kg/m\u00b2",
+          "bmi": "36.1 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.0\u00b0F",
+          "temperature": "98.1\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m here for pre-op clearance for a dialysis catheter.",
-        "doctor_note": "HPI: 60-year-old female with hypertensive CKD (I12.9) and stage 4 CKD (N18.4) presents for pre-op evaluation for requested tunneled dialysis catheter insertion (CPT 36558). She reports fatigue and intermittent nausea; denies chest pain or shortness of breath at rest. She is not currently receiving dialysis treatments and does not have a documented dialysis start date in the pre-op paperwork.\n\nROS: Positive fatigue and nausea; otherwise negative as reviewed.\n\nPhysical Exam: Well-appearing, no acute distress. Airway Mallampati II. Heart regular. Lungs clear. Trace lower extremity edema.\n\nAssessment: Pre-op evaluation for requested dialysis catheter in patient with N18.4/I12.9 and anemia of CKD (D63.1).\n\nPlan: Review recent labs/imaging. Counsel on peri-procedural infection/bleeding risks and line care basics. Medication review performed; no anticoagulants documented. Continue amlodipine, furosemide, sodium bicarbonate, and iron; continue ondansetron PRN. Proceed with scheduling per interventional radiology.\n\nConcurrent Care Reference: Patient is actively engaged in Mental Health / Psychotherapy every 2 weeks with Dr. Simone Harper, PhD.",
+        "doctor_note": "HPI: Patient presents for pre-op evaluation prior to requested tunneled central venous catheter insertion for dialysis (CPT 36558). She reports ongoing fatigue (R53.83) and intermittent nausea (R11.0) related to CKD stage 4 (N18.4). She denies chest pain or dyspnea at rest. Allergies to penicillin and latex reviewed. Current medication regimen reviewed.\n\nReview of Systems: Positive for fatigue and intermittent nausea; negative for fever and chest pain.\n\nPhysical Exam: Appears fatigued, hemodynamically stable. Cardiovascular exam regular rhythm; trace edema. Lungs clear. Abdomen soft.\n\nAssessment: Advanced CKD with comorbid hypertensive CKD and anemia; preparing for tunneled dialysis catheter placement.\n\nPlan: Proceed with planned catheter placement at St. David's Medical Center Interventional Radiology. Continue amlodipine and sodium bicarbonate morning of procedure; furosemide per procedural team. Reviewed latex-free supply needs and antibiotic allergy considerations. Noted active psychotherapy (every 2 weeks) as concurrent care.",
         "observations": [
-          "Pre-op paperwork references dialysis catheter request; dialysis start plan not documented.",
-          "Active psychotherapy noted in pre-op assessment."
+          "Latex allergy noted for equipment selection.",
+          "Continues psychotherapy for anxiety and adherence routines."
         ],
         "procedures_performed": [
-          "99203 - Office or other outpatient visit, new patient, level 3"
+          "99214 - Office or other outpatient visit, established patient, moderate MDM"
         ],
         "diagnoses": [
-          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
           "N18.4 - Chronic kidney disease, stage 4 (severe)",
+          "I12.9 - Hypertensive chronic kidney disease with stage 1 through stage 4 chronic kidney disease, or unspecified chronic kidney disease",
           "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea"
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue"
         ],
-        "medications_prescribed": [
-          "No new medications prescribed at this visit"
-        ],
+        "medications_prescribed": [],
         "care_team": [
-          "Dr. Lena Tran, MD",
-          "Interventional Radiology scheduling team",
+          "Dr. Maya Patel, MD",
           "Dr. Arjun Mehta, MD",
-          "Dr. Maya Patel, MD"
+          "Interventional Radiology scheduling"
         ],
-        "progress_notes": "Pre-op assessment completed with review of available studies; patient remains pre-dialysis with ongoing symptoms.",
-        "follow_up_instructions": "Follow IR scheduling instructions and arrive NPO per anesthesia guidance if applicable. Bring updated medication list. Call clinic for fever, worsening shortness of breath, chest pain, or uncontrolled vomiting."
+        "progress_notes": "Pre-op evaluation completed; patient understands plan for tunneled catheter placement and peri-procedure instructions.",
+        "follow_up_instructions": "Follow up with nephrology in 4 weeks for repeat evaluation and decision on proceeding with dialysis initiation plan."
       }
     ],
     "images": [
@@ -16961,15 +17093,15 @@
         "type": "Ultrasound Kidneys and Bladder",
         "date": "2026-03-31",
         "provider": "Dr. Maya Patel, MD",
-        "facility": "Ascension Seton Medical Center Austin",
-        "findings": "Bilateral kidneys small with increased cortical echogenicity and mild cortical thinning, consistent with chronic medical renal disease. No hydronephrosis or obstructing stone identified. Bladder partially distended without focal mass noted."
+        "facility": "St. David's Medical Center",
+        "findings": "Bilateral kidneys are small with increased echogenicity and mild cortical thinning; no hydronephrosis. Findings consistent with chronic medical renal disease (N18.4, I12.9) and used for pre-procedure planning for dialysis access including requested tunneled catheter (CPT 36558)."
       },
       {
         "type": "Upper Extremity Venous Mapping (limited)",
         "date": "2026-04-04",
         "provider": "Dr. Arjun Mehta, MD",
-        "facility": "Ascension Seton Medical Center Austin - Vascular Lab",
-        "findings": "Limited duplex mapping with superficial vein diameters recorded (cephalic ~2.0\u20132.6 mm; basilic ~2.7\u20133.1 mm). No thrombosis documented in segments visualized. Report lacks arterial mapping and does not state AV fistula suitability or recommended site."
+        "facility": "St. David's Medical Center",
+        "findings": "Limited mapping demonstrates patency of evaluated venous segments including visualized bilateral internal jugular veins; full-length mapping and central venous evaluation limited. Study obtained as part of preparation for dialysis access planning for requested tunneled catheter insertion (CPT 36558)."
       }
     ],
     "reports": [
@@ -16977,8 +17109,8 @@
         "type": "CBC/CMP",
         "date": "2026-03-24",
         "provider": "Dr. Colin Reyes, MD",
-        "results": "Hgb 9.6 g/dL; Cr 3.1 mg/dL; eGFR 16 mL/min/1.73m\u00b2; BUN 62 mg/dL; K 5.2 mmol/L; CO2 18 mmol/L.",
-        "notes": "Findings consistent with anemia of CKD and advanced CKD; trend data and dialysis initiation thresholds not documented in this report."
+        "results": "Hgb 9.4 g/dL (anemia consistent with D63.1). BUN 74 mg/dL and creatinine 4.1 mg/dL with CO2 18 mmol/L and potassium 5.2 mmol/L in the setting of N18.4/I12.9. Results used to inform outpatient planning and pre-procedure assessment for dialysis access including requested tunneled catheter placement (CPT 36558).",
+        "notes": "Collected in ED during evaluation for nausea and fatigue. Symptomatic treatment provided; outpatient nephrology follow-up arranged."
       }
     ],
     "procedures": [
@@ -16986,41 +17118,41 @@
         "name": "Peripheral IV placement (difficult access)",
         "date": "2026-03-24",
         "provider": "Dr. Colin Reyes, MD",
-        "facility": "Ascension Seton Medical Center Austin - Emergency Department",
-        "reason": "Need for IV access for ED evaluation/labs and symptomatic treatment; multiple attempts required.",
-        "notes": "Difficult peripheral venous access documented; no central access placed at that time."
+        "facility": "St. David's Medical Center",
+        "reason": "Need for IV access for ED evaluation and lab collection in setting of nausea and fatigue (R11.0, R53.83) with CKD (N18.4).",
+        "notes": "Multiple attempts required; patient reported anxiety related to repeated needle sticks."
       }
     ],
     "social_history": {
-      "tobacco_use": "Former smoker - quit 2016",
-      "tobacco_frequency": "Previously ~0.5 pack/day for ~20 years",
-      "alcohol_use": "Rare",
-      "alcohol_frequency": "1-2 drinks per month at most",
+      "tobacco_use": "Former smoker - quit 2012",
+      "tobacco_frequency": "Previously ~0.5 pack/day for 12 years",
+      "alcohol_use": "Social/Occasional",
+      "alcohol_frequency": "1-2 drinks/month",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "2026-04-05",
-      "last_visit_reason": "Pre-op evaluation for dialysis catheter",
-      "missed_appointment": false,
-      "missed_appointment_reason": null,
+      "last_visit_reason": "Pre-op clearance for dialysis catheter placement",
+      "missed_appointment": true,
+      "missed_appointment_reason": "Work shift changed unexpectedly; rescheduled within the same week",
       "early_visit_reason": null,
-      "mental_health_history": "Anxiety symptoms associated with chronic medical illness and uncertainty; in psychotherapy since 2025.",
-      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety); PHQ-9: 6 (mild depressive symptoms)",
-      "exercise_habits": "Walks 15\u201320 minutes 2x/week when energy allows; otherwise limited by fatigue",
-      "diet_notes": "Attempting lower sodium; meal timing inconsistent due to shift work",
-      "family_history_relevant": "Both parents with hypertension; older sibling with chronic kidney disease."
+      "mental_health_history": "Anxiety symptoms managed with psychotherapy (2026-present)",
+      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety) on 2026-03-28 therapy visit; denies SI",
+      "exercise_habits": "Walks 1-2x/week when fatigue allows",
+      "diet_notes": "Attempts lower sodium choices; inconsistent due to shift work",
+      "family_history_relevant": "First-degree relative with hypertension; family history of chronic kidney disease reported."
     },
     "vital_signs_current": {
       "recorded_date": "2026-04-05",
-      "blood_pressure": "150/86 mmHg",
-      "heart_rate": "80 bpm",
+      "blood_pressure": "162/92 mmHg",
+      "heart_rate": "86 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "30.2 kg/m\u00b2",
+      "bmi": "36.1 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.0\u00b0F",
+      "temperature": "98.1\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "G2P2. Last Pap smear: 2023-09-14 (reported normal). Last mammogram: 2024-11-03 (reported normal). Menopause in early 50s; no postmenopausal bleeding reported.",
+    "gender_specific_history": "G2P2. Last Pap smear: 2023-07-18 (reported normal). Last mammogram: 2024-08-09 (reported normal). Menopause around age 52; no postmenopausal bleeding reported.",
     "insurance_selection": {
       "provider_id": "UHC",
       "plan_type": "Commercial/HMO",
@@ -17057,7 +17189,7 @@
       "address": "3412 North Fitzhugh Ave, Dallas, TX 75204",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "2015-06-20",
+      "period_start": "2012-06-23",
       "period_end": "ongoing"
     },
     "provider": {
@@ -17091,7 +17223,7 @@
     "procedure_requested": "Insertion of tunneled central venous catheter for dialysis",
     "procedure_facility": {
       "facility_name": "UT Southwestern Medical Center",
-      "street_address": "6201 Harry Hines Blvd",
+      "street_address": "5323 Harry Hines Blvd",
       "city": "Dallas",
       "state": "TX",
       "zip_code": "75390",
@@ -17100,20 +17232,20 @@
     "pa_request": {
       "requesting_provider": "Dr. Rohan Iyer, MD",
       "urgency_level": "Pre-Service Routine",
-      "clinical_justification": "Patient with advanced chronic kidney disease and ongoing symptom burden under nephrology care. Tunneled dialysis catheter placement is requested to establish reliable central venous access to support initiation of hemodialysis when clinically ordered, informed by recent lab monitoring and pre-op evaluation.",
+      "clinical_justification": "Patient with advanced chronic kidney disease with progressive fatigue, intermittent nausea, and declining renal function is being prepared for initiation of hemodialysis. A tunneled central venous catheter is requested to establish reliable vascular access and enable timely outpatient dialysis start while long-term access planning continues. Comorbid hypertensive chronic kidney disease increases the importance of dependable access and minimizing repeated peripheral IV attempts.",
       "supporting_diagnoses": [
-        "N18.5 - Chronic kidney disease, stage 5",
         "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+        "N18.5 - Chronic kidney disease, stage 5",
         "D63.1 - Anemia in chronic kidney disease",
         "R11.0 - Nausea",
         "R53.83 - Other fatigue"
       ],
-      "previous_treatments": "Blood pressure management with amlodipine and carvedilol; phosphate binding with sevelamer; vitamin D supplementation; oral iron supplementation; symptom management with ondansetron. Past trial of furosemide for intermittent swelling, later discontinued.",
-      "expected_outcome": "Establish functional tunneled central venous access suitable for hemodialysis when ordered and support ongoing renal replacement therapy planning.",
+      "previous_treatments": "Blood pressure management with amlodipine and carvedilol; phosphate binding with sevelamer with meals; iron supplementation for CKD anemia; vitamin D supplementation; ondansetron as needed for nausea. Prior intermittent furosemide use for swelling was discontinued.",
+      "expected_outcome": "Establish central venous access to support planned hemodialysis with improved treatment logistics and reliable vascular access.",
       "units_requested": "1"
     },
-    "bio_narrative": "Amelia Shepherd is a 42-year-old woman living in Dallas, Texas, followed at UT Southwestern for progressive chronic kidney disease and hypertension. Over the past 1\u20132 years she has noticed steadily worsening stamina with reduced tolerance for long work shifts and increasing need for rest after routine activities. In early 2026 she began to experience daily fatigue (R53.83) and intermittent nausea (R11.0), prompting nephrology consultation and closer laboratory surveillance. She has hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease (I12.0) and is being monitored as kidney function has declined into stage 5 CKD (N18.5). She also carries anemia in chronic kidney disease (D63.1), managed with oral iron supplementation. Her longitudinal treatment has emphasized optimizing blood pressure control with amlodipine and carvedilol, alongside dietary efforts to limit sodium. For CKD-related mineral balance concerns, she uses sevelamer with meals and takes vitamin D3 daily. She uses ondansetron as needed for nausea. She previously used furosemide as needed for intermittent swelling, but this was stopped when edema was not prominent. Recent lab monitoring (CBC/BMP and iron studies) has been used to trend anemia and metabolic status, and a baseline chest X-ray was obtained as part of pre-procedural evaluation. Amelia does not smoke and reports occasional alcohol use (1\u20132 drinks on some weekends). She denies illicit drug use. She works long shifts and describes inconsistent meal timing, sometimes skipping meals, which can worsen nausea and limit adherence to a structured renal diet. She is engaged in psychotherapy every other week for stress and sleep disruption related to chronic illness. Family history is notable for hypertension in her father and chronic kidney disease in a maternal aunt; she reports no known hereditary renal syndromes. Given progressive CKD stage 5 with persistent symptom burden and ongoing nephrology monitoring, the care team has discussed dialysis education and access planning. A tunneled central venous catheter is being requested (CPT 36558) to establish reliable vascular access for hemodialysis initiation when clinically ordered, with the goal of avoiding delays in therapy initiation as her clinical course is monitored.",
-    "has_fit_fobt_result": false,
+    "bio_narrative": "Amelia Shepherd is a 42-year-old woman in Dallas, Texas who has been followed in primary care at UT Southwestern for hypertension that has gradually progressed into hypertensive chronic kidney disease (I12.0). Over the last several years she has noticed a slow decline in energy and increasing difficulty making it through long work shifts. By late 2025, her nephrology workup included a renal ultrasound (completed 2025-09-18), and she began to focus more on diet and blood pressure adherence as her kidney function worsened. In early 2026, she reported persistent fatigue (R53.83) that became daily and began to affect concentration and sleep. She also developed intermittent nausea (R11.0), often worse when she skipped meals or ate higher-sodium convenience foods during busy days. She has been managed medically with antihypertensives (amlodipine and carvedilol) and CKD-directed supportive therapy including sevelamer with meals to support phosphate control and vitamin D supplementation. She takes oral iron (ferrous sulfate) for anemia in chronic kidney disease (D63.1) and uses ondansetron as needed for nausea. She previously used low-dose furosemide intermittently for swelling during CKD progression but stopped it when edema was no longer prominent. Her March 2026 nephrology consult focused on worsening fatigue and progression to CKD stage 5 (N18.5), with lab monitoring (CBC/BMP and iron studies on 2026-03-25) and ongoing symptom tracking. Subsequent telehealth and follow-up visits in late March and early April addressed continued symptoms and education about renal replacement therapy planning. A baseline chest X-ray on 2026-04-02 was obtained during follow-up as part of pre-procedure planning for vascular access. At her pre-op evaluation on 2026-04-07, she reviewed catheter placement logistics and peri-procedural risks in the context of CKD, anemia, and hypertension. Socially, Amelia does not smoke and drinks alcohol occasionally (1\u20132 drinks on some weekends). She denies illicit drug use. Diet is inconsistent; she tries to limit sodium but has not consistently followed a structured renal diet and sometimes skips meals. She remains engaged in psychotherapy every other week to manage stress and sleep disruption related to chronic illness, which she finds helpful for coping and adherence routines. Family history is notable for hypertension in both parents and a maternal uncle with kidney disease requiring dialysis later in life, which adds to her anxiety about nearing dialysis. Given ongoing symptoms and advanced CKD stage 5 with hypertensive etiology, her care team is coordinating initiation of hemodialysis planning. To support timely dialysis start and reliable outpatient access while longer-term access planning proceeds, insertion of a tunneled central venous catheter for dialysis (CPT 36558) is requested with an expected date of 2026-05-12 at UT Southwestern Medical Center.",
+    "has_fit_fobt_result": null,
     "medications": [
       {
         "brand": "Norvasc",
@@ -17122,7 +17254,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Owen Hunt, MD",
         "status": "current",
-        "start_date": "2025-08-15",
+        "start_date": "2025-11-01",
         "end_date": "ongoing",
         "reason": "Hypertension associated with hypertensive CKD (I12.0)"
       },
@@ -17133,7 +17265,7 @@
         "qty": "60 tablets",
         "prescribed_by": "Dr. Owen Hunt, MD",
         "status": "current",
-        "start_date": "2025-10-02",
+        "start_date": "2026-01-10",
         "end_date": "ongoing",
         "reason": "Blood pressure control in hypertensive CKD (I12.0)"
       },
@@ -17144,7 +17276,7 @@
         "qty": "45 tablets",
         "prescribed_by": "Dr. Rohan Iyer, MD",
         "status": "ongoing",
-        "start_date": "2026-03-12",
+        "start_date": "2026-02-15",
         "end_date": "ongoing",
         "reason": "Anemia in chronic kidney disease (D63.1)"
       },
@@ -17166,7 +17298,7 @@
         "qty": "90 tablets",
         "prescribed_by": "Dr. Rohan Iyer, MD",
         "status": "current",
-        "start_date": "2026-03-28",
+        "start_date": "2026-03-12",
         "end_date": "ongoing",
         "reason": "Hyperphosphatemia risk in advanced CKD stage 5 (N18.5) dietary management support"
       },
@@ -17174,10 +17306,10 @@
         "brand": "Vitamin D3",
         "generic_name": "Cholecalciferol 2000 IU",
         "dosage": "1 capsule by mouth daily",
-        "qty": "90 capsules",
+        "qty": "30 capsules",
         "prescribed_by": "Dr. Owen Hunt, MD",
         "status": "ongoing",
-        "start_date": "2025-11-10",
+        "start_date": "2025-12-01",
         "end_date": "ongoing",
         "reason": "Vitamin D supplementation in CKD (N18.5)"
       },
@@ -17188,8 +17320,8 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Owen Hunt, MD",
         "status": "past",
-        "start_date": "2025-06-01",
-        "end_date": "2026-01-15",
+        "start_date": "2025-06-15",
+        "end_date": "2026-01-20",
         "reason": "Intermittent lower extremity swelling reported during CKD progression (N18.5); later discontinued as edema not prominent"
       },
       {
@@ -17199,7 +17331,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Owen Hunt, MD",
         "status": "current",
-        "start_date": "2025-12-01",
+        "start_date": "2026-02-01",
         "end_date": "ongoing",
         "reason": "Intermittent headache associated with stress and poor sleep (R53.83)"
       }
@@ -17210,14 +17342,14 @@
         "allergy_type": "Drug",
         "reaction": "Hives and pruritic rash",
         "severity": "Moderate",
-        "onset_date": "2002-05-10"
+        "onset_date": "2001-05-10"
       },
       {
         "allergen": "Shellfish",
         "allergy_type": "Food",
         "reaction": "Lip swelling and throat tightness",
         "severity": "Severe",
-        "onset_date": "2008-07-22"
+        "onset_date": "2009-08-22"
       }
     ],
     "vaccinations": [
@@ -17226,14 +17358,14 @@
         "vaccine_type": "Inactivated",
         "date_administered": "2025-10-05",
         "administered_by": "UT Southwestern Medical Center - Primary Care",
-        "dose_number": "1",
+        "dose_number": "Annual",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "COVID-19 mRNA (BNT162b2)",
         "vaccine_type": "mRNA",
         "date_administered": "2024-10-20",
-        "administered_by": "CVS Pharmacy, Dallas TX",
+        "administered_by": "CVS Pharmacy, Dallas, TX",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -17241,7 +17373,7 @@
         "vaccine_name": "Hepatitis B (Engerix-B)",
         "vaccine_type": "Subunit",
         "date_administered": "2026-03-28",
-        "administered_by": "UT Southwestern Nephrology Clinic",
+        "administered_by": "UT Southwestern Medical Center",
         "dose_number": "1",
         "reason": "Catch-up"
       },
@@ -17263,14 +17395,14 @@
           "R53.83 - Other fatigue"
         ],
         "provider": "Dr. Priya Nair, PhD",
-        "provider_npi": "3185062749",
-        "facility": "UT Southwestern Psychiatry & Psychology Clinic",
+        "provider_npi": "1780543219",
+        "facility": "UT Southwestern Behavioral Health Clinic",
         "start_date": "2026-02-06",
         "end_date": "ongoing",
         "frequency": "Every 2 weeks",
         "status": "Active",
-        "reason": "Stress, sleep disruption, and coping skills related to chronic illness",
-        "notes": "Focus on CBT-informed coping strategies, sleep hygiene, and adjustment to chronic kidney disease; no safety concerns reported."
+        "reason": "Stress and sleep disruption related to chronic illness contributing to fatigue (R53.83)",
+        "notes": "Focus on coping skills, sleep hygiene, and adjustment to chronic kidney disease; patient reports sessions help with adherence routines."
       }
     ],
     "behavioral_notes": "Patient is generally adherent with daily medications but admits occasional missed evening doses of carvedilol during long work shifts. Diet is inconsistent; she attempts to limit sodium but has not reliably followed a structured renal diet and sometimes skips meals. She does not smoke and reports occasional alcohol (1\u20132 drinks on some weekends). She attends psychotherapy every other week for stress and sleep disruption related to chronic illness; denies illicit drug use.",
@@ -17278,115 +17410,111 @@
       {
         "encounter_date": "2026-03-12",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Nephrology consultation for progressive CKD symptoms and discussion of dialysis planning.",
+        "purpose_of_visit": "Evaluation of worsening fatigue and CKD progression; discussion of dialysis planning.",
         "provider": "Dr. Rohan Iyer, MD",
-        "provider_npi": "3297746102",
+        "provider_npi": "3297456108",
         "facility": "UT Southwestern Medical Center",
         "vital_signs": {
           "recorded_date": "2026-03-12",
-          "blood_pressure": "142/88 mmHg",
-          "heart_rate": "84 bpm",
+          "blood_pressure": "152/94 mmHg",
+          "heart_rate": "82 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "24.9 kg/m\u00b2",
-          "oxygen_saturation": "99%",
-          "temperature": "98.4\u00b0F",
+          "oxygen_saturation": "98%",
+          "temperature": "98.1\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m exhausted all the time and my labs keep getting worse.",
-        "doctor_note": "HPI: Patient with known hypertensive CKD presents for nephrology evaluation due to progressive fatigue over several months. Reports decreased energy, difficulty completing long work shifts, and occasional lightheadedness when standing quickly. Notes intermittent nausea without vomiting; appetite fluctuates. Denies fever, dysuria, flank pain, chest pain, or shortness of breath.\n\nROS: Positive for fatigue and nausea. Negative for cough, orthopnea, edema at present, abdominal pain, hematemesis, melena, rash, or focal weakness.\n\nPhysical Exam: Well-appearing female in no acute distress. BP elevated. Cardiovascular: regular rate/rhythm, no murmurs. Lungs clear to auscultation bilaterally. Abdomen soft, non-tender. Extremities without significant edema. Neuro nonfocal.\n\nAssessment: Advanced CKD stage 5 (N18.5) with hypertensive CKD (I12.0). CKD-associated anemia suspected contributor to fatigue (D63.1). Intermittent nausea likely uremia-related symptom (R11.0). \n\nPlan: Order CBC/BMP and iron studies. Start oral iron supplementation. Continue antihypertensives and reinforce adherence. Discuss renal diet basics and dialysis education; review options for vascular access planning. Provide ondansetron ODT for nausea PRN. Return in 2 weeks for lab review.",
+        "doctor_note": "HPI: 42-year-old female with hypertensive CKD stage 5 reports progressive fatigue over months with reduced stamina and intermittent nausea. Denies fever, chest pain, or dyspnea at rest. Medications reviewed; notes occasional missed evening carvedilol due to long work shifts.\n\nReview of Systems: Positive for fatigue and intermittent nausea. Negative for cough, orthopnea, chest pain, dysuria, or rash.\n\nPhysical Exam: Well appearing, no acute distress. Mildly elevated blood pressure. Lungs clear; heart regular rhythm. Abdomen soft, non-tender. No significant edema.\n\nAssessment: I12.0 hypertensive CKD with N18.5 stage 5; D63.1 anemia in CKD; R11.0 nausea; R53.83 fatigue.\n\nPlan: Continue antihypertensives and CKD supportive meds. Order CBC/BMP and iron studies for 2026-03-25. Provide dialysis education and discuss vascular access options including potential tunneled catheter (CPT 36558) if dialysis initiation anticipated. Counsel on diet and consistent meals; follow up in 2 weeks via telehealth.",
         "observations": [
-          "Reports progressive fatigue affecting work tolerance.",
-          "Intermittent nausea without vomiting.",
-          "No edema on exam; lungs clear."
+          "Reports decreased stamina and difficulty completing long shifts",
+          "No edema on exam",
+          "Intermittent nausea without vomiting"
         ],
         "procedures_performed": [
-          "99204 - Office or other outpatient visit for the evaluation and management of a new patient, moderate complexity"
+          "99204 - Office or other outpatient visit, new patient, level 4"
         ],
         "diagnoses": [
-          "N18.5 - Chronic kidney disease, stage 5",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "N18.5 - Chronic kidney disease, stage 5",
           "D63.1 - Anemia in chronic kidney disease",
           "R11.0 - Nausea",
           "R53.83 - Other fatigue"
         ],
         "medications_prescribed": [
-          "Feosol (ferrous sulfate 325mg) every other day",
-          "Zofran ODT 4mg q8h PRN nausea"
+          "Zofran (Ondansetron ODT 4mg) PRN nausea",
+          "Renvela (Sevelamer carbonate 800mg) TID with meals"
         ],
         "care_team": [
           "Dr. Rohan Iyer, MD (Nephrology)",
           "Dr. Owen Hunt, MD (Primary Care)"
         ],
-        "progress_notes": "Initial nephrology consult; baseline symptom burden documented and lab monitoring initiated. Patient engaged in dialysis education discussion and agreed to return after labs.",
-        "follow_up_instructions": "Complete labs within 1-2 weeks. Continue BP meds. Call for persistent vomiting, shortness of breath, chest pain, or new swelling. Follow up in 2 weeks."
+        "progress_notes": "Initial nephrology consultation focused on symptom burden and planning. Patient receptive to education and agrees to lab monitoring and follow-up.",
+        "follow_up_instructions": "Complete ordered labs on 2026-03-25; follow up via telehealth in ~2 weeks; call for worsening nausea, shortness of breath, chest pain, or swelling."
       },
       {
         "encounter_date": "2026-03-28",
         "encounter_type": "Telehealth",
-        "purpose_of_visit": "Review symptoms and laboratory results related to CKD and anemia; adjust supportive care.",
+        "purpose_of_visit": "Follow-up of fatigue, nausea, and review of initial CKD planning steps.",
         "provider": "Dr. Rohan Iyer, MD",
-        "provider_npi": "3297746102",
+        "provider_npi": "3297456108",
         "facility": "UT Southwestern Medical Center",
         "vital_signs": null,
         "chief_complaint": "I still feel worn out and sometimes nauseated.",
-        "doctor_note": "HPI: Telehealth follow-up to review recent CBC/BMP and iron studies. Patient reports persistent fatigue most days and intermittent nausea, improved somewhat with ondansetron when used. Denies vomiting, fever, chest pain, or shortness of breath. Reports variable adherence to a renal diet and occasional missed evening carvedilol dose due to work schedule.\n\nROS: Positive fatigue and nausea. Negative for cough, dyspnea, edema, abdominal pain, confusion.\n\nPhysical Exam (limited due to video): Patient appears tired but in no acute distress, speaking full sentences.\n\nAssessment: CKD stage 5 (N18.5) and hypertensive CKD (I12.0) with stable electrolytes on recent labs. Mild normocytic anemia consistent with CKD (D63.1). Ongoing nausea (R11.0) and fatigue (R53.83).\n\nPlan: Continue oral iron; counsel on taking with food if GI upset. Initiate sevelamer with meals for CKD mineral management support. Reinforce renal diet counseling and hydration guidance per CKD plan. Continue ondansetron PRN. Continue BP medications and emphasize adherence strategies. Discuss that access planning may be needed; plan in-person follow-up.",
+        "doctor_note": "HPI: Patient reports continued daily fatigue and intermittent nausea. She has tried to maintain more consistent meals; nausea remains episodic and responds to ondansetron. No fever, vomiting, chest pain, or dyspnea at rest.\n\nReview of Systems: Positive for fatigue and nausea; negative for cough, edema, urinary burning.\n\nPhysical Exam (limited by telehealth): Appears alert and in no acute distress. Speaking in full sentences.\n\nAssessment: Advanced CKD stage 5 (N18.5) with hypertensive CKD (I12.0); anemia in CKD (D63.1); nausea (R11.0); fatigue (R53.83).\n\nPlan: Reviewed 2026-03-25 labs with patient. Continue iron supplementation every other day and renal diet counseling. Continue sevelamer with meals and antihypertensives. Discussed next steps for dialysis education and access planning; schedule in-person follow-up.",
         "observations": [
-          "Lab review discussed; anemia mild and stable.",
-          "Nausea responsive to ondansetron when used.",
-          "Diet adherence inconsistent per patient report."
+          "Nausea responsive to ondansetron",
+          "No new cardiopulmonary symptoms reported"
         ],
         "procedures_performed": [
-          "99442 - Telephone evaluation and management service, 11-20 minutes of medical discussion"
+          "99442 - Telephone evaluation and management service, 11-20 minutes"
         ],
         "diagnoses": [
-          "N18.5 - Chronic kidney disease, stage 5",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "N18.5 - Chronic kidney disease, stage 5",
           "D63.1 - Anemia in chronic kidney disease",
           "R11.0 - Nausea",
           "R53.83 - Other fatigue"
         ],
-        "medications_prescribed": [
-          "Renvela (sevelamer carbonate 800mg) TID with meals"
-        ],
+        "medications_prescribed": [],
         "care_team": [
           "Dr. Rohan Iyer, MD (Nephrology)"
         ],
-        "progress_notes": "Symptoms persistent but no new red-flag features reported. Medication regimen expanded to include phosphate binder; planning for next in-person reassessment.",
-        "follow_up_instructions": "Continue current meds and renal diet efforts. Schedule in-person follow-up within 1-2 weeks. Seek care for worsening shortness of breath, confusion, persistent vomiting, or chest pain."
+        "progress_notes": "Symptoms persist but stable; patient continues medical management and is engaged in planning discussions.",
+        "follow_up_instructions": "In-person follow-up in 1-2 weeks; continue current meds; seek care for vomiting, inability to keep fluids, chest pain, or shortness of breath."
       },
       {
         "encounter_date": "2026-04-02",
         "encounter_type": "Follow-up",
-        "purpose_of_visit": "In-person follow-up for CKD symptom monitoring and dialysis access planning discussion.",
+        "purpose_of_visit": "Ongoing CKD symptom management and discussion of impending dialysis needs.",
         "provider": "Dr. Owen Hunt, MD",
         "provider_npi": "3198457620",
         "facility": "UT Southwestern Medical Center - Primary Care",
         "vital_signs": {
           "recorded_date": "2026-04-02",
-          "blood_pressure": "136/82 mmHg",
-          "heart_rate": "78 bpm",
+          "blood_pressure": "150/96 mmHg",
+          "heart_rate": "76 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "24.9 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.2\u00b0F",
-          "respiratory_rate": "15 breaths/min"
+          "temperature": "98.5\u00b0F",
+          "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m tired every day and I\u2019m worried I\u2019ll need dialysis soon.",
-        "doctor_note": "HPI: Patient presents for follow-up of hypertensive CKD and persistent fatigue. She reports daily tiredness and decreased endurance. Nausea is intermittent and she uses ondansetron as needed. She is concerned about the possibility of dialysis and asks about next steps. No chest pain, dyspnea, fever, or new swelling.\n\nROS: Positive for fatigue and intermittent nausea. Negative for cough, wheeze, orthopnea, abdominal pain, vomiting, rash.\n\nPhysical Exam: Alert, cooperative. Cardiovascular: RRR, no murmurs. Respiratory: clear bilaterally. Abdomen soft, NT. Extremities: no pitting edema. Skin intact.\n\nAssessment: Advanced CKD stage 5 (N18.5) with hypertensive CKD (I12.0). CKD-related anemia (D63.1) and persistent fatigue (R53.83). Intermittent nausea (R11.0).\n\nPlan: Review recent labs and reinforce follow-up with nephrology. Provide vaccine catch-up per CKD risk profile (PCV20 administered today). Order chest X-ray as part of baseline pre-procedural evaluation for potential central access placement planning. Discuss dialysis access options and that a tunneled dialysis catheter may be used when hemodialysis is initiated; encourage scheduling pre-op evaluation if proceeding. Continue current meds; reinforce carvedilol adherence strategies and renal diet counseling.",
+        "doctor_note": "HPI: Patient reports ongoing daily fatigue and intermittent nausea; anxious about dialysis. She is taking medications as prescribed with occasional missed evening carvedilol. No fever, chest pain, or dyspnea at rest.\n\nReview of Systems: Positive for fatigue and nausea. Negative for cough, urinary symptoms, rash.\n\nPhysical Exam: BP elevated; heart regular rhythm; lungs clear; abdomen soft; no edema.\n\nAssessment: I12.0 hypertensive CKD with N18.5 stage 5; D63.1 anemia in CKD; R11.0 nausea; R53.83 fatigue.\n\nPlan: Reinforced renal diet guidance and consistent meals, continue current medications. Administered PCV20 vaccine as catch-up. Ordered chest X-ray 2 views as baseline study to support pre-procedure planning for requested tunneled dialysis catheter (CPT 36558). Encouraged ongoing nephrology follow-up and psychotherapy for stress/sleep.",
         "observations": [
-          "No edema; lungs clear.",
-          "BP improved compared to prior visit.",
-          "Patient expressed anxiety about dialysis planning."
+          "Anxiety about dialysis discussed",
+          "No edema noted"
         ],
         "procedures_performed": [
-          "99214 - Office or other outpatient visit for the evaluation and management of an established patient, moderate complexity",
+          "99214 - Office or other outpatient visit, established patient, level 4",
           "71046 - Radiologic examination, chest; 2 views"
         ],
         "diagnoses": [
-          "N18.5 - Chronic kidney disease, stage 5",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "N18.5 - Chronic kidney disease, stage 5",
           "D63.1 - Anemia in chronic kidney disease",
           "R11.0 - Nausea",
           "R53.83 - Other fatigue"
@@ -17394,97 +17522,95 @@
         "medications_prescribed": [],
         "care_team": [
           "Dr. Owen Hunt, MD (Primary Care)",
-          "Dr. Rohan Iyer, MD (Nephrology)"
+          "Dr. Rohan Iyer, MD (Nephrology)",
+          "Dr. Priya Nair, PhD (Psychotherapy)"
         ],
-        "progress_notes": "Ongoing fatigue and intermittent nausea without acute decompensation. Preventive care updated and baseline imaging ordered in anticipation of dialysis access planning steps.",
-        "follow_up_instructions": "Continue medications as prescribed. Follow nephrology within 1-2 weeks. Return sooner for shortness of breath, worsening swelling, or inability to keep down fluids."
+        "progress_notes": "Continued symptom burden without acute change; focus on education and pre-procedure baseline testing.",
+        "follow_up_instructions": "Continue meds; follow with nephrology; return for worsening symptoms; review imaging results via portal."
       },
       {
         "encounter_date": "2026-04-07",
         "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-operative evaluation prior to requested tunneled central venous catheter placement for dialysis access.",
-        "provider": "Dr. Sarah Kim, MD",
-        "provider_npi": "3016689021",
+        "purpose_of_visit": "Pre-operative assessment prior to tunneled dialysis catheter placement.",
+        "provider": "Dr. Maya Patel, MD",
+        "provider_npi": "3412067895",
         "facility": "UT Southwestern Medical Center",
         "vital_signs": {
           "recorded_date": "2026-04-07",
-          "blood_pressure": "134/80 mmHg",
-          "heart_rate": "76 bpm",
+          "blood_pressure": "147/91 mmHg",
+          "heart_rate": "79 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "24.9 kg/m\u00b2",
-          "oxygen_saturation": "99%",
-          "temperature": "98.1\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I\u2019m here for the pre-op visit for the catheter procedure.",
-        "doctor_note": "HPI: Patient presents for pre-op evaluation for planned tunneled dialysis catheter placement (CPT 36558). Reports ongoing fatigue and intermittent nausea; no vomiting. Denies chest pain, shortness of breath, fever, chills, or current swelling. Medications reviewed; notes occasional missed evening carvedilol dose during long shifts. Allergies reviewed (penicillin and shellfish).\n\nROS: Positive fatigue and nausea. Negative for cough, dyspnea, palpitations, syncope, abdominal pain, bleeding tendencies.\n\nPhysical Exam: Well-appearing, no acute distress. HEENT normal. Cardiovascular RRR. Lungs clear. Abdomen soft. Extremities warm, no edema. Skin without rash. \n\nAssessment: Pre-op assessment for vascular access procedure in patient with CKD stage 5 (N18.5) and hypertensive CKD (I12.0). CKD-related anemia (D63.1). Ongoing symptoms fatigue (R53.83) and nausea (R11.0).\n\nPlan: Review baseline labs and chest X-ray. Provide pre-procedure counseling on catheter care and complication symptoms. Confirm plan for procedure scheduling and transportation. Note concurrent psychotherapy engagement and reinforce coping strategies for peri-procedural stress. Continue current medication regimen unless procedural team provides day-of instructions.",
-        "observations": [
-          "No signs of acute infection on exam.",
-          "Medication reconciliation completed; allergies reviewed.",
-          "Discussed catheter care and warning signs."
-        ],
-        "procedures_performed": [
-          "99203 - Office or other outpatient visit for the evaluation and management of a new patient, low complexity"
-        ],
-        "diagnoses": [
-          "N18.5 - Chronic kidney disease, stage 5",
-          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "D63.1 - Anemia in chronic kidney disease",
-          "R11.0 - Nausea",
-          "R53.83 - Other fatigue"
-        ],
-        "medications_prescribed": [],
-        "care_team": [
-          "Dr. Sarah Kim, MD (Pre-op/Anesthesiology)",
-          "Dr. Rohan Iyer, MD (Nephrology)",
-          "Dr. Owen Hunt, MD (Primary Care)"
-        ],
-        "progress_notes": "Pre-op evaluation completed; no acute interval changes reported since 04/02 visit. Baseline testing reviewed for procedural planning; patient educated on peri-procedure expectations.",
-        "follow_up_instructions": "Proceed with scheduled procedure date. Contact clinic for fever, chills, new shortness of breath, bleeding, or worsening nausea. Continue psychotherapy appointments as scheduled."
-      },
-      {
-        "encounter_date": "2026-04-08",
-        "encounter_type": "Office Visit",
-        "purpose_of_visit": "Care coordination visit to review dialysis access planning questions and reinforce education after pre-op evaluation.",
-        "provider": "Dr. Rohan Iyer, MD",
-        "provider_npi": "3297746102",
-        "facility": "UT Southwestern Medical Center",
-        "vital_signs": {
-          "recorded_date": "2026-04-08",
-          "blood_pressure": "132/78 mmHg",
-          "heart_rate": "74 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "24.8 kg/m\u00b2",
           "oxygen_saturation": "98%",
           "temperature": "98.3\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
-        "chief_complaint": "I want to understand the plan for dialysis access and what I need to do next.",
-        "doctor_note": "HPI: Patient returns the day after pre-op evaluation with additional questions about dialysis access and timing. She reports fatigue remains her primary symptom with intermittent nausea that is manageable with PRN ondansetron. No new swelling, shortness of breath, fever, or chest pain. She requests clarification on catheter care and when dialysis might begin.\n\nROS: Positive fatigue and occasional nausea. Negative for dyspnea, cough, chest pain, palpitations, fever/chills.\n\nPhysical Exam: NAD. Cardiovascular RRR. Lungs clear. No edema. Mentation intact.\n\nAssessment: CKD stage 5 (N18.5) with hypertensive CKD (I12.0) and anemia (D63.1) under ongoing monitoring. Symptoms fatigue (R53.83) and nausea (R11.0) persist without acute decompensation.\n\nPlan: Reviewed the role of tunneled dialysis catheter placement (CPT 36558) for hemodialysis access and emphasized catheter site hygiene and follow-up. Reinforced medication adherence strategies, including setting reminders for evening carvedilol. Continue sevelamer, vitamin D, and iron therapy. Coordinate with interventional radiology scheduling; ensure vaccination catch-up documented.",
+        "chief_complaint": "I\u2019m here for the pre-op visit for the catheter procedure.",
+        "doctor_note": "HPI: Patient presents for pre-op evaluation for planned tunneled dialysis catheter placement (CPT 36558). Reports persistent fatigue and intermittent nausea. Denies fever, chills, chest pain, or shortness of breath at rest. Allergies reviewed.\n\nReview of Systems: Positive fatigue and nausea; otherwise negative for infectious symptoms.\n\nPhysical Exam: Well appearing; lungs clear; heart regular rhythm; no edema; skin intact without signs of infection.\n\nAssessment: I12.0 hypertensive CKD with N18.5 stage 5; D63.1 anemia; R11.0 nausea; R53.83 fatigue.\n\nPlan: Reviewed procedure risks/benefits and line care. Continue antihypertensives day of procedure with sip of water unless anesthesia recommends otherwise; hold sevelamer when NPO and resume with meals. Avoid NSAIDs. Plan updated labs within 7 days of procedure and confirm scheduling.",
         "observations": [
-          "Patient demonstrates understanding after education session.",
-          "No acute changes; vitals stable.",
-          "Reinforced carvedilol adherence strategies."
+          "Reviewed allergy precautions and peri-procedural instructions",
+          "No signs of active infection"
         ],
         "procedures_performed": [
-          "99213 - Office or other outpatient visit for the evaluation and management of an established patient, low complexity"
+          "99214 - Office or other outpatient visit, established patient, level 4"
         ],
         "diagnoses": [
-          "N18.5 - Chronic kidney disease, stage 5",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "N18.5 - Chronic kidney disease, stage 5",
           "D63.1 - Anemia in chronic kidney disease",
           "R11.0 - Nausea",
           "R53.83 - Other fatigue"
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Rohan Iyer, MD (Nephrology)",
-          "UT Southwestern Interventional Radiology Scheduling Team"
+          "Dr. Maya Patel, MD (Pre-op)",
+          "Dr. Rohan Iyer, MD (Nephrology)"
         ],
-        "progress_notes": "Education and care coordination performed; symptoms unchanged and no new objective concerns documented. Plans for catheter placement remain scheduled.",
-        "follow_up_instructions": "Keep procedure scheduling appointment and arrange driver. Call for fever/chills, new swelling, shortness of breath, uncontrolled nausea/vomiting, or confusion. Follow nephrology in 2-4 weeks or sooner if symptoms worsen."
+        "progress_notes": "Pre-op education completed; patient understands logistics and peri-procedural medication plan.",
+        "follow_up_instructions": "Complete pre-procedure labs as scheduled; follow scheduling instructions; arrange transport and adhere to NPO guidance."
+      },
+      {
+        "encounter_date": "2026-04-08",
+        "encounter_type": "Office Visit",
+        "purpose_of_visit": "Dialysis access counseling and preparation steps for upcoming catheter placement.",
+        "provider": "Dr. Owen Hunt, MD",
+        "provider_npi": "3198457620",
+        "facility": "UT Southwestern Medical Center - Primary Care",
+        "vital_signs": {
+          "recorded_date": "2026-04-08",
+          "blood_pressure": "148/92 mmHg",
+          "heart_rate": "78 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "24.9 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.4\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I want to understand the plan for dialysis access and what I need to do next.",
+        "doctor_note": "HPI: Patient requests detailed counseling on dialysis access plan and upcoming tunneled catheter placement. Persistent fatigue and intermittent nausea continue; no acute cardiopulmonary complaints. Medication adherence discussed.\n\nReview of Systems: Fatigue and nausea present; otherwise negative.\n\nPhysical Exam: No acute distress; heart regular rhythm; lungs clear; no edema.\n\nAssessment: I12.0, N18.5, D63.1, R11.0, R53.83.\n\nPlan: Reviewed procedure expectations and care coordination with nephrology. Reinforced adherence to carvedilol and renal diet basics; continue current meds and psychotherapy. Discussed return precautions and follow-up intervals.",
+        "observations": [
+          "Education provided on catheter care and dialysis planning"
+        ],
+        "procedures_performed": [
+          "99214 - Office or other outpatient visit, established patient, level 4"
+        ],
+        "diagnoses": [
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "N18.5 - Chronic kidney disease, stage 5",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R11.0 - Nausea",
+          "R53.83 - Other fatigue"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Owen Hunt, MD (Primary Care)",
+          "Dr. Rohan Iyer, MD (Nephrology)",
+          "Dr. Priya Nair, PhD (Psychotherapy)"
+        ],
+        "progress_notes": "Focus on education and next steps; symptoms stable compared with prior visits.",
+        "follow_up_instructions": "Nephrology follow-up within 1 week; primary care follow-up in 4-6 weeks; return sooner if worsening symptoms."
       }
     ],
     "images": [
@@ -17493,7 +17619,7 @@
         "date": "2026-04-02",
         "provider": "Dr. Owen Hunt, MD",
         "facility": "UT Southwestern Medical Center",
-        "findings": "Cardiomediastinal silhouette within normal limits. Lungs clear without focal consolidation, pleural effusion, or pneumothorax. No acute osseous abnormality. Study obtained as baseline imaging in preparation for requested tunneled dialysis catheter placement (CPT 36558)."
+        "findings": "Normal cardiomediastinal silhouette. No focal consolidation, pleural effusion, or pneumothorax. Baseline pre-procedure study prior to planned tunneled dialysis catheter placement (CPT 36558)."
       }
     ],
     "reports": [
@@ -17501,15 +17627,22 @@
         "type": "CBC/BMP",
         "date": "2026-03-25",
         "provider": "Dr. Rohan Iyer, MD",
-        "results": "CBC: WBC 6.2, Hgb 10.8 g/dL, Plt 238. BMP: Na 138, K 4.6, CO2 22, BUN 52, Cr 5.1, Glu 98, Ca 9.0; eGFR ~10.",
-        "notes": "Baseline labs reviewed for CKD monitoring and pre-procedural planning for tunneled dialysis catheter (CPT 36558)."
+        "results": "CBC: WBC 6.2, Hgb 10.4, Plt 248. BMP: Na 139, K 4.7, CO2 21, BUN 58, Cr 5.3, Glu 92, Ca 9.0.",
+        "notes": "Consistent with CKD stage 5 (N18.5) and anemia in CKD (D63.1); used for monitoring during dialysis access planning (CPT 36558)."
       },
       {
         "type": "Iron studies",
         "date": "2026-03-25",
         "provider": "Dr. Rohan Iyer, MD",
-        "results": "Iron 62, TIBC 290, TSAT 21%, Ferritin 118.",
-        "notes": "Consistent with ongoing oral iron supplementation for CKD-related anemia (D63.1)."
+        "results": "Ferritin 155, Iron 62, TIBC 285, TSAT 22%.",
+        "notes": "Supports ongoing oral iron therapy for D63.1."
+      },
+      {
+        "type": "CBC/CMP/Coagulation panel",
+        "date": "2026-04-09",
+        "provider": "Nurse Alex Karev, RN",
+        "results": "CBC: WBC 6.5, Hgb 10.6, Plt 255. CMP: Na 138, K 4.8, CO2 22, BUN 60, Cr 5.4, Ca 9.1, Alb 4.0. Coags: PT 10.8, INR 1.0, aPTT 29.",
+        "notes": "Updated pre-procedure labs obtained to support safe tunneled catheter placement (CPT 36558)."
       }
     ],
     "procedures": [
@@ -17518,8 +17651,8 @@
         "date": "2025-09-18",
         "provider": "UT Southwestern Radiology",
         "facility": "UT Southwestern Medical Center",
-        "reason": "Evaluation and longitudinal monitoring of chronic kidney disease (N18.5) and hypertensive CKD (I12.0).",
-        "notes": "Findings consistent with chronic medical renal disease; no hydronephrosis noted per prior report summary."
+        "reason": "Evaluation of chronic kidney disease progression and renal anatomy",
+        "notes": "No acute obstruction reported; used in longitudinal CKD workup."
       }
     ],
     "social_history": {
@@ -17529,29 +17662,29 @@
       "alcohol_frequency": "1\u20132 drinks on some weekends",
       "illicit_drug_use": "None",
       "substance_history": null,
-      "last_medical_visit": "2026-04-07",
-      "last_visit_reason": "Pre-op evaluation for planned tunneled dialysis catheter placement (CPT 36558)",
+      "last_medical_visit": "2026-04-08",
+      "last_visit_reason": "Dialysis access counseling and CKD symptom review",
       "missed_appointment": false,
       "missed_appointment_reason": null,
-      "early_visit_reason": "Returned 2026-04-08 for care coordination questions about dialysis access planning",
-      "mental_health_history": "Stress/insomnia related to chronic illness; in psychotherapy since 2026-02",
-      "mental_health_current": "PHQ-9: 7 (mild depressive symptoms); GAD-7: 8 (mild anxiety)",
-      "exercise_habits": "Walks 20\u201330 minutes 2x/week when energy allows; otherwise low activity due to fatigue",
-      "diet_notes": "Attempts low-sodium diet; inconsistent renal diet adherence; sometimes skips meals during long shifts",
-      "family_history_relevant": "Father with hypertension; maternal aunt with chronic kidney disease; no known hereditary renal syndromes reported"
+      "early_visit_reason": null,
+      "mental_health_history": "Stress and insomnia symptoms managed with psychotherapy starting 2026",
+      "mental_health_current": "PHQ-9: 7 (mild depressive symptoms); GAD-7: 9 (mild anxiety) on 2026-04-08",
+      "exercise_habits": "Walks 15\u201320 minutes, 2\u20133x/week as tolerated; decreased recently due to fatigue",
+      "diet_notes": "Attempts low sodium; inconsistent renal diet adherence; sometimes skips meals leading to nausea",
+      "family_history_relevant": "Both parents with hypertension; maternal uncle with kidney disease requiring dialysis later in life"
     },
     "vital_signs_current": {
       "recorded_date": "2026-04-08",
-      "blood_pressure": "132/78 mmHg",
-      "heart_rate": "74 bpm",
+      "blood_pressure": "148/92 mmHg",
+      "heart_rate": "78 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
-      "bmi": "24.8 kg/m\u00b2",
+      "bmi": "24.9 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.3\u00b0F",
+      "temperature": "98.4\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "G2P2. Last Pap smear: 2024-06-18 (reported normal). Last mammogram: 2025-07-09 (reported normal). No history of abnormal Pap requiring procedure; menses regular; no current pregnancy concerns."
+    "gender_specific_history": "G2P2. Last Pap smear: 2024-06-18 (reported normal). Mammogram: 2025-07-22 (reported normal). No history of gestational hypertension; menses regular."
   },
   "2231": {
     "first_name": "Severus",

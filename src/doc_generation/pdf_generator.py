@@ -254,7 +254,7 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
         svc_date = (
             report_meta.get("report_date")
             or report_meta.get("service_date")
-            or datetime.now().strftime("%Y-%m-%d")
+            or datetime.now().strftime("%m-%d-%Y")
         )
         acc_num = report_meta.get("accession_id") or f"ACC-{patient_id}-000"
 
@@ -603,7 +603,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     
     Story.append(Spacer(1, 15))
     
-    footer_text = f"<i>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | This document is for internal QA purposes only</i>"
+    footer_text = f"<i>Generated: {datetime.now().strftime('%m-%d-%Y %H:%M')} | This document is for internal QA purposes only</i>"
     Story.append(Paragraph(footer_text, 
                           ParagraphStyle('ann_footer', parent=style_normal, 
                                         fontSize=8, textColor=colors.grey, alignment=1)))

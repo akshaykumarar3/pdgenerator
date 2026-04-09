@@ -64,7 +64,7 @@ def write_patient_record(
     else:
         p = persona or {}
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
 
     # ── helpers ──────────────────────────────────────────────────────────────
     def g(key, default="(not recorded)"):

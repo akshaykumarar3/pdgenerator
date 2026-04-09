@@ -536,7 +536,7 @@ API server runs on `http://localhost:410` by default (`API_PORT` env var).
 
 # Key Rules for AI Agents
 
-1. Dates must use `YYYY-MM-DD`
+1. Dates must use `MM-DD-YYYY`
 2. Patient IDs are numeric strings
 3. Document titles must use underscores
 4. Avoid generating duplicate reports

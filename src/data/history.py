@@ -19,14 +19,14 @@ def get_history(patient_id: str) -> str:
 def append_history(patient_id: str, feedback: str, changes_summary: str):
     """
     Appends a new entry to the patient's history log.
-    FORMAT: [YYYY-MM-DD HH:MM] Feedback: <text> | Changes: <text>
+    FORMAT: [MM-DD-YYYY HH:MM] Feedback: <text> | Changes: <text>
     """
     log_dir = get_patient_logs_folder(patient_id)
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
     log_path = os.path.join(log_dir, f"{patient_id}.txt")
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
     
     entry = f"\n--------------------------------------------------\n"
     entry += f"RUN TIMESTAMP: {timestamp}\n"

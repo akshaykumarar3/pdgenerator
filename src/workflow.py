@@ -501,7 +501,7 @@ def process_patient_workflow(
                         "dob": result.patient_persona.dob if result.patient_persona else "",
                         "gender": result.patient_persona.gender if result.patient_persona else "",
                         "patient_phone": patient_phone,
-                        "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                        "report_date": datetime.datetime.now().strftime("%m-%d-%Y"),
                         "provider": provider_name,
                         "provider_address": provider_address,
                         "provider_phone": provider_phone,
@@ -900,7 +900,7 @@ def render_patient_pdfs_from_content(
                     title_hint=title_hint,
                     facility_name=fac_name,
                     provider_name=prov_name,
-                    service_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                    service_date=datetime.datetime.now().strftime("%m-%d-%Y"),
                     accession_number=f"ACC-{patient_id}-{seq_str}",
                 )
                 image_path = None

@@ -35,6 +35,12 @@ Your task: generate realistic, diverse clinical personas and medical documents b
 9. **Avoid the Word "Justification"**: Do not use the word "justification" in narrative text. Use factual clinical findings and prior treatment history instead.
 10. **Positive Evidence Emphasis**: Clinical narratives should emphasize positive, factual evidence (symptoms, findings, prior treatments, objective data) that supports the requested procedure without stating sufficiency or correctness.
 11. **No Outcome Guarantees**: Do not promise or imply the procedure will "fix" or "resolve" the condition. Describe goals and clinical reasoning grounded in documented findings.
+12. **USA Standards Mandate**: EVERYTHING must use USA formatting and measurement systems. 
+    - Dates must be MM-DD-YYYY. 
+    - Numbering must use US format (e.g., 1,000 for thousands, 1.5 for decimals). 
+    - Height must be in feet and inches (e.g., '5 ft 10 in'). Weight must be in pounds (lbs). 
+    - Temperature must be in Fahrenheit (°F). 
+    - Standard US customary units must be applied for all general sizing and measurements, but standard medical scores (e.g. BMI, lab units) should be preserved as numbers. Do NOT use kg, cm, or Celsius.
 
 === MANDATORY PERSONA SECTIONS ===
 Every generated patient persona MUST include ALL of the following. No empty lists allowed for new patients:
@@ -305,7 +311,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - Do NOT leave supporting reports as standalone items with no link to the target procedure. The persona PDF and standalone report PDFs must make the clinical link clear so auditors see why each document exists.
        - Every report's `content` JSON must be **fully populated** (no empty sections); the persona's "Clinical Reports & Imaging" section displays this content and must not be blank.
     8. **TEMPORAL CONSISTENCY (CRITICAL - NEW REQUIREMENT)**:
-       - **Today's Date**: {datetime.datetime.now().strftime("%Y-%m-%d")}
+       - **Today's Date**: {datetime.datetime.now().strftime("%m-%d-%Y")}
        - **Expected Procedure Date**: MUST be 7-90 days in the FUTURE from today
        - **Timeline Requirements**:
          * Medical history events: 6 months to 5 years BEFORE procedure date
@@ -355,7 +361,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
        - **CRITICAL IMPERATIVE**: You MUST rely ONLY on `patient_state` for identifiers, MRN, naming, and demographics. DO NOT CREATE NEW IDENTIFIERS.
        - **Required Fields (ALL MUST BE FILLED)**:
          - `first_name`, `last_name`, `gender`, `dob`, `address`, `telecom`
-         - **Biometrics**: `race`, `height`, `weight`
+         - **Biometrics**: `race`, `height` (Must be in feet/inches, e.g., '5 ft 10 in'), `weight` (Must be in pounds, e.g., '180 lbs')
          - `maritalStatus`, `photo` (default placeholder)
          - `communication`, `contact` (Emergency)
          - `provider` (GP), `link` (N/A)
@@ -367,7 +373,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
            - `secondary_diagnosis_codes`: List of secondary ICD-10 codes
            - `procedure_history`: List of past relevant procedures
          - **NEW MANDATORY FIELDS (Temporal & Facility)**:
-           - `expected_procedure_date`: Future date (YYYY-MM-DD, 7-90 days from today)
+           - `expected_procedure_date`: Future date (MM-DD-YYYY, 7-90 days from today)
            - `procedure_requested`: Full procedure name
            - `procedure_facility`: FacilityDetails object (name, address, city, state, ZIP, department)
            - `pa_request`: PARequestDetails object (all PA form fields)
@@ -411,7 +417,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
      17. **SOCIAL HISTORY (SocialHistory object — MANDATORY)**:
         - Generate social_history object with all fields. Some may be null at random (realistic variation).
         - tobacco_use, tobacco_frequency, alcohol_use, alcohol_frequency, illicit_drug_use, substance_history
-        - last_medical_visit (YYYY-MM-DD), last_visit_reason
+        - last_medical_visit (MM-DD-YYYY), last_visit_reason
         - missed_appointment (true/false/null), missed_appointment_reason, early_visit_reason
         - mental_health_history, mental_health_current (PHQ-9/GAD-7 if applicable, else null)
         - exercise_habits, diet_notes, family_history_relevant
@@ -424,7 +430,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
      19. **ENCOUNTERS (2-5 chronological encounters — MANDATORY)**:
         - Generate encounters list ordered from oldest to most recent.
         - Each encounter MUST have:
-          * encounter_date (YYYY-MM-DD, must respect temporal timeline)
+          * encounter_date (MM-DD-YYYY, must respect temporal timeline)
           * encounter_type: Office Visit / ER Visit / Telehealth / Follow-up / Specialist Consult / Pre-op Evaluation
           * purpose_of_visit: 1-2 sentence description of why the patient came in
           * provider + provider_npi, facility
