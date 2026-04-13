@@ -1,4 +1,4 @@
-# Clinical Data Generator (v5.0)
+# Clinical Data Generator (v5.2)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -57,6 +57,23 @@ python remove_persona.py <Patient_ID>
 # Or to skip confirmation:
 python remove_persona.py -f <Patient_ID>
 ```
+
+#### Patient Data Compaction CLI
+
+To reduce token-heavy history/context/feedback and shrink patient DB text fields, run:
+
+```bash
+python compact_patient_data.py --patient-id 225
+# Compact all patients and keep only the last 3 history entries:
+python compact_patient_data.py --all --history-entries 3
+# Dry run (no files written):
+python compact_patient_data.py --patient-id 225 --dry-run
+```
+
+Defaults:
+- Truncates long text fields in `patients_db.json` (including `bio_narrative`)
+- Keeps the last 5 history entries in `archive/log/<id>.txt`
+- Trims feedback blocks in `<id>-record.txt`
 
 ---
 
@@ -133,9 +150,15 @@ After each run, a 2×2 summary panel is shown:
 
 ## ✨ Key Features
 
+### Generation Control & Batching
+
+- **Batch Generation**: Support for processing multiple patients simultaneously. The system builds a queue and processes records sequentially while maintaining strict isolation.
+- **Cancel/Abort with Auto-Rollback**: Safely halt any long-running generation (single or batch) at any time. If a job is aborted mid-flight, the system automatically triggers a rollback to restore the previous state of the patient's documents and persona database, preventing corrupted or partial outputs.
+
 ### Prior Authorization Workflow Support
 
 - **PA Optimization**: Toggle to automatically strengthen clinical justifications for likely-rejected cases
+- **PA Rejection Documents**: Generate intentionally deficient clinical documents (missing tests, failed criteria) to test denial workflows. Controlled via UI toggle and custom gap instructions.
 - **Complete PA Request Forms**: Requesting provider, urgency level, clinical justification, ICD-10 diagnoses, previous treatments, expected outcome
 - **Future Procedure Dates**: Procedure dates set 7–90 days in the future for realistic PA workflows
 
@@ -288,13 +311,16 @@ pdgenerator/
 │   └── summary_template.json   # Clinical summary PDF layout
 │
 ├── generated_output/           # Generated files (gitignored)
-│   ├── persona/                # Patient persona PDFs
-│   ├── patient-reports/<ID>/   # Clinical report PDFs
-│   ├── summary/                # Annotator verification summaries
-│   └── logs/                   # Generation history per patient
+│   ├── patient-data/<ID - Name - CPT - Outcome>/ # Per-patient documents
+│   │   └── *.pdf               # Persona, reports, summaries ONLY (latest generated)
+│   ├── archive/                # Archived/past generated versions
+│   ├── metadata/               # Patient text records (-record.txt)
+│   ├── summary/                # Clinical summary PDFs (flat structure)
+│   └── logs/                   # Generation logs and history tracking
 │
 ├── api_server.py               # Flask REST API (serves the UI)
 ├── run.py                      # CLI launcher (recommended)
+├── compact_patient_data.py     # CLI tool to compact DB/context/feedback
 ├── remove_persona.py           # CLI tool to completely wipe a persona
 │
 ├── run.bat                     # Windows CLI launcher
@@ -305,7 +331,7 @@ pdgenerator/
 ```
 
 **Patient DB:** The active database lives at `src/core/patients_db.json`. If a legacy `core/patients_db.json` exists, it is automatically migrated on first load.
-**Feedback history:** Per-patient feedback/history is stored in `generated_output/logs` and reused across runs (legacy logs from the old output path are auto-migrated when read).
+**Feedback history:** Per-patient feedback/history is stored under `generated_output/logs/<ID - Name - CPT - Outcome>...`.
 
 ### Key Files to Customize
 
@@ -315,6 +341,7 @@ pdgenerator/
 | `cred/.env` | Configure API keys, output path, port |
 | `core/UAT Plan.xlsx` | Patient test cases |
 | `templates/summary_template.json` | PDF layout structure |
+| `templates/summary_template_concise.json` | Concise PDF layout structure |
 | `config/*.json` | External rules (remediation, sanitization) |
 
 ---
@@ -370,7 +397,8 @@ We have integrated full **Swagger OpenAPI documentation**. To explore the intera
 | GET | `/api/patient/<id>` | Fetch stored patient record |
 | POST | `/api/generate` | Trigger single patient generation |
 | POST | `/api/generate_all` | 🔁 Trigger batch generation for all patients |
-| POST | `/api/purge` | 🗑️ Purge specific databases or generated files (patient mode supports `targets[]` and `mode=delete|archive`) |
+| POST | `/api/cancel/<job_id>` | ⛔ Cancel an active generation job with auto-rollback |
+| POST | `/api/purge` | 🗑️ Purge specific databases or generated files (patient mode supports `targets[]` and `mode=delete/archive`) |
 | POST | `/api/template/save` | 💾 Save a generated document as a global template |
 | GET | `/api/job/<job_id>?since=N` | Poll job status + incremental logs |
 | GET | `/api/output/<patient_id>` | List all generated PDFs for a patient |

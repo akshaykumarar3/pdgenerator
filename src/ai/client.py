@@ -32,7 +32,7 @@ ALLOWED_PROVIDERS = ["vertexai", "openai"]
 # Model Configuration (Prod vs Test)
 MODEL_MAP = {
     "vertexai": {"prod": "gemini-2.5-pro", "test": "gemini-2.5-flash"},
-    "openai":   {"prod": "gpt-4o",         "test": "gpt-4o-mini"}
+    "openai":   {"prod": "gpt-5.2",         "test": "gpt-4o-mini"}
 }
 
 # Select Model
@@ -460,6 +460,95 @@ def fix_document_content(content: str, errors: List[str]) -> str:
     except Exception as e:
         print(f"   ⚠️ Repair Failed: {e}")
         return content  # Return original if fix fails
+
+def generate_concise_summary(
+    case_details: dict,
+    patient_persona,
+    generated_documents: list = None,
+    search_results: dict = None
+) -> models.ConciseSummary:
+    """
+    Generates a concise clinical summary.
+    
+    Args:
+        case_details: Dict with \'procedure\', \'outcome\', \'details\'
+        patient_persona: The generated patient persona (Pydantic object or dict)
+        generated_documents: Optional list of generated documents
+        search_results: Optional web search results for CPT/ICD codes
+    
+    Returns:
+        ConciseSummary object with the summary content
+    """
+    
+    print(f"   📋 Generating Concise Clinical Summary...")
+    
+    # Get prompt from centralized prompts module
+    prompt = prompts.get_concise_summary_prompt(
+        case_details=case_details,
+        patient_persona=patient_persona,
+        generated_documents=generated_documents,
+        search_results=search_results
+    )
+    
+    try:
+        # Convert system prompt to user prompt for Vertex AI compatibility
+        system_role = "user" if PROVIDER == "vertexai" else "system"
+        
+        system_prompt = """You are an expert clinical data analyst creating a concise summary for a user.
+Your task is to analyze patient data and create a concise summary.
+Focus on being specific, clear, and helpful."""
+        
+        kwargs = {
+            "model": MODEL_NAME,
+            "response_model": models.ConciseSummary,
+            "messages": [
+                {"role": system_role, "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ]
+        }
+        
+        if PROVIDER == "vertexai":
+            print(f"   [DEBUG] Calling Vertex AI for Concise Summary — Model: {MODEL_NAME}")
+            try:
+                model_instance = client.client
+                msgs = kwargs["messages"]
+                full_prompt = f"{msgs[0]['content']}\n\nUser Input:\n{msgs[1]['content']}"
+
+                resp = model_instance.generate_content(
+                    full_prompt,
+                    generation_config=GenerationConfig(
+                        response_mime_type="application/json",
+                    )
+                )
+
+                print(f"   [DEBUG] Concise Summary Response Length: {len(resp.text)}")
+                summary_obj = _parse_vertex_response(resp, models.ConciseSummary)
+                print("   ✅ Concise Summary Generated Successfully")
+                return summary_obj
+
+            except Exception as e:
+                print(f"   ❌ Vertex AI Concise Summary Failed: {e}")
+                raise e
+        
+        # OPENAI PATH
+        print(f"   [DEBUG] Calling OpenAI for Concise Summary - Model: {MODEL_NAME}")
+        completion_resp = client.chat.completions.create_with_completion(**kwargs)
+        
+        # Handle Instructor Tuple Return
+        if isinstance(completion_resp, tuple):
+            summary_obj = completion_resp[0]
+        else:
+            summary_obj = completion_resp
+        
+        if summary_obj is None:
+            raise ValueError("AI returned no response for concise summary")
+        
+        print(f"   ✅ Concise Summary Generated Successfully")
+        return summary_obj
+        
+    except Exception as e:
+        print(f"   ❌ Concise Summary Generation Failed: {e}")
+        raise e
 
 def generate_annotator_summary(
     case_details: dict,

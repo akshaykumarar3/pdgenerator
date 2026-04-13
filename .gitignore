@@ -19,3 +19,4 @@ generated_output/
 core/*.json
 .continue/
 .search_cache/
+.pytest_cache/

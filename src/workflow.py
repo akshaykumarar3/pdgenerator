@@ -15,7 +15,11 @@ from .data import patient_record_writer
 from .core import state as state_manager
 from .doc_generation import planner as document_planner
 from .doc_generation.validator import validate_structure, format_clinical_document
-from .core.config import get_patient_report_folder, SUMMARY_DIR, PERSONA_DIR
+from .core.config import (
+    get_patient_report_folder,
+    get_patient_persona_folder,
+    get_patient_summary_folder,
+)
 from .utils.file_utils import get_persona_version, archive_patient_files, sanitize_filename_component
 
 def _is_policy_criteria_doc(doc) -> bool:
@@ -52,6 +56,33 @@ def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
         updated["outcome"] = "PA Approval"
         return updated
     return case_details
+
+
+def _apply_insurance_overrides(persona, patient_state: dict | None):
+    """
+    Ensure payer details in persona align with patient_state.insurance.
+    """
+    if not persona or not patient_state:
+        return
+    insurance = (patient_state or {}).get("insurance") or {}
+    if not insurance:
+        return
+    payer = getattr(persona, "payer", None)
+    if not payer:
+        return
+
+    for field in (
+        "payer_id",
+        "payer_name",
+        "plan_name",
+        "plan_type",
+        "provider_abbreviation",
+        "provider_policy_url",
+        "plan_id",
+        "plan_policy_url",
+    ):
+        if field in insurance:
+            setattr(payer, field, insurance.get(field) or "")
 
 def _augment_feedback_with_risk_assessment(feedback: str, case_details: dict | None = None) -> str:
     """
@@ -151,15 +182,19 @@ def load_existing_context(patient_id: str, generation_mode: dict) -> dict:
         patient_report_folder = get_patient_report_folder(patient_id)
         if os.path.exists(patient_report_folder):
             report_files = [
-                f for f in os.listdir(patient_report_folder) if f.endswith(".pdf")
+                f for f in os.listdir(patient_report_folder)
+                if f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-")
             ]
             context["reports"] = report_files[:5]  # cap for prompt size
 
     # Load existing summary only when we are NOT regenerating it
     if not generation_mode.get("summary", False):
-        summary_file = os.path.join(SUMMARY_DIR, f"{patient_id}-summary.pdf")
-        if os.path.exists(summary_file):
-            context["summary"] = summary_file
+        summary_folder = get_patient_summary_folder(patient_id)
+        if os.path.isdir(summary_folder):
+            for f in os.listdir(summary_folder):
+                if f.endswith(".pdf") and f.startswith(f"Clinical_Summary_Patient_{patient_id}"):
+                    context["summary"] = os.path.join(summary_folder, f)
+                    break
 
     return context
 
@@ -178,31 +213,34 @@ def check_patient_sync_status(patient_id: str, generation_mode: dict) -> bool:
     has_summary  = not req_summary
 
     # Check Persona
-    if req_persona and os.path.isdir(PERSONA_DIR):
-        has_persona = any(
-            f.startswith(f"{patient_id}-") and f.endswith(".pdf")
-            for f in os.listdir(PERSONA_DIR)
-            if f != "archive"
-        )
+    if req_persona:
+        persona_folder = get_patient_persona_folder(patient_id)
+        if os.path.isdir(persona_folder):
+            has_persona = any(
+                f.endswith(".pdf") and "-persona" in f
+                for f in os.listdir(persona_folder)
+                if f != "archive"
+            )
 
     # Check Reports
     if req_reports:
         rpt_folder = get_patient_report_folder(patient_id)
         if os.path.isdir(rpt_folder):
             has_report = any(
-                f.endswith(".pdf")
+                f.endswith(".pdf") and f.startswith(f"DOC-{patient_id}-")
                 for f in os.listdir(rpt_folder)
                 if f != "archive"
             )
 
     # Check Summary
-    if req_summary and os.path.isdir(SUMMARY_DIR):
-        has_summary = any(
-            (f.startswith(f"{patient_id}-") or f.startswith(f"Clinical_Summary_Patient_{patient_id}"))
-            and f.endswith(".pdf")
-            for f in os.listdir(SUMMARY_DIR)
-            if f != "archive"
-        )
+    if req_summary:
+        summary_folder = get_patient_summary_folder(patient_id)
+        if os.path.isdir(summary_folder):
+            has_summary = any(
+                f.endswith(".pdf") and f.startswith(f"Clinical_Summary_Patient_{patient_id}")
+                for f in os.listdir(summary_folder)
+                if f != "archive"
+            )
 
     exists = has_persona and has_report and has_summary
     if not exists:
@@ -219,6 +257,9 @@ def process_patient_workflow(
     feedback: str = "",
     excluded_names: list[str] = None,
     generation_mode: dict = None,
+    cancel_check: callable = None,
+    archive_token: str = None,
+    generate_rejection_docs: bool = False,
 ) -> str:
     """
     Main orchestration for a single patient.
@@ -263,21 +304,29 @@ def process_patient_workflow(
 
     # ── 3. LOAD EXISTING PATIENT RECORD ───────────────────────────────────────
     existing_patient = patient_db.load_patient(patient_id)
-    if existing_patient:
+    has_persona = bool(existing_patient and (existing_patient.get("first_name") or existing_patient.get("last_name")))
+    if has_persona:
         print(f"   🔄 Existing record: {existing_patient.get('first_name')} {existing_patient.get('last_name')}")
 
     # ── 4. BUILD PATIENT STATE & DOCUMENT PLAN ─────────────────────────────────
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
-    
-    patient_report_folder = get_patient_report_folder(patient_id)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
-    case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    if generate_rejection_docs:
+        case_details_for_generation = dict(case_data or {})
+    else:
+        case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    
     if case_details_for_generation.get("outcome") != (case_data or {}).get("outcome"):
         print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')} → {case_details_for_generation.get('outcome', '?')})")
     else:
         print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
+    
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before AI generation.")
+        return None
+
     try:
         result, usage = ai_engine.generate_clinical_data(
             case_details=case_details_for_generation,
@@ -285,8 +334,14 @@ def process_patient_workflow(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_persona=existing_patient,
+            existing_persona=existing_patient if has_persona else None,
         )
+        
+        from .doc_generation.validator import validate_npi_consistency
+        npi_valid, npi_errors = validate_npi_consistency(result)
+        if not npi_valid:
+            raise ValueError(f"NPI Consistency Error: {'; '.join(npi_errors)}")
+            
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
         return None
@@ -301,6 +356,9 @@ def process_patient_workflow(
         removed = len(documents_all) - len(filtered_documents)
         print(f"   🧹 Removed {removed} payer policy criteria document(s) from output.")
 
+    # Ensure payer fields reflect patient_state insurance config/selection
+    _apply_insurance_overrides(result.patient_persona, patient_state)
+
     # ── 6. SAVE PATIENT PERSONA TO DB ─────────────────────────────────────────
     p_full_name = None
     if result.patient_persona:
@@ -309,18 +367,46 @@ def process_patient_workflow(
         p_full_name = f"{result.patient_persona.first_name} {result.patient_persona.last_name}"
         print(f"   💾 Patient DB updated: {p_full_name} (ID {patient_id})")
 
+    # Ensure patient output folder uses "ID - Name" convention when possible
+    patient_report_folder = None
+    if p_full_name:
+        try:
+            from .core.config import find_patient_folder, get_patient_root, OUTPUT_DIR
+            existing_root = find_patient_folder(patient_id)
+            desired_root = get_patient_root(patient_id, p_full_name, prefer_name=True)
+            if existing_root and existing_root != desired_root and not os.path.exists(desired_root):
+                os.rename(existing_root, desired_root)
+                # Ensure we also rename decoupled folders if they exist
+                old_base = os.path.basename(existing_root)
+                new_base = os.path.basename(desired_root)
+                for decoupled in ["metadata", "logs", "archive"]:
+                    old_path = os.path.join(OUTPUT_DIR, decoupled, old_base)
+                    new_path = os.path.join(OUTPUT_DIR, decoupled, new_base)
+                    if os.path.exists(old_path) and not os.path.exists(new_path):
+                        os.makedirs(os.path.dirname(new_path), exist_ok=True)
+                        os.rename(old_path, new_path)
+            patient_report_folder = desired_root if os.path.exists(desired_root) else (existing_root or desired_root)
+        except Exception as e:
+            print(f"   ⚠️  Could not align patient folder name: {e}")
+
     # ── 7. VERSION & ARCHIVE ───────────────────────────────────────────────────
     doc_version = get_persona_version(patient_id)
     print(f"   🔖 Document version: v{doc_version}")
 
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before PDF archiving.")
+        return None
+
     # Archive ONLY documents that are about to be overwritten
-    archive_patient_files(patient_id, generation_mode)
+    archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
 
     # ── 8. WRITE DOCUMENTS ─────────────────────────────────────────────────────
     current_year = datetime.datetime.now().year
     current_mrn  = f"MRN-{patient_id}-{current_year}"
     docs_written: list[str] = []
 
+    if not patient_report_folder:
+        patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
     # Ensure the patient's report sub-folder exists before writing
     os.makedirs(patient_report_folder, exist_ok=True)
 
@@ -333,7 +419,7 @@ def process_patient_workflow(
             filtered_documents,
             image_map=None,
             mrn=current_mrn,
-            output_folder=PERSONA_DIR,
+            output_folder=get_patient_persona_folder(patient_id),
             version=doc_version,
         )
         pf = os.path.basename(persona_path)
@@ -356,8 +442,12 @@ def process_patient_workflow(
             else:
                 loaded_template_sections.append([])
 
+        persist_images = os.getenv("PERSIST_IMAGES", "false").lower() == "true"
         print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
         for seq, doc in enumerate(filtered_documents, start=1):
+            if cancel_check and cancel_check():
+                print("   ⛔ Cancellation requested during PDF generation loop.")
+                return None
             try:
                 seq_str            = f"{seq:03d}"
                 doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
@@ -411,7 +501,7 @@ def process_patient_workflow(
                         "dob": result.patient_persona.dob if result.patient_persona else "",
                         "gender": result.patient_persona.gender if result.patient_persona else "",
                         "patient_phone": patient_phone,
-                        "report_date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                        "report_date": datetime.datetime.now().strftime("%m-%d-%Y"),
                         "provider": provider_name,
                         "provider_address": provider_address,
                         "provider_phone": provider_phone,
@@ -438,18 +528,23 @@ def process_patient_workflow(
 
                 image_path = None
                 imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
-                if any(kw in doc.title_hint.upper() for kw in imaging_keywords):
+                # Use regex with word boundaries to avoid 'CT' matching 'ACTION'
+                found_keyword = next((kw for kw in imaging_keywords if re.search(rf'\b{kw}\b', str(doc.title_hint).upper())), "Radiograph")
+                
+                if any(re.search(rf'\b{kw}\b', str(doc.title_hint).upper()) for kw in imaging_keywords):
                     print(f"      📸 Imaging document detected '{doc.title_hint}', generating supportive AI visual...")
                     img_filename = f"{final_filename_base}_img.png"
                     temp_image_path = os.path.join(patient_report_folder, img_filename)
                     
-                    # Pass a slice of the document description to guide DALL-E
-                    if isinstance(doc.content, dict):
-                        content_preview = json.dumps(doc.content)[:500]
-                    else:
-                        content_preview = str(doc.content)[:500]
-                    image_context = f"Visual supporting document {doc.title_hint}: {content_preview}"
-                    generated_path = ai_engine.generate_clinical_image(context=image_context, image_type=doc.title_hint, output_path=temp_image_path)
+                    # Provide a sanitized, high-fidelity context instead of raw JSON
+                    sanitized_hint = doc.title_hint.replace("_", " ").replace("-", " ")
+                    image_context = f"High-fidelity medical visualization of {sanitized_hint} radiological findings"
+                    
+                    generated_path = ai_engine.generate_clinical_image(
+                        context=image_context, 
+                        image_type=found_keyword, 
+                        output_path=temp_image_path
+                    )
                     
                     if generated_path:
                         image_path = generated_path
@@ -465,6 +560,11 @@ def process_patient_workflow(
                     image_path=image_path,
                     version=doc_version,
                 )
+                if image_path and not persist_images:
+                    try:
+                        os.remove(image_path)
+                    except Exception as e:
+                        print(f"      ⚠️  Could not remove temp image {image_path}: {e}")
                 rf = os.path.basename(pdf_path)
                 docs_written.append(rf)
                 print(f"      ✅ {rf}")
@@ -476,6 +576,9 @@ def process_patient_workflow(
 
     # ── 8c. SUMMARY ────────────────────────────────────────────────────────────
     if generation_mode["summary"]:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before summary generation.")
+            return None
         try:
             print(f"   📋 Generating annotator summary at v{doc_version}…")
 
@@ -518,19 +621,19 @@ def process_patient_workflow(
                 search_results["verification_notes"] = verification_notes
 
             documents_for_summary = filtered_documents if generation_mode["reports"] else None
-            annotator_summary = ai_engine.generate_annotator_summary(
+            concise_summary = ai_engine.generate_concise_summary(
                 case_details=case_data,
                 patient_persona=result.patient_persona,
                 generated_documents=documents_for_summary,
                 search_results=search_results,
             )
 
-            sum_path = pdf_generator.create_annotator_summary_pdf(
+            sum_path = pdf_generator.create_concise_summary_pdf(
                 patient_id=patient_id,
-                annotator_summary=annotator_summary,
+                concise_summary=concise_summary,
                 case_details=case_data,
                 patient_persona=result.patient_persona,
-                output_folder=SUMMARY_DIR,
+                output_folder=get_patient_summary_folder(patient_id),
                 version=doc_version,
             )
 
@@ -546,6 +649,9 @@ def process_patient_workflow(
 
     # ── 9. PATIENT TEXT RECORD ─────────────────────────────────────────────────
     if result.patient_persona:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before writing patient record.")
+            return None
         try:
             rec_path = patient_record_writer.write_patient_record(
                 patient_id=patient_id,
@@ -566,6 +672,8 @@ def preview_patient_generation(
     feedback: str = "",
     excluded_names: list[str] = None,
     generation_mode: dict = None,
+    cancel_check: callable = None,
+    generate_rejection_docs: bool = False,
 ) -> dict | None:
     """
     Run AI generation for a patient WITHOUT writing any PDFs.
@@ -590,8 +698,13 @@ def preview_patient_generation(
 
     history_txt = history_manager.get_history(patient_id)
     existing_patient = patient_db.load_patient(patient_id)
+    has_persona = bool(existing_patient and (existing_patient.get("first_name") or existing_patient.get("last_name")))
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
+
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before AI preview generation.")
+        return None
 
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     try:
@@ -601,7 +714,7 @@ def preview_patient_generation(
             document_plan=document_plan,
             user_feedback=feedback,
             history_context=history_txt,
-            existing_persona=existing_patient,
+            existing_persona=existing_patient if has_persona else None,
         )
     except Exception as e:
         print(f"❌ AI generation failed: {e}")
@@ -676,6 +789,8 @@ def render_patient_pdfs_from_content(
     documents_content: list,   # [{title_hint, content_html}]
     persona_json: dict | None = None,
     summarize: bool = True,
+    cancel_check: callable = None,
+    archive_token: str = None,
 ) -> list[str]:
     """
     Write PDFs from user-confirmed (possibly edited) content.
@@ -705,13 +820,39 @@ def render_patient_pdfs_from_content(
     except Exception:
         pass
 
+    # Apply insurance overrides even when rendering from existing persona
+    patient_state = None
+    try:
+        patient_state = state_manager.build_patient_state(patient_id, case_data or {})
+    except Exception:
+        patient_state = None
+    _apply_insurance_overrides(persona_obj, patient_state)
+
     p_full_name = (
         f"{persona_obj.first_name} {persona_obj.last_name}" if persona_obj
         else f"Patient_{patient_id}"
     )
 
-    archive_patient_files(patient_id, generation_mode)
-    patient_report_folder = get_patient_report_folder(patient_id)
+    # Ensure patient output folder uses "ID - Name" convention when possible
+    patient_report_folder = None
+    if persona_obj:
+        try:
+            from .core.config import find_patient_folder, get_patient_root
+            existing_root = find_patient_folder(patient_id)
+            desired_root = get_patient_root(patient_id, p_full_name, prefer_name=True)
+            if existing_root and existing_root != desired_root and not os.path.exists(desired_root):
+                os.rename(existing_root, desired_root)
+            patient_report_folder = desired_root if os.path.exists(desired_root) else (existing_root or desired_root)
+        except Exception as e:
+            print(f"   ⚠️  Could not align patient folder name: {e}")
+
+    if cancel_check and cancel_check():
+        print("   ⛔ Cancellation requested before archiving files.")
+        return []
+
+    archive_patient_files(patient_id, generation_mode, archive_token=archive_token)
+    if not patient_report_folder:
+        patient_report_folder = get_patient_report_folder(patient_id, p_full_name)
     os.makedirs(patient_report_folder, exist_ok=True)
 
     # ── Persona PDF ───────────────────────────────────────────────────────────
@@ -720,7 +861,7 @@ def render_patient_pdfs_from_content(
             persona_path = pdf_generator.create_persona_pdf(
                 patient_id, p_full_name, persona_obj, [],
                 image_map=None, mrn=current_mrn,
-                output_folder=PERSONA_DIR, version=doc_version,
+                output_folder=get_patient_persona_folder(patient_id), version=doc_version,
             )
             docs_written.append(os.path.basename(persona_path))
             print(f"   👤 Persona → {os.path.basename(persona_path)}")
@@ -730,6 +871,9 @@ def render_patient_pdfs_from_content(
     # ── Report PDFs from edited content ──────────────────────────────────────
     if generation_mode.get("reports", False) and documents_content:
         for seq, doc_info in enumerate(documents_content, start=1):
+            if cancel_check and cancel_check():
+                print("   ⛔ Cancellation requested during PDF creation.")
+                return []
             try:
                 title_hint = doc_info.get("title_hint", f"Document_{seq}")
                 content_html = doc_info.get("content_html", "")
@@ -756,9 +900,35 @@ def render_patient_pdfs_from_content(
                     title_hint=title_hint,
                     facility_name=fac_name,
                     provider_name=prov_name,
-                    service_date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                    service_date=datetime.datetime.now().strftime("%m-%d-%Y"),
                     accession_number=f"ACC-{patient_id}-{seq_str}",
                 )
+                image_path = None
+                imaging_keywords = ["ECG", "XRAY", "X-RAY", "MRI", "CT", "ULTRASOUND", "ECHO", "RADIOGRAPH", "SCAN"]
+                found_keyword = next((kw for kw in imaging_keywords if re.search(rf'\b{kw}\b', str(title_hint).upper())), "Radiograph")
+                
+                if any(re.search(rf'\b{kw}\b', str(title_hint).upper()) for kw in imaging_keywords):
+                    print(f"      📸 Imaging document detected '{title_hint}', generating supportive AI visual...")
+                    img_filename = f"{final_base}_img.png"
+                    temp_image_path = os.path.join(patient_report_folder, img_filename)
+                    
+                    sanitized_hint = title_hint.replace("_", " ").replace("-", " ")
+                    image_context = f"High-fidelity medical visualization of {sanitized_hint} radiological findings"
+                    
+                    try:
+                        from src.ai.engine import AIEngine
+                        ai_engine = AIEngine()
+                        generated_path = ai_engine.generate_clinical_image(
+                            context=image_context, 
+                            image_type=found_keyword, 
+                            output_path=temp_image_path
+                        )
+                        if generated_path:
+                            image_path = generated_path
+                            print(f"      🖼️  Saved image to {image_path}")
+                    except Exception as e:
+                        print(f"      ⚠️  Could not generate image: {e}")
+
                 pdf_path = pdf_generator.create_patient_pdf(
                     patient_id=patient_id,
                     doc_type=final_base,
@@ -766,9 +936,18 @@ def render_patient_pdfs_from_content(
                     patient_persona=persona_obj,
                     doc_metadata=doc_meta,
                     base_output_folder=patient_report_folder,
-                    image_path=None,
+                    image_path=image_path,
                     version=doc_version,
                 )
+                
+                if image_path:
+                    persist_images = os.getenv("PERSIST_IMAGES", "false").lower() == "true"
+                    if not persist_images:
+                        try:
+                            os.remove(image_path)
+                        except Exception as e:
+                            print(f"      ⚠️  Could not remove temp image {image_path}: {e}")
+
                 docs_written.append(os.path.basename(pdf_path))
                 print(f"      ✅ {os.path.basename(pdf_path)}")
             except Exception as e:
@@ -778,19 +957,22 @@ def render_patient_pdfs_from_content(
 
     # ── Summary PDF ───────────────────────────────────────────────────────────
     if summarize and generation_mode.get("summary", False) and case_data and persona_obj:
+        if cancel_check and cancel_check():
+            print("   ⛔ Cancellation requested before generating summary.")
+            return []
         try:
-            annotator_summary = ai_engine.generate_annotator_summary(
+            concise_summary = ai_engine.generate_concise_summary(
                 case_details=case_data,
                 patient_persona=persona_obj,
                 generated_documents=None,
                 search_results=None,
             )
-            sum_path = pdf_generator.create_annotator_summary_pdf(
+            sum_path = pdf_generator.create_concise_summary_pdf(
                 patient_id=patient_id,
-                annotator_summary=annotator_summary,
+                concise_summary=concise_summary,
                 case_details=case_data,
                 patient_persona=persona_obj,
-                output_folder=SUMMARY_DIR,
+                output_folder=get_patient_summary_folder(patient_id),
                 version=doc_version,
             )
             if sum_path:

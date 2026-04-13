@@ -13,6 +13,7 @@ Outputs include:
 * Clinical reports (lab, imaging, consult notes)
 * Patient personas (FHIR-aligned records)
 * Clinical summaries for case review
+* A concise, bulleted summary with highlighted keywords for quick review
 * Verification summaries for annotators
 * Policy criteria summaries are intentionally excluded from patient-facing reports and persona outputs
 
@@ -25,7 +26,7 @@ The Clinical Data Generator is an **AI-driven pipeline** that synthesizes realis
 Primary responsibilities:
 
 1. Generate realistic patient personas
-2. Generate clinical documents aligned with PA workflows
+2. Generate clinical documents aligned with PA workflows (supporting both Approval conditions and Rejection/Denial deficiency cases via `generate_rejection_docs`)
 3. Maintain temporal and clinical consistency
 4. Prevent document duplication
 5. Produce structured outputs for testing automation pipelines
@@ -161,6 +162,15 @@ Human verification guide containing:
 * verification notes
 * clinical reasoning summary
 
+### ConciseSummary
+
+A concise, bulleted summary with highlighted keywords for quick review, containing:
+
+* Patient Profile and Case Explanation
+* Extraction Expectation
+* Document Purpose and Gaps
+* Overall Expectation and Gaps
+
 ---
 
 # Generation Workflow
@@ -208,6 +218,14 @@ The function `load_existing_context()` guarantees that:
 * reports reference the same procedure
 
 Contradictory data across documents must never occur.
+
+**Strict Data Consistency Rules (v5)**:
+* **NPI Consistency**: Every provider has EXACTLY one NPI across all encounters, therapies, and documents. No two providers share an NPI.
+* **Encounter/Lab Matching**: Encounter lists in summaries perfectly match the persona. Lab events strictly map to existing encounters or create distinct ones.
+* **Clinical Coding**: Referenced ICD-10 and CPT codes must identically match codes in the persona profile.
+* **Medications**: "Past" medications use past tense and appear strictly under "Previous Treatments" in PA forms. Hold instructions calculate explicit calendar dates.
+* **Conditionals**: Pre-Op Eval docs must include Concurrent Care references if active therapies exist. GI cases explicitly flag FIT/FOBT results consistently.
+* **PA Fields**: Risk/Benefit justifications explicitly cite comorbidities. Authorization types use standard labels. Units are defaulted or calculated.
 
 Quality guardrails:
 
@@ -364,25 +382,43 @@ the `structured_documents` array in responses.
 
 ---
 
-# File Naming Conventions
+# Folder & File Naming Conventions
 
-Documents
+**Folders (Decoupled Architecture from v5.2)**:
+* Active Documents: `generated_output/patient-data/<Patient_ID> - <Patient_Name> - <CPT_Code> - <PA_Outcome>/`
+* Metadata tracking: `generated_output/metadata/<Folder_Name>`
+* Summary documents: `generated_output/summary/` (Flat structure)
+* Generation logs: `generated_output/logs/<Folder_Name>`
+* Historical archives: `generated_output/archive/<Folder_Name>`
+* Debug & Internal State: `generated_output/debug/`
 
+**Documents**:
 ```
 DOC-{patient_id}-{seq}-{title}.pdf
 ```
 
-Persona
-
+**Persona**:
 ```
 {patient_id}-{name}-persona.pdf
 ```
 
-Summary
-
+**Summary**:
 ```
 Clinical_Summary_Patient_{id}.pdf
 ```
+
+---
+
+# Maintenance & Utilities
+
+**Compaction Management**:
+* `compact_patient_data.py`: Prunes and truncates verbose logs and patient records.
+* Logic: Uses section-aware parsing to truncate history and generation feedback while preserving current clinical context.
+* Execution: Always run with project venv: `./venv/bin/python3 compact_patient_data.py`.
+
+**Purge Management**:
+* Utilities: `src/utils/purge_manager.py` (CLI entrypoints via `run.py`).
+* Coverage: Global wipes (`all`, `summaries`, `logs`) and selective patient purging.
 
 ---
 
@@ -437,6 +473,29 @@ suffix -NAF
 AI errors do not terminate generation.
 
 Workflow continues gracefully.
+
+---
+
+# Maintenance & Updates
+
+### v5.3 Gap Injection System Overhaul (2026-04-09)
+* **Multi-Dimensional Gap Archetypes**: Added `GAP_ARCHETYPE_POOL` in `src/ai/prompts.py` — 20 archetypes across 5 clinical dimensions (Profile-Behavior, Temporal-Sequence, Treatment-Escalation, Cross-Document, Policy-Criteria).
+* **Weighted Selector**: `_select_gap_archetypes()` randomizes 2–4 archetypes per run, guaranteeing ≥2 distinct dimensions and ≥1 high-impact (TE or PC) archetype per denial case.
+* **Sophisticated Gap Builder**: `get_rejection_gap_instruction()` produces a self-contained prompt block with per-archetype injection instructions and mandatory anti-pattern guards.
+* **Approval/Denial Dispatch**: `_build_clinical_logic_instruction()` replaces the old single-line blunt directive — approval cases get strong-evidence instructions; denial cases get the gap injection protocol.
+* **Anti-Pattern Guards**: Explicitly prohibit blank sections, `[MISSING]` labels, single-obvious-value errors, and gap concentration in one document.
+* **Design Goal**: Gaps are detectable only by cross-referencing ≥2 data dimensions; no gap is visible from a single document read-through.
+
+### v5.2 Directory Restructuring (2026-04-08)
+* **Decoupled Architecture**: `logs/`, `metadata/`, `archive/`, and `debug/` data have been entirely moved out of the `patient-data/` folder and decoupled to reside top-level inside `generated_output/`.
+* **Dynamic Folder Naming**: Patient folders dynamically append `CPT Code` and `PA Outcome` attributes (e.g. `101 - Sandor - 12345 - PA Approval`). 
+* **Granular Archiving**: Document overrides automatically and specifically archive (rather than delete) older PDFs (i.e. replacing *only* personas vs all files) during new generation loops into `generated_output/archive/...`
+
+### v4.1 Robustness Improvements (2026-04-07)
+* **Indentation Fix**: Resolved `IndentationError` in `src/workflow.py` causing server startup failures.
+* **Folder Safety**: Added `patient_report_folder` validation and fallback logic to prevent `os.makedirs` crashes during headless generation or persona name alignment.
+* **API Stability**: Corrected `history_manager` local import in `api_server.py` to use `src.data.history`.
+* **Dependency Alignment**: Added `Flask` and `Flask-Cors` to `requirements.txt`.
 
 ---
 
@@ -501,7 +560,7 @@ API server runs on `http://localhost:410` by default (`API_PORT` env var).
 
 # Key Rules for AI Agents
 
-1. Dates must use `YYYY-MM-DD`
+1. Dates must use `MM-DD-YYYY`
 2. Patient IDs are numeric strings
 3. Document titles must use underscores
 4. Avoid generating duplicate reports

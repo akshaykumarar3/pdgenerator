@@ -6,17 +6,8 @@ import random
 from typing import Dict, Any
 
 from . import patient_db
-
-_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DEBUG_DIR = os.path.join(_BASE_DIR, "generated_output", "debug")
-
-# Helper list of fictional insurance companies for random assignment if not provided
-INSURANCE_PAYERS = [
-    {"payer_id": "UHC-001", "name": "UnitedHealthcare", "plan_type": "PPO"},
-    {"payer_id": "AET-002", "name": "Aetna", "plan_type": "HMO"},
-    {"payer_id": "BCBS-003", "name": "Blue Cross Blue Shield", "plan_type": "EPO"},
-    {"payer_id": "CIG-004", "name": "Cigna", "plan_type": "PPO"}
-]
+from . import insurance_config
+from .config import DEBUG_DIR
 
 def ensure_debug_dir():
     os.makedirs(DEBUG_DIR, exist_ok=True)
@@ -54,12 +45,13 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
     """
     # 1. Load existing db record if present
     existing_record = patient_db.load_patient(patient_id)
+    has_persona = bool(existing_record and (existing_record.get("first_name") or existing_record.get("last_name")))
     
     # 2. Setup Base State
     identifiers = {}
     demographics = {}
     
-    if existing_record:
+    if has_persona:
         # User already generated a persona for this ID; reuse data
         identifiers = existing_record.get("identifiers", {})
         if not identifiers:
@@ -116,8 +108,28 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
         if m:
             cpt_code = m.group(1)
     
-    # Pick random insurance for new patients
-    selected_payer = random.choice(INSURANCE_PAYERS)
+    # Resolve insurance selection (patient-level override or config default)
+    selection = (existing_record or {}).get("insurance_selection") or {}
+    selected_provider_id = selection.get("provider_id") or insurance_config.get_default_provider_id()
+    selected_provider = insurance_config.get_provider_by_id(selected_provider_id) or insurance_config.get_default_provider()
+
+    # If no explicit plan_type, reuse existing payer plan_type if present
+    selected_plan_type = selection.get("plan_type")
+    if not selected_plan_type:
+        existing_payer = (existing_record or {}).get("payer") or {}
+        existing_plan_type = existing_payer.get("plan_type")
+        if existing_plan_type:
+            selected_plan_type = existing_plan_type
+
+    # Resolve plan using selection, previous payer plan, or config defaults
+    plan_id = selection.get("plan_id")
+    existing_plan_name = ((existing_record or {}).get("payer") or {}).get("plan_name")
+    plan = insurance_config.resolve_plan(
+        selected_provider,
+        plan_type=selected_plan_type,
+        plan_id=plan_id,
+        fallback_plan_name=existing_plan_name,
+    )
     
     patient_state = {
         "patient_id": str(patient_id),
@@ -134,9 +146,14 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
              "expected_date": "" # Handled by generate temporal logic later
         },
         "insurance": {
-             "payer_id": selected_payer["payer_id"],
-             "payer_name": selected_payer["name"],
-             "plan_type": selected_payer["plan_type"],
+             "payer_id": (selected_provider or {}).get("provider_id", "UNKNOWN"),
+             "payer_name": (selected_provider or {}).get("name", "Unknown"),
+             "plan_name": (plan or {}).get("plan_name", "Unknown Plan"),
+             "plan_type": (plan or {}).get("plan_type", selected_plan_type or "Unknown"),
+             "provider_abbreviation": (selected_provider or {}).get("abbreviation", ""),
+             "provider_policy_url": (selected_provider or {}).get("policy_url", ""),
+             "plan_id": (plan or {}).get("plan_id", ""),
+             "plan_policy_url": (plan or {}).get("policy_url", ""),
              "member_id": identifiers["insurance_member_id"],
              "policy_number": identifiers["policy_number"]
         }

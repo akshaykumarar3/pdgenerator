@@ -31,7 +31,7 @@ def _calc_age(dob_str: str) -> Optional[int]:
     if not dob_str:
         return None
     try:
-        dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+        dob = datetime.strptime(dob_str, "%m-%d-%Y").date()
         today = datetime.now().date()
         return today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
     except Exception:

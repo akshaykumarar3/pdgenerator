@@ -25,7 +25,7 @@ Sections:
 import os
 from datetime import datetime
 
-from ..core.config import RECORDS_DIR
+from ..core.config import get_patient_records_folder
 
 
 def _hr(width: int = 70) -> str:
@@ -54,8 +54,9 @@ def write_patient_record(
     Write/overwrite records/{patient_id}-record.txt.
     Returns the path to the file.
     """
-    os.makedirs(RECORDS_DIR, exist_ok=True)
-    out_path = os.path.join(RECORDS_DIR, f"{patient_id}-record.txt")
+    records_dir = get_patient_records_folder(patient_id)
+    os.makedirs(records_dir, exist_ok=True)
+    out_path = os.path.join(records_dir, f"{patient_id}-record.txt")
 
     # Support both Pydantic and plain dict
     if hasattr(persona, "model_dump"):
@@ -63,7 +64,7 @@ def write_patient_record(
     else:
         p = persona or {}
 
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
 
     # ── helpers ──────────────────────────────────────────────────────────────
     def g(key, default="(not recorded)"):
@@ -100,8 +101,12 @@ def write_patient_record(
     lines.append(_section("2. Insurance / Payer"))
     payer = nested("payer")
     lines.append(_val("Payer", payer.get("payer_name", "(not recorded)")))
+    lines.append(_val("Provider Abbrev", payer.get("provider_abbreviation", "(not recorded)")))
+    lines.append(_val("Provider Policy URL", payer.get("provider_policy_url", "(not recorded)")))
     lines.append(_val("Plan", payer.get("plan_name", "(not recorded)")))
     lines.append(_val("Plan Type", payer.get("plan_type", "(not recorded)")))
+    lines.append(_val("Plan ID", payer.get("plan_id", "(not recorded)")))
+    lines.append(_val("Plan Policy URL", payer.get("plan_policy_url", "(not recorded)")))
     lines.append(_val("Member ID", payer.get("member_id", "(not recorded)")))
     lines.append(_val("Policy #", payer.get("policy_number", "(not recorded)")))
     lines.append(_val("Effective Date", payer.get("effective_date", "(not recorded)")))

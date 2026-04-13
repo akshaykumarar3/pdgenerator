@@ -4,11 +4,16 @@ import glob
 import json
 import datetime
 from ..core import patient_db
-from ..core.config import OUTPUT_DIR, REPORTS_DIR, SUMMARY_DIR, LOGS_DIR, RECORDS_DIR, PERSONA_DIR
-
-# Derived Paths (Mapped from config)
-DOCS_DIR = REPORTS_DIR
-PERSONAS_DIR = PERSONA_DIR
+from ..core.config import (
+    OUTPUT_DIR,
+    PATIENT_DATA_DIR,
+    get_patient_summary_folder,
+    get_patient_logs_folder,
+    get_patient_records_folder,
+    get_patient_archive_folder,
+    SUMMARY_DIR,
+    DEBUG_DIR,
+)
 DB_PATH = patient_db.DB_PATH
 
 def confirm_action(message: str, force: bool = False) -> bool:
@@ -19,28 +24,21 @@ def confirm_action(message: str, force: bool = False) -> bool:
     return response == 'y'
 
 
-def _archive_dir(base_dir: str) -> str:
-    archive_dir = os.path.join(base_dir, "archive")
+def _archive_dir_for_patient(patient_id: str) -> str:
+    archive_dir = get_patient_archive_folder(patient_id)
     os.makedirs(archive_dir, exist_ok=True)
     return archive_dir
 
 
-def _archive_files(files: list[str], base_dir: str):
-    archive_dir = _archive_dir(base_dir)
+def _archive_files_for_patient(files: list[str], patient_id: str, label: str):
+    archive_dir = _archive_dir_for_patient(patient_id)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    prefix = f"{label}_{timestamp}__"
     for f in files:
         if not os.path.isfile(f):
             continue
-        dst = os.path.join(archive_dir, os.path.basename(f))
+        dst = os.path.join(archive_dir, f"{prefix}{os.path.basename(f)}")
         shutil.move(f, dst)
-
-
-def _archive_folder(folder_path: str, base_dir: str, label: str):
-    if not os.path.exists(folder_path):
-        return
-    archive_dir = _archive_dir(base_dir)
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    dst = os.path.join(archive_dir, f"{label}_{timestamp}")
-    shutil.move(folder_path, dst)
 
 
 def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "delete", force: bool = False):
@@ -62,69 +60,81 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
 
     print(f"\n   🗑️  Purging Patient {patient_id} ({mode})...")
 
-    # Reports (patient-reports/<id>/)
+    p_root = get_patient_root(patient_id)
+    p_summary = get_patient_summary_folder(patient_id)
+
+    # Reports
     if "reports" in targets:
-        p_doc_dir = os.path.join(DOCS_DIR, str(patient_id))
+        report_files = glob.glob(os.path.join(p_root, f"DOC-{patient_id}-*.pdf"))
         if mode == "archive":
-            _archive_folder(p_doc_dir, DOCS_DIR, f"{patient_id}_reports")
+            _archive_files_for_patient(report_files, patient_id, f"{patient_id}_reports")
         else:
-            if os.path.exists(p_doc_dir):
-                shutil.rmtree(p_doc_dir)
-                print(f"      ✅ Deleted: {p_doc_dir}/")
+            for f in report_files:
+                os.remove(f)
+                print(f"      ✅ Deleted: {os.path.basename(f)}")
 
     # Personas
     if "persona" in targets:
-        persona_files = glob.glob(os.path.join(PERSONAS_DIR, f"*{patient_id}*"))
+        persona_files = glob.glob(os.path.join(p_root, f"{patient_id}-*persona*.pdf"))
         if mode == "archive":
-            _archive_files(persona_files, PERSONAS_DIR)
+            _archive_files_for_patient(persona_files, patient_id, f"{patient_id}_persona")
         else:
             for f in persona_files:
-                if os.path.isfile(f):
-                    os.remove(f)
-                    print(f"      ✅ Deleted: personas/{os.path.basename(f)}")
+                os.remove(f)
+                print(f"      ✅ Deleted: {os.path.basename(f)}")
 
     # Summaries
     if "summary" in targets:
-        summary_files = glob.glob(os.path.join(SUMMARY_DIR, f"*{patient_id}*"))
+        # Search both root (legacy) and dedicated summary folder
+        summary_files = glob.glob(os.path.join(p_root, f"Clinical_Summary_Patient_{patient_id}*.pdf"))
+        if os.path.exists(p_summary):
+            summary_files.extend(glob.glob(os.path.join(p_summary, f"Clinical_Summary_Patient_{patient_id}*.pdf")))
+        
         if mode == "archive":
-            _archive_files(summary_files, SUMMARY_DIR)
+            _archive_files_for_patient(summary_files, patient_id, f"{patient_id}_summary")
         else:
             for f in summary_files:
-                if os.path.isfile(f):
+                try:
                     os.remove(f)
-                    print(f"      ✅ Deleted: summary/{os.path.basename(f)}")
+                    print(f"      ✅ Deleted: {os.path.basename(f)}")
+                except Exception:
+                    pass
+                    pass
 
     # Logs
     if "logs" in targets:
-        log_file = os.path.join(LOGS_DIR, f"{patient_id}.txt")
-        if os.path.exists(log_file):
+        logs_dir = get_patient_logs_folder(patient_id)
+        if os.path.exists(logs_dir):
             if mode == "archive":
-                _archive_files([log_file], LOGS_DIR)
+                _archive_files_for_patient(
+                    glob.glob(os.path.join(logs_dir, "*")),
+                    patient_id,
+                    f"{patient_id}_logs",
+                )
             else:
-                os.remove(log_file)
-                print(f"      ✅ Deleted: {os.path.basename(log_file)}")
+                shutil.rmtree(logs_dir)
+                print(f"      ✅ Deleted: {logs_dir}/")
 
     # Debug state
     if "debug" in targets:
-        debug_state = os.path.join(OUTPUT_DIR, "debug", f"patient_state_{patient_id}.json")
+        debug_state = os.path.join(DEBUG_DIR, f"patient_state_{patient_id}.json")
         if os.path.exists(debug_state):
             if mode == "archive":
-                _archive_files([debug_state], os.path.join(OUTPUT_DIR, "debug"))
+                _archive_files_for_patient([debug_state], patient_id, f"{patient_id}_debug")
             else:
                 os.remove(debug_state)
                 print(f"      ✅ Deleted: {os.path.basename(debug_state)}")
 
     # Records
     if "records" in targets:
-        if os.path.exists(RECORDS_DIR):
-            record_files = glob.glob(os.path.join(RECORDS_DIR, f"*{patient_id}*"))
+        record_dir = get_patient_records_folder(patient_id)
+        record_file = os.path.join(record_dir, f"{patient_id}-record.txt")
+        if os.path.exists(record_file):
             if mode == "archive":
-                _archive_files(record_files, RECORDS_DIR)
+                _archive_files_for_patient([record_file], patient_id, f"{patient_id}_records")
             else:
-                for f in record_files:
-                    if os.path.isfile(f):
-                        os.remove(f)
-                        print(f"      ✅ Deleted: records/{os.path.basename(f)}")
+                os.remove(record_file)
+                print(f"      ✅ Deleted: {os.path.basename(record_file)}")
 
     # DB entry
     if "db" in targets:
@@ -137,7 +147,7 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
                 data = {}
         if str(patient_id) in data:
             if mode == "archive":
-                archive_dir = _archive_dir(RECORDS_DIR)
+                archive_dir = _archive_dir_for_patient(patient_id)
                 archive_path = os.path.join(archive_dir, f"patient_{patient_id}_db.json")
                 with open(archive_path, "w", encoding="utf-8") as f:
                     json.dump(data[str(patient_id)], f, indent=2)
@@ -167,29 +177,11 @@ def purge_all(force: bool = False):
 
     print("\n   🗑️  Purging ALL Data...")
     
-    # 1. Documents
-    if os.path.exists(DOCS_DIR):
-        shutil.rmtree(DOCS_DIR)
-        os.makedirs(DOCS_DIR)
-        print(f"      ✅ Deleted: {DOCS_DIR}/")
-
-    # 2. Summaries
-    if os.path.exists(SUMMARY_DIR):
-        shutil.rmtree(SUMMARY_DIR)
-        os.makedirs(SUMMARY_DIR)
-        print(f"      ✅ Deleted: {SUMMARY_DIR}/")
-
-    # 3. Personas
-    if os.path.exists(PERSONAS_DIR):
-        shutil.rmtree(PERSONAS_DIR)
-        os.makedirs(PERSONAS_DIR)
-        print(f"      ✅ Deleted: {PERSONAS_DIR}/")
-
-    # 4. Logs
-    if os.path.exists(LOGS_DIR):
-        shutil.rmtree(LOGS_DIR)
-        os.makedirs(LOGS_DIR)
-        print(f"      ✅ Deleted: {LOGS_DIR}/")
+    # 1. Patient Data
+    if os.path.exists(PATIENT_DATA_DIR):
+        shutil.rmtree(PATIENT_DATA_DIR)
+        os.makedirs(PATIENT_DATA_DIR)
+        print(f"      ✅ Deleted: {PATIENT_DATA_DIR}/")
 
     # 5. Patient DB
     try:
@@ -199,11 +191,16 @@ def purge_all(force: bool = False):
     except IOError:
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
-    # 6. Records
-    if os.path.exists(RECORDS_DIR):
-        shutil.rmtree(RECORDS_DIR)
-        os.makedirs(RECORDS_DIR)
-        print(f"      ✅ Deleted: {RECORDS_DIR}/")
+    # 2. Additional Folders
+    for d in ["logs", "metadata", "archive", "summary"]:
+        target_dir = os.path.join(OUTPUT_DIR, d)
+        if os.path.exists(target_dir):
+            shutil.rmtree(target_dir)
+            print(f"      ✅ Deleted: {target_dir}/")
+    
+    if os.path.exists(DEBUG_DIR):
+        shutil.rmtree(DEBUG_DIR)
+        print(f"      ✅ Deleted: {DEBUG_DIR}/")
 
     print("\n   ✨ Purge Complete.")
 
@@ -227,16 +224,19 @@ def purge_personas(force: bool = False):
     except IOError:
         print(f"      ⚠️  Could not reset DB at {DB_PATH}")
 
-    # 2. Personas Folder
-    if os.path.exists(PERSONAS_DIR):
-        shutil.rmtree(PERSONAS_DIR)
-        print(f"      ✅ Deleted: {PERSONAS_DIR}/")
+    # 2. Personas Files
+    if os.path.exists(PATIENT_DATA_DIR):
+        for folder in os.listdir(PATIENT_DATA_DIR):
+            p_root = os.path.join(PATIENT_DATA_DIR, folder)
+            for f in glob.glob(os.path.join(p_root, "*-persona-*.pdf")):
+                os.remove(f)
+                print(f"      ✅ Deleted: {os.path.basename(f)}")
     
     print("\n   ✨ Personas Purged.")
 
 def purge_documents(force: bool = False):
     """
-    Clears `documents/` folder content EXCEPT `documents/personas/`.
+    Clears report + summary folders but preserves personas.
     """
     if not confirm_action("This will clear ALL Patient Documents (PDFs/Images) but PRESERVE Personas.", force=force):
         print("   ❌ Operation Cancelled.")
@@ -244,19 +244,18 @@ def purge_documents(force: bool = False):
 
     print("\n   🗑️  Purging Documents (Preserving Personas)...")
     
-    if os.path.exists(DOCS_DIR):
-        items = os.listdir(DOCS_DIR)
-        for item in items:
-            item_path = os.path.join(DOCS_DIR, item)
-            # Skip personas folder
-            if item == "personas":
-                continue
+    if os.path.exists(PATIENT_DATA_DIR):
+        for folder in os.listdir(PATIENT_DATA_DIR):
+            p_root = os.path.join(PATIENT_DATA_DIR, folder)
+            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
+                os.remove(f)
+        
+        # Also clear dedicated summary folder
+        if os.path.exists(SUMMARY_DIR):
+            shutil.rmtree(SUMMARY_DIR)
+            os.makedirs(SUMMARY_DIR)
             
-            if os.path.isfile(item_path):
-                os.remove(item_path)
-            elif os.path.isdir(item_path):
-                shutil.rmtree(item_path)
-        print(f"      ✅ Cleared: {DOCS_DIR}/ (excluding 'personas')")
+        print(f"      ✅ Cleared reports + summaries.")
     
     print("\n   ✨ Documents Purged.")
 
@@ -271,13 +270,20 @@ def purge_summaries_only(force: bool = False):
     print("\n   🗑️  Purging Summaries Only...")
     
     count = 0
-    # Summaries are in summary/Clinical_Summary_Patient_{id}.pdf
+    # 1. Clear summary PDFs inside patient folders (legacy)
+    if os.path.exists(PATIENT_DATA_DIR):
+        for folder in os.listdir(PATIENT_DATA_DIR):
+            p_root = os.path.join(PATIENT_DATA_DIR, folder)
+            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
+                os.remove(f)
+                count += 1
+                print(f"      ✅ Deleted (legacy): {os.path.basename(f)}")
+    
+    # 2. Clear dedicated summary folder
     if os.path.exists(SUMMARY_DIR):
-        summary_files = glob.glob(os.path.join(SUMMARY_DIR, "Clinical_Summary_Patient_*.pdf"))
-        for f in summary_files:
-            os.remove(f)
-            count += 1
-            print(f"      ✅ Deleted: {os.path.basename(f)}")
+        shutil.rmtree(SUMMARY_DIR)
+        os.makedirs(SUMMARY_DIR)
+        print(f"      ✅ Wiped dedicated summary folder: {SUMMARY_DIR}/")
     
     print(f"\n   ✨ Deleted {count} summary file(s).")
 
@@ -292,22 +298,14 @@ def purge_reports_only(force: bool = False):
     print("\n   🗑️  Purging Reports Only...")
     
     count = 0
-    # Reports are DOC-{id}-*.pdf files
-    if os.path.exists(DOCS_DIR):
-        for patient_folder in os.listdir(DOCS_DIR):
-            patient_path = os.path.join(DOCS_DIR, patient_folder)
-            if os.path.isdir(patient_path):
-                report_files = glob.glob(os.path.join(patient_path, "DOC-*.pdf"))
-                for f in report_files:
-                    os.remove(f)
-                    count += 1
-                    print(f"      ✅ Deleted: {os.path.basename(f)}")
-                
-                # Also delete images folder if it exists
-                images_dir = os.path.join(patient_path, "images")
-                if os.path.exists(images_dir):
-                    shutil.rmtree(images_dir)
-                    print(f"      ✅ Deleted: images/ for {patient_folder}")
+    if os.path.exists(PATIENT_DATA_DIR):
+        for folder in os.listdir(PATIENT_DATA_DIR):
+            p_root = os.path.join(PATIENT_DATA_DIR, folder)
+            report_files = glob.glob(os.path.join(p_root, "DOC-*.pdf"))
+            for f in report_files:
+                os.remove(f)
+                count += 1
+                print(f"      ✅ Deleted: {os.path.basename(f)}")
     
     print(f"\n   ✨ Deleted {count} report file(s).")
 
@@ -321,23 +319,18 @@ def purge_reports_and_summaries(force: bool = False):
 
     print("\n   🗑️  Purging Reports and Summaries...")
     
-    # Delete patient-reports directory
-    if os.path.exists(DOCS_DIR):
-        shutil.rmtree(DOCS_DIR)
-        os.makedirs(DOCS_DIR)
-        print(f"      ✅ Deleted: {DOCS_DIR}/")
-    
-    # Delete summary directory
-    if os.path.exists(SUMMARY_DIR):
-        shutil.rmtree(SUMMARY_DIR)
-        os.makedirs(SUMMARY_DIR)
-        print(f"      ✅ Deleted: {SUMMARY_DIR}/")
-    
-    # Clear logs
-    if os.path.exists(LOGS_DIR):
-        shutil.rmtree(LOGS_DIR)
-        os.makedirs(LOGS_DIR)
-        print(f"      ✅ Deleted: {LOGS_DIR}/")
+    if os.path.exists(PATIENT_DATA_DIR):
+        for folder in os.listdir(PATIENT_DATA_DIR):
+            p_root = os.path.join(PATIENT_DATA_DIR, folder)
+            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
+                os.remove(f)
+        
+        # Also clear dedicated summary folder
+        if os.path.exists(SUMMARY_DIR):
+            shutil.rmtree(SUMMARY_DIR)
+            os.makedirs(SUMMARY_DIR)
+            
+        print(f"      ✅ Deleted: reports + summaries.")
     
     print("\n   ✨ Reports and Summaries Purged.")
 

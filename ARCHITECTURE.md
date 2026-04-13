@@ -8,7 +8,9 @@ The system generates:
 
 - **Patient Personas**: FHIR-style patient records.
 - **Clinical Reports**: Consult notes, imaging reports, and lab reports.
-- **Clinical Summaries**: Aggregated case overviews.
+- **Clinical Summaries**: Two types of summaries are generated:
+  - An aggregated case overview.
+  - A concise, bulleted summary with highlighted keywords for quick review.
 - **Policy criteria summaries are not emitted in clinical outputs** (reports/persona); any policy/criteria content is reserved for internal annotator guidance.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
@@ -39,18 +41,25 @@ All generated documents must derive from a single structured patient record call
 
 ```mermaid
 graph TD
-    UI["User Input / UI (ui/index.html, index2.html)"] --> API["API Server (api_server.py)"]
-    API --> Generator["Workflow Orchestrator (src/workflow.py)"]
-    Generator --> DataLoader["Case Loader (src/data/loader.py)"]
-    Generator --> PatientState["Patient State Builder"]
-    PatientState --> AIEngine["AI Engine (src/ai/client.py)"]
-    AIEngine --> Documents["Clinical Document Generator"]
-    Documents --> Validator["Document Validator (src/doc_generation/validator.py)"]
-    Validator --> PDFFactory["PDF Renderer (src/doc_generation/pdf_generator.py)"]
-    PDFFactory --> Output["generated_output/"]
-    Generator --> Search["Search Engine (src/ai/search_engine.py)"]
-    Generator --> History["History Manager (src/data/history.py)"]
-    Generator --> DB["Patient Database (src/core/patient_db.py)"]
+    subgraph Input
+        UI["User Input / UI (ui/index.html, index2.html)"]
+    end
+    subgraph Processing
+        API["API Server (api_server.py)"] --> Generator["Workflow Orchestrator (src/workflow.py)"]
+        Generator --> DataLoader["Case Loader (src/data/loader.py)"]
+        Generator --> PatientState["Patient State Builder"]
+        PatientState --> AIEngine["AI Engine (src/ai/client.py)"]
+        AIEngine --> Documents["Clinical Document Generator"]
+        Documents --> Validator["Document Validator (src/doc_generation/validator.py)"]
+        Validator --> PDFFactory["PDF Renderer (src/doc_generation/pdf_generator.py)"]
+        Generator --> Search["Search Engine (src/ai/search_engine.py)"]
+        Generator --> History["History Manager (src/data/history.py)"]
+        Generator --> DB["Patient Database (src/core/patient_db.py)"]
+    end
+    subgraph Output
+        PDFFactory --> OutputDir["generated_output/"]
+    end
+    UI --> API
 ```
 
 ---
@@ -117,6 +126,12 @@ The Patient State Layer ensures that all documents reference the same patient da
 - **`GeneratedDocument`**: Single clinical document (title, type, content sections).
 - **`ClinicalDataPayload`**: Combined persona + documents + changes summary. The `documents` field uses the alias `structured_documents` for AI fidelity; both keys are normalised by `_parse_vertex_response()`.
 - **`AnnotatorSummary`**: Post-generation quality summary used for PA optimization scoring.
+- **`ConciseSummary`**: A concise, bulleted summary with highlighted keywords for quick review.
+
+### Batch Processing & Job Cancellation
+
+- **Batch Execution (`/api/generate_all`)**: Processes multiple target patient IDs sequentially. Builds an in-memory queue to maintain generation state.
+- **Cancel/Abort Checks (`cancel_check`)**: Passed into internal orchestration loops (`process_patient_workflow`). Checks a flag per `job_id`. If `True`, the worker halts AI generation/PDF rendering immediately and triggers a rollback of the patient record.
 
 ---
 
@@ -159,7 +174,34 @@ A `vertex_doc_reminder` CRITICAL instruction is always prepended to Vertex promp
 - **Bio narrative is enforced non-empty**: if the LLM returns a blank or too-short `bio_narrative`, it is backfilled from persona data, encounters, diagnoses, and case details.
 - **Report medical history is enforced**: if a document includes `past_medical_history` but it is blank, it is backfilled using supporting diagnoses or case context.
 - **No coverage/sufficiency judgments in clinical text**: documents are sanitized to remove explicit appropriateness/coverage or evidence-sufficiency language (e.g., "not indicated", "not medically necessary", "meets criteria", "insufficient evidence").
-- **Rejection → Approval for clinical docs**: when supporting reports are generated, rejection/denial case outcomes are converted to approval for clinical document generation (annotator summary can still reflect the original test case).
+- **Rejection/Approval Handling**: For default positive outcomes, the system forces approval document generation. When `generate_rejection_docs` is set, the outcome is passed as-is (Denial) and the prompt's gap injection protocol activates.
+
+### Gap Injection System (`src/ai/prompts.py`)
+
+Activated when the case outcome is Denial / Rejection. Replaces the legacy single-line "remove evidence" directive with a multi-dimensional, probabilistic gap injection framework.
+
+| Component | Role |
+|-----------|------|
+| `GAP_ARCHETYPE_POOL` | 20 curated gap archetypes across 5 dimensions |
+| `_select_gap_archetypes()` | Samples 2–4 archetypes per run; guarantees ≥2 dimensions and ≥1 high-impact gap |
+| `get_rejection_gap_instruction()` | Builds the full prompt block with per-archetype injection instructions + anti-pattern guards |
+| `_build_clinical_logic_instruction()` | Dispatches approval vs. denial logic at prompt-build time |
+
+**Five Gap Dimensions:**
+
+| Dimension | Example Patterns |
+|-----------|------------------|
+| Profile-Behavior | Tobacco denial vs. encounter notes; BMI vs. drug dosing |
+| Temporal-Sequence | Lab predates ordering encounter; imaging referenced before it was performed |
+| Treatment-Escalation | Step therapy lasted 10 days (requires 6–12 weeks); single therapy claimed as multiple |
+| Cross-Document | ICD-10 mild-severity vs. PA "severe" narrative; active vs. discontinued medication |
+| Policy-Criteria | Auth type mismatch; missing functional assessment scores required by payer |
+
+**Core Design Invariants:**
+- Every gap requires comparing ≥2 documents or dimensions to detect
+- No gap is visible from a single document read-through
+- No section is left blank or null; gaps live inside otherwise complete, realistic data
+- Anti-pattern guards embedded in the prompt prohibit`[MISSING]` labels, impossible values, and section-level omissions
 
 ---
 
@@ -193,7 +235,7 @@ The system performs a pre-generation scan of existing outputs:
 
 ### AI Prompt Architecture (`src/ai/prompts.py`)
 
-All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`).
+All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`, `get_concise_summary_prompt`).
 
 ### Search Engine (`src/ai/search_engine.py`)
 
@@ -215,6 +257,8 @@ Persistent storage of generated personas in `src/core/patients_db.json` to prese
 
 Legacy `core/patients_db.json` is automatically migrated into `src/core/patients_db.json` on first load.
 
+Use `compact_patient_data.py` to truncate long patient DB fields and trim per-patient history/feedback logs for smaller context sizes.
+
 ### UI Layer (`ui/`)
 
 | File | Theme | Description |
@@ -235,10 +279,12 @@ pdgenerator/
 ├── config/                     # Externalized rules & patterns
 ├── templates/                  # PDF and Document templates
 ├── generated_output/           # Final artifacts
-│   ├── persona/
-│   ├── patient-reports/
-│   ├── summary/
-│   └── logs/
+│   ├── patient-data/           # Main document storage
+│   ├── archive/                # Archived/past generated versions
+│   ├── logs/                   # Generation logs
+│   ├── metadata/               # Patient text records & tracker records
+│   ├── summary/                # Dedicated clinical summary PDFs (flat structure)
+│   └── debug/                  # Internal patient_state JSON states
 ├── ui/
 │   ├── index.html              # Dark UI (Material You)
 │   └── index2.html             # Light UI (Command Center)
@@ -252,6 +298,7 @@ pdgenerator/
 │   └── workflow.py              # Orchestration layer
 ├── api_server.py                # Flask REST API (port 410)
 ├── run.py                       # CLI launcher (recommended)
+├── compact_patient_data.py      # Compact DB/context/feedback utility
 └── remove_persona.py            # Deep persona removal utility
 ```
 

@@ -23,6 +23,7 @@ load_dotenv(os.path.join(BASE_DIR, "cred", ".env"))
 
 from src.data import loader as data_loader
 from src.core import patient_db
+from src.core import insurance_config
 
 # Refresh CPT code mapping from UAT Plan on server startup
 try:
@@ -66,7 +67,10 @@ swagger = Swagger(app, config=swagger_config, template=template)
 _jobs: dict = {}
 _jobs_lock = threading.Lock()
 
-from src.core.config import OUTPUT_DIR, REPORTS_DIR, PERSONA_DIR, SUMMARY_DIR
+from src.core.config import (
+    get_patient_report_folder,
+    get_patient_records_folder,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -103,7 +107,9 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                      vaccinations: list, therapies: list,
                      behavioral_notes: str,
                      encounters: list, images: list,
-                     reports: list, procedures: list):
+                     reports: list, procedures: list,
+                     generate_rejection_docs: bool = False,
+                     rejection_gaps: str = ""):
     """Background worker: calls the generator and updates job state."""
     with _jobs_lock:
         _jobs[job_id]["status"] = "running"
@@ -214,6 +220,12 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
                     "expected outcome label."
                 )
 
+            if generate_rejection_docs:
+                if rejection_gaps and rejection_gaps.strip():
+                    extra_blocks.append(f"[REJECTION GAPS / DENIAL FOCUS]: {rejection_gaps.strip()}")
+                else:
+                    extra_blocks.append("[REJECTION GAPS / DENIAL FOCUS]: Ensure the clinical evidence is insufficient. Omit critical supportive findings, exclude documentation of prior conservative treatments, and ensure the criteria for PA approval are explicitly NOT met.")
+
             combined_feedback = feedback.strip()
             if extra_blocks:
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
@@ -221,17 +233,34 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
             # Fetch exclusion names
             current_names = patient_db.get_all_patient_names()
 
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             result_name = wf.process_patient_workflow(
                 patient_id=patient_id,
                 feedback=combined_feedback,
                 excluded_names=current_names,
-                generation_mode=generation_mode
+                generation_mode=generation_mode,
+                cancel_check=cancel_check,
+                archive_token=job_id,
+                generate_rejection_docs=generate_rejection_docs
             )
+
+            if cancel_check():
+                with _jobs_lock:
+                    _jobs[job_id]["logs"].append("⛔ Worker stopped due to cancellation. Performing rollback...")
+                from src.utils.file_utils import restore_patient_files
+                restore_patient_files(patient_id, generation_mode, archive_token=job_id)
+                with _jobs_lock:
+                    _jobs[job_id]["status"] = "cancelled"
+                    _jobs[job_id]["result"] = "Cancelled by user"
+                return
 
         # Capture changes_summary from AI result if accessible via history
         changes_summary = None
         try:
-            import history_manager
+            from src.data import history as history_manager
             hist = history_manager.get_history(patient_id)
             if hist:
                 # Last entry in history has the changes_summary
@@ -266,20 +295,33 @@ def _run_generation(job_id: str, patient_id: str, feedback: str,
 
 
 
-def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
-    """Background worker for batch processing all patients."""
+def _run_batch_generation(job_id, patients_payload, pa_optimize):
+    """Background worker for batch processing specific patients."""
     try:
         def log_cb(msg):
             with _jobs_lock:
                 _jobs[job_id]["logs"].append(msg)
 
-        all_ids = data_loader.get_all_patient_ids()
-        log_cb(f"🚀 Starting BATCH generation for {len(all_ids)} patients.")
+        log_cb(f"🚀 Starting BATCH generation for {len(patients_payload)} patients.")
 
         success_count = 0
         from src.workflow import process_patient_workflow
 
-        for p_id in all_ids:
+        for entry in patients_payload:
+            p_id = str(entry.get("patient_id", "")).strip()
+            if not p_id:
+                continue
+            generation_mode = entry.get("generation_mode") or {"summary": True, "reports": True, "persona": True}
+            feedback = entry.get("feedback", "")
+            with _jobs_lock:
+                if _jobs[job_id].get("cancelled"):
+                    log_cb("⛔ Batch cancelled. Stopping.")
+                    break
+            
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
             try:
                 import sys, io
@@ -287,9 +329,11 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
                 sys.stdout = io.StringIO()
                 try:
                     current_names = patient_db.get_all_patient_names()
+                    tok = f"{job_id}_{p_id}"
                     result_name = process_patient_workflow(
                         patient_id=p_id, feedback=feedback,
-                        excluded_names=current_names, generation_mode=generation_mode
+                        excluded_names=current_names, generation_mode=generation_mode,
+                        cancel_check=cancel_check, archive_token=tok
                     )
                 finally:
                     output = sys.stdout.getvalue()
@@ -297,15 +341,25 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
                     for line in output.splitlines():
                         if line.strip():
                             log_cb(line)
+                            
+                if cancel_check():
+                    from src.utils.file_utils import restore_patient_files
+                    restore_patient_files(p_id, generation_mode, archive_token=tok)
+                    break
+                    
                 success_count += 1
                 log_cb(f"✅ {p_id} completed successfully (Result: {result_name})")
             except Exception as pe:
                 log_cb(f"❌ Failed processing {p_id}: {pe}")
 
         with _jobs_lock:
-            _jobs[job_id]["status"] = "done"
-            _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(all_ids)} OK"
-            _jobs[job_id]["logs"].append("🏁 Batch run finished.")
+            if _jobs[job_id].get("cancelled"):
+                _jobs[job_id]["status"] = "cancelled"
+                _jobs[job_id]["result"] = f"Batch Cancelled: {success_count}/{len(patients_payload)} OK"
+            else:
+                _jobs[job_id]["status"] = "done"
+                _jobs[job_id]["result"] = f"Batch Complete: {success_count}/{len(patients_payload)} OK"
+                _jobs[job_id]["logs"].append("🏁 Batch run finished.")
     except Exception as e:
         with _jobs_lock:
             _jobs[job_id]["status"] = "error"
@@ -316,7 +370,9 @@ def _run_batch_generation(job_id, feedback, generation_mode, pa_optimize):
 def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                              generation_mode: dict, medications: list, allergies: list,
                              vaccinations: list, therapies: list, behavioral_notes: str,
-                             encounters: list, images: list, reports: list, procedures: list):
+                             encounters: list, images: list, reports: list, procedures: list,
+                             generate_rejection_docs: bool = False,
+                             rejection_gaps: str = ""):
     """Background worker: AI-only generation, stores payload for preview UI (no PDFs)."""
     with _jobs_lock:
         _jobs[job_id]["status"] = "running"
@@ -378,9 +434,19 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                 ]
                 extra_blocks.append("PROCEDURES (use exactly as provided):\n" + "\n".join(p_lines))
 
+            if generate_rejection_docs:
+                if rejection_gaps and rejection_gaps.strip():
+                    extra_blocks.append(f"[REJECTION GAPS / DENIAL FOCUS]: {rejection_gaps.strip()}")
+                else:
+                    extra_blocks.append("[REJECTION GAPS / DENIAL FOCUS]: Ensure the clinical evidence is insufficient. Omit critical supportive findings, exclude documentation of prior conservative treatments, and ensure the criteria for PA approval are explicitly NOT met.")
+
             combined_feedback = feedback.strip()
             if extra_blocks:
                 combined_feedback += ("\n\n" if combined_feedback else "") + "\n\n".join(extra_blocks)
+
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
 
             current_names = patient_db.get_all_patient_names()
             payload = wf.preview_patient_generation(
@@ -388,9 +454,17 @@ def _run_preview_generation(job_id: str, patient_id: str, feedback: str,
                 feedback=combined_feedback,
                 excluded_names=current_names,
                 generation_mode=generation_mode,
+                cancel_check=cancel_check,
+                generate_rejection_docs=generate_rejection_docs,
             )
 
         with _jobs_lock:
+            if _jobs[job_id].get("cancelled"):
+                _jobs[job_id]["status"] = "cancelled"
+                _jobs[job_id]["result"] = "Preview cancelled by user"
+                _jobs[job_id]["logs"].append("⛔ Preview generation stopped.")
+                return
+            
             _jobs[job_id]["status"] = "done" if payload else "error"
             _jobs[job_id]["preview_payload"] = payload
             _jobs[job_id]["result"] = (
@@ -415,13 +489,30 @@ def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: 
     try:
         with JobLogger(job_id):
             from src import workflow as wf
+            def cancel_check():
+                with _jobs_lock:
+                    return _jobs[job_id].get("cancelled", False)
+
             docs_written = wf.render_patient_pdfs_from_content(
                 patient_id=patient_id,
                 generation_mode=generation_mode,
                 documents_content=documents_content,
                 persona_json=persona_json,
                 summarize=True,
+                cancel_check=cancel_check,
+                archive_token=job_id
             )
+            
+            if cancel_check():
+                with _jobs_lock:
+                    _jobs[job_id]["logs"].append("⛔ Worker stopped due to cancellation. Performing rollback...")
+                from src.utils.file_utils import restore_patient_files
+                restore_patient_files(patient_id, generation_mode, archive_token=job_id)
+                with _jobs_lock:
+                    _jobs[job_id]["status"] = "cancelled"
+                    _jobs[job_id]["result"] = "Cancelled by user"
+                return
+            
         with _jobs_lock:
             _jobs[job_id]["status"] = "done"
             _jobs[job_id]["result"] = f"{len(docs_written)} PDF(s) generated"
@@ -490,6 +581,59 @@ def api_get_patient(patient_id: str):
     return jsonify({"found": False, "data": None, "case_details": None})
 
 
+@app.route("/api/insurance/config")
+def api_insurance_config():
+    """Return insurance configuration for UI selection."""
+    return jsonify(insurance_config.get_config())
+
+
+@app.route("/api/patient/<patient_id>/insurance", methods=["POST"])
+def api_update_patient_insurance(patient_id: str):
+    """Update patient-level insurance selection."""
+    body = request.get_json(force=True) or {}
+    provider_id = str(body.get("provider_id", "")).strip()
+    plan_type = str(body.get("plan_type", "")).strip()
+    plan_id = str(body.get("plan_id", "")).strip() if body.get("plan_id") else None
+
+    provider = insurance_config.get_provider_by_id(provider_id)
+    if not provider:
+        return jsonify({"error": "Invalid provider_id"}), 400
+
+    plan = insurance_config.get_plan_by_id(provider, plan_id) if plan_id else None
+    if plan_id and not plan:
+        return jsonify({"error": "Invalid plan_id for provider"}), 400
+    if plan and not plan_type:
+        plan_type = str(plan.get("plan_type") or "").strip()
+    if plan and plan_type and str(plan.get("plan_type") or "").strip() != plan_type:
+        return jsonify({"error": "plan_id does not match plan_type"}), 400
+
+    if plan_type:
+        valid_types = {p.get("plan_type") for p in (provider.get("plans") or [])}
+        if plan_type not in valid_types:
+            return jsonify({"error": "Invalid plan_type for provider"}), 400
+
+    record = patient_db.load_patient(patient_id) or {}
+    record["insurance_selection"] = {
+        "provider_id": provider_id,
+        "plan_type": plan_type or None,
+        "plan_id": plan_id or None,
+    }
+    patient_db.save_patient(patient_id, record)
+    return jsonify({"ok": True, "insurance_selection": record["insurance_selection"]})
+
+
+@app.route("/api/patient/<patient_id>/insurance", methods=["DELETE"])
+def api_clear_patient_insurance(patient_id: str):
+    """Clear patient-level insurance selection."""
+    record = patient_db.load_patient(patient_id) or {}
+    if "insurance_selection" in record:
+        del record["insurance_selection"]
+    if "payer" in record:
+        del record["payer"]
+    patient_db.save_patient(patient_id, record)
+    return jsonify({"ok": True})
+
+
 @app.route("/api/generate", methods=["POST"])
 def api_generate():
     """
@@ -530,6 +674,8 @@ def api_generate():
     reports        = body.get("reports", [])
     procedures     = body.get("procedures", [])
     behavioral_notes = body.get("behavioral_notes", "")
+    generate_rejection_docs = bool(body.get("generate_rejection_docs", False))
+    rejection_gaps = str(body.get("rejection_gaps", "")).strip()
 
     if not patient_id:
         return jsonify({"error": "patient_id is required"}), 400
@@ -565,7 +711,7 @@ def api_generate():
         target=_run_generation,
         args=(job_id, patient_id, feedback, generation_mode, pa_optimize,
               medications, allergies, vaccinations, therapies, behavioral_notes,
-              encounters, images, reports, procedures),
+              encounters, images, reports, procedures, generate_rejection_docs, rejection_gaps),
         daemon=True
     )
     t.start()
@@ -592,6 +738,8 @@ def api_preview():
     images           = body.get("images", [])
     reports          = body.get("reports", [])
     procedures       = body.get("procedures", [])
+    generate_rejection_docs = bool(body.get("generate_rejection_docs", False))
+    rejection_gaps = str(body.get("rejection_gaps", "")).strip()
 
     job_id = str(uuid.uuid4())
     with _jobs_lock:
@@ -609,7 +757,8 @@ def api_preview():
     t = threading.Thread(
         target=_run_preview_generation,
         args=(job_id, patient_id, feedback, generation_mode, medications, allergies,
-              vaccinations, therapies, behavioral_notes, encounters, images, reports, procedures),
+              vaccinations, therapies, behavioral_notes, encounters, images, reports, procedures,
+              generate_rejection_docs, rejection_gaps),
         daemon=True,
     )
     t.start()
@@ -661,23 +810,54 @@ def api_generate_all():
         description: Batch Job queued
     """
     body = request.get_json(force=True) or {}
-    feedback       = body.get("feedback", "")
-    generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
-    pa_optimize    = bool(body.get("pa_optimize", False))
+    patients_payload = body.get("patients", None)
+    pa_optimize = bool(body.get("pa_optimize", False))
+
+    normalized = []
+    if patients_payload:
+        for entry in patients_payload:
+            pid = str(entry.get("patient_id", "")).strip()
+            if not pid:
+                continue
+            generation_mode = entry.get("generation_mode") or body.get(
+                "generation_mode",
+                {"summary": True, "reports": True, "persona": True},
+            )
+            feedback = entry.get("feedback")
+            if feedback is None or str(feedback).strip() == "":
+                feedback = body.get("feedback", "")
+            normalized.append({
+                "patient_id": pid,
+                "generation_mode": generation_mode,
+                "feedback": feedback,
+            })
+    else:
+        patient_ids = body.get("patient_ids", [])
+        if not patient_ids:
+            return jsonify({"error": "patient_ids is required and cannot be empty"}), 400
+        feedback = body.get("feedback", "")
+        generation_mode = body.get("generation_mode", {"summary": True, "reports": True, "persona": True})
+        normalized = [
+            {"patient_id": str(pid), "generation_mode": generation_mode, "feedback": feedback}
+            for pid in patient_ids
+        ]
+
+    if not normalized:
+        return jsonify({"error": "patients payload is empty"}), 400
 
     job_id = str(uuid.uuid4())
     with _jobs_lock:
         _jobs[job_id] = {
             "status": "queued",
-            "logs": [f"🚀 BATCH Job {job_id} queued"],
+            "logs": [f"🚀 BATCH Job {job_id} queued for {len(normalized)} patients"],
             "error": None,
             "result": None,
             "changes_summary": None,
             "patient_id": "BATCH",
             "created_at": datetime.now().isoformat(),
             "request_context": {
-                "feedback": feedback,
-                "generation_mode": generation_mode,
+                "feedback": body.get("feedback", ""),
+                "generation_mode": body.get("generation_mode", None),
                 "pa_optimize": pa_optimize,
                 "is_batch": True
             }
@@ -685,7 +865,7 @@ def api_generate_all():
 
     t = threading.Thread(
         target=_run_batch_generation,
-        args=(job_id, feedback, generation_mode, pa_optimize),
+        args=(job_id, normalized, pa_optimize),
         daemon=True
     )
     t.start()
@@ -733,6 +913,27 @@ def api_job_status(job_id: str):
         "preview_payload": job.get("preview_payload"),   # populated by /api/preview jobs
     })
 
+@app.route("/api/cancel/<job_id>", methods=["POST"])
+def api_cancel_job(job_id: str):
+    """
+    Cancel an active job and trigger rollback of generated outputs.
+    """
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+
+    if not job:
+        return jsonify({"error": "Job not found"}), 404
+
+    with _jobs_lock:
+        if job["status"] in ["done", "error", "cancelled"]:
+            return jsonify({"job_id": job_id, "status": job["status"]}) # Already finished
+        
+        job["cancelled"] = True
+        job["status"] = "cancelled"
+        job["logs"].append("⛔ Cancellation requested by user.")
+
+    return jsonify({"job_id": job_id, "status": "cancelled"})
+
 
 @app.route("/api/output/<patient_id>")
 def api_output(patient_id: str):
@@ -752,28 +953,20 @@ def api_output(patient_id: str):
     """
     files = []
 
-    # Reports (exclude archive subfolder)
-    report_folder = os.path.join(REPORTS_DIR, patient_id)
-    if os.path.exists(report_folder):
-        for f in sorted(os.listdir(report_folder)):
-            if f.endswith(".pdf") and f != "archive":
-                full_path = os.path.join(report_folder, f)
-                if os.path.isfile(full_path):
-                    files.append({"type": "report", "name": f, "path": full_path})
-
-    # Persona (match any -persona-vN.pdf pattern for versioned files)
-    if os.path.exists(PERSONA_DIR):
-        for f in sorted(os.listdir(PERSONA_DIR)):
-            fp = os.path.join(PERSONA_DIR, f)
-            if str(patient_id) in f and f.endswith(".pdf") and "-persona" in f and os.path.isfile(fp):
-                files.append({"type": "persona", "name": f, "path": fp})
-
-    # Summary (versioned)
-    if os.path.exists(SUMMARY_DIR):
-        for f in sorted(os.listdir(SUMMARY_DIR)):
-            fp = os.path.join(SUMMARY_DIR, f)
-            if str(patient_id) in f and f.endswith(".pdf") and os.path.isfile(fp):
-                files.append({"type": "summary", "name": f, "path": fp})
+    root_folder = get_patient_report_folder(patient_id)
+    if os.path.exists(root_folder):
+        for f in sorted(os.listdir(root_folder)):
+            if not f.endswith(".pdf"):
+                continue
+            full_path = os.path.join(root_folder, f)
+            if not os.path.isfile(full_path):
+                continue
+            if f.startswith(f"DOC-{patient_id}-"):
+                files.append({"type": "report", "name": f, "path": full_path})
+            elif "-persona" in f and f.startswith(f"{patient_id}-"):
+                files.append({"type": "persona", "name": f, "path": full_path})
+            elif f.startswith(f"Clinical_Summary_Patient_{patient_id}"):
+                files.append({"type": "summary", "name": f, "path": full_path})
 
     return jsonify({"patient_id": patient_id, "files": files})
 
@@ -781,8 +974,7 @@ def api_output(patient_id: str):
 @app.route("/api/record/<patient_id>")
 def api_get_patient_record(patient_id: str):
     """Return the human-readable patient text record."""
-    from src.core.config import RECORDS_DIR
-    record_path = os.path.join(RECORDS_DIR, f"{patient_id}-record.txt")
+    record_path = os.path.join(get_patient_records_folder(patient_id), f"{patient_id}-record.txt")
     if not os.path.exists(record_path):
         return jsonify({"error": "Record not found", "patient_id": patient_id}), 404
     with open(record_path, "r", encoding="utf-8") as f:
@@ -794,11 +986,11 @@ def api_get_patient_record(patient_id: str):
 def api_download_file(patient_id: str, file_type: str, filename: str):
     """Serve a generated PDF file."""
     if file_type == "report":
-        directory = os.path.join(REPORTS_DIR, patient_id)
+        directory = get_patient_report_folder(patient_id)
     elif file_type == "persona":
-        directory = PERSONA_DIR
+        directory = get_patient_report_folder(patient_id)
     elif file_type == "summary":
-        directory = SUMMARY_DIR
+        directory = get_patient_report_folder(patient_id)
     else:
         return jsonify({"error": "Invalid file type"}), 400
     
@@ -904,9 +1096,12 @@ def api_save_template():
         return jsonify({"error": "Missing parameters"}), 400
 
     base_dir = ""
-    if file_type == "persona": base_dir = PERSONA_DIR
-    elif file_type == "report": base_dir = os.path.join(REPORTS_DIR, patient_id)
-    elif file_type == "summary": base_dir = SUMMARY_DIR
+    if file_type == "persona":
+        base_dir = get_patient_report_folder(patient_id)
+    elif file_type == "report":
+        base_dir = get_patient_report_folder(patient_id)
+    elif file_type == "summary":
+        base_dir = get_patient_report_folder(patient_id)
     
     source_path = os.path.join(base_dir, filename)
     if not os.path.exists(source_path):
