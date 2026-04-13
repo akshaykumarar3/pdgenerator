@@ -621,16 +621,16 @@ def process_patient_workflow(
                 search_results["verification_notes"] = verification_notes
 
             documents_for_summary = filtered_documents if generation_mode["reports"] else None
-            annotator_summary = ai_engine.generate_annotator_summary(
+            concise_summary = ai_engine.generate_concise_summary(
                 case_details=case_data,
                 patient_persona=result.patient_persona,
                 generated_documents=documents_for_summary,
                 search_results=search_results,
             )
 
-            sum_path = pdf_generator.create_annotator_summary_pdf(
+            sum_path = pdf_generator.create_concise_summary_pdf(
                 patient_id=patient_id,
-                annotator_summary=annotator_summary,
+                concise_summary=concise_summary,
                 case_details=case_data,
                 patient_persona=result.patient_persona,
                 output_folder=get_patient_summary_folder(patient_id),
@@ -961,15 +961,15 @@ def render_patient_pdfs_from_content(
             print("   ⛔ Cancellation requested before generating summary.")
             return []
         try:
-            annotator_summary = ai_engine.generate_annotator_summary(
+            concise_summary = ai_engine.generate_concise_summary(
                 case_details=case_data,
                 patient_persona=persona_obj,
                 generated_documents=None,
                 search_results=None,
             )
-            sum_path = pdf_generator.create_annotator_summary_pdf(
+            sum_path = pdf_generator.create_concise_summary_pdf(
                 patient_id=patient_id,
-                annotator_summary=annotator_summary,
+                concise_summary=concise_summary,
                 case_details=case_data,
                 patient_persona=persona_obj,
                 output_folder=get_patient_summary_folder(patient_id),

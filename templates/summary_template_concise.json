@@ -1,0 +1,38 @@
+{
+    "title": "Patient Clinical Summary - Concise",
+    "sections": [
+        {
+            "title": "Patient Profile and Case Explanation",
+            "fields": [
+                "patient_details",
+                "case_explanation",
+                "cpt_codes",
+                "icd_codes"
+            ]
+        },
+        {
+            "title": "Extraction Expectation",
+            "fields": [
+                "insurance_provider",
+                "cpt",
+                "icd",
+                "encounters"
+            ]
+        },
+        {
+            "title": "Document Purpose and Gaps",
+            "fields": [
+                "document_purpose",
+                "purpose_gap",
+                "information_gap"
+            ]
+        },
+        {
+            "title": "Overall Expectation and Gaps",
+            "fields": [
+                "overall_expectation",
+                "overall_gaps"
+            ]
+        }
+    ]
+}

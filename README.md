@@ -341,6 +341,7 @@ pdgenerator/
 | `cred/.env` | Configure API keys, output path, port |
 | `core/UAT Plan.xlsx` | Patient test cases |
 | `templates/summary_template.json` | PDF layout structure |
+| `templates/summary_template_concise.json` | Concise PDF layout structure |
 | `config/*.json` | External rules (remediation, sanitization) |
 
 ---

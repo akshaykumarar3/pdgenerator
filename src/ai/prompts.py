@@ -1,4 +1,4 @@
-"""
+s """
 AI Prompts Configuration
 
 This file contains all AI prompts and instructions used throughout the application.
@@ -731,7 +731,7 @@ RETURN ONLY THE FIXED CONTENT (no explanations, no code blocks)."""
 # WHEN TO USE: After persona (and optionally documents) are generated
 # PURPOSE: Create actionable guidance for manual verification and QA
 
-def get_annotator_summary_prompt(
+def get_concise_summary_prompt(
     case_details: dict,
     patient_persona: dict,
     generated_documents: list = None,
@@ -739,16 +739,7 @@ def get_annotator_summary_prompt(
     search_results: dict = None
 ) -> str:
     """
-    Generates prompt for creating annotator verification guide.
-    
-    FLEXIBLE GENERATION:
-    - If generated_documents is provided: Full summary with all 4 sections
-    - If generated_documents is None/empty: Partial summary (case explanation + patient profile)
-    
-    This supports the production workflow where:
-    1. Persona is generated first
-    2. Reports are attached later based on requirements
-    3. Summary can be regenerated when reports are added
+    Generates prompt for creating a concise summary document.
     
     Args:
         case_details: Dict with 'procedure', 'outcome', 'details'
@@ -758,7 +749,7 @@ def get_annotator_summary_prompt(
         search_results: Optional web search results for CPT/ICD codes
     
     Returns:
-        Complete prompt string for annotator summary generation
+        Complete prompt string for concise summary generation
     """
     
     # Extract persona details safely
@@ -897,9 +888,9 @@ The following issues were detected during data preparation. These MUST be includ
 """
     
     return f"""
-**TASK: Generate an Annotator Verification Guide**
+**TASK: Generate a Concise Clinical Summary**
 
-You are creating a comprehensive guide for clinical data annotators to verify and validate the generated patient data against expected outcomes. This is NOT a clinical document - it is an internal QA tool.
+You are creating a concise clinical summary for a user. This is a clinical document.
 
 **PATIENT INFORMATION:**
 {patient_info_section}
@@ -921,93 +912,63 @@ You are creating a comprehensive guide for clinical data annotators to verify an
 
 **DETAILED INSTRUCTIONS FOR EACH SECTION:**
 
-### 1. Case Explanation
-Provide a clear, concise explanation that includes:
-- **Extract CPT code and description from the patient bio narrative** (do not use "N/A")
-- What procedure is being requested (CPT code and description)
-- The clinical context and patient presentation
-- The expected outcome (Approval or Denial) and WHY this outcome is expected
-- The clinical rationale for this specific case
-- List all CPT and ICD-10 codes found in the bio narrative
+### 1. Patient Profile and Case Explanation
+Provide a clear, concise explanation in bullet points. **Highlight** keywords in bold.
+- **Patient Details**: Name, DOB, Gender
+- **Case Explanation**: A very short summary of the case.
+- **CPT Codes**: List of CPT codes.
+- **ICD Codes**: List of ICD codes.
 
-### 2. Medical Details (Persona-Specific)
-Analyze the patient persona and explain:
-- Key medical history elements relevant to this case
-- How the patient's diagnoses (ICD-10 codes) support or contradict the procedure request
-- What makes this case unique or noteworthy
-- Any complicating factors or considerations
-- What the annotator should expect to see in the clinical documentation
+### 2. Extraction Expectation
+Provide the following information in bullet points. **Highlight** keywords in bold.
+- **Insurance Provider**: Payer Name, Plan Name, Plan Type. These details should be extracted from the patient's persona.
+- **CPT**: CPT codes.
+- **ICD**: ICD codes.
+- **Encounters**: List of encounters.
 
-### 3. Patient Profile Summary
-Create a comprehensive summary that includes:
-- Prior health concerns and medical history
-- Why this patient needs this specific procedure (medical necessity)
-- How the CPT code aligns with the patient's condition
-- Justification for the procedure based on the patient's clinical profile
-- Any relevant social or lifestyle factors that impact the case
+### 3. Document Purpose and Gaps
+Provide the following information in bullet points. **Highlight** keywords in bold.
+- **Document Purpose**: Purpose of each document.
+- **Purpose Gap**: Gaps in the purpose of the documents.
+- **Information Gap**: Gaps in the information of the documents.
 
-### 4. Verification Pointers (KEY SECTION FOR ANNOTATORS)
-{f'''
-Create an actionable checklist based on the expected outcome ({case_details['outcome']}):
-
-**If Expected Outcome is APPROVAL:**
-- List specific evidence that MUST be present in the documents to support approval
-- Identify which documents should contain supporting findings
-- Note any critical test results or clinical findings that justify the procedure
-- Highlight alignment between diagnoses and procedure request
-
-**If Expected Outcome is DENIAL:**
-- List red flags or missing evidence that should lead to denial
-- Identify gaps in clinical justification
-- Note any contradictory findings or lack of medical necessity
-- Highlight misalignment between diagnoses and procedure request
-
-**General Verification Items:**
-- CPT code accuracy and appropriateness
-- ICD-10 code validity and medical necessity support
-- Consistency across all documents (demographics, dates, findings)
-- Completeness of clinical documentation
-- Alignment with expected outcome
-''' if generated_documents and len(generated_documents) > 0 else 'Indicate that reports are pending and verification checklist will be completed when clinical documents are available.'}
+### 4. Overall Expectation and Gaps
+Provide the following information in bullet points. **Highlight** keywords in bold.
+- **Overall Expectation**: Overall expectation of the case.
+- **Overall Gaps**: Overall gaps in the case.
 
 **OUTPUT FORMAT:**
 Return a structured JSON object with the following schema:
 
 {{
-    "case_explanation": "Detailed explanation of procedure, context, and expected outcome...",
-    "medical_details": "Persona-specific medical information and case expectations...",
-    "patient_profile_summary": "Prior health concerns, procedure justification, CPT rationale...",
-    "verification_pointers": {{
-        "expected_outcome": "{case_details['outcome']}",
-        "key_verification_items": [
-            "Item 1 to verify...",
-            "Item 2 to verify...",
-            ...
-        ],
-        "supporting_evidence_checklist": [
-            "Evidence 1 that should be present...",
-            "Evidence 2 that should be present...",
-            ...
-        ],
-        "red_flags": [
-            "Red flag 1 to watch for...",
-            "Red flag 2 to watch for...",
-            ...
-        ],
-        "document_references": [
-            {{"document": "Document name", "should_contain": "What this document should demonstrate"}},
-            ...
-        ]
+    "patient_profile_and_case_explanation": {{
+        "patient_details": "...",
+        "case_explanation": "...",
+        "cpt_codes": "...",
+        "icd_codes": "..."
+    }},
+    "extraction_expectation": {{
+        "insurance_provider": "...",
+        "cpt": "...",
+        "icd": "...",
+        "encounters": "..."
+    }},
+    "document_purpose_and_gaps": {{
+        "document_purpose": "...",
+        "purpose_gap": "...",
+        "information_gap": "..."
+    }},
+    "overall_expectation_and_gaps": {{
+        "overall_expectation": "...",
+        "overall_gaps": "..."
     }}
 }}
 
 **CRITICAL RULES:**
-1. Write for an ANNOTATOR audience, not a clinical audience
+1. Write for a USER audience, not a clinical audience
 2. Be specific and actionable - avoid vague statements
 3. Reference actual CPT and ICD-10 codes from the persona
-4. Align verification pointers with the expected outcome
-5. Make it easy for annotators to validate the data quality
-6. If documents are not available, clearly indicate pending status
+4. If documents are not available, clearly indicate pending status
 """
 
 
@@ -1337,7 +1298,6 @@ def _select_gap_archetypes(n: int = 3) -> list[dict]:
     selected = [must_have] + fill
     _random.shuffle(selected)
     return selected
-
 
 def get_rejection_gap_instruction(case_details: dict) -> str:
     """

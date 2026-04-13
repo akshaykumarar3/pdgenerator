@@ -13,6 +13,7 @@ Outputs include:
 * Clinical reports (lab, imaging, consult notes)
 * Patient personas (FHIR-aligned records)
 * Clinical summaries for case review
+* A concise, bulleted summary with highlighted keywords for quick review
 * Verification summaries for annotators
 * Policy criteria summaries are intentionally excluded from patient-facing reports and persona outputs
 
@@ -160,6 +161,15 @@ Human verification guide containing:
 * case explanation
 * verification notes
 * clinical reasoning summary
+
+### ConciseSummary
+
+A concise, bulleted summary with highlighted keywords for quick review, containing:
+
+* Patient Profile and Case Explanation
+* Extraction Expectation
+* Document Purpose and Gaps
+* Overall Expectation and Gaps
 
 ---
 

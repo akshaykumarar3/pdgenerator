@@ -8,7 +8,9 @@ The system generates:
 
 - **Patient Personas**: FHIR-style patient records.
 - **Clinical Reports**: Consult notes, imaging reports, and lab reports.
-- **Clinical Summaries**: Aggregated case overviews.
+- **Clinical Summaries**: Two types of summaries are generated:
+  - An aggregated case overview.
+  - A concise, bulleted summary with highlighted keywords for quick review.
 - **Policy criteria summaries are not emitted in clinical outputs** (reports/persona); any policy/criteria content is reserved for internal annotator guidance.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
@@ -39,18 +41,25 @@ All generated documents must derive from a single structured patient record call
 
 ```mermaid
 graph TD
-    UI["User Input / UI (ui/index.html, index2.html)"] --> API["API Server (api_server.py)"]
-    API --> Generator["Workflow Orchestrator (src/workflow.py)"]
-    Generator --> DataLoader["Case Loader (src/data/loader.py)"]
-    Generator --> PatientState["Patient State Builder"]
-    PatientState --> AIEngine["AI Engine (src/ai/client.py)"]
-    AIEngine --> Documents["Clinical Document Generator"]
-    Documents --> Validator["Document Validator (src/doc_generation/validator.py)"]
-    Validator --> PDFFactory["PDF Renderer (src/doc_generation/pdf_generator.py)"]
-    PDFFactory --> Output["generated_output/"]
-    Generator --> Search["Search Engine (src/ai/search_engine.py)"]
-    Generator --> History["History Manager (src/data/history.py)"]
-    Generator --> DB["Patient Database (src/core/patient_db.py)"]
+    subgraph Input
+        UI["User Input / UI (ui/index.html, index2.html)"]
+    end
+    subgraph Processing
+        API["API Server (api_server.py)"] --> Generator["Workflow Orchestrator (src/workflow.py)"]
+        Generator --> DataLoader["Case Loader (src/data/loader.py)"]
+        Generator --> PatientState["Patient State Builder"]
+        PatientState --> AIEngine["AI Engine (src/ai/client.py)"]
+        AIEngine --> Documents["Clinical Document Generator"]
+        Documents --> Validator["Document Validator (src/doc_generation/validator.py)"]
+        Validator --> PDFFactory["PDF Renderer (src/doc_generation/pdf_generator.py)"]
+        Generator --> Search["Search Engine (src/ai/search_engine.py)"]
+        Generator --> History["History Manager (src/data/history.py)"]
+        Generator --> DB["Patient Database (src/core/patient_db.py)"]
+    end
+    subgraph Output
+        PDFFactory --> OutputDir["generated_output/"]
+    end
+    UI --> API
 ```
 
 ---
@@ -117,6 +126,7 @@ The Patient State Layer ensures that all documents reference the same patient da
 - **`GeneratedDocument`**: Single clinical document (title, type, content sections).
 - **`ClinicalDataPayload`**: Combined persona + documents + changes summary. The `documents` field uses the alias `structured_documents` for AI fidelity; both keys are normalised by `_parse_vertex_response()`.
 - **`AnnotatorSummary`**: Post-generation quality summary used for PA optimization scoring.
+- **`ConciseSummary`**: A concise, bulleted summary with highlighted keywords for quick review.
 
 ### Batch Processing & Job Cancellation
 
@@ -225,7 +235,7 @@ The system performs a pre-generation scan of existing outputs:
 
 ### AI Prompt Architecture (`src/ai/prompts.py`)
 
-All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`).
+All prompts are centralized for customization and consistency (`SYSTEM_PROMPT`, `get_clinical_data_prompt`, `get_document_repair_prompt`, `get_concise_summary_prompt`).
 
 ### Search Engine (`src/ai/search_engine.py`)
 
