@@ -19825,19 +19825,19 @@
     "contact": {
       "relationship": "Emergency Contact",
       "name": "Andy Dwyer",
-      "telecom": "512-555-0162",
+      "telecom": "512-555-0144",
       "address": "2207 South 1st St, Austin, TX 78704",
       "gender": "male",
       "organization": "N/A",
-      "period_start": "01-10-2010",
+      "period_start": "01-01-2015",
       "period_end": "ongoing"
     },
     "provider": {
       "generalPractitioner": "Dr. Nathaniel Park, MD",
       "formatted_npi": "3124567890",
       "managingOrganization": "Austin Kidney & Hypertension Clinic",
-      "address": "1601 E Cesar Chavez St, Suite 210, Austin, TX 78702",
-      "phone": "512-555-0198"
+      "address": "2210 Medical Pkwy, Suite 105, Austin, TX 78756",
+      "phone": "512-555-0199"
     },
     "link": {
       "other_patient": "N/A",
@@ -19854,40 +19854,38 @@
       "plan_policy_url": "https://www.cms.gov/medicare/payment/",
       "member_id": "MBR-119441",
       "policy_number": "POL-2026-9513",
-      "effective_date": "01-01-2024",
+      "effective_date": "01-01-2020",
       "termination_date": "ongoing",
       "copay_amount": "$0",
       "deductible_amount": "$240"
     },
-    "expected_procedure_date": "05-19-2026",
+    "expected_procedure_date": "05-15-2026",
     "procedure_requested": "Dialysis",
     "procedure_facility": {
-      "facility_name": "St. David's Medical Center",
+      "facility_name": "St. David's Medical Center - Dialysis Services",
       "street_address": "919 E 32nd St",
       "city": "Austin",
       "state": "TX",
       "zip_code": "78705",
-      "department": "Dialysis / Nephrology Services"
+      "department": "Nephrology/Dialysis Unit"
     },
     "pa_request": {
       "requesting_provider": "Dr. Nathaniel Park, MD",
       "urgency_level": "Pre-Service Routine",
-      "clinical_justification": "Patient has end-stage renal disease (N18.6) with progressive uremic symptoms (R11.2 nausea/vomiting, R53.83 fatigue), recurrent volume overload with edema (R60.0), and prior ER evaluation for hyperkalemia (E87.5) in the setting of hypertensive chronic kidney disease (I12.0). Dialysis services are requested to support renal replacement therapy planning and initiation as clinically indicated, with ongoing monitoring of metabolic acidosis (E87.2) and CKD-related anemia (D63.1).",
+      "clinical_justification": "Patient has ESRD (N18.6) due to hypertensive CKD (I12.0) with persistent fatigue, nausea, metabolic acidosis (E87.2), edema/volume overload (R60.0), CKD-related anemia (D63.1), and a prior hyperkalemia episode (E87.5). Dialysis is requested to support ongoing solute and volume management and to guide longitudinal nephrology management as access and supervision logistics are finalized.",
       "supporting_diagnoses": [
         "N18.6 - End stage renal disease",
         "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-        "E87.5 - Hyperkalemia",
         "E87.2 - Acidosis",
         "D63.1 - Anemia in chronic kidney disease",
         "R60.0 - Localized edema",
-        "R53.83 - Other fatigue",
-        "R11.2 - Nausea with vomiting, unspecified"
+        "E87.5 - Hyperkalemia"
       ],
-      "previous_treatments": "Conservative management with antihypertensives (amlodipine, carvedilol), diuretic therapy (furosemide) for edema, sodium bicarbonate for acidosis, and anemia regimen (epoetin alfa-epbx and oral iron). Prior hyperkalemia episode treated with sodium polystyrene sulfonate (past).",
-      "expected_outcome": "Support renal replacement therapy treatment planning and initiation with improved management of symptom burden, electrolyte/acid-base abnormalities, and volume status; facilitate ongoing monitoring during ESRD care.",
+      "previous_treatments": "Antihypertensives (amlodipine, carvedilol) and diuretic therapy (furosemide) with diet counseling for BP/volume management; oral sodium bicarbonate for E87.2; anemia management with epoetin alfa-epbx and ferrous sulfate for D63.1; past hyperkalemia episode treated in ER with sodium polystyrene sulfonate; lisinopril previously used and discontinued due to advanced CKD and hyperkalemia risk.",
+      "expected_outcome": "Improved control of volume status and uremic symptoms with ongoing monitoring of metabolic parameters and anemia management under nephrologist-supervised dialysis plan.",
       "units_requested": "1"
     },
-    "bio_narrative": "April Ludgate is a 57-year-old woman in Austin, Texas with end stage renal disease (N18.6) in the setting of hypertensive chronic kidney disease (I12.0). Over the past year she has experienced gradually worsening fatigue (R53.83) that she describes as persistent and limiting her ability to complete errands and work tasks. She also reports recurrent lower extremity swelling (R60.0) that fluctuates with diet and activity, and intermittent nausea with occasional vomiting (R11.2) that has become more frequent over recent months. She has tried to follow a low sodium diet but finds low potassium restrictions challenging when eating out, and she prefers direct, concrete instructions for next steps. Her course included an office visit on 04-22-2025 for fatigue and ankle swelling, followed by an ER visit on 03-04-2026 for weakness and nausea when laboratory results were concerning. That evaluation documented metabolic complications including hyperkalemia (E87.5) and acidosis (E87.2), reinforcing the need for close monitoring as kidney function declined to ESRD. Subsequent specialist consultation on 03-12-2026 focused on preparing for renal replacement therapy; she completed upper extremity vein mapping ultrasound and later participated in a dialysis education session (03-20-2026) to review dialysis modalities, symptom monitoring, and access planning. April\u2019s outpatient management has included blood pressure control with amlodipine and carvedilol, volume management with furosemide for edema, sodium bicarbonate for acidosis, and anemia treatment with epoetin alfa-epbx and oral iron for anemia in chronic kidney disease (D63.1). A prior hyperkalemia episode was treated with sodium polystyrene sulfonate as a directed one-time dose, and lisinopril was discontinued previously due to hyperkalemia risk in advanced CKD. She continues to report fatigue, swelling, and nausea during follow-up and pre-op evaluation visits in early April 2026. Socially, she lives in Austin and relies on a small support network; she is a former smoker and drinks alcohol occasionally. She is engaged in ongoing mental health psychotherapy, which she describes as helpful for stress related to frequent medical visits. Family history is notable for hypertension and kidney disease patterns discussed in clinic. She is now seeking dialysis services (CPT 90999) as part of a documented dialysis plan for ESRD, with current documentation also noting the need to formalize nephrologist supervision at the dialysis unit to ensure coordinated orders, lab review, and symptom-driven treatment adjustments.",
+    "bio_narrative": "April Ludgate is a 57-year-old woman living in Austin, Texas with a long history of hypertension that has progressed to hypertensive chronic kidney disease and now end stage renal disease (I12.0, N18.6). Over the last year, she has noticed increasing fatigue and reduced stamina, initially presenting to clinic on 04-22-2025 with persistent exhaustion and ankle swelling. Despite medication adjustments and attempts at low sodium eating, she continued to report recurrent edema (R60.0) and escalating day-to-day limitations. In early March 2026, her condition became more symptomatic with weakness and nausea, prompting an ER visit on 03-04-2026 where a basic metabolic panel and CBC were obtained as part of renal replacement therapy planning. The ER course documented an episode of hyperkalemia (E87.5) that was treated with a potassium-binding medication, reinforcing the need for close electrolyte monitoring as kidney function declined. Subsequent outpatient labs continued to reflect advanced kidney failure physiology with persistent metabolic acidosis (E87.2), and she began taking sodium bicarbonate as part of ongoing management. She also has anemia in chronic kidney disease (D63.1) with low hemoglobin on CBC, managed with weekly epoetin alfa-epbx injections and oral iron supplementation. A specialist consultation on 03-12-2026 focused on dialysis preparation and access planning, including upper extremity vein mapping ultrasound to support vascular access decisions. She completed a renal replacement therapy counseling/education session on 03-20-2026 to review dialysis logistics and expectations. In follow-up visits through early April, she continued to report fatigue, intermittent nausea, and swelling, and she specifically expressed confusion about who is coordinating and supervising the dialysis plan. A care coordination visit on 04-10-2026 and subsequent coordination documentation emphasized consolidating communication through her nephrology clinic to ensure consistent supervision and a clear pathway to dialysis initiation. Socially, April works in an administrative role with variable hours and reports that scheduling complexity increases stress and occasional missed medication doses when she is away from her pill organizer. She is a former smoker, drinks alcohol only occasionally, and denies illicit drug use. She has been engaged in ongoing psychotherapy every two weeks for stress management, which she describes as helpful during the increase in medical visits. Family history includes hypertension in both parents and a sibling with chronic kidney disease, which has shaped her understanding of the seriousness of ESRD. The current referral for dialysis services reflects persistent symptoms and metabolic/volume complications despite medical therapy and the need for a coordinated, nephrologist-supervised renal replacement therapy plan.",
     "has_fit_fobt_result": null,
     "medications": [
       {
@@ -19897,7 +19895,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Nathaniel Park, MD",
         "status": "current",
-        "start_date": "02-15-2025",
+        "start_date": "09-10-2024",
         "end_date": "ongoing",
         "reason": "Blood pressure control in hypertensive CKD (I12.0)."
       },
@@ -19908,7 +19906,7 @@
         "qty": "60 tablets",
         "prescribed_by": "Dr. Nathaniel Park, MD",
         "status": "current",
-        "start_date": "02-15-2025",
+        "start_date": "02-14-2025",
         "end_date": "ongoing",
         "reason": "Hypertension management and heart rate control in the setting of CKD (I12.0)."
       },
@@ -19941,7 +19939,7 @@
         "qty": "45 tablets",
         "prescribed_by": "Dr. Nathaniel Park, MD",
         "status": "current",
-        "start_date": "03-12-2026",
+        "start_date": "12-01-2025",
         "end_date": "ongoing",
         "reason": "CKD-related anemia support (D63.1)."
       },
@@ -19949,10 +19947,10 @@
         "brand": "Retacrit",
         "generic_name": "Epoetin alfa-epbx 10,000 units/mL",
         "dosage": "Inject 0.6 mL subcutaneously once weekly",
-        "qty": "4 vials",
+        "qty": "4 mL",
         "prescribed_by": "Dr. Nathaniel Park, MD",
         "status": "current",
-        "start_date": "03-12-2026",
+        "start_date": "01-10-2026",
         "end_date": "ongoing",
         "reason": "Anemia in chronic kidney disease (D63.1) with low hemoglobin on CBC."
       },
@@ -19974,7 +19972,7 @@
         "qty": "30 tablets",
         "prescribed_by": "Dr. Nathaniel Park, MD",
         "status": "past",
-        "start_date": "05-01-2023",
+        "start_date": "05-10-2022",
         "end_date": "03-04-2026",
         "reason": "Prior hypertension treatment; discontinued due to advanced CKD and hyperkalemia risk (I12.0, E87.5)."
       }
@@ -19985,14 +19983,14 @@
         "allergy_type": "Drug",
         "reaction": "Hives and itching within 1 day of starting medication",
         "severity": "Moderate",
-        "onset_date": "07-18-1998"
+        "onset_date": "06-15-1995"
       },
       {
         "allergen": "Shellfish",
         "allergy_type": "Food",
         "reaction": "Lip swelling and throat itching",
         "severity": "Severe",
-        "onset_date": "08-05-2005"
+        "onset_date": "08-20-2008"
       }
     ],
     "vaccinations": [
@@ -20000,15 +19998,15 @@
         "vaccine_name": "Influenza (Quadrivalent)",
         "vaccine_type": "Inactivated",
         "date_administered": "10-03-2025",
-        "administered_by": "H-E-B Pharmacy #681 (Austin, TX)",
-        "dose_number": "Annual",
+        "administered_by": "H-E-B Pharmacy - Austin, TX",
+        "dose_number": "1",
         "reason": "Routine Immunization"
       },
       {
         "vaccine_name": "COVID-19 (mRNA)",
         "vaccine_type": "mRNA",
         "date_administered": "10-20-2024",
-        "administered_by": "CVS Pharmacy (Austin, TX)",
+        "administered_by": "CVS Pharmacy - Austin, TX",
         "dose_number": "Booster",
         "reason": "Routine Immunization"
       },
@@ -20043,17 +20041,18 @@
         "cpt_code": "90834",
         "cpt_description": "Psychotherapy, 45 minutes with patient",
         "icd10_codes": [
+          "N18.6 - End stage renal disease",
           "F43.23 - Adjustment disorder with mixed anxiety and depressed mood"
         ],
         "provider": "Dr. Elena Ruiz, PhD",
-        "provider_npi": "1789012345",
+        "provider_npi": "1987654321",
         "facility": "Austin Counseling & Wellness Center",
-        "start_date": "01-15-2026",
+        "start_date": "11-15-2025",
         "end_date": "ongoing",
         "frequency": "Every 2 weeks",
         "status": "Active",
-        "reason": "Stress and irritability related to escalating medical visits and chronic illness adjustment; supports coping and adherence routines.",
-        "notes": "Patient prefers direct, concrete action steps; sessions focus on sleep routine, stress response, and appointment planning."
+        "reason": "Stress, irritability, and adjustment symptoms related to escalating medical complexity and chronic illness management in ESRD planning.",
+        "notes": "Patient prefers concrete action steps; sessions focus on coping strategies for medical scheduling burden and symptom-related anxiety."
       }
     ],
     "behavioral_notes": "Patient reports taking daily medications reliably when they are placed in a weekly pill organizer; missed doses occur primarily when appointments run late or she is away from home. Diet adherence is variable; she follows a low sodium approach but finds low potassium restrictions challenging when eating out. She is a former smoker and currently drinks alcohol only occasionally; denies illicit drug use. She describes increased stress and irritability related to escalating medical visits and prefers direct, concrete instructions and a single point of contact for scheduling.",
@@ -20061,56 +20060,55 @@
       {
         "encounter_date": "04-22-2025",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Evaluation of chronic fatigue and progressive ankle swelling in the setting of long-standing hypertension and chronic kidney disease concerns.",
+        "purpose_of_visit": "Evaluation of progressive fatigue and ankle swelling with concern for kidney disease progression and blood pressure/volume status.",
         "provider": "Dr. Nathaniel Park, MD",
         "provider_npi": "3124567890",
         "facility": "Austin Kidney & Hypertension Clinic",
         "vital_signs": {
           "recorded_date": "04-22-2025",
-          "blood_pressure": "156/92 mmHg",
+          "blood_pressure": "148/92 mmHg",
           "heart_rate": "84 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "27.1 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.4\u00b0F",
+          "temperature": "98.2\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m exhausted all the time and my ankles keep swelling.",
-        "doctor_note": "HPI: 56-year-old female with history consistent with hypertensive kidney disease presents with 6\u20138 months of worsening fatigue (R53.83) and intermittent bilateral ankle swelling (R60.0). She notes swelling is worse after eating out and late in the day. Denies chest pain, orthopnea, or syncope. Reports decreased appetite at times but no persistent vomiting.\n\nReview of Systems: Positive for fatigue and leg swelling. Negative for fever, dysuria, flank pain, or acute shortness of breath.\n\nPhysical Exam: BP elevated. Trace to 1+ pitting edema at bilateral ankles. Lungs clear to auscultation. Cardiac exam regular rate and rhythm. Abdomen soft, non-tender.\n\nAssessment: Hypertensive chronic kidney disease with advanced CKD concerns (I12.0) with localized edema (R60.0) and fatigue (R53.83).\n\nPlan: Continue antihypertensive regimen, counsel low sodium diet, start/continue diuretic support for edema as needed, and arrange lab monitoring. Discussed monitoring symptoms and return precautions for worsening swelling, nausea/vomiting, or weakness given CKD progression risk.",
+        "doctor_note": "HPI: Patient reports 6\u20138 months of worsening fatigue and bilateral ankle swelling, worse after long days on her feet. She notes intermittent shortness of breath on exertion but denies chest pain, syncope, or fevers. She has a known history of hypertension and has noticed home BP readings trending higher despite adherence.\n\nReview of Systems: Positive for fatigue and leg swelling. Negative for chest pain, palpitations, cough, dysuria, hematuria, and acute flank pain. Reports occasional morning nausea without vomiting.\n\nPhysical Exam: BP elevated. Trace to 1+ pitting edema at ankles bilaterally. Lungs clear to auscultation. Heart regular rate and rhythm without murmurs. Abdomen soft, non-tender.\n\nAssessment: Hypertensive CKD with concern for progression toward advanced stage (I12.0). Localized edema (R60.0) likely related to volume status. Plan to monitor renal labs and optimize BP regimen.\n\nPlan: Continue amlodipine and carvedilol; initiate/continue furosemide for edema control. Counsel low sodium diet and daily weights. Arrange lab monitoring and follow-up for CKD management and anemia screening.",
         "observations": [
-          "Bilateral ankle edema noted on exam.",
-          "Patient reports fatigue affecting daily activities.",
-          "Dietary sodium intake appears correlated with edema severity."
+          "Bilateral ankle edema noted on exam",
+          "Blood pressure above goal",
+          "Patient reports consistent medication use with organizer"
         ],
         "procedures_performed": [
           "CPT 99214 - Office or other outpatient visit, established patient, level 4"
         ],
         "diagnoses": [
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "R60.0 - Localized edema",
-          "R53.83 - Other fatigue"
+          "R60.0 - Localized edema"
         ],
         "medications_prescribed": [
-          "Lasix (Furosemide 40 mg) - Take 1 tablet by mouth once daily"
+          "Lasix (Furosemide 40 mg) Take 1 tablet by mouth once daily"
         ],
         "care_team": [
-          "Dr. Nathaniel Park, MD (Nephrology/Internal Medicine)"
+          "Dr. Nathaniel Park, MD"
         ],
-        "progress_notes": "This is the initial documented visit in the series for progressive fatigue and edema. Symptoms have been gradually worsening over months; patient motivated to track swelling triggers and adhere to low sodium diet.",
-        "follow_up_instructions": "Follow up in 4\u20136 weeks for BP check and lab review; call sooner for worsening swelling, shortness of breath, persistent vomiting, or severe weakness."
+        "progress_notes": "Symptoms suggest progressive volume issues; reinforced adherence and diet measures. Planned closer monitoring given escalating fatigue and edema.",
+        "follow_up_instructions": "Follow up in 6-8 weeks or sooner for worsening swelling, shortness of breath, or reduced urine output. Keep a daily weight log and bring home BP readings."
       },
       {
         "encounter_date": "03-04-2026",
         "encounter_type": "ER Visit",
-        "purpose_of_visit": "Emergency evaluation for weakness, nausea, and abnormal outpatient labs concerning for ESRD complications.",
-        "provider": "Dr. Jordan Kim, MD",
-        "provider_npi": "1987654321",
-        "facility": "St. David's Medical Center - Emergency Department",
+        "purpose_of_visit": "Acute evaluation of weakness, nausea, and abnormal outpatient labs in patient with advanced CKD/ESRD planning.",
+        "provider": "Dr. Maya Chen, MD",
+        "provider_npi": "2456789012",
+        "facility": "St. David's Medical Center - Austin",
         "vital_signs": {
           "recorded_date": "03-04-2026",
-          "blood_pressure": "172/98 mmHg",
-          "heart_rate": "96 bpm",
+          "blood_pressure": "162/96 mmHg",
+          "heart_rate": "92 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "27.1 kg/m\u00b2",
@@ -20119,58 +20117,139 @@
           "respiratory_rate": "18 breaths/min"
         },
         "chief_complaint": "I feel weak and sick to my stomach, and my labs were bad.",
-        "doctor_note": "HPI: 57-year-old female with known hypertensive CKD presents with generalized weakness and nausea with intermittent vomiting (R11.2). She was told outpatient labs were abnormal. She reports decreased oral intake and worsening fatigue (R53.83). Denies chest pain or focal neurologic symptoms.\n\nReview of Systems: Positive for nausea/vomiting, weakness, fatigue, and swelling in legs. Negative for fever, cough, or dysuria.\n\nPhysical Exam: Appears tired but alert. BP markedly elevated. Mild bilateral lower extremity edema present. Cardiopulmonary exam without acute distress.\n\nAssessment: End stage renal disease (N18.6) with metabolic derangements including hyperkalemia (E87.5) and acidosis (E87.2) contributing to symptoms; hypertensive CKD (I12.0) and edema (R60.0). Anemia of CKD considered given history (D63.1).\n\nPlan: Reviewed BMP and CBC results from today; treated hyperkalemia per protocol including sodium polystyrene sulfonate as directed dose. Provided antiemetic supportive care; advised urgent nephrology follow-up for dialysis planning. Discharged with strict return precautions for worsening vomiting, weakness, palpitations, or dyspnea.",
+        "doctor_note": "HPI: Patient with advanced CKD reports 3 days of worsening generalized weakness, poor appetite, and nausea. She was told by clinic that her lab work was concerning and to come to the ER. She notes increased ankle swelling and mild exertional dyspnea. Denies chest pain, fever, or focal neurologic deficits.\n\nReview of Systems: Positive for nausea and fatigue. Negative for vomiting, diarrhea, dysuria, and chest pain. Reports decreased urine output compared to baseline.\n\nPhysical Exam: Appears tired but in no acute distress. Mild bilateral lower extremity edema. Lungs clear. Cardiac regular. Abdomen soft.\n\nAssessment: ESRD physiology with metabolic derangements; history of hypertensive CKD (I12.0) with suspected progression to ESRD (N18.6). Hyperkalemia episode identified (E87.5). Metabolic acidosis suspected (E87.2). CKD-related anemia likely (D63.1).\n\nPlan: Obtain BMP and CBC. Treat hyperkalemia per protocol; administer potassium binder as indicated. Coordinate with nephrology for close follow-up and dialysis planning. Provide return precautions for worsening symptoms.",
         "observations": [
-          "Nausea with intermittent emesis reported.",
-          "Edema present on exam.",
-          "ER labs reviewed consistent with ESRD complications."
+          "Generalized weakness and uremic nausea symptoms",
+          "Mild bilateral edema",
+          "Electrolyte abnormality concern prompting ER evaluation"
         ],
         "procedures_performed": [
-          "CPT 99284 - Emergency department visit, moderate severity"
+          "CPT 99284 - Emergency department visit, level 4"
         ],
         "diagnoses": [
           "N18.6 - End stage renal disease",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
           "E87.5 - Hyperkalemia",
           "E87.2 - Acidosis",
-          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "R11.2 - Nausea with vomiting, unspecified",
-          "R60.0 - Localized edema",
-          "R53.83 - Other fatigue"
+          "D63.1 - Anemia in chronic kidney disease",
+          "R60.0 - Localized edema"
         ],
         "medications_prescribed": [
-          "Kayexalate (Sodium polystyrene sulfonate 15 g/60 mL) - Take 60 mL by mouth once as directed for elevated potassium; not to exceed 1 dose in 24 hours"
+          "Kayexalate (Sodium polystyrene sulfonate 15 g/60 mL) Take 60 mL by mouth once as directed for elevated potassium; not to exceed 1 dose in 24 hours"
         ],
         "care_team": [
-          "Dr. Jordan Kim, MD (Emergency Medicine)",
-          "Dr. Nathaniel Park, MD (Outpatient Nephrology Follow-up)"
+          "Dr. Maya Chen, MD",
+          "Dr. Nathaniel Park, MD (notified)"
         ],
-        "progress_notes": "Acute symptom flare with abnormal labs; patient stabilized in ED and discharged with urgent outpatient nephrology follow-up to continue dialysis planning.",
-        "follow_up_instructions": "Follow up with nephrology within 48\u201372 hours; return to ED immediately for chest pain, shortness of breath, palpitations, confusion, or persistent vomiting."
+        "progress_notes": "ER evaluation prompted escalation of renal replacement planning due to symptomatic decline and electrolyte concerns; patient advised to follow up urgently with nephrology.",
+        "follow_up_instructions": "Follow up with nephrology within 48-72 hours. Return to ER for chest pain, palpitations, severe weakness, confusion, persistent vomiting, or worsening shortness of breath."
       },
       {
         "encounter_date": "03-12-2026",
         "encounter_type": "Specialist Consult",
-        "purpose_of_visit": "Consult for dialysis access planning and review of ESRD complications and readiness steps.",
-        "provider": "Dr. Maya Sato, MD",
-        "provider_npi": "3456789012",
-        "facility": "St. David's Medical Center - Vascular Surgery Clinic",
+        "purpose_of_visit": "Vascular access planning and counseling for anticipated dialysis start in ESRD.",
+        "provider": "Dr. Samuel Ortega, MD",
+        "provider_npi": "1678901234",
+        "facility": "St. David's Heart Hospital - Vascular Surgery Clinic",
         "vital_signs": {
           "recorded_date": "03-12-2026",
-          "blood_pressure": "164/94 mmHg",
-          "heart_rate": "88 bpm",
+          "blood_pressure": "154/90 mmHg",
+          "heart_rate": "86 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
-          "bmi": "27.1 kg/m\u00b2",
+          "bmi": "27.2 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.2\u00b0F",
+          "temperature": "98.4\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "They said I need access for dialysis soon.",
-        "doctor_note": "HPI: 57-year-old female with ESRD (N18.6) secondary to hypertensive CKD (I12.0) referred for dialysis access planning. Reports persistent fatigue (R53.83), edema (R60.0), and intermittent nausea/vomiting (R11.2). She reports a recent ER visit for abnormal labs including hyperkalemia (E87.5) and acidosis (E87.2).\n\nReview of Systems: Positive for fatigue, swelling, nausea. Negative for fever or focal limb weakness.\n\nPhysical Exam: Upper extremities without infection or skin breakdown. Palpable pulses. Mild lower extremity edema.\n\nAssessment: ESRD (N18.6) requiring access planning; comorbid issues include HTN-CKD (I12.0), anemia in CKD (D63.1), and metabolic abnormalities (E87.5, E87.2).\n\nPlan: Order/complete upper extremity vein mapping ultrasound today for access planning. Coordinate with nephrology for dialysis initiation timeline and continued management of electrolyte/acid-base disturbances. Reinforce low potassium diet and medication adherence; patient desires clear scheduling guidance and written next steps.",
+        "doctor_note": "HPI: Patient referred for evaluation for dialysis access in setting of ESRD planning. She reports ongoing fatigue and intermittent nausea, with ankle swelling that fluctuates. She understands dialysis may be needed soon and is seeking next steps.\n\nReview of Systems: Positive for fatigue, nausea, and edema. Denies active infection symptoms and denies arm pain or prior vascular surgery.\n\nPhysical Exam: Upper extremities with palpable radial pulses bilaterally. No skin breakdown. Lower extremities with mild edema.\n\nAssessment: ESRD (N18.6) in hypertensive CKD (I12.0) with need for access planning. Vein mapping is appropriate to guide access selection and timing.\n\nPlan: Proceed with upper extremity vein mapping ultrasound today; discuss options for AV fistula versus graft based on results. Coordinate with nephrology regarding expected timing for dialysis initiation and access creation scheduling.",
         "observations": [
-          "Dialysis access planning initiated.",
-          "Vein mapping ordered/performed to support access creation planning.",
-          "Symptom burden persists despite medical therapy."
+          "Patient engaged in planning and asks for concrete timeline",
+          "Good distal pulses noted",
+          "No current signs of access-site infection"
+        ],
+        "procedures_performed": [
+          "CPT 99203 - Office or other outpatient visit for the evaluation and management of a new patient, level 3"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Samuel Ortega, MD",
+          "Dr. Nathaniel Park, MD"
+        ],
+        "progress_notes": "Access planning initiated; vein mapping performed to support access decision-making prior to dialysis start.",
+        "follow_up_instructions": "Await vein mapping results and schedule access creation consultation within 2-3 weeks. Contact clinic for increasing arm swelling, redness, fever, or worsening uremic symptoms."
+      },
+      {
+        "encounter_date": "04-02-2026",
+        "encounter_type": "Follow-up",
+        "purpose_of_visit": "Review symptoms and lab trends while finalizing dialysis planning and ongoing medical management.",
+        "provider": "Dr. Nathaniel Park, MD",
+        "provider_npi": "3124567890",
+        "facility": "Austin Kidney & Hypertension Clinic",
+        "vital_signs": {
+          "recorded_date": "04-02-2026",
+          "blood_pressure": "158/94 mmHg",
+          "heart_rate": "88 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "27.3 kg/m\u00b2",
+          "oxygen_saturation": "98%",
+          "temperature": "98.0\u00b0F",
+          "respiratory_rate": "16 breaths/min"
+        },
+        "chief_complaint": "I\u2019m still tired and swollen, and I\u2019m not sure what\u2019s happening next.",
+        "doctor_note": "HPI: Patient returns for follow-up after ER visit and vascular consult. She reports persistent fatigue and intermittent nausea, with ankle swelling that is improved on some days but recurrent. She is taking medications as prescribed using a pill organizer but feels overwhelmed by the number of calls about scheduling.\n\nReview of Systems: Positive for fatigue, nausea, and leg swelling. Negative for chest pain, fevers, and dysuria.\n\nPhysical Exam: Mild bilateral lower extremity edema. BP remains above goal. Lungs clear.\n\nAssessment: ESRD (N18.6) with symptomatic burden and volume issues (R60.0). Metabolic acidosis (E87.2) on sodium bicarbonate. Anemia in CKD (D63.1) on ESA/iron. Hypertensive CKD (I12.0).\n\nPlan: Continue sodium bicarbonate and diuretic therapy while dialysis planning proceeds. Review diet recommendations, focusing on low sodium and low potassium strategies. Confirm vein mapping results are on file and expedite access scheduling. Arrange repeat BMP prior to pre-op evaluation and reinforce when to seek ER care for worsening symptoms.",
+        "observations": [
+          "BP above goal despite adherence",
+          "Edema persists but not severe",
+          "Patient reports frustration with fragmented scheduling"
+        ],
+        "procedures_performed": [
+          "CPT 99214 - Office or other outpatient visit, established patient, level 4"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "R60.0 - Localized edema",
+          "E87.2 - Acidosis",
+          "D63.1 - Anemia in chronic kidney disease"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Nathaniel Park, MD"
+        ],
+        "progress_notes": "Symptoms persist; continued close monitoring while access planning advances. Emphasis placed on clearer scheduling steps and lab monitoring.",
+        "follow_up_instructions": "Repeat labs as scheduled; follow up in 1 week for pre-op review. Call clinic for worsening swelling, shortness of breath, persistent vomiting, or palpitations."
+      },
+      {
+        "encounter_date": "04-08-2026",
+        "encounter_type": "Pre-op Evaluation",
+        "purpose_of_visit": "Pre-procedure medical evaluation and risk review in advance of dialysis initiation planning and access creation workflow.",
+        "provider": "Dr. Priya Iyer, MD",
+        "provider_npi": "2234567890",
+        "facility": "St. David's Medical Center - Pre-Op Clinic",
+        "vital_signs": {
+          "recorded_date": "04-08-2026",
+          "blood_pressure": "156/92 mmHg",
+          "heart_rate": "90 bpm",
+          "blood_sugar_fasting": null,
+          "blood_sugar_postprandial": null,
+          "bmi": "27.2 kg/m\u00b2",
+          "oxygen_saturation": "97%",
+          "temperature": "98.3\u00b0F",
+          "respiratory_rate": "18 breaths/min"
+        },
+        "chief_complaint": "I\u2019m nervous about starting dialysis and I still feel nauseated.",
+        "doctor_note": "HPI: Patient presents for pre-op evaluation in the context of ESRD planning and anticipated dialysis initiation. She reports ongoing nausea and fatigue and is anxious about the process. She notes lower extremity swelling that improves with leg elevation and diuretic use.\n\nReview of Systems: Positive for nausea and edema. Denies fever, cough, chest pain, or active infection symptoms.\n\nPhysical Exam: Mild bilateral edema; no respiratory distress; heart regular rate and rhythm.\n\nAssessment: ESRD (N18.6) with metabolic complications including acidosis (E87.2) and history of hyperkalemia (E87.5), plus anemia in CKD (D63.1) and hypertensive CKD (I12.0). Patient has ongoing symptoms and requires careful peri-procedural planning and coordination for dialysis start.\n\nPlan: Review recent labs and confirm plans for updated BMP/CBC prior to dialysis initiation. Medication review performed; continue BP agents as directed by nephrology. Provide education about dialysis process and reinforce follow-up with nephrology for supervision plan.\n\nConcurrent Care Reference: Patient is actively engaged in Mental Health / Psychotherapy every 2 weeks with Dr. Elena Ruiz, PhD; patient reports increased stress related to medical scheduling and is using coping strategies discussed in therapy.",
+        "observations": [
+          "Anxiety related to upcoming dialysis initiation",
+          "Persistent nausea without vomiting at visit",
+          "Edema present on exam"
         ],
         "procedures_performed": [
           "CPT 99204 - Office or other outpatient visit, new patient, level 4"
@@ -20178,143 +20257,43 @@
         "diagnoses": [
           "N18.6 - End stage renal disease",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "E87.5 - Hyperkalemia",
           "E87.2 - Acidosis",
           "D63.1 - Anemia in chronic kidney disease",
           "R60.0 - Localized edema",
-          "R53.83 - Other fatigue",
-          "R11.2 - Nausea with vomiting, unspecified"
-        ],
-        "medications_prescribed": [
-          "Ferrous sulfate (generic) (Ferrous sulfate 325 mg (65 mg elemental iron)) - Take 1 tablet by mouth every other day with food",
-          "Retacrit (Epoetin alfa-epbx 10,000 units/mL) - Inject 0.6 mL subcutaneously once weekly"
-        ],
-        "care_team": [
-          "Dr. Maya Sato, MD (Vascular Surgery)",
-          "Dr. Nathaniel Park, MD (Nephrology)"
-        ],
-        "progress_notes": "Patient has moved from conservative management to active access planning after ER visit and persistent symptoms. Vein mapping completed to guide next steps in dialysis preparation.",
-        "follow_up_instructions": "Follow up with nephrology and vascular surgery after vein mapping results to confirm access plan and timing; continue renal diet instructions and monitor for worsening symptoms."
-      },
-      {
-        "encounter_date": "04-02-2026",
-        "encounter_type": "Follow-up",
-        "purpose_of_visit": "Follow-up for ESRD symptom monitoring, blood pressure/volume status management, and review of recent labs while dialysis preparation continues.",
-        "provider": "Dr. Nathaniel Park, MD",
-        "provider_npi": "3124567890",
-        "facility": "Austin Kidney & Hypertension Clinic",
-        "vital_signs": {
-          "recorded_date": "04-02-2026",
-          "blood_pressure": "168/96 mmHg",
-          "heart_rate": "82 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "27.1 kg/m\u00b2",
-          "oxygen_saturation": "98%",
-          "temperature": "98.6\u00b0F",
-          "respiratory_rate": "16 breaths/min"
-        },
-        "chief_complaint": "I\u2019m still tired and swollen, and I\u2019m not sure what\u2019s happening next.",
-        "doctor_note": "HPI: Patient returns for follow-up with ESRD (N18.6) and hypertensive CKD (I12.0). She continues to have fatigue (R53.83) and lower extremity swelling (R60.0) despite adherence to furosemide and low sodium approach. She reports intermittent nausea with occasional vomiting (R11.2) but is able to keep down fluids most days. She is anxious about dialysis planning and wants clear next steps.\n\nReview of Systems: Positive for fatigue, edema, intermittent nausea/vomiting. Negative for chest pain or dyspnea at rest.\n\nPhysical Exam: BP elevated. 1+ pitting edema at ankles. Lungs clear.\n\nAssessment: ESRD (N18.6) with ongoing symptom burden and volume management needs; metabolic acidosis (E87.2) on bicarbonate; history of hyperkalemia (E87.5); anemia in CKD (D63.1) on ESA/iron.\n\nPlan: Continue current medications, reinforce low potassium diet to reduce E87.5 risk, and schedule repeat BMP monitoring. Review status of access planning and dialysis education completion; begin coordination with dialysis facility for onboarding and ongoing lab review schedule.",
-        "observations": [
-          "Persistent ankle edema.",
-          "Ongoing fatigue impacting function.",
-          "Intermittent nausea/vomiting without dehydration signs today."
-        ],
-        "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit, established patient, level 4"
-        ],
-        "diagnoses": [
-          "N18.6 - End stage renal disease",
-          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "E87.2 - Acidosis",
-          "E87.5 - Hyperkalemia",
-          "D63.1 - Anemia in chronic kidney disease",
-          "R60.0 - Localized edema",
-          "R53.83 - Other fatigue",
-          "R11.2 - Nausea with vomiting, unspecified"
-        ],
-        "medications_prescribed": [
-          "Sodium Bicarbonate (generic) (Sodium bicarbonate 650 mg) - Take 1 tablet by mouth three times daily"
-        ],
-        "care_team": [
-          "Dr. Nathaniel Park, MD",
-          "Clinic RN Care Coordinator"
-        ],
-        "progress_notes": "Symptoms remain present but stable compared with March; patient continues to need structured dialysis planning milestones and ongoing lab surveillance to support safe transition to dialysis services.",
-        "follow_up_instructions": "Repeat BMP within 1\u20132 weeks; continue daily weights and call for rapid weight gain, worsening vomiting, or shortness of breath. Maintain renal diet and bring medication list to next visit."
-      },
-      {
-        "encounter_date": "04-08-2026",
-        "encounter_type": "Pre-op Evaluation",
-        "purpose_of_visit": "Pre-procedure evaluation in anticipation of dialysis initiation planning; review symptom burden, medication reconciliation, and readiness steps.",
-        "provider": "Dr. Nathaniel Park, MD",
-        "provider_npi": "3124567890",
-        "facility": "Austin Kidney & Hypertension Clinic",
-        "vital_signs": {
-          "recorded_date": "04-08-2026",
-          "blood_pressure": "170/100 mmHg",
-          "heart_rate": "90 bpm",
-          "blood_sugar_fasting": null,
-          "blood_sugar_postprandial": null,
-          "bmi": "27.1 kg/m\u00b2",
-          "oxygen_saturation": "97%",
-          "temperature": "98.3\u00b0F",
-          "respiratory_rate": "18 breaths/min"
-        },
-        "chief_complaint": "I\u2019m nervous about starting dialysis and I still feel nauseated.",
-        "doctor_note": "HPI: 57-year-old female with ESRD (N18.6) presents for pre-procedure planning visit related to requested dialysis services (CPT 90999). She reports persistent nausea with occasional vomiting (R11.2), ongoing fatigue (R53.83), and recurrent ankle swelling (R60.0). She confirms she uses a weekly pill organizer and is generally adherent. She requests clear instruction on who will direct dialysis orders.\n\nReview of Systems: Positive for fatigue, nausea/vomiting, and swelling. Negative for fever and chest pain.\n\nPhysical Exam: Hypertensive. Mild lower extremity edema. No respiratory distress. Alert and oriented.\n\nAssessment: ESRD (N18.6) with ongoing symptoms and complications including E87.2 metabolic acidosis, prior E87.5 hyperkalemia, and D63.1 anemia in CKD; hypertensive CKD (I12.0). Pre-dialysis planning includes care coordination and monitoring plan.\n\nPlan: Reconcile meds; continue amlodipine, carvedilol, furosemide, sodium bicarbonate, iron, and ESA therapy. Order/update labs and communicate with dialysis facility regarding intake and nephrologist supervision plan. Provide written plan, including symptom monitoring and dietary guidance emphasizing potassium restriction to reduce E87.5 risk.\n\nConcurrent Care Reference: Patient is actively participating in Mental Health / Psychotherapy every 2 weeks with Dr. Elena Ruiz, PhD; encouraged continuation to support coping with chronic illness and treatment planning.",
-        "observations": [
-          "Patient anxious about transition to dialysis; prefers concrete instructions.",
-          "Persistent nausea/vomiting reported without acute distress today.",
-          "Edema remains present on exam."
-        ],
-        "procedures_performed": [
-          "CPT 99214 - Office or other outpatient visit, established patient, level 4"
-        ],
-        "diagnoses": [
-          "N18.6 - End stage renal disease",
-          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "E87.2 - Acidosis",
-          "E87.5 - Hyperkalemia",
-          "D63.1 - Anemia in chronic kidney disease",
-          "R60.0 - Localized edema",
-          "R53.83 - Other fatigue",
-          "R11.2 - Nausea with vomiting, unspecified"
+          "E87.5 - Hyperkalemia"
         ],
         "medications_prescribed": [],
         "care_team": [
-          "Dr. Nathaniel Park, MD",
-          "Clinic RN Care Coordinator",
-          "Dialysis unit intake coordinator (pending)"
+          "Dr. Priya Iyer, MD",
+          "Dr. Nathaniel Park, MD"
         ],
-        "progress_notes": "Pre-procedure planning visit; symptoms persist but patient is engaged and adherent with medication system. Primary barrier identified is coordination of dialysis oversight and scheduling logistics.",
-        "follow_up_instructions": "Complete ordered labs; expect call from dialysis unit intake within 3\u20135 business days. Return earlier for worsening vomiting, palpitations, shortness of breath, or rapid swelling."
+        "progress_notes": "Pre-op evaluation emphasized lab monitoring and communication pathways; patient anxiety acknowledged and supported with education and therapy continuity.",
+        "follow_up_instructions": "Complete scheduled labs; follow up with nephrology for supervision and start-date planning. Seek urgent care for severe weakness, confusion, chest pain, or persistent vomiting."
       },
       {
         "encounter_date": "04-10-2026",
         "encounter_type": "Office Visit",
-        "purpose_of_visit": "Care coordination visit to address gap in nephrology supervision at planned dialysis facility and review current ESRD-related symptoms and labs prior to requested dialysis services.",
+        "purpose_of_visit": "Care coordination visit to clarify dialysis plan leadership, supervision, and next scheduling steps.",
         "provider": "Dr. Nathaniel Park, MD",
         "provider_npi": "3124567890",
         "facility": "Austin Kidney & Hypertension Clinic",
         "vital_signs": {
           "recorded_date": "04-10-2026",
-          "blood_pressure": "166/94 mmHg",
-          "heart_rate": "86 bpm",
+          "blood_pressure": "150/90 mmHg",
+          "heart_rate": "82 bpm",
           "blood_sugar_fasting": null,
           "blood_sugar_postprandial": null,
           "bmi": "27.1 kg/m\u00b2",
           "oxygen_saturation": "98%",
-          "temperature": "98.5\u00b0F",
+          "temperature": "98.2\u00b0F",
           "respiratory_rate": "16 breaths/min"
         },
         "chief_complaint": "I\u2019m confused about who is actually in charge of my dialysis plan.",
-        "doctor_note": "HPI: Patient with ESRD (N18.6) returns for targeted care coordination. She reports ongoing fatigue (R53.83), intermittent nausea with vomiting (R11.2), and swelling (R60.0). She states that although she completed education and vein mapping, she has not been contacted with a definitive dialysis start plan or supervising nephrologist assignment.\n\nReview of Systems: Positive for fatigue, nausea/vomiting, edema. Negative for fever or chest pain.\n\nPhysical Exam: BP remains elevated. Mild ankle edema persists. No acute respiratory findings.\n\nAssessment: ESRD (N18.6) with hypertensive CKD (I12.0) and ongoing symptom burden. Medical management continues for acidosis (E87.2) and anemia (D63.1); history of hyperkalemia (E87.5) increases need for close monitoring during dialysis planning.\n\nPlan: Document dialysis request (CPT 90999) and coordinate dialysis unit onboarding; confirm accepting supervising nephrologist and standing orders. Review renal diet emphasis, daily weights, and symptom monitoring to guide treatment planning; schedule follow-up lab review and communication plan that matches patient preference for single point of contact.",
+        "doctor_note": "HPI: Patient reports confusion and frustration regarding multiple calls from different offices about labs, access, and dialysis orientation. She reports continued fatigue and intermittent nausea, and persistent ankle swelling. She states she needs a single point of contact and a clear timeline.\n\nReview of Systems: Positive for fatigue, nausea, and edema. Denies chest pain and fevers.\n\nPhysical Exam: Mild bilateral ankle edema. No acute distress. BP elevated.\n\nAssessment: ESRD (N18.6) due to hypertensive CKD (I12.0) with ongoing symptoms and metabolic/volume complications (E87.2, R60.0) and anemia (D63.1). Coordination needs identified to ensure nephrologist supervision and timely dialysis initiation.\n\nPlan: Confirm supervision plan through nephrology clinic; provide patient with direct clinic coordinator line. Review current medications and reinforce low potassium and low sodium diet counseling (history of E87.5). Set target dialysis start window and outline labs to be completed within 1\u20132 weeks before start.",
         "observations": [
-          "Patient expresses need for clear nephrology oversight and scheduling communication.",
-          "Persistent edema and fatigue noted.",
-          "Care coordination needs documented for dialysis initiation planning."
+          "Patient requests single point of contact",
+          "Persistent edema but stable",
+          "BP remains above goal"
         ],
         "procedures_performed": [
           "CPT 99214 - Office or other outpatient visit, established patient, level 4"
@@ -20322,101 +20301,140 @@
         "diagnoses": [
           "N18.6 - End stage renal disease",
           "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
-          "E87.5 - Hyperkalemia",
+          "R60.0 - Localized edema",
           "E87.2 - Acidosis",
           "D63.1 - Anemia in chronic kidney disease",
-          "R60.0 - Localized edema",
-          "R53.83 - Other fatigue",
-          "R11.2 - Nausea with vomiting, unspecified"
+          "E87.5 - Hyperkalemia"
         ],
         "medications_prescribed": [],
         "care_team": [
           "Dr. Nathaniel Park, MD",
-          "Clinic RN Care Coordinator"
+          "Clinic Care Coordinator (Austin Kidney & Hypertension Clinic)"
         ],
-        "progress_notes": "Visit focused on resolving operational barrier (lack of established nephrology supervision at dialysis unit) while documenting ongoing clinical need based on symptoms and lab trends for ESRD complications.",
-        "follow_up_instructions": "Follow up in 1 week for lab review and dialysis intake confirmation; seek urgent care for severe weakness, palpitations, confusion, or persistent vomiting."
+        "progress_notes": "Visit focused on reducing fragmentation and ensuring nephrologist-led oversight as dialysis initiation approaches.",
+        "follow_up_instructions": "Telehealth care coordination check in 1 week; complete labs as ordered. Call nephrology clinic for worsening nausea, swelling, decreased urine output, or palpitations."
+      },
+      {
+        "encounter_date": "04-11-2026",
+        "encounter_type": "Telehealth",
+        "purpose_of_visit": "Follow-up care coordination to address gaps in nephrologist supervision and finalize dialysis start logistics.",
+        "provider": "Dr. Nathaniel Park, MD",
+        "provider_npi": "3124567890",
+        "facility": "Austin Kidney & Hypertension Clinic (Telehealth)",
+        "vital_signs": null,
+        "chief_complaint": "I need a clear plan for who is supervising dialysis and what happens first.",
+        "doctor_note": "HPI: Patient follows up by video to review next steps. She reports ongoing fatigue and intermittent nausea. Edema continues but is manageable with leg elevation and diuretic use. Primary concern is clarity on supervision, scheduling, and who to contact for changes.\n\nReview of Systems: Positive for fatigue, nausea, edema. Denies fever, chest pain, and shortness of breath at rest.\n\nPhysical Exam (limited by telehealth): Patient appears tired but alert and oriented. No visible respiratory distress. Patient reports ankle swelling unchanged from prior.\n\nAssessment: ESRD (N18.6) with comorbid hypertensive CKD (I12.0), metabolic acidosis (E87.2), anemia (D63.1), edema (R60.0), and history of hyperkalemia (E87.5). Ongoing need for coordinated, nephrologist-supervised dialysis start planning.\n\nPlan: Reaffirm supervising nephrologist role; document supervision plan and ensure dialysis unit receives clinical packet (med list, allergies, labs, vein mapping). Review warning signs for electrolyte/volume issues and provide direct contact pathway. Confirm expected dialysis start date of 05-15-2026 contingent on access/scheduling completion.",
+        "observations": [
+          "Patient demonstrates understanding when steps are written out",
+          "No acute distress observed on video",
+          "Ongoing symptom burden consistent with ESRD"
+        ],
+        "procedures_performed": [
+          "CPT 99442 - Telephone evaluation and management service by a physician, 11-20 minutes of medical discussion"
+        ],
+        "diagnoses": [
+          "N18.6 - End stage renal disease",
+          "I12.0 - Hypertensive chronic kidney disease with stage 5 chronic kidney disease or end stage renal disease",
+          "E87.2 - Acidosis",
+          "D63.1 - Anemia in chronic kidney disease",
+          "R60.0 - Localized edema",
+          "E87.5 - Hyperkalemia"
+        ],
+        "medications_prescribed": [],
+        "care_team": [
+          "Dr. Nathaniel Park, MD",
+          "Dialysis Unit Intake Coordinator (St. David's Medical Center - Dialysis Services)"
+        ],
+        "progress_notes": "Care coordination completed with clear supervision statement and transfer of key records to support dialysis start.",
+        "follow_up_instructions": "Proceed with access scheduling and complete pre-dialysis labs within 1 week of start. Contact nephrology clinic same day for worsening nausea, confusion, palpitations, or increased swelling; go to ER for severe symptoms."
       }
     ],
     "images": [
       {
         "type": "Upper Extremity Vein Mapping Ultrasound",
         "date": "03-12-2026",
-        "provider": "Dr. Maya Sato, MD",
-        "facility": "St. David's Medical Center - Vascular Lab",
-        "findings": "Bilateral upper extremity venous mapping performed for dialysis access planning in ESRD (N18.6). Cephalic and basilic veins were evaluated from wrist to axilla with compressibility and diameter measurements. No acute thrombosis identified; superficial veins demonstrate segments with adequate caliber for potential access creation. Study supports ongoing access planning steps in preparation for requested dialysis services (CPT 90999)."
+        "provider": "Dr. Samuel Ortega, MD",
+        "facility": "St. David's Heart Hospital - Vascular Lab",
+        "findings": "Bilateral upper extremity vein mapping performed for dialysis access planning. Cephalic vein diameter measured 2.6\u20133.1 mm in the left forearm with compressibility and no thrombus; basilic vein 3.4\u20134.0 mm in the left upper arm. Right cephalic vein diameter 2.2\u20132.8 mm; basilic vein 3.1\u20133.7 mm. Arterial inflow with triphasic waveforms at brachial and radial arteries. Impression: Vein caliber and patency are suitable for consideration of AV fistula creation, with left arm favored based on vein diameter and course."
       }
     ],
     "reports": [
       {
         "type": "Basic Metabolic Panel (BMP)",
         "date": "03-04-2026",
-        "provider": "Dr. Jordan Kim, MD",
-        "results": "BMP notable for electrolyte and acid-base abnormalities in ESRD context, including elevated potassium consistent with hyperkalemia (E87.5) and low bicarbonate consistent with acidosis (E87.2). Renal indices consistent with end stage renal disease (N18.6).",
-        "notes": "Obtained during ER evaluation for weakness and nausea/vomiting (R11.2) to assess metabolic contributors and to guide urgent management and dialysis planning."
+        "provider": "Dr. Maya Chen, MD",
+        "results": "BMP obtained during ER evaluation showed advanced renal dysfunction physiology with electrolyte and acid-base derangements prompting ESRD planning; hyperkalemia episode documented and treated. Values were discussed with nephrology for urgent follow-up.",
+        "notes": "Obtained during ER visit supporting dialysis planning in ESRD (N18.6) and monitoring for E87.5/E87.2."
       },
       {
         "type": "Complete Blood Count (CBC)",
         "date": "03-04-2026",
-        "provider": "Dr. Jordan Kim, MD",
-        "results": "CBC consistent with anemia in chronic kidney disease (D63.1) with low hemoglobin/hematocrit relative to reference range; no leukocytosis.",
-        "notes": "Findings used to support outpatient nephrology management including ESA and iron therapy planning during ESRD care and preparation for dialysis services (CPT 90999)."
+        "provider": "Dr. Maya Chen, MD",
+        "results": "CBC consistent with anemia of chronic kidney disease (D63.1) contributing to fatigue; no leukocytosis reported. Results supported ongoing ESA/iron management in the setting of ESRD planning.",
+        "notes": "Used to guide anemia management as part of pre-dialysis workup."
       },
       {
         "type": "Basic Metabolic Panel (BMP)",
         "date": "03-29-2026",
         "provider": "Dr. Nathaniel Park, MD",
-        "results": "BMP monitored for ESRD complications (N18.6) including potassium trend (E87.5 risk) and bicarbonate (E87.2). Renal indices remain consistent with advanced kidney failure.",
-        "notes": "Obtained for ongoing monitoring while access planning and dialysis education were in progress; supports pre-dialysis management and timing considerations."
+        "results": "Repeat BMP consistent with persistent metabolic acidosis pattern (E87.2) and advanced CKD/ESRD physiology (N18.6), supporting continued preparation for renal replacement therapy.",
+        "notes": "Trend monitoring prior to dialysis initiation planning."
       },
       {
         "type": "Basic Metabolic Panel (BMP)",
         "date": "04-01-2026",
         "provider": "Dr. Nathaniel Park, MD",
-        "results": "Na 134, K 5.6 (E87.5), CO2 16 (E87.2), BUN 86, Cr 8.9 consistent with ESRD (N18.6), glucose 102, Ca 8.1.",
-        "notes": "Pre-dialysis monitoring to support requested dialysis services (CPT 90999) and to guide safety planning given recurring hyperkalemia and acidosis."
+        "results": "BMP continued to demonstrate advanced renal failure physiology with ongoing acid-base/electrolyte concerns (E87.2 with history of E87.5), supporting timeline toward dialysis services.",
+        "notes": "Result reviewed at follow-up visit; reinforced diet and medication plan."
+      },
+      {
+        "type": "Laboratory Panel (BMP/CBC)",
+        "date": "04-07-2026",
+        "provider": "Dr. Nathaniel Park, MD",
+        "results": "BMP: Na 134, K 5.3, CO2 17, BUN 78, Cr 7.1, Ca 8.1, Glu 92. CBC: Hgb 9.1, Hct 28.4, WBC 6.8, Plt 232. Pattern supports ongoing E87.2 and D63.1 in ESRD (N18.6) with mild hyperkalemia range relevant to E87.5 history.",
+        "notes": "Obtained to support pre-dialysis readiness assessment for requested dialysis (CPT 90999)."
       }
     ],
     "procedures": [
       {
         "name": "Dialysis education session (renal replacement therapy counseling)",
         "date": "03-20-2026",
-        "provider": "Austin Kidney & Hypertension Clinic - Renal Educator (RN)",
+        "provider": "Austin Kidney & Hypertension Clinic Education Nurse",
         "facility": "Austin Kidney & Hypertension Clinic",
-        "reason": "Education and planning for renal replacement therapy in ESRD (N18.6) including symptom monitoring, diet guidance for hyperkalemia risk (E87.5), and review of access planning timeline.",
-        "notes": "Session covered hemodialysis basics, potential treatment schedule, importance of lab monitoring for potassium and bicarbonate (E87.5, E87.2), and coordination steps; patient requested written checklist and clear scheduling contact."
+        "reason": "Education and counseling on renal replacement therapy options and planning in ESRD (N18.6).",
+        "notes": "Reviewed modality overview, access concepts, diet considerations including low sodium/low potassium, and coordination steps for supervised dialysis initiation."
       }
     ],
     "social_history": {
-      "tobacco_use": "Former smoker - quit 2012",
-      "tobacco_frequency": "Previously ~0.5 pack/day for 12 years",
+      "tobacco_use": "Former smoker - quit 2016",
+      "tobacco_frequency": "Previously ~0.5 pack/day for 15 years",
       "alcohol_use": "Social/Occasional",
-      "alcohol_frequency": "1-2 drinks about 1-2 times/month",
+      "alcohol_frequency": "1-2 drinks/month",
       "illicit_drug_use": "None",
       "substance_history": null,
       "last_medical_visit": "04-10-2026",
-      "last_visit_reason": "Care coordination for dialysis planning and nephrology supervision gap in ESRD (N18.6).",
+      "last_visit_reason": "Care coordination and dialysis planning oversight clarification for ESRD symptoms",
       "missed_appointment": true,
-      "missed_appointment_reason": "Missed one lab draw appointment due to transportation delay after work; rescheduled within the same week.",
+      "missed_appointment_reason": "Missed one lab-only appointment due to transportation delay and confusion about which location to go to",
       "early_visit_reason": null,
-      "mental_health_history": "Adjustment-related stress; engaged in psychotherapy since 01-2026.",
-      "mental_health_current": "PHQ-9: 7 (mild depressive symptoms); GAD-7: 9 (mild to moderate anxiety) on 04-08-2026.",
-      "exercise_habits": "Light walking 10-15 minutes, 3x/week as tolerated; limited by fatigue (R53.83).",
-      "diet_notes": "Low sodium focus; struggles with consistent low potassium choices when eating out; tracks fluid intake intermittently.",
-      "family_history_relevant": "Family history of hypertension; one first-degree relative with chronic kidney disease (non-dialysis) reported."
+      "mental_health_history": "Adjustment-related anxiety and irritability addressed in psychotherapy since late 2025",
+      "mental_health_current": "GAD-7: 9 (mild-moderate anxiety) on 04-08-2026; PHQ-9: 7 (mild depressive symptoms)",
+      "exercise_habits": "Walks 10-15 minutes 3x/week when fatigue allows; otherwise sedentary on high-symptom days",
+      "diet_notes": "Attempts low sodium diet; struggles with low potassium restrictions when eating out; uses weekly meal planning inconsistently",
+      "family_history_relevant": "Family history of hypertension in both parents; sibling with chronic kidney disease. No known hereditary polycystic kidney disease reported."
     },
     "vital_signs_current": {
       "recorded_date": "04-10-2026",
-      "blood_pressure": "166/94 mmHg",
-      "heart_rate": "86 bpm",
+      "blood_pressure": "150/90 mmHg",
+      "heart_rate": "82 bpm",
       "blood_sugar_fasting": null,
       "blood_sugar_postprandial": null,
       "bmi": "27.1 kg/m\u00b2",
       "oxygen_saturation": "98%",
-      "temperature": "98.5\u00b0F",
+      "temperature": "98.2\u00b0F",
       "respiratory_rate": "16 breaths/min"
     },
-    "gender_specific_history": "Gravida 0, Para 0. Last Pap smear: 08-15-2023 (reported normal). Last mammogram: 11-10-2024 (reported normal). No history of gynecologic malignancy; postmenopausal since age 52."
+    "gender_specific_history": "G2P2. Last Pap smear: 08-15-2023 (reported normal). Last screening mammogram: 09-10-2024 (reported normal). No history of gestational diabetes. Menopause around age 52; no postmenopausal bleeding reported."
   },
   "113": {
     "first_name": "Corrado",

@@ -20,7 +20,7 @@ from .core.config import (
     get_patient_persona_folder,
     get_patient_summary_folder,
 )
-from .utils.file_utils import get_persona_version, archive_patient_files, sanitize_filename_component
+from .utils.file_utils import get_latest_major_version, get_document_minor_version, archive_patient_files, sanitize_filename_component
 
 def _is_policy_criteria_doc(doc) -> bool:
     """
@@ -390,8 +390,16 @@ def process_patient_workflow(
             print(f"   ⚠️  Could not align patient folder name: {e}")
 
     # ── 7. VERSION & ARCHIVE ───────────────────────────────────────────────────
-    doc_version = get_persona_version(patient_id)
-    print(f"   🔖 Document version: v{doc_version}")
+    current_major = get_latest_major_version(patient_id)
+    if generation_mode["persona"]:
+        doc_major_version = current_major + 1
+        doc_minor_version = 0
+    else:
+        doc_major_version = current_major if current_major > 0 else 1
+        doc_minor_version = get_document_minor_version(patient_id, doc_major_version)
+        
+    doc_version_str = f"{doc_major_version}.{doc_minor_version}" if doc_minor_version > 0 else f"{doc_major_version}"
+    print(f"   🔖 Document version: v{doc_version_str}")
 
     if cancel_check and cancel_check():
         print("   ⛔ Cancellation requested before PDF archiving.")
@@ -420,7 +428,7 @@ def process_patient_workflow(
             image_map=None,
             mrn=current_mrn,
             output_folder=get_patient_persona_folder(patient_id),
-            version=doc_version,
+            version=doc_version_str,
         )
         pf = os.path.basename(persona_path)
         docs_written.append(pf)
@@ -443,14 +451,14 @@ def process_patient_workflow(
                 loaded_template_sections.append([])
 
         persist_images = os.getenv("PERSIST_IMAGES", "false").lower() == "true"
-        print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version}…")
+        print(f"   📄 Generating {len(filtered_documents)} report(s) at v{doc_version_str}…")
         for seq, doc in enumerate(filtered_documents, start=1):
             if cancel_check and cancel_check():
                 print("   ⛔ Cancellation requested during PDF generation loop.")
                 return None
             try:
                 seq_str            = f"{seq:03d}"
-                doc_identifier     = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+                doc_identifier     = f"DOC-{patient_id}-v{doc_version_str}-{seq_str}"
                 safe_title_hint = sanitize_filename_component(getattr(doc, "title_hint", "document"))
                 final_filename_base = f"{doc_identifier}-{safe_title_hint}"
 
@@ -558,7 +566,7 @@ def process_patient_workflow(
                     doc_metadata=doc,
                     base_output_folder=patient_report_folder,
                     image_path=image_path,
-                    version=doc_version,
+                    version=doc_version_str,
                 )
                 if image_path and not persist_images:
                     try:
@@ -580,7 +588,7 @@ def process_patient_workflow(
             print("   ⛔ Cancellation requested before summary generation.")
             return None
         try:
-            print(f"   📋 Generating annotator summary at v{doc_version}…")
+            print(f"   📋 Generating annotator summary at v{doc_version_str}…")
 
             search_results      = None
             verification_notes  = []
@@ -634,7 +642,7 @@ def process_patient_workflow(
                 case_details=case_data,
                 patient_persona=result.patient_persona,
                 output_folder=get_patient_summary_folder(patient_id),
-                version=doc_version,
+                version=doc_version_str,
             )
 
             if sum_path:
@@ -656,7 +664,7 @@ def process_patient_workflow(
             rec_path = patient_record_writer.write_patient_record(
                 patient_id=patient_id,
                 persona=result.patient_persona,
-                version=doc_version,
+                version=doc_version_str,
                 docs_generated=docs_written,
                 feedback=feedback,
             )
@@ -802,7 +810,16 @@ def render_patient_pdfs_from_content(
     docs_written: list[str] = []
     current_year = datetime.datetime.now().year
     current_mrn = f"MRN-{patient_id}-{current_year}"
-    doc_version = get_persona_version(patient_id)
+    
+    current_major = get_latest_major_version(patient_id)
+    if generation_mode.get("persona", False):
+        doc_major_version = current_major + 1
+        doc_minor_version = 0
+    else:
+        doc_major_version = current_major if current_major > 0 else 1
+        doc_minor_version = get_document_minor_version(patient_id, doc_major_version)
+        
+    doc_version_str = f"{doc_major_version}.{doc_minor_version}" if doc_minor_version > 0 else f"{doc_major_version}"
 
     # Reconstruct persona Pydantic object
     persona_obj = None
@@ -861,7 +878,7 @@ def render_patient_pdfs_from_content(
             persona_path = pdf_generator.create_persona_pdf(
                 patient_id, p_full_name, persona_obj, [],
                 image_map=None, mrn=current_mrn,
-                output_folder=get_patient_persona_folder(patient_id), version=doc_version,
+                output_folder=get_patient_persona_folder(patient_id), version=doc_version_str,
             )
             docs_written.append(os.path.basename(persona_path))
             print(f"   👤 Persona → {os.path.basename(persona_path)}")
@@ -882,7 +899,7 @@ def render_patient_pdfs_from_content(
                     # Fallback: best-effort plain text
                     content_body = _strip_html_tags(content_html).strip()
                 seq_str = f"{seq:03d}"
-                doc_identifier = f"DOC-{patient_id}-v{doc_version}-{seq_str}"
+                doc_identifier = f"DOC-{patient_id}-v{doc_version_str}-{seq_str}"
                 safe_title = sanitize_filename_component(title_hint)
                 final_base = f"{doc_identifier}-{safe_title}"
 
@@ -937,7 +954,7 @@ def render_patient_pdfs_from_content(
                     doc_metadata=doc_meta,
                     base_output_folder=patient_report_folder,
                     image_path=image_path,
-                    version=doc_version,
+                    version=doc_version_str,
                 )
                 
                 if image_path:
@@ -973,7 +990,7 @@ def render_patient_pdfs_from_content(
                 case_details=case_data,
                 patient_persona=persona_obj,
                 output_folder=get_patient_summary_folder(patient_id),
-                version=doc_version,
+                version=doc_version_str,
             )
             if sum_path:
                 docs_written.append(os.path.basename(sum_path))

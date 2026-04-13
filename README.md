@@ -1,4 +1,4 @@
-# Clinical Data Generator (v5.2)
+# Clinical Data Generator (v6.0)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.
@@ -111,9 +111,15 @@ Two interface files in `ui/` share the same **3-silo layout**:
 - **Feedback textarea** — optional AI instructions
 - **Doc type checkboxes** — Persona / Reports / Summary
 - **Generate button** → `POST /api/generate` → live log polling
-- **Live log panel** — streams real-time generation output
-- **Document list** with type filter tabs (All / P / R / S) + inline PDF links
+- **Live log panel** — streams real-time generation output (thread-safe for parallel runs)
+- **Document list** — PDF links with versioning (e.g. `v3.0`, `v3.1`)
 - **Batch Modal** — header button opens patient checklist → `POST /api/generate_all`
+
+### Concurrency & Parallelism
+
+- **Multi-Tab Support**: The system supports multiple concurrent generation jobs from different browser tabs/users.
+- **Thread-Safe Logging**: Uses a global `ThreadSafeStdout` proxy to route `print()` output to the correct `job_id` log stream based on the executing thread.
+- **Patient-Level Locking**: Parallel runs are allowed for **different patients**. Concurrent requests for the **same patient** are blocked with an `HTTP 409 Conflict` error to prevent document race conditions.
 
 ### Clinical Data Input Tabs
 
@@ -162,6 +168,15 @@ After each run, a 2×2 summary panel is shown:
 - **Complete PA Request Forms**: Requesting provider, urgency level, clinical justification, ICD-10 diagnoses, previous treatments, expected outcome
 - **Future Procedure Dates**: Procedure dates set 7–90 days in the future for realistic PA workflows
 
+### Concise Clinical Summary (v6)
+
+The summary document has been restructured into 5 distinct clinical and operational sections:
+1. **Patient Profile and Case** — Core demographics and scenario overview.
+2. **Extraction Expectation** — Payer details, CPT/ICD codes, and expected encounter counts.
+3. **Expectation Before Upload** — Clinical state expected prior to the current document set.
+4. **Expectation After Upload** — Clinical state expected after documents are processed.
+5. **Overall Expectation and Gaps** — Final clinical conclusion and identified data/logical gaps.
+
 ### Clinical Data Sections
 
 Medications, allergies, vaccinations, therapies, and behavioral notes are:
@@ -183,6 +198,13 @@ All generated data follows a realistic timeline:
 - **Recent Encounters**: 1–12 weeks before procedure
 - **Lab Results**: 1–4 weeks before procedure
 - **Procedure Date**: 7–90 days in the future
+
+### Versioning System (vMajor.Minor)
+
+The system uses a two-tier versioning system to track changes:
+- **Major Version (vX)**: Incremented whenever a new **Patient Persona** is generated (e.g., v2.0 -> v3.0).
+- **Minor Version (.n)**: Incremented for subsequent **Reports** or **Summary** generations using the *same* persona (e.g., v3.0 -> v3.1 -> v3.2).
+- This ensures clinical consistency: if the persona changes, the version resets; if only documents change, the lineage is preserved.
 
 ### Document Coherence
 

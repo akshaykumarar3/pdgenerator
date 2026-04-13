@@ -1,4 +1,4 @@
-s """
+"""
 AI Prompts Configuration
 
 This file contains all AI prompts and instructions used throughout the application.
@@ -731,246 +731,94 @@ RETURN ONLY THE FIXED CONTENT (no explanations, no code blocks)."""
 # WHEN TO USE: After persona (and optionally documents) are generated
 # PURPOSE: Create actionable guidance for manual verification and QA
 
-def get_concise_summary_prompt(
+def get_annotator_summary_prompt(
     case_details: dict,
     patient_persona: dict,
     generated_documents: list = None,
-    existing_summary: str = None,
     search_results: dict = None
 ) -> str:
     """
-    Generates prompt for creating a concise summary document.
-    
-    Args:
-        case_details: Dict with 'procedure', 'outcome', 'details'
-        patient_persona: The generated patient persona object (dict or Pydantic)
-        generated_documents: Optional list of generated documents
-        existing_summary: Optional existing summary to update
-        search_results: Optional web search results for CPT/ICD codes
-    
-    Returns:
-        Complete prompt string for concise summary generation
+    Generates prompt for creating an annotator verification guide.
     """
-    
-    # Extract persona details safely
     if hasattr(patient_persona, 'model_dump'):
         persona_dict = patient_persona.model_dump()
     else:
         persona_dict = patient_persona
-    
+        
     patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
-    patient_dob = persona_dict.get('dob', '')
-    patient_gender = persona_dict.get('gender', '')
     bio_narrative = persona_dict.get('bio_narrative', '')
     
-    # Build patient info (only show fields with data)
-    patient_info_lines = [f"- Name: {patient_name}"]
-    if patient_dob:
-        patient_info_lines.append(f"- DOB: {patient_dob}")
-    if patient_gender:
-        patient_info_lines.append(f"- Gender: {patient_gender}")
-    patient_info_section = "\n".join(patient_info_lines)
+    doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in (generated_documents or [])])
     
-    # Build document list if available
-    documents_section = ""
-    if generated_documents and len(generated_documents) > 0:
-        doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in generated_documents])
-        documents_section = f"""
-**GENERATED CLINICAL DOCUMENTS ({len(generated_documents)} total):**
-{doc_list}
+    return f"""
+**TASK: Generate an Annotator Verification Guide**
 
-You MUST analyze these documents to create the verification checklist.
+**PATIENT:** {patient_name}
+**CLINICAL SCENARIO:** Expected Outcome: {case_details.get('outcome', 'Unknown')}
+**PATIENT BIO NARRATIVE:** {bio_narrative}
+
+**GENERATED CLINICAL DOCUMENTS:**
+{doc_list if generated_documents else 'Documents Pending'}
+
+**REQUIRED SECTIONS:**
+1. **Case Explanation**: Target Procedure, expected outcome, and rationale.
+2. **Medical Details**: Key history, diagnoses, and complexity.
+3. **Patient Profile Summary**: Prior concerns, necessity justification.
+4. **Verification Pointers**: Key items to verify, supporting evidence, red flags.
 """
+
+def get_concise_summary_prompt(
+    case_details: dict,
+    patient_persona: dict,
+    generated_documents: list = None,
+    search_results: dict = None
+) -> str:
+    """
+    Generates prompt for creating a concise clinical summary.
+    """
+    if hasattr(patient_persona, 'model_dump'):
+        persona_dict = patient_persona.model_dump()
     else:
-        documents_section = """
-**CLINICAL DOCUMENTS STATUS:**
-Reports are pending. Clinical documents will be attached later based on requirements.
-The verification checklist section should indicate: "Reports pending - verification pointers will be available when clinical documents are generated."
-"""
-    
-    # Determine which sections to generate
-    sections_instruction = ""
-    if generated_documents and len(generated_documents) > 0:
-        sections_instruction = """
-**REQUIRED SECTIONS (ALL 4):**
-
-1. **Case Explanation**: 
-   - **CRITICAL**: Extract the TARGET CPT CODE and DESCRIPTION from the patient bio narrative above
-   - Start with: "Target Procedure: CPT [code] - [description]"
-   - Extract ALL CPT codes mentioned in the bio narrative
-   - Extract ALL ICD-10 codes with descriptions from the bio narrative
-   - Explain the clinical context and patient presentation
-   - Explain the expected outcome (Approval/Denial) with clear rationale
-   - Include clinical justification for the procedure
-   - **NEVER use "N/A"** - if a code is not in the bio narrative, state "See clinical documents for code details"
-
-2. **Medical Details**: 
-   - Key medical history elements from the persona
-   - How the diagnoses (ICD-10 codes) support or contradict the procedure request
-   - Unique or noteworthy aspects of this case
-   - Any complicating factors or special considerations
-   - Expected documentation elements
-
-3. **Patient Profile Summary**: 
-   - Prior health concerns and relevant medical history
-   - Medical necessity justification for the target procedure
-   - How the CPT code aligns with the patient's condition
-   - Procedure justification based on clinical profile
-   - Relevant social, lifestyle, or demographic factors
-
-4. **Verification Pointers**: 
-   - Key items to verify in the generated documents
-   - Supporting evidence that should be present
-   - Red flags or inconsistencies to watch for
-   - Document-specific expectations (what each document should contain)
-"""
-    else:
-        sections_instruction = """
-**REQUIRED SECTIONS (3 of 4 - Documents Pending):**
-
-1. **Case Explanation**: 
-   - Start with a clear statement of the TARGET PROCEDURE including CPT code and full description
-   - Example: "Target Procedure: CPT 50360 - Renal Transplantation, Kidney Allotransplantation"
-   - Explain the clinical context and patient presentation
-   - List ALL CPT codes that will be referenced in this case
-   - List ALL ICD-10 codes with descriptions (primary and secondary diagnoses)
-   - Explain the expected outcome (Approval/Denial) with clear rationale
-   - Include clinical justification for the procedure
-
-2. **Medical Details**: 
-   - Key medical history elements from the persona
-   - How the diagnoses support or contradict the procedure request
-   - Unique or noteworthy aspects of this case
-   - Expected documentation elements when reports are generated
-
-3. **Patient Profile Summary**: 
-   - Prior health concerns and relevant medical history
-   - Medical necessity justification for the target procedure
-   - How the CPT code aligns with the patient's condition
-   - Procedure justification based on clinical profile
-
-4. **Verification Pointers**: 
-   INDICATE: "Reports pending - verification checklist will be available when clinical documents are generated."
-   INDICATE: "Reports pending - verification checklist will be available when clinical documents are generated."
-"""
-
-    # Build reference information section from web search
-    reference_section = ""
-    if search_results:
-        # Add CPT info if available
-        if search_results.get('cpt_info'):
-            cpt_info = search_results['cpt_info']
-            reference_section = f"""
-
-**REFERENCE INFORMATION (Authoritative Source):**
-
-Target CPT Code (from official medical coding database):
-- Code: {cpt_info.get('code', 'N/A')}
-- Official Description: {cpt_info.get('description', 'N/A')}
-- Source: {cpt_info.get('source_url', 'Authoritative medical coding database')}
-
-**IMPORTANT**: Use the official CPT description above when writing the case explanation. This is from an authoritative source and should be referenced accurately.
-"""
+        persona_dict = patient_persona
         
-        # Add verification notes if present
-        if search_results.get('verification_notes'):
-            notes = search_results['verification_notes']
-            notes_text = '\n'.join([f"- {note}" for note in notes])
-            reference_section += f"""
-
-**DATA QUALITY NOTES (IMPORTANT - Include in Verification Section):**
-
-The following issues were detected during data preparation. These MUST be included in the verification checklist:
-
-{notes_text}
-
-**ACTION REQUIRED**: Add these notes to the "Verification Pointers" section so annotators know what needs manual verification.
-"""
+    patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
+    
+    doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in (generated_documents or [])])
     
     return f"""
 **TASK: Generate a Concise Clinical Summary**
 
-You are creating a concise clinical summary for a user. This is a clinical document.
+**PATIENT:** {patient_name}
+**CLINICAL SCENARIO:** Expected Outcome: {case_details.get('outcome', 'Unknown')}
 
-**PATIENT INFORMATION:**
-{patient_info_section}
+**GENERATED CLINICAL DOCUMENTS:**
+{doc_list if generated_documents else 'Documents Pending'}
 
-{reference_section}
-
-**CLINICAL SCENARIO (SOURCE OF TRUTH):**
-- Expected Outcome: {case_details.get('outcome', 'Unknown')}
-- Clinical Context: {case_details.get('details', 'See patient bio narrative')}
-
-**PATIENT BIO NARRATIVE (KEY SOURCE OF MEDICAL INFORMATION):**
-{bio_narrative if bio_narrative else 'Not available - extract from generated documents'}
-
-**IMPORTANT**: Extract ALL CPT codes and ICD-10 codes from the bio narrative above. Do NOT show "N/A" - if information is missing, extract it from the bio narrative or indicate it should be verified from the clinical documents.
-
-{documents_section}
-
-{sections_instruction}
-
-**DETAILED INSTRUCTIONS FOR EACH SECTION:**
+**DETAILED INSTRUCTIONS FOR EACH SECTION (OUTPUT STRICT JSON):**
 
 ### 1. Patient Profile and Case Explanation
-Provide a clear, concise explanation in bullet points. **Highlight** keywords in bold.
+Provide a clear, concise explanation in bullet points. Highlight keywords in bold.
 - **Patient Details**: Name, DOB, Gender
-- **Case Explanation**: A very short summary of the case.
-- **CPT Codes**: List of CPT codes.
-- **ICD Codes**: List of ICD codes.
+- **Case Explanation**: A very short summary of the case
+- **CPT Codes**: List of CPT codes
+- **ICD Codes**: List of ICD codes
 
 ### 2. Extraction Expectation
-Provide the following information in bullet points. **Highlight** keywords in bold.
-- **Insurance Provider**: Payer Name, Plan Name, Plan Type. These details should be extracted from the patient's persona.
-- **CPT**: CPT codes.
-- **ICD**: ICD codes.
-- **Encounters**: List of encounters.
+Provide the following in bullet points.
+- **Insurance Provider**: Payer Name, Plan Name
+- **CPT**: CPT codes
+- **ICD**: ICD codes
+- **Encounters**: List of encounters
 
-### 3. Document Purpose and Gaps
-Provide the following information in bullet points. **Highlight** keywords in bold.
-- **Document Purpose**: Purpose of each document.
-- **Purpose Gap**: Gaps in the purpose of the documents.
-- **Information Gap**: Gaps in the information of the documents.
+### 3. Expectation Before Upload
+Explain the expectation before document/reports upload based on the clinical scenario.
 
-### 4. Overall Expectation and Gaps
-Provide the following information in bullet points. **Highlight** keywords in bold.
-- **Overall Expectation**: Overall expectation of the case.
-- **Overall Gaps**: Overall gaps in the case.
+### 4. Expectation After Upload
+Explain the expectation after document/reports upload based on generated documents.
 
-**OUTPUT FORMAT:**
-Return a structured JSON object with the following schema:
-
-{{
-    "patient_profile_and_case_explanation": {{
-        "patient_details": "...",
-        "case_explanation": "...",
-        "cpt_codes": "...",
-        "icd_codes": "..."
-    }},
-    "extraction_expectation": {{
-        "insurance_provider": "...",
-        "cpt": "...",
-        "icd": "...",
-        "encounters": "..."
-    }},
-    "document_purpose_and_gaps": {{
-        "document_purpose": "...",
-        "purpose_gap": "...",
-        "information_gap": "..."
-    }},
-    "overall_expectation_and_gaps": {{
-        "overall_expectation": "...",
-        "overall_gaps": "..."
-    }}
-}}
-
-**CRITICAL RULES:**
-1. Write for a USER audience, not a clinical audience
-2. Be specific and actionable - avoid vague statements
-3. Reference actual CPT and ICD-10 codes from the persona
-4. If documents are not available, clearly indicate pending status
+### 5. Overall Expectation and Gaps
+Provide the overall expectation of the case and any remaining clinical/data gaps.
 """
-
 
 # ============================================================================
 # REJECTION / DENIAL GAP INJECTION SYSTEM

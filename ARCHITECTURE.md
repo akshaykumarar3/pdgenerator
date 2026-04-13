@@ -1,4 +1,4 @@
-# Clinical Data Generator — System Architecture (v4)
+# Clinical Data Generator — System Architecture (v6)
 
 ## 1. Overview
 
@@ -10,7 +10,7 @@ The system generates:
 - **Clinical Reports**: Consult notes, imaging reports, and lab reports.
 - **Clinical Summaries**: Two types of summaries are generated:
   - An aggregated case overview.
-  - A concise, bulleted summary with highlighted keywords for quick review.
+  - A concise summary restructured into 5 sections: Patient Profile, Extraction Expectation, Pre-upload Expectations, Post-upload Expectations, and Overall Gaps.
 - **Policy criteria summaries are not emitted in clinical outputs** (reports/persona); any policy/criteria content is reserved for internal annotator guidance.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.
@@ -128,10 +128,20 @@ The Patient State Layer ensures that all documents reference the same patient da
 - **`AnnotatorSummary`**: Post-generation quality summary used for PA optimization scoring.
 - **`ConciseSummary`**: A concise, bulleted summary with highlighted keywords for quick review.
 
-### Batch Processing & Job Cancellation
+### Concurrency & Thread-Safe Logging
 
-- **Batch Execution (`/api/generate_all`)**: Processes multiple target patient IDs sequentially. Builds an in-memory queue to maintain generation state.
-- **Cancel/Abort Checks (`cancel_check`)**: Passed into internal orchestration loops (`process_patient_workflow`). Checks a flag per `job_id`. If `True`, the worker halts AI generation/PDF rendering immediately and triggers a rollback of the patient record.
+To support parallel generation from multiple browser tabs:
+- **ThreadSafeStdout Proxy**: Standard `sys.stdout` is replaced by a thread-local proxy (`api_server.py`) that detects the calling thread's `job_id` and routes log messages to the correct in-memory job buffer.
+- **Race Condition Prevention**: The system enforces patient-level isolation. While different patients can be generated in parallel, concurrent jobs for the same `patient_id` are rejected via an active-job registry.
+
+### Versioning Strategy (vMajor.Minor)
+
+The system enforces a granular versioning lineage:
+1. **Major Version**: Incremented by 1 whenever the `PatientPersona` is regenerated. All documents in that run are marked `.0`.
+2. **Minor Version**: Incremented by 1 whenever only `Reports` or `Summary` are generated for an existing Persona.
+3. **Storage**: Utility `get_latest_major_version` and `get_document_minor_version` in `src/utils/file_utils.py` scan the filesystem using regex `v(\d+)\.?(\d*)` to determine the next available version suffix.
+
+### Job Cancellation & Auto-Rollback
 
 ---
 

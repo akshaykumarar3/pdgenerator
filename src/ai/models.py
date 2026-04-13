@@ -383,11 +383,13 @@ class ExtractionExpectation(BaseModel):
     icd: str = Field(..., description="ICD")
     encounters: str = Field(..., description="Encounters")
 
-class DocumentPurposeAndGaps(BaseModel):
-    """Document purpose and gaps section."""
-    document_purpose: str = Field(..., description="Document purpose")
-    purpose_gap: str = Field(..., description="Purpose gap")
-    information_gap: str = Field(..., description="Information gap")
+class ExpectationBeforeUpload(BaseModel):
+    """Expectation before document/reports upload section."""
+    summary: str = Field(..., description="Expectation before document/reports upload")
+
+class ExpectationAfterUpload(BaseModel):
+    """Expectation after document/reports upload section."""
+    summary: str = Field(..., description="Expectation after document/reports upload")
 
 class OverallExpectationAndGaps(BaseModel):
     """Overall expectation and gaps section."""
@@ -398,7 +400,8 @@ class ConciseSummary(BaseModel):
     """Concise clinical summary for a user."""
     patient_profile_and_case_explanation: ConciseSummarySection = Field(..., description="Patient profile and case explanation")
     extraction_expectation: ExtractionExpectation = Field(..., description="Extraction expectation")
-    document_purpose_and_gaps: DocumentPurposeAndGaps = Field(..., description="Document purpose and gaps")
+    expectation_before_upload: ExpectationBeforeUpload = Field(..., description="Expectation before document/reports upload")
+    expectation_after_upload: ExpectationAfterUpload = Field(..., description="Expectation after document/reports upload")
     overall_expectation_and_gaps: OverallExpectationAndGaps = Field(..., description="Overall expectation and gaps")
 
 class AnnotatorSummary(BaseModel):

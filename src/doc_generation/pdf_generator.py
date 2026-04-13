@@ -191,7 +191,7 @@ def _extract_report_metadata(content: str) -> dict:
     return metadata
 
 
-def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = None, image_path: str = None, version: int = 1):
+def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = None, image_path: str = None, version: str = "1"):
     patient_folder = base_output_folder or "documents"
     _ensure_folder(patient_folder)
 
@@ -329,7 +329,7 @@ def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_per
 def get_clinical_image(doc_title: str):
     return None
 
-def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: int = 1):
+def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: str = "1"):
     if output_folder is None:
         from ..core.config import OUTPUT_DIR
         output_folder = os.path.join(OUTPUT_DIR, "summary")
@@ -390,38 +390,41 @@ def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: d
 
     # 1. Patient Profile and Case Explanation
     Story.append(Paragraph("1. Patient Profile and Case Explanation", style_h2))
-    Story.append(Paragraph(f"• <b>Patient Details:</b> {summary.patient_profile_and_case_explanation.patient_details}", style_bullet))
-    Story.append(Paragraph(f"• <b>Case Explanation:</b> {summary.patient_profile_and_case_explanation.case_explanation}", style_bullet))
-    Story.append(Paragraph(f"• <b>CPT Codes:</b> {summary.patient_profile_and_case_explanation.cpt_codes}", style_bullet))
-    Story.append(Paragraph(f"• <b>ICD Codes:</b> {summary.patient_profile_and_case_explanation.icd_codes}", style_bullet))
+    Story.append(Paragraph(f"• <b>Patient Details:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.patient_details)}", style_bullet))
+    Story.append(Paragraph(f"• <b>Case Explanation:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.case_explanation)}", style_bullet))
+    Story.append(Paragraph(f"• <b>CPT Codes:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.cpt_codes)}", style_bullet))
+    Story.append(Paragraph(f"• <b>ICD Codes:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.icd_codes)}", style_bullet))
     Story.append(Spacer(1, 10))
 
     # 2. Extraction Expectation
     Story.append(Paragraph("2. Extraction Expectation", style_h2))
-    Story.append(Paragraph(f"• <b>Insurance Provider:</b> {summary.extraction_expectation.insurance_provider}", style_bullet))
-    Story.append(Paragraph(f"• <b>CPT:</b> {summary.extraction_expectation.cpt}", style_bullet))
-    Story.append(Paragraph(f"• <b>ICD:</b> {summary.extraction_expectation.icd}", style_bullet))
-    Story.append(Paragraph(f"• <b>Encounters:</b> {summary.extraction_expectation.encounters}", style_bullet))
+    Story.append(Paragraph(f"• <b>Insurance Provider:</b> {format_clinical_text(summary.extraction_expectation.insurance_provider)}", style_bullet))
+    Story.append(Paragraph(f"• <b>CPT:</b> {format_clinical_text(summary.extraction_expectation.cpt)}", style_bullet))
+    Story.append(Paragraph(f"• <b>ICD:</b> {format_clinical_text(summary.extraction_expectation.icd)}", style_bullet))
+    Story.append(Paragraph(f"• <b>Encounters:</b> {format_clinical_text(summary.extraction_expectation.encounters)}", style_bullet))
     Story.append(Spacer(1, 10))
 
-    # 3. Document Purpose and Gaps
-    Story.append(Paragraph("3. Document Purpose and Gaps", style_h2))
-    Story.append(Paragraph(f"• <b>Document Purpose:</b> {summary.document_purpose_and_gaps.document_purpose}", style_bullet))
-    Story.append(Paragraph(f"• <b>Purpose Gap:</b> {summary.document_purpose_and_gaps.purpose_gap}", style_bullet))
-    Story.append(Paragraph(f"• <b>Information Gap:</b> {summary.document_purpose_and_gaps.information_gap}", style_bullet))
+    # 3. Expectation Before Upload
+    Story.append(Paragraph("3. Expectation Before Document/Reports Upload", style_h2))
+    Story.append(Paragraph(f"• <b>Summary:</b> {format_clinical_text(summary.expectation_before_upload.summary)}", style_bullet))
     Story.append(Spacer(1, 10))
 
-    # 4. Overall Expectation and Gaps
-    Story.append(Paragraph("4. Overall Expectation and Gaps", style_h2))
-    Story.append(Paragraph(f"• <b>Overall Expectation:</b> {summary.overall_expectation_and_gaps.overall_expectation}", style_bullet))
-    Story.append(Paragraph(f"• <b>Overall Gaps:</b> {summary.overall_expectation_and_gaps.overall_gaps}", style_bullet))
+    # 4. Expectation After Upload
+    Story.append(Paragraph("4. Expectation After Document/Reports Upload", style_h2))
+    Story.append(Paragraph(f"• <b>Summary:</b> {format_clinical_text(summary.expectation_after_upload.summary)}", style_bullet))
+    Story.append(Spacer(1, 10))
+
+    # 5. Overall Expectation and Gaps
+    Story.append(Paragraph("5. Overall Expectation and Gaps", style_h2))
+    Story.append(Paragraph(f"• <b>Overall Expectation:</b> {format_clinical_text(summary.overall_expectation_and_gaps.overall_expectation)}", style_bullet))
+    Story.append(Paragraph(f"• <b>Overall Gaps:</b> {format_clinical_text(summary.overall_expectation_and_gaps.overall_gaps)}", style_bullet))
     Story.append(Spacer(1, 10))
 
     doc.build(Story)
     return file_path
 
 
-def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: int = 1):
+def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_details: dict, patient_persona=None, output_folder: str = None, version: str = "1"):
     if output_folder is None:
         from ..core.config import OUTPUT_DIR
         output_folder = os.path.join(OUTPUT_DIR, "summary")
@@ -915,7 +918,7 @@ def create_patient_summary_pdf(patient_id, summary_data, output_folder: str = No
     doc.build(Story)
     return file_path
 
-def create_persona_pdf(patient_id: str, patient_name: str, persona: object, generated_reports: list = None, image_map: dict = None, mrn: str = "N/A", output_folder: str = "documents/personas", version: int = 1):
+def create_persona_pdf(patient_id: str, patient_name: str, persona: object, generated_reports: list = None, image_map: dict = None, mrn: str = "N/A", output_folder: str = "documents/personas", version: str = "1"):
     """
     Generates a comprehensive Patient Master Record from Structured Data.
     - **Header**: Official Record Title.

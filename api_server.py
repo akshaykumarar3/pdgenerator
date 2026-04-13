@@ -77,28 +77,59 @@ from src.core.config import (
 #  HELPERS
 # ═══════════════════════════════════════════════════════════════════════════════
 
-class JobLogger:
-    """Captures print() output for a job and stores it line-by-line."""
-    def __init__(self, job_id: str):
-        self.job_id = job_id
-        self._real_stdout = sys.stdout
-
-    def write(self, text: str):
-        self._real_stdout.write(text)
-        self._real_stdout.flush()
+class ThreadSafeStdout:
+    def __init__(self, original_stdout):
+        self.original_stdout = original_stdout
+        self.thread_jobs = {}
+        
+    def register_thread(self, job_id):
+        self.thread_jobs[threading.get_ident()] = job_id
+        
+    def unregister_thread(self):
+        self.thread_jobs.pop(threading.get_ident(), None)
+        
+    def write(self, text):
+        self.original_stdout.write(text)
+        self.original_stdout.flush()
         if text.strip():
-            with _jobs_lock:
-                _jobs[self.job_id]["logs"].append(text.rstrip())
+            job_id = self.thread_jobs.get(threading.get_ident())
+            if job_id:
+                with _jobs_lock:
+                    if job_id in _jobs:
+                        _jobs[job_id]["logs"].append(text.rstrip())
 
     def flush(self):
-        self._real_stdout.flush()
+        self.original_stdout.flush()
+
+_global_stdout_proxy = ThreadSafeStdout(sys.stdout)
+sys.stdout = _global_stdout_proxy
+
+def format_active_job_error(patient_id: str) -> str:
+    return f"A generation job is already active for patient '{patient_id}'. Please wait or cancel it."
+
+def is_patient_active(patient_id: str) -> bool:
+    """Check if the given patient is currently running or queued in any job."""
+    with _jobs_lock:
+        for job in _jobs.values():
+            if job.get("status") in ("queued", "running"):
+                if job.get("patient_id") == patient_id:
+                    return True
+                if "batch_patients" in job and patient_id in job["batch_patients"]:
+                    return True
+    return False
+
+
+class JobLogger:
+    """Captures print() output for a job and stores it line-by-line using the thread-safe proxy."""
+    def __init__(self, job_id: str):
+        self.job_id = job_id
 
     def __enter__(self):
-        sys.stdout = self
+        _global_stdout_proxy.register_thread(self.job_id)
         return self
 
     def __exit__(self, *args):
-        sys.stdout = self._real_stdout
+        _global_stdout_proxy.unregister_thread()
 
 
 def _run_generation(job_id: str, patient_id: str, feedback: str,
@@ -324,10 +355,7 @@ def _run_batch_generation(job_id, patients_payload, pa_optimize):
 
             log_cb(f"\n--- Batch: Processing Patient ID {p_id} ---")
             try:
-                import sys, io
-                original_stdout = sys.stdout
-                sys.stdout = io.StringIO()
-                try:
+                with JobLogger(job_id):
                     current_names = patient_db.get_all_patient_names()
                     tok = f"{job_id}_{p_id}"
                     result_name = process_patient_workflow(
@@ -335,12 +363,6 @@ def _run_batch_generation(job_id, patients_payload, pa_optimize):
                         excluded_names=current_names, generation_mode=generation_mode,
                         cancel_check=cancel_check, archive_token=tok
                     )
-                finally:
-                    output = sys.stdout.getvalue()
-                    sys.stdout = original_stdout
-                    for line in output.splitlines():
-                        if line.strip():
-                            log_cb(line)
                             
                 if cancel_check():
                     from src.utils.file_utils import restore_patient_files
@@ -680,6 +702,9 @@ def api_generate():
     if not patient_id:
         return jsonify({"error": "patient_id is required"}), 400
 
+    if is_patient_active(patient_id):
+        return jsonify({"error": format_active_job_error(patient_id)}), 409
+
     job_id = str(uuid.uuid4())
     with _jobs_lock:
         _jobs[job_id] = {
@@ -727,6 +752,9 @@ def api_preview():
     if not patient_id:
         return jsonify({"error": "patient_id is required"}), 400
 
+    if is_patient_active(patient_id):
+        return jsonify({"error": format_active_job_error(patient_id)}), 409
+
     feedback         = body.get("feedback", "")
     generation_mode  = body.get("generation_mode", {"persona": True, "reports": True, "summary": False})
     medications      = body.get("medications", [])
@@ -772,6 +800,9 @@ def api_generate_from_content():
     patient_id = str(body.get("patient_id", "")).strip()
     if not patient_id:
         return jsonify({"error": "patient_id is required"}), 400
+
+    if is_patient_active(patient_id):
+        return jsonify({"error": format_active_job_error(patient_id)}), 409
 
     generation_mode   = body.get("generation_mode", {"persona": True, "reports": True, "summary": True})
     documents_content = body.get("documents", [])   # [{title_hint, content_html}]
@@ -845,6 +876,10 @@ def api_generate_all():
     if not normalized:
         return jsonify({"error": "patients payload is empty"}), 400
 
+    active_patients = [p["patient_id"] for p in normalized if is_patient_active(p["patient_id"])]
+    if active_patients:
+        return jsonify({"error": f"Jobs are already active for patients: {', '.join(active_patients)}. Please wait."}), 409
+
     job_id = str(uuid.uuid4())
     with _jobs_lock:
         _jobs[job_id] = {
@@ -854,6 +889,7 @@ def api_generate_all():
             "result": None,
             "changes_summary": None,
             "patient_id": "BATCH",
+            "batch_patients": [p["patient_id"] for p in normalized],
             "created_at": datetime.now().isoformat(),
             "request_context": {
                 "feedback": body.get("feedback", ""),
