@@ -146,7 +146,6 @@ F. **GEOGRAPHIC CONSTRAINT (MANDATORY)**:
 # - Document Formatting: Critical for validation - do not change markers
 # - Persona Requirements: Add/remove required patient fields
 
-
 def _build_clinical_logic_instruction(case_details: dict) -> str:
     """
     Build the Clinical Logic Application instruction (prompt instruction #2).
@@ -166,7 +165,6 @@ def _build_clinical_logic_instruction(case_details: dict) -> str:
         "diagnostic workup, and explicit treatment rationale. Every finding must positively "
         "corroborate the requested procedure."
     )
-
 
 def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "",
                              history_context: str = "", existing_persona: dict = None) -> str:
@@ -290,7 +288,7 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
           Do NOT attempt to use markdown or raw text in `content`—it MUST be a structured JSON object.
           The `title_hint` field should match the template's title or logically reflect it.
          - **FEEDBACK-DRIVEN DOCUMENTS (CRITICAL ESCAPE HATCH)**:
-           If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{"doc_type": "ECG", "findings": "...", "interpretation": "..."}}`) and add them to the `documents` list.
+           If the USER FEEDBACK mentions missing documents (e.g., "Missing ECG", "No Risk Assessment"), you MUST invent and generate a NEW document for each requested item, even if it is not in the DOCUMENT PLAN. Create a fitting JSON structure for these ad-hoc documents (e.g. `{{\"doc_type\": \"ECG\", \"findings\": \"...\", \"interpretation\": \"...\"}}`) and add them to the `documents` list.
         - **PROHIBITED TITLES**: No "Approval Letters" or "Denial Notices". Only clinical evidence.
         - **TITLES**: MUST be UNIQUE and DESCRIPTIVE (e.g. "Cardiology_Consult", "Echo_Report").
         - **NO MARKDOWN BOLD**: Do not use `**Text**`.
@@ -635,7 +633,7 @@ def get_feedback_instruction(user_feedback: str) -> str:
 
     **FEEDBACK IMPLEMENTATION MANDATE:**
     - If feedback requests a DEMOGRAPHIC change (e.g. gender, name, age) or baseline clinical change (e.g. remove an allergy, change a medication), you MUST immediately break the "Strict Identity Lock" and apply the requested change across ALL sections (persona, bio narrative, documents, pronouns).
-    - If feedback requests **more supporting reports**, **more observations**, or **clinical timeline** — ADD those documents and enrich encounters/bio_narrative. The `patient_persona` object remains MANDATORY in the output; never omit it when adding documents.
+    - If feedback requests **more supporting reports**, **more observations**, or **clinical timeline** — ADD those to `documents` and enrich `encounters`/`bio_narrative`. The `patient_persona` object remains MANDATORY in the output; never omit it when adding documents.
     - If feedback points out **missing documents** (e.g. ECG, Risk Assessment, Stress Test), you MUST invent and generate those specific documents and add them to the `documents` list. DO NOT wait for a template. Invent a logical JSON structure for the newly requested document. The `patient_persona` MUST still be included.
     - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters`, `images`, `reports`, and `procedures` lists AND `bio_narrative` to show a clear longitudinal history matching the findings.
     - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
@@ -774,50 +772,40 @@ def get_concise_summary_prompt(
     search_results: dict = None
 ) -> str:
     """
-    Generates prompt for creating a concise clinical summary.
+    Generates prompt for creating a structured clinical summary.
     """
     if hasattr(patient_persona, 'model_dump'):
         persona_dict = patient_persona.model_dump()
     else:
         persona_dict = patient_persona
-        
+
     patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
-    
+    bio_narrative = persona_dict.get('bio_narrative', '')
     doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in (generated_documents or [])])
-    
+
     return f"""
-**TASK: Generate a Concise Clinical Summary**
+**TASK: Generate a Structured Clinical Summary for Patient: {patient_name}**
 
-**PATIENT:** {patient_name}
-**CLINICAL SCENARIO:** Expected Outcome: {case_details.get('outcome', 'Unknown')}
+**1. Patient's Clinical Narrative:**
+{bio_narrative}
 
-**GENERATED CLINICAL DOCUMENTS:**
+**2. Generated Clinical Documents:**
 {doc_list if generated_documents else 'Documents Pending'}
 
-**DETAILED INSTRUCTIONS FOR EACH SECTION (OUTPUT STRICT JSON):**
+**3. Instructions for Summary Generation (Output as a JSON object):**
 
-### 1. Patient Profile and Case Explanation
-Provide a clear, concise explanation in bullet points. Highlight keywords in bold.
-- **Patient Details**: Name, DOB, Gender
-- **Case Explanation**: A very short summary of the case
-- **CPT Codes**: List of CPT codes
-- **ICD Codes**: List of ICD codes
+You are to act as a clinical analyst. Your task is to synthesize the provided information into a structured, clinically-focused summary. The summary should be structured as follows:
 
-### 2. Extraction Expectation
-Provide the following in bullet points.
-- **Insurance Provider**: Payer Name, Plan Name
-- **CPT**: CPT codes
-- **ICD**: ICD codes
-- **Encounters**: List of encounters
+- **test_case_and_overview**: A brief paragraph summarizing the test case details and the case overview.
+- **details_from_extraction**: A bulleted list of details from extraction like CPT, ICD codes, and insurance.
+- **likelihood_without_documents**: The Likelihood/PA probability without considering any supporting documents.
+- **likelihood_change_with_documents**: A bulleted list detailing the Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded (if the report creates a positive impact, or if the gap is still not clear from it).
+- **overall_summary_pointers**: A bulleted list of the OVERALL summary and pointers for what needs to be checked to validate the case.
 
-### 3. Expectation Before Upload
-Explain the expectation before document/reports upload based on the clinical scenario.
-
-### 4. Expectation After Upload
-Explain the expectation after document/reports upload based on generated documents.
-
-### 5. Overall Expectation and Gaps
-Provide the overall expectation of the case and any remaining clinical/data gaps.
+**IMPORTANT:**
+- The summary must be based *only* on the information provided.
+- Do not invent new information.
+- The tone should be professional and clinical.
 """
 
 # ============================================================================
@@ -1114,7 +1102,6 @@ GAP_ARCHETYPE_POOL: list[dict] = [
         ),
     },
 ]
-
 
 def _select_gap_archetypes(n: int = 3) -> list[dict]:
     """

@@ -170,12 +170,12 @@ After each run, a 2×2 summary panel is shown:
 
 ### Concise Clinical Summary (v6)
 
-The summary document has been restructured into 5 distinct clinical and operational sections:
-1. **Patient Profile and Case** — Core demographics and scenario overview.
-2. **Extraction Expectation** — Payer details, CPT/ICD codes, and expected encounter counts.
-3. **Expectation Before Upload** — Clinical state expected prior to the current document set.
-4. **Expectation After Upload** — Clinical state expected after documents are processed.
-5. **Overall Expectation and Gaps** — Final clinical conclusion and identified data/logical gaps.
+The summary document is built to provide a cohesive clinical picture and includes 5 sections:
+1. **Test Case and Overview** — Narrative context of the procedure.
+2. **Details from Extraction** — CPT, ICD codes, constraints, and insurance details.
+3. **Likelihood/PA Probability (Without Supporting Documents)** — Baseline outcome estimates prior to reports.
+4. **Likelihood PA Score Change (Considering Each Document)** — Evaluation of document impact on the potential outcome.
+5. **OVERALL Summary** — Pointers for manual verification and QA checks.
 
 ### Clinical Data Sections
 

@@ -13,6 +13,7 @@ from ..core.config import (
     get_patient_archive_folder,
     SUMMARY_DIR,
     DEBUG_DIR,
+    get_patient_root,
 )
 DB_PATH = patient_db.DB_PATH
 
@@ -87,8 +88,12 @@ def purge_patient_selective(patient_id: str, targets: list[str], mode: str = "de
     if "summary" in targets:
         # Search both root (legacy) and dedicated summary folder
         summary_files = glob.glob(os.path.join(p_root, f"Clinical_Summary_Patient_{patient_id}*.pdf"))
+        summary_files.extend(glob.glob(os.path.join(p_root, f"Annotator_Summary_Patient_{patient_id}*.pdf")))
+        summary_files.extend(glob.glob(os.path.join(p_root, f"Concise_Summary_Patient_{patient_id}*.pdf")))
         if os.path.exists(p_summary):
             summary_files.extend(glob.glob(os.path.join(p_summary, f"Clinical_Summary_Patient_{patient_id}*.pdf")))
+            summary_files.extend(glob.glob(os.path.join(p_summary, f"Annotator_Summary_Patient_{patient_id}*.pdf")))
+            summary_files.extend(glob.glob(os.path.join(p_summary, f"Concise_Summary_Patient_{patient_id}*.pdf")))
         
         if mode == "archive":
             _archive_files_for_patient(summary_files, patient_id, f"{patient_id}_summary")
@@ -247,8 +252,9 @@ def purge_documents(force: bool = False):
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
-            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
-                os.remove(f)
+            for pattern in ["Clinical_Summary_Patient_*.pdf", "Annotator_Summary_Patient_*.pdf", "Concise_Summary_Patient_*.pdf"]:
+                for f in glob.glob(os.path.join(p_root, pattern)):
+                    os.remove(f)
         
         # Also clear dedicated summary folder
         if os.path.exists(SUMMARY_DIR):
@@ -274,10 +280,11 @@ def purge_summaries_only(force: bool = False):
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
-            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
-                os.remove(f)
-                count += 1
-                print(f"      ✅ Deleted (legacy): {os.path.basename(f)}")
+            for pattern in ["Clinical_Summary_Patient_*.pdf", "Annotator_Summary_Patient_*.pdf", "Concise_Summary_Patient_*.pdf"]:
+                for f in glob.glob(os.path.join(p_root, pattern)):
+                    os.remove(f)
+                    count += 1
+                    print(f"      ✅ Deleted (legacy): {os.path.basename(f)}")
     
     # 2. Clear dedicated summary folder
     if os.path.exists(SUMMARY_DIR):
@@ -322,8 +329,9 @@ def purge_reports_and_summaries(force: bool = False):
     if os.path.exists(PATIENT_DATA_DIR):
         for folder in os.listdir(PATIENT_DATA_DIR):
             p_root = os.path.join(PATIENT_DATA_DIR, folder)
-            for f in glob.glob(os.path.join(p_root, "Clinical_Summary_Patient_*.pdf")):
-                os.remove(f)
+            for pattern in ["Clinical_Summary_Patient_*.pdf", "Annotator_Summary_Patient_*.pdf", "Concise_Summary_Patient_*.pdf"]:
+                for f in glob.glob(os.path.join(p_root, pattern)):
+                    os.remove(f)
         
         # Also clear dedicated summary folder
         if os.path.exists(SUMMARY_DIR):

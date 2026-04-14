@@ -70,6 +70,7 @@ _jobs_lock = threading.Lock()
 from src.core.config import (
     get_patient_report_folder,
     get_patient_records_folder,
+    get_patient_summary_folder,
 )
 
 
@@ -988,21 +989,31 @@ def api_output(patient_id: str):
         description: Files array
     """
     files = []
+    patient_name = patient_db.get_patient_name(patient_id)
 
-    root_folder = get_patient_report_folder(patient_id)
-    if os.path.exists(root_folder):
-        for f in sorted(os.listdir(root_folder)):
+    # Scan for Persona and Reports in patient-specific folder
+    report_folder = get_patient_report_folder(patient_id, patient_name)
+    if os.path.exists(report_folder):
+        for f in sorted(os.listdir(report_folder)):
             if not f.endswith(".pdf"):
                 continue
-            full_path = os.path.join(root_folder, f)
+            full_path = os.path.join(report_folder, f)
             if not os.path.isfile(full_path):
                 continue
+
             if f.startswith(f"DOC-{patient_id}-"):
                 files.append({"type": "report", "name": f, "path": full_path})
             elif "-persona" in f and f.startswith(f"{patient_id}-"):
                 files.append({"type": "persona", "name": f, "path": full_path})
-            elif f.startswith(f"Clinical_Summary_Patient_{patient_id}"):
-                files.append({"type": "summary", "name": f, "path": full_path})
+
+    # Scan for Summaries in the shared summary folder
+    summary_folder = get_patient_summary_folder(patient_id)
+    if os.path.exists(summary_folder):
+        for f in sorted(os.listdir(summary_folder)):
+            if f.startswith(f"Clinical_Summary_Patient_{patient_id}") and f.endswith(".pdf"):
+                full_path = os.path.join(summary_folder, f)
+                if os.path.isfile(full_path):
+                    files.append({"type": "summary", "name": f, "path": full_path})
 
     return jsonify({"patient_id": patient_id, "files": files})
 

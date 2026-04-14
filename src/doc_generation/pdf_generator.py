@@ -125,7 +125,6 @@ def _sanitize_filename(name: str) -> str:
     name = re.sub(r"\s+", " ", name).strip()
     return name
 
-
 def _clean_doc_title(title_hint: str, doc_type_fallback: str = "") -> str:
     """Clean AI-generated title hints into proper clinical report titles."""
     raw = title_hint or doc_type_fallback or "Clinical Report"
@@ -139,7 +138,6 @@ def _clean_doc_title(title_hint: str, doc_type_fallback: str = "") -> str:
         '', raw, flags=re.IGNORECASE
     )
     return raw.strip().title()
-
 
 def _parse_formatted_sections(content_str: str) -> list:
     """
@@ -163,7 +161,6 @@ def _parse_formatted_sections(content_str: str) -> list:
         if body:
             sections.append((label, body))
     return sections if sections else [(None, content_str)]
-
 
 def _extract_report_metadata(content: str) -> dict:
     """
@@ -189,7 +186,6 @@ def _extract_report_metadata(content: str) -> dict:
         key, val = line.split(":", 1)
         metadata[key.strip().lower()] = val.strip()
     return metadata
-
 
 def create_patient_pdf(patient_id: str, doc_type: str, content: str, patient_persona=None, doc_metadata=None, base_output_folder: str = None, image_path: str = None, version: str = "1"):
     patient_folder = base_output_folder or "documents"
@@ -338,86 +334,84 @@ def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: d
 
     output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}-v{version}.pdf")
     file_path = output_path
-    
+
     if os.path.exists(file_path):
         try:
             os.remove(file_path)
             print(f"      🔄 Replaced existing summary")
         except Exception as e:
             print(f"      ⚠️  Could not remove old summary: {e}")
-    
+
     doc = SimpleDocTemplate(file_path, pagesize=letter,
                             rightMargin=50, leftMargin=50,
                             topMargin=50, bottomMargin=50)
 
     styles = getSampleStyleSheet()
-    
+
     col_primary = colors.HexColor("#2c3e50")
     col_secondary = colors.HexColor("#e74c3c")
-    col_success = colors.HexColor("#27ae60")
-    col_warning = colors.HexColor("#f39c12")
     col_light_bg = colors.HexColor("#ecf0f1")
-    
-    style_title = ParagraphStyle("ann_MainTitle", parent=styles["Heading1"], 
+
+    style_title = ParagraphStyle("ann_MainTitle", parent=styles["Heading1"],
                                 textColor=col_primary, fontSize=20, alignment=1,
                                 spaceAfter=10, spaceBefore=0)
-    
+
     style_subtitle = ParagraphStyle("ann_SubTitle", parent=styles["Normal"],
                                    textColor=col_secondary, fontSize=12, alignment=1,
                                    fontName="Helvetica-Bold", spaceAfter=20)
-    
-    style_h2 = ParagraphStyle("ann_SecTitle", parent=styles["Heading2"], 
+
+    style_h2 = ParagraphStyle("ann_SecTitle", parent=styles["Heading2"],
                              textColor=col_primary, backColor=col_light_bg,
                              borderPadding=8, borderLeftWidth=4, borderColor=col_secondary,
                              spaceBefore=15, spaceAfter=10)
-    
-    style_h3 = ParagraphStyle("ann_SubSecTitle", parent=styles["Heading3"],
-                             textColor=col_secondary, spaceBefore=10, spaceAfter=5)
-    
-    style_normal = ParagraphStyle("ann_Body", parent=styles["Normal"], 
+
+    style_normal = ParagraphStyle("ann_Body", parent=styles["Normal"],
                                  leading=14, fontSize=10, spaceAfter=6)
-    
-    style_bullet = ParagraphStyle("ann_Bullet", parent=style_normal, 
+
+    style_bullet = ParagraphStyle("ann_Bullet", parent=style_normal,
                                  leftIndent=20, bulletIndent=10)
-    
+
     Story = []
 
-    Story.append(Paragraph("Concise Clinical Summary", style_title))
+    Story.append(Paragraph("Structured Clinical Summary", style_title))
     Story.append(Paragraph(f"Patient ID: {patient_id}", style_subtitle))
     Story.append(Spacer(1, 10))
 
     summary = concise_summary
 
-    # 1. Patient Profile and Case Explanation
-    Story.append(Paragraph("1. Patient Profile and Case Explanation", style_h2))
-    Story.append(Paragraph(f"• <b>Patient Details:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.patient_details)}", style_bullet))
-    Story.append(Paragraph(f"• <b>Case Explanation:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.case_explanation)}", style_bullet))
-    Story.append(Paragraph(f"• <b>CPT Codes:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.cpt_codes)}", style_bullet))
-    Story.append(Paragraph(f"• <b>ICD Codes:</b> {format_clinical_text(summary.patient_profile_and_case_explanation.icd_codes)}", style_bullet))
+    # 1. Test case and overview
+    Story.append(Paragraph("1. Test Case and Overview", style_h2))
+    Story.append(Paragraph(format_clinical_text(summary.test_case_and_overview), style_normal))
     Story.append(Spacer(1, 10))
 
-    # 2. Extraction Expectation
-    Story.append(Paragraph("2. Extraction Expectation", style_h2))
-    Story.append(Paragraph(f"• <b>Insurance Provider:</b> {format_clinical_text(summary.extraction_expectation.insurance_provider)}", style_bullet))
-    Story.append(Paragraph(f"• <b>CPT:</b> {format_clinical_text(summary.extraction_expectation.cpt)}", style_bullet))
-    Story.append(Paragraph(f"• <b>ICD:</b> {format_clinical_text(summary.extraction_expectation.icd)}", style_bullet))
-    Story.append(Paragraph(f"• <b>Encounters:</b> {format_clinical_text(summary.extraction_expectation.encounters)}", style_bullet))
+    # 2. Details from extraction
+    Story.append(Paragraph("2. Details from Extraction", style_h2))
+    if summary.details_from_extraction:
+        for item in summary.details_from_extraction:
+            Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
     Story.append(Spacer(1, 10))
 
-    # 3. Expectation Before Upload
-    Story.append(Paragraph("3. Expectation Before Document/Reports Upload", style_h2))
-    Story.append(Paragraph(f"• <b>Summary:</b> {format_clinical_text(summary.expectation_before_upload.summary)}", style_bullet))
+    # 3. Likelihood without documents
+    Story.append(Paragraph("3. Likelihood/PA Probability (Without Supporting Documents)", style_h2))
+    Story.append(Paragraph(format_clinical_text(summary.likelihood_without_documents), style_normal))
     Story.append(Spacer(1, 10))
 
-    # 4. Expectation After Upload
-    Story.append(Paragraph("4. Expectation After Document/Reports Upload", style_h2))
-    Story.append(Paragraph(f"• <b>Summary:</b> {format_clinical_text(summary.expectation_after_upload.summary)}", style_bullet))
+    # 4. Likelihood change with documents
+    Story.append(Paragraph("4. Likelihood PA Score Change (Considering Each Document)", style_h2))
+    if summary.likelihood_change_with_documents:
+        for item in summary.likelihood_change_with_documents:
+            Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+    else:
+        Story.append(Paragraph("None identified.", style_normal))
     Story.append(Spacer(1, 10))
 
-    # 5. Overall Expectation and Gaps
-    Story.append(Paragraph("5. Overall Expectation and Gaps", style_h2))
-    Story.append(Paragraph(f"• <b>Overall Expectation:</b> {format_clinical_text(summary.overall_expectation_and_gaps.overall_expectation)}", style_bullet))
-    Story.append(Paragraph(f"• <b>Overall Gaps:</b> {format_clinical_text(summary.overall_expectation_and_gaps.overall_gaps)}", style_bullet))
+    # 5. Overall summary pointers
+    Story.append(Paragraph("5. Overall Summary & Verification Pointers", style_h2))
+    if summary.overall_summary_pointers:
+        for item in summary.overall_summary_pointers:
+            Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+    else:
+        Story.append(Paragraph("None.", style_normal))
     Story.append(Spacer(1, 10))
 
     doc.build(Story)
@@ -431,7 +425,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
 
     os.makedirs(output_folder, exist_ok=True)
 
-    output_path = os.path.join(output_folder, f"Clinical_Summary_Patient_{patient_id}-v{version}.pdf")
+    output_path = os.path.join(output_folder, f"Annotator_Summary_Patient_{patient_id}-v{version}.pdf")
     file_path = output_path
     
     if os.path.exists(file_path):
@@ -698,7 +692,7 @@ def create_annotator_summary_pdf(patient_id: str, annotator_summary, case_detail
     
     Story.append(Spacer(1, 15))
     
-    footer_text = f"<i>Generated: {datetime.now().strftime("%m-%d-%Y %H:%M")} | This document is for internal QA purposes only</i>"
+    footer_text = f"<i>Generated: {datetime.now().strftime('%m-%d-%Y %H:%M')} | This document is for internal QA purposes only</i>"
     Story.append(Paragraph(footer_text, 
                           ParagraphStyle("ann_footer", parent=style_normal, 
                                         fontSize=8, textColor=colors.grey, alignment=1)))
@@ -1213,7 +1207,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
 
         # 4. Therapies (expanded — CPT codes + ICD-10)
         if therapies_list:
-            Story.append(Paragraph("<b>Therapy &amp; Behavioral Health</b>", style_h3))
+            Story.append(Paragraph("<b>Therapy & Behavioral Health</b>", style_h3))
             Story.append(Spacer(1, 5))
             th_data = [["Type", "CPT Code", "Provider / Facility", "Frequency / Status", "ICD-10 Diagnoses"]]
             for th in therapies_list:
@@ -1240,7 +1234,7 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
         # 5. Social History
         sh = getattr(p, 'social_history', None)
         if sh:
-            Story.append(Paragraph("<b>Social &amp; Lifestyle History</b>", style_h3))
+            Story.append(Paragraph("<b>Social & Lifestyle History</b>", style_h3))
             Story.append(Spacer(1, 5))
             sh_data = [
                 ["Tobacco Use", getattr(sh, 'tobacco_use', None) or "(not recorded)"],

@@ -592,6 +592,9 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       checkServer(); loadPatients();
+      if ('Notification' in window) {
+        Notification.requestPermission();
+      }
       document.getElementById('patient-select').addEventListener('change', onPatientChange);
       document.getElementById('info-provider-mode')?.addEventListener('change', () => {
         if (currentPatientData) updateProviderDisplay(currentPatientData);
@@ -1057,6 +1060,13 @@
       } catch (e) { appendLog('❌ ' + e.message); resetGenerateBtn(); }
     }
 
+    function showNotification(title, body, icon = 'clinical_notes') {
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        return;
+      }
+      new Notification(title, { body, icon: 'https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/clinical_notes/default/48px.svg' });
+    }
+
     async function pollJob(jobId) {
       try {
         const r = await fetch(`${API}/api/job/${jobId}?since=${logOffset}`); const d = await r.json();
@@ -1064,7 +1074,14 @@
         if (d.status === 'done' || d.status === 'error' || d.status === 'cancelled') {
           clearInterval(pollTimer); pollTimer = null; resetGenerateBtn();
           document.getElementById('log-dot').style.background = d.status === 'done' ? '#16a34a' : '#ef4444';
-          if (d.status === 'done') loadDocuments(currentPatientId);
+          if (d.status === 'done') {
+            showNotification('Generation Complete', `Successfully generated documents for patient ${d.patient_id}.`);
+            loadDocuments(currentPatientId);
+          } else if (d.status === 'error') {
+            showNotification('Generation Failed', `An error occurred while generating documents for patient ${d.patient_id}.`);
+          } else if (d.status === 'cancelled') {
+            showNotification('Generation Cancelled', `The generation job for patient ${d.patient_id} was cancelled.`);
+          }
         }
       } catch (_) { }
     }

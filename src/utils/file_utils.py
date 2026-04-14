@@ -23,6 +23,8 @@ def get_latest_major_version(patient_id: str) -> int:
         f"{patient_id}-",
         f"DOC-{patient_id}-",
         f"Clinical_Summary_Patient_{patient_id}",
+        f"Annotator_Summary_Patient_{patient_id}",
+        f"Concise_Summary_Patient_{patient_id}",
     ]
     
     dirs_to_check = [
@@ -51,6 +53,8 @@ def get_document_minor_version(patient_id: str, major_version: int) -> int:
     prefix_patterns = [
         f"DOC-{patient_id}-",
         f"Clinical_Summary_Patient_{patient_id}",
+        f"Annotator_Summary_Patient_{patient_id}",
+        f"Concise_Summary_Patient_{patient_id}",
     ]
     
     dirs_to_check = [
@@ -115,6 +119,8 @@ def archive_patient_files(patient_id: str, generation_mode: dict, archive_token:
         prefix_patterns.append(f"DOC-{patient_id}-")
     if generation_mode.get("summary", False):
         prefix_patterns.append(f"Clinical_Summary_Patient_{patient_id}")
+        prefix_patterns.append(f"Annotator_Summary_Patient_{patient_id}")
+        prefix_patterns.append(f"Concise_Summary_Patient_{patient_id}")
 
     if prefix_patterns:
         # 1. Root folder (Persona + Reports)
@@ -142,6 +148,8 @@ def restore_patient_files(patient_id: str, generation_mode: dict, archive_token:
         prefix_patterns.append(f"DOC-{patient_id}-")
     if generation_mode.get("summary", False):
         prefix_patterns.append(f"Clinical_Summary_Patient_{patient_id}")
+        prefix_patterns.append(f"Annotator_Summary_Patient_{patient_id}")
+        prefix_patterns.append(f"Concise_Summary_Patient_{patient_id}")
 
     for fname in os.listdir(folder):
         if fname == "archive" or not fname.endswith(".pdf"):
@@ -162,7 +170,7 @@ def restore_patient_files(patient_id: str, generation_mode: dict, archive_token:
             orig = fname[len(token_prefix):]
             # Try to move back to either report or summary folder depending on filename
             dst_folder = folder
-            if orig.startswith("Clinical_Summary"):
+            if orig.startswith("Clinical_Summary") or orig.startswith("Annotator_Summary") or orig.startswith("Concise_Summary"):
                 dst_folder = get_patient_summary_folder(patient_id)
                 os.makedirs(dst_folder, exist_ok=True)
                 

@@ -8,9 +8,8 @@ The system generates:
 
 - **Patient Personas**: FHIR-style patient records.
 - **Clinical Reports**: Consult notes, imaging reports, and lab reports.
-- **Clinical Summaries**: Two types of summaries are generated:
-  - An aggregated case overview.
-  - A concise summary restructured into 5 sections: Patient Profile, Extraction Expectation, Pre-upload Expectations, Post-upload Expectations, and Overall Gaps.
+- **Clinical Summaries**: A concise summary document is generated:
+  - **Concise Clinical Summary**: A concise clinical overview featuring test cases, likelihood analysis against uploaded reports, and an overall verification summary.
 - **Policy criteria summaries are not emitted in clinical outputs** (reports/persona); any policy/criteria content is reserved for internal annotator guidance.
 
 Outputs are rendered as structured PDFs designed for OCR evaluation, LLM document understanding, and Prior Authorization testing pipelines.

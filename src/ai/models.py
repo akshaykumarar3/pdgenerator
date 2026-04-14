@@ -369,40 +369,13 @@ class VerificationPointers(BaseModel):
     red_flags: List[str] = Field(default_factory=list, description="Red flags to watch for")
     document_references: List[Dict[str, str]] = Field(default_factory=list, description="Document references with expected content")
 
-class ConciseSummarySection(BaseModel):
-    """A section of the concise summary."""
-    patient_details: str = Field(..., description="Patient details")
-    case_explanation: str = Field(..., description="Case explanation")
-    cpt_codes: str = Field(..., description="CPT codes")
-    icd_codes: str = Field(..., description="ICD codes")
-
-class ExtractionExpectation(BaseModel):
-    """Extraction expectation section."""
-    insurance_provider: str = Field(..., description="Insurance provider")
-    cpt: str = Field(..., description="CPT")
-    icd: str = Field(..., description="ICD")
-    encounters: str = Field(..., description="Encounters")
-
-class ExpectationBeforeUpload(BaseModel):
-    """Expectation before document/reports upload section."""
-    summary: str = Field(..., description="Expectation before document/reports upload")
-
-class ExpectationAfterUpload(BaseModel):
-    """Expectation after document/reports upload section."""
-    summary: str = Field(..., description="Expectation after document/reports upload")
-
-class OverallExpectationAndGaps(BaseModel):
-    """Overall expectation and gaps section."""
-    overall_expectation: str = Field(..., description="Overall expectation")
-    overall_gaps: str = Field(..., description="Overall gaps")
-
 class ConciseSummary(BaseModel):
-    """Concise clinical summary for a user."""
-    patient_profile_and_case_explanation: ConciseSummarySection = Field(..., description="Patient profile and case explanation")
-    extraction_expectation: ExtractionExpectation = Field(..., description="Extraction expectation")
-    expectation_before_upload: ExpectationBeforeUpload = Field(..., description="Expectation before document/reports upload")
-    expectation_after_upload: ExpectationAfterUpload = Field(..., description="Expectation after document/reports upload")
-    overall_expectation_and_gaps: OverallExpectationAndGaps = Field(..., description="Overall expectation and gaps")
+    """Clinical summary for a user."""
+    test_case_and_overview: str = Field(..., description="Test case description and case overview.")
+    details_from_extraction: List[str] = Field(..., description="Details from extraction like CPT, ICD codes, and insurance.")
+    likelihood_without_documents: str = Field(..., description="Likelihood/PA probability without considering any supporting documents.")
+    likelihood_change_with_documents: List[str] = Field(..., description="Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded?")
+    overall_summary_pointers: List[str] = Field(..., description="OVERALL summary - pointers what needs to be checked to validate.")
 
 class AnnotatorSummary(BaseModel):
     """Annotator verification guide - created after persona and documents are generated."""

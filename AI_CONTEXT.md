@@ -165,11 +165,11 @@ Human verification guide containing:
 ### ConciseSummary
 
 A concise clinical summary structured into 5 parts:
-* **Patient Profile and Case**: Profile basics + case overview
-* **Extraction Expectation**: Insurance details + CPT/ICD/Encounter expectations
-* **Expectation Before Upload**: Summary of state before these documents
-* **Expectation After Upload**: Summary of state after these documents
-* **Overall Expectation and Gaps**: Final clinical summary and logic gaps
+* **Test Case and Overview**: Profile basics + case overview.
+* **Details from Extraction**: Insurance details + CPT/ICD/Encounter expectations.
+* **Likelihood without Documents**: Baseline PA probability estimation prior to reports.
+* **Likelihood PA Score Change**: Impact trajectory when evaluating individual uploaded reports.
+* **Overall Summary & Pointers**: Final case summary and verification milestones.
 
 ---
 

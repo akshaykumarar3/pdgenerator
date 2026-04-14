@@ -93,6 +93,13 @@ def save_patient(patient_id: str, patient_data: Dict):
     
     print(f"      💾 Patient {patient_id} ({patient_data.get('name', 'Unknown')}) saved to Core DB.")
 
+def get_patient_name(patient_id: str) -> Optional[str]:
+    """Loads a patient and returns their full name."""
+    p = load_patient(patient_id)
+    if p:
+        return f"{p.get('first_name', '')} {p.get('last_name', '')}".strip()
+    return None
+
 def get_all_patient_names() -> list[str]:
     """
     Returns a list of all 'First Last' names currently in the DB.

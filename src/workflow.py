@@ -629,14 +629,15 @@ def process_patient_workflow(
                 search_results["verification_notes"] = verification_notes
 
             documents_for_summary = filtered_documents if generation_mode["reports"] else None
+
+            # Generate Concise Summary
             concise_summary = ai_engine.generate_concise_summary(
                 case_details=case_data,
                 patient_persona=result.patient_persona,
                 generated_documents=documents_for_summary,
                 search_results=search_results,
             )
-
-            sum_path = pdf_generator.create_concise_summary_pdf(
+            con_path = pdf_generator.create_concise_summary_pdf(
                 patient_id=patient_id,
                 concise_summary=concise_summary,
                 case_details=case_data,
@@ -644,9 +645,8 @@ def process_patient_workflow(
                 output_folder=get_patient_summary_folder(patient_id),
                 version=doc_version_str,
             )
-
-            if sum_path:
-                sf = os.path.basename(sum_path)
+            if con_path:
+                sf = os.path.basename(con_path)
                 docs_written.append(sf)
                 print(f"   📊 Summary → {sf}")
             else:

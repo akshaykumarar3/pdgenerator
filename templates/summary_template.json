@@ -1,35 +1,25 @@
 {
     "title": "Patient Clinical Summary",
     "sections": [
-        "patient_details",
-        "diagnoses",
-        "encounters_documentation",
-        "treatment_plan",
-        "clinical_rationale",
-        "provider_contact"
+        "case_profile_and_explanation",
+        "expectation_after_extraction",
+        "likelihood_after_extraction",
+        "expectation_from_each_report",
+        "overall_expectation_and_gaps"
     ],
-    "patient_details": {
-        "source": "patient_state.demographics"
+    "case_profile_and_explanation": {
+        "title": "Case Profile and Explanation"
     },
-    "diagnoses": {
-        "source": "patient_state.diagnoses"
+    "expectation_after_extraction": {
+        "title": "Expectation of User After Extraction"
     },
-    "encounters_documentation": {
-        "source": "patient_state.timeline",
-        "narrative_summary": "",
-        "key_findings": []
+    "likelihood_after_extraction": {
+        "title": "Likelihood After Extraction"
     },
-    "treatment_plan": {
-        "procedure": "patient_state.requested_procedure.procedure_name",
-        "cpt_code": "patient_state.requested_procedure.cpt_code",
-        "expected_date": "patient_state.requested_procedure.expected_date"
+    "expectation_from_each_report": {
+        "title": "Expectation from Each Report"
     },
-    "clinical_rationale": {
-        "justification_text": "",
-        "clinical_necessity_points": []
-    },
-    "provider_contact": {
-        "provider": "patient_state.providers[0].name",
-        "facility": "patient_state.providers[0].facility"
+    "overall_expectation_and_gaps": {
+        "title": "Overall Expectation and Gaps to be Identified and Checked"
     }
 }
