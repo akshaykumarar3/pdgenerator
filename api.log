@@ -705,3 +705,15 @@ INFO:httpx:HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1
 INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 14:14:40] "GET /api/job/9eb92160-530a-4dab-9199-dbb6143f527f?since=28 HTTP/1.1" 200 -
 127.0.0.1 - - [15/Apr/2026 14:14:40] "GET /api/output/113 HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 14:14:40] "GET /api/output/113 HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:36:02] "GET /api/status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:36:02] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:36:02] "GET /api/patients HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:36:02] "GET /api/patients HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:36:08] "GET /api/status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:36:08] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:36:08] "GET /api/patients HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:36:08] "GET /api/patients HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:40:12] "GET /api/status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:40:12] "GET /api/status HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 16:40:13] "GET /api/patients HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Apr/2026 16:40:13] "GET /api/patients HTTP/1.1" 200 -

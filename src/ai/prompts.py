@@ -772,7 +772,10 @@ def get_concise_summary_prompt(
     case_details: dict,
     patient_persona: dict,
     generated_documents: list = None,
-    search_results: dict = None
+    search_results: dict = None,
+    canonical_payer: dict | None = None,
+    objective_evidence: str = "",
+    policy_lens: str = "",
 ) -> str:
     """
     Generates prompt for creating a structured clinical summary.
@@ -785,6 +788,21 @@ def get_concise_summary_prompt(
     patient_name = f"{persona_dict.get('first_name', 'Unknown')} {persona_dict.get('last_name', 'Unknown')}"
     bio_narrative = persona_dict.get('bio_narrative', '')
     doc_list = "\n".join([f"   - {doc.title_hint if hasattr(doc, 'title_hint') else doc.get('title_hint', 'Unknown')}" for doc in (generated_documents or [])])
+    payer_lines = []
+    if canonical_payer:
+        if canonical_payer.get("payer_name"):
+            payer_lines.append(f"Payer: {canonical_payer.get('payer_name')}")
+        if canonical_payer.get("plan_name"):
+            payer_lines.append(f"Plan: {canonical_payer.get('plan_name')}")
+        if canonical_payer.get("plan_id"):
+            payer_lines.append(f"Plan ID: {canonical_payer.get('plan_id')}")
+        if canonical_payer.get("member_id"):
+            payer_lines.append(f"Member ID: {canonical_payer.get('member_id')}")
+        if canonical_payer.get("policy_number"):
+            payer_lines.append(f"Policy #: {canonical_payer.get('policy_number')}")
+    payer_block = "\n".join([f"- {l}" for l in payer_lines]) if payer_lines else ""
+    objective_block = objective_evidence.strip()
+    lens = (policy_lens or "").strip()
 
     return f"""
 **TASK: Generate a Structured Clinical Summary for Patient: {patient_name}**
@@ -794,6 +812,10 @@ def get_concise_summary_prompt(
 
 **2. Generated Clinical Documents:**
 {doc_list if generated_documents else 'Documents Pending'}
+
+**3. Canonical Facts (Authoritative):**
+{payer_block if payer_block else 'No authoritative payer detected.'}
+{objective_block if objective_block else ''}
 
 **3. Instructions for Summary Generation (Output as a JSON object):**
 
@@ -812,6 +834,9 @@ You are to act as a clinical analyst. Your task is to synthesize the provided in
 - The summary must be based *only* on the information provided.
 - Do not invent new information.
 - The tone should be professional and clinical.
+- If authoritative payer details are provided above, DO NOT output 'not provided' for insurance.
+- If payer is known, Policy Compliance must be assessable; do not output 'cannot assess' unless payer is missing or objective evidence is missing.
+- If policy lens is provided ({lens if lens else 'unknown'}), write Policy Compliance using that payer lens.
 """
 
 # ============================================================================

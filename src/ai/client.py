@@ -13,6 +13,7 @@ import httpx # For disabling HTTP/2 to prevent hangs
 
 from . import models
 from . import prompts
+from . import enrichment
 from . import quality
 
 # ─── Load Environment ────────────────────────────────────────────────────────
@@ -481,13 +482,24 @@ def generate_concise_summary(
     """
     
     print(f"   📋 Generating Concise Clinical Summary...")
+
+    # Build canonical facts from available structured sources (procedure-agnostic)
+    facts = enrichment.build_canonical_facts(
+        patient_state=None,
+        patient_persona=patient_persona,
+        documents=generated_documents or [],
+    )
+    objective = enrichment.build_objective_evidence_text(facts.numeric_evidence or [])
     
     # Get prompt from centralized prompts module
     prompt = prompts.get_concise_summary_prompt(
         case_details=case_details,
         patient_persona=patient_persona,
         generated_documents=generated_documents,
-        search_results=search_results
+        search_results=search_results,
+        canonical_payer=facts.canonical_payer,
+        objective_evidence=objective,
+        policy_lens=facts.policy_lens,
     )
     
     try:
@@ -542,7 +554,10 @@ Focus on being specific, clear, and helpful."""
         
         if summary_obj is None:
             raise ValueError("AI returned no response for concise summary")
-        
+
+        # Deterministic patching for payer + assessability (procedure-agnostic)
+        summary_obj = enrichment.patch_concise_summary(summary_obj, facts)
+
         print(f"   ✅ Concise Summary Generated Successfully")
         return summary_obj
         

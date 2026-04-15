@@ -8,6 +8,7 @@ from typing import Optional, List, Dict, Any
 from . import models
 from . import prompts
 from ..utils import date_utils
+from . import enrichment
 
 # Vertex AI REST context window: gemini-1.5-pro supports up to ~1M tokens input,
 # but keeping the prompt under ~80K characters (≈20K tokens) ensures the model
@@ -470,6 +471,7 @@ def ensure_persona_quality(payload: "models.ClinicalDataPayload", case_details: 
             # Sanitize judgment language in document body text
             doc.content = _sanitize_document_content(doc.content)
     payload = ensure_temporal_consistency(payload)
+    payload = enrichment.apply_to_payload(payload, patient_state)
     return payload
 
 
