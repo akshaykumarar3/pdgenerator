@@ -311,17 +311,20 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
     8. **TEMPORAL CONSISTENCY (CRITICAL - NEW REQUIREMENT)**:
        - **Today's Date**: {datetime.datetime.now().strftime("%m-%d-%Y")}
        - **Expected Procedure Date**: MUST be 7-90 days in the FUTURE from today
-       - **Timeline Requirements**:
-         * Medical history events: 6 months to 5 years BEFORE procedure date
-         * Recent encounters/consultations: 1-12 weeks BEFORE procedure date
-         * Lab results/diagnostic tests: 1-4 weeks BEFORE procedure date
-         * ALL dates in documents must be BEFORE the procedure date
+       - **Timeline Requirements (IMPORTANT)**:
+         * Completed clinical events (encounters, consults, ER visits, doctor notes, imaging, lab/pathology results, prior procedures, vaccinations, vitals recorded) MUST be dated ON or BEFORE today's date.
+         * Future-dated "completed" items are NOT allowed.
+         * Future dates are allowed ONLY for: expected_procedure_date and scheduling text inside follow_up_instructions / pre-procedure hold instructions (i.e., plans), not as completed encounters/reports.
+         * Medical history events: 6 months to 5 years BEFORE today's date
+         * Recent encounters/consultations: 1-12 weeks BEFORE today's date
+         * Lab results/diagnostic tests: 1-4 weeks BEFORE today's date
+         * ALL completed evidence dates must be BEFORE the expected procedure date
        - **Example Timeline**:
-         * Today: 2026-02-17
-         * Procedure Date: 2026-03-15 (27 days in future)
-         * Recent Consultation: 2026-02-10 (5 days before today)
-         * Lab Results: 2026-02-05 (12 days before today)
-         * Medical History: 2024-08-15 (18 months ago)
+         * Today: {datetime.datetime.now().strftime("%m-%d-%Y")}
+         * Procedure Date: {(datetime.datetime.now() + datetime.timedelta(days=30)).strftime("%m-%d-%Y")} (example: 30 days in future)
+         * Recent Consultation (completed): {(datetime.datetime.now() - datetime.timedelta(days=7)).strftime("%m-%d-%Y")} (example: 7 days before today)
+         * Lab Results (completed): {(datetime.datetime.now() - datetime.timedelta(days=12)).strftime("%m-%d-%Y")} (example: 12 days before today)
+         * Medical History (completed): {(datetime.datetime.now() - datetime.timedelta(days=600)).strftime("%m-%d-%Y")} (example: ~20 months ago)
     9. **FACILITY LOCATION (CRITICAL - NEW REQUIREMENT)**:
        - **Procedure Facility**: Generate a realistic healthcare facility where the procedure will be performed
        - **Requirements**:

@@ -1,12 +1,13 @@
 import json
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
 
 # Assuming models are in a sibling file
 from . import models
 from . import prompts
+from ..utils import date_utils
 
 # Vertex AI REST context window: gemini-1.5-pro supports up to ~1M tokens input,
 # but keeping the prompt under ~80K characters (≈20K tokens) ensures the model
@@ -249,6 +250,163 @@ def _sanitize_document_content(value: Any) -> Any:
     return value
 
 
+_COMPLETED_DATE_KEYS = {
+    "encounter_date",
+    "service_date",
+    "recorded_date",
+    "date_administered",
+    "onset_date",
+    "date",
+}
+
+_ALLOWED_FUTURE_DATE_KEYS = {
+    # scheduling/planning
+    "expected_procedure_date",
+    "expected_date",
+}
+
+
+def _ensure_future_procedure_date(date_str: str, today) -> str:
+    """
+    Ensure expected_procedure_date is 7–90 days in the future (MM-DD-YYYY).
+    Uses a deterministic default if parsing fails.
+    """
+    d = date_utils.parse_date_any(date_str)
+    min_d = today + timedelta(days=7)
+    max_d = today + timedelta(days=90)
+    if d is None:
+        d = today + timedelta(days=30)
+    if d < min_d:
+        d = min_d
+    if d > max_d:
+        d = max_d
+    return date_utils.format_mmddyyyy(d)
+
+
+def _clamp_completed_date(date_str: Any, today) -> Any:
+    """
+    Clamp a completed-event date to be <= today and normalize format to MM-DD-YYYY
+    when parseable. Leaves non-parseable values unchanged.
+    """
+    if date_str is None:
+        return date_str
+    d = date_utils.parse_date_any(str(date_str))
+    if d is None:
+        return date_str
+    if d > today:
+        d = today
+    return date_utils.format_mmddyyyy(d)
+
+
+def _normalize_dates_in_obj(obj: Any, today) -> Any:
+    """
+    Recursively normalize any recognized date fields inside dict/list content.
+    This is used for document JSON payloads.
+    """
+    if isinstance(obj, list):
+        return [_normalize_dates_in_obj(v, today) for v in obj]
+    if isinstance(obj, dict):
+        out = dict(obj)
+        for k, v in list(out.items()):
+            key = str(k)
+            if key in _ALLOWED_FUTURE_DATE_KEYS:
+                # still normalize formatting when parseable
+                d = date_utils.parse_date_any(str(v)) if v is not None else None
+                if d is not None:
+                    out[k] = date_utils.format_mmddyyyy(d)
+                continue
+            if key in _COMPLETED_DATE_KEYS:
+                out[k] = _clamp_completed_date(v, today)
+                continue
+            out[k] = _normalize_dates_in_obj(v, today)
+        return out
+    return obj
+
+
+def ensure_temporal_consistency(payload: "models.ClinicalDataPayload") -> "models.ClinicalDataPayload":
+    """
+    Enforce that completed clinical events are not future-dated relative to today.
+    Future dates are allowed only for scheduling fields (e.g., expected_procedure_date).
+    """
+    if not payload or not getattr(payload, "patient_persona", None):
+        return payload
+
+    today = datetime.now().date()
+    persona = payload.patient_persona
+
+    # Expected procedure date must be in the future window
+    if hasattr(persona, "expected_procedure_date"):
+        persona.expected_procedure_date = _ensure_future_procedure_date(
+            getattr(persona, "expected_procedure_date", ""),
+            today,
+        )
+
+    # Encounters: encounter_date and embedded vitals must not be in the future
+    for enc in (getattr(persona, "encounters", None) or []):
+        if hasattr(enc, "encounter_date"):
+            enc.encounter_date = _clamp_completed_date(getattr(enc, "encounter_date", ""), today)
+        vs = getattr(enc, "vital_signs", None)
+        if vs and hasattr(vs, "recorded_date"):
+            vs.recorded_date = _clamp_completed_date(getattr(vs, "recorded_date", ""), today)
+
+    # Current vitals
+    vs_cur = getattr(persona, "vital_signs_current", None)
+    if vs_cur and hasattr(vs_cur, "recorded_date"):
+        vs_cur.recorded_date = _clamp_completed_date(getattr(vs_cur, "recorded_date", ""), today)
+
+    # Completed evidence lists
+    for img in (getattr(persona, "images", None) or []):
+        if hasattr(img, "date"):
+            img.date = _clamp_completed_date(getattr(img, "date", ""), today)
+    for rep in (getattr(persona, "reports", None) or []):
+        if hasattr(rep, "date"):
+            rep.date = _clamp_completed_date(getattr(rep, "date", ""), today)
+    for proc in (getattr(persona, "procedures", None) or []):
+        if hasattr(proc, "date"):
+            proc.date = _clamp_completed_date(getattr(proc, "date", ""), today)
+    for vax in (getattr(persona, "vaccinations", None) or []):
+        if hasattr(vax, "date_administered"):
+            vax.date_administered = _clamp_completed_date(getattr(vax, "date_administered", ""), today)
+    for allergy in (getattr(persona, "allergies", None) or []):
+        if hasattr(allergy, "onset_date"):
+            allergy.onset_date = _clamp_completed_date(getattr(allergy, "onset_date", ""), today)
+
+    # Medications / therapies: don't allow future start dates; don't allow future end dates for completed items
+    for med in (getattr(persona, "medications", None) or []):
+        if hasattr(med, "start_date"):
+            med.start_date = _clamp_completed_date(getattr(med, "start_date", ""), today)
+        status = str(getattr(med, "status", "") or "").strip().lower()
+        end_val = getattr(med, "end_date", None)
+        end_date = date_utils.parse_date_any(str(end_val)) if end_val is not None else None
+        if end_date is not None and end_date > today and status == "past":
+            med.end_date = date_utils.format_mmddyyyy(today)
+
+    for th in (getattr(persona, "therapies", None) or []):
+        if hasattr(th, "start_date"):
+            th.start_date = _clamp_completed_date(getattr(th, "start_date", ""), today)
+        status = str(getattr(th, "status", "") or "").strip().lower()
+        end_val = getattr(th, "end_date", None)
+        end_date = date_utils.parse_date_any(str(end_val)) if end_val is not None else None
+        if end_date is not None and end_date > today and status in {"completed", "discontinued"}:
+            th.end_date = date_utils.format_mmddyyyy(today)
+
+    # Documents: clamp any service_date/date fields inside JSON content
+    for doc in (getattr(payload, "documents", None) or []):
+        content = getattr(doc, "content", None)
+        if isinstance(content, str):
+            try:
+                parsed = json.loads(content)
+                if isinstance(parsed, dict):
+                    doc.content = _normalize_dates_in_obj(parsed, today)
+            except Exception:
+                pass
+        elif isinstance(content, dict):
+            doc.content = _normalize_dates_in_obj(content, today)
+
+    payload.patient_persona = persona
+    return payload
+
+
 def ensure_persona_quality(payload: "models.ClinicalDataPayload", case_details: dict, patient_state: dict) -> "models.ClinicalDataPayload":
     if not payload or not getattr(payload, "patient_persona", None):
         return payload
@@ -311,6 +469,7 @@ def ensure_persona_quality(payload: "models.ClinicalDataPayload", case_details: 
                     doc.content = structured
             # Sanitize judgment language in document body text
             doc.content = _sanitize_document_content(doc.content)
+    payload = ensure_temporal_consistency(payload)
     return payload
 
 

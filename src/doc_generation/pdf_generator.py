@@ -23,6 +23,112 @@ _REPORT_META_SKIP_KEYS = {
     "title_hint",
 }
 
+def _as_dict_content(content):
+    if isinstance(content, dict):
+        return content
+    if isinstance(content, str):
+        try:
+            parsed = json.loads(content)
+            return parsed if isinstance(parsed, dict) else None
+        except Exception:
+            return None
+    return None
+
+
+def _extract_report_date_hint(content) -> str:
+    data = _as_dict_content(content) or {}
+    for k in ("service_date", "report_date", "study_date", "performed_date", "date"):
+        v = data.get(k)
+        if v:
+            return str(v).strip()
+    return ""
+
+
+def _shorten(text: str, max_chars: int) -> str:
+    t = (text or "").strip()
+    if len(t) <= max_chars:
+        return t
+    return (t[: max(0, max_chars - 1)].rstrip() + "…") if max_chars > 1 else "…"
+
+
+def _extract_report_highlights(content, max_bullets: int = 4, max_chars: int = 160) -> list[str]:
+    data = _as_dict_content(content)
+    if not isinstance(data, dict):
+        # fall back to plain text, but keep it very short
+        if isinstance(content, str) and content.strip():
+            return [_shorten(content.strip().replace("\n", " "), max_chars)]
+        return []
+
+    highlights: list[str] = []
+
+    def _push(val):
+        if val is None:
+            return
+        if isinstance(val, str):
+            s = val.strip().replace("\n", " ")
+            if s:
+                highlights.append(_shorten(s, max_chars))
+        elif isinstance(val, list):
+            parts = []
+            for item in val[:2]:
+                if isinstance(item, str) and item.strip():
+                    parts.append(item.strip())
+                elif isinstance(item, dict):
+                    parts.append(json.dumps(item)[:max_chars])
+            if parts:
+                highlights.append(_shorten("; ".join(parts), max_chars))
+        elif isinstance(val, dict):
+            # pick a couple of key fields if present
+            for kk in ("impression", "findings", "results", "assessment", "plan", "summary", "conclusion"):
+                if kk in val and val[kk]:
+                    _push(val[kk])
+                    break
+
+    # Prefer clinically meaningful fields
+    for key in (
+        "impression",
+        "findings",
+        "results",
+        "assessment",
+        "plan",
+        "interpretation",
+        "clinical_indication",
+        "chief_complaint",
+        "summary",
+        "conclusion",
+    ):
+        if key in data and data.get(key):
+            _push(data.get(key))
+        if len(highlights) >= max_bullets:
+            break
+
+    # If template uses sections, pull from first 1–2 populated sections
+    if len(highlights) < max_bullets:
+        sections = data.get("sections") or []
+        if isinstance(sections, list):
+            for sec in sections[:4]:
+                if not sec:
+                    continue
+                val = data.get(sec)
+                if val:
+                    _push(val)
+                if len(highlights) >= max_bullets:
+                    break
+
+    # Dedupe while preserving order
+    seen = set()
+    out = []
+    for h in highlights:
+        key = h.strip().lower()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(h)
+        if len(out) >= max_bullets:
+            break
+    return out
+
+
 def _ensure_folder(path: str):
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=True)
@@ -1354,45 +1460,28 @@ def create_persona_pdf(patient_id: str, patient_name: str, persona: object, gene
 
     # --- REPORTS & IMAGING ---
     if generated_reports:
-        # ... (Same as before)
+        # Compact index + highlights (persona should stay concise; full PDFs contain details)
+        max_items = int(os.getenv("PERSONA_SECTION3_MAX_ITEMS", "6") or "6")
+        max_bullets = int(os.getenv("PERSONA_SECTION3_MAX_BULLETS", "4") or "4")
+        max_chars = int(os.getenv("PERSONA_SECTION3_BULLET_CHARS", "160") or "160")
+
         Story.append(Paragraph("III. CLINICAL REPORTS & IMAGING", style_h2))
-        
-        for rep in generated_reports:
-            # Report Title
+        Story.append(Paragraph("Full report PDFs contain complete details. Key findings are summarized below.", style_normal))
+        Story.append(Spacer(1, 10))
+
+        for rep in (generated_reports or [])[:max_items]:
             rep_title = rep.title_hint.replace('_', ' ').upper()
-            Story.append(Paragraph(f"► {rep_title}", style_h3))
-            
-            # Check Image
-            img_path = None
-            if image_map:
-                for k, v in image_map.items():
-                    if k.startswith(rep.title_hint):
-                        img_path = v
-                        break
-            
-            if img_path and os.path.exists(img_path):
-                 img = Image(img_path, width=3.5*inch, height=2*inch, kind='proportional')
-                 Story.append(img)
-                 Story.append(Spacer(1, 5))
-            
-            # Content
-            
-            # Format markdown to styled text with graceful fallback
-            rep_text = format_report_content(rep.content)
-            
-            try:
-                Story.append(Paragraph(rep_text, style_normal))
-            except ValueError:
-                import html
-                safe_text = html.escape(rep.content).replace('\n', '<br/>')
-                Story.append(Paragraph(safe_text, style_normal))
-            
-            Story.append(Spacer(1, 15))
-            Story.append(Spacer(1,6))
-            Story.append(Table([[""]], colWidths=[6.4*inch], style=[
-                ('LINEABOVE',(0,0),(-1,-1),0.5,colors.grey)
-            ]))
-            Story.append(Spacer(1,6))
+            rep_date = _extract_report_date_hint(getattr(rep, "content", None))
+            rep_header = f"► {rep_title}" + (f"  ({rep_date})" if rep_date else "")
+            Story.append(Paragraph(rep_header, style_h3))
+
+            bullets = _extract_report_highlights(getattr(rep, "content", None), max_bullets=max_bullets, max_chars=max_chars)
+            if not bullets:
+                bullets = ["See report PDF for details."]
+            for b in bullets:
+                Story.append(Paragraph(f"• {html.escape(str(b))}", ParagraphStyle('persona_bull_s3', parent=style_normal, leftIndent=15)))
+
+            Story.append(Spacer(1, 10))
 
     doc.build(Story)
     return file_path
