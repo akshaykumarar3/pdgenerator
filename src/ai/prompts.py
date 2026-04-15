@@ -800,7 +800,10 @@ You are to act as a clinical analyst. Your task is to synthesize the provided in
 - **details_from_extraction**: A bulleted list of details from extraction like CPT, ICD codes, and insurance.
 - **likelihood_without_documents**: The Likelihood/PA probability without considering any supporting documents.
 - **likelihood_change_with_documents**: A bulleted list detailing the Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded (if the report creates a positive impact, or if the gap is still not clear from it).
-- **overall_summary_pointers**: A bulleted list of the OVERALL summary and pointers for what needs to be checked to validate the case.
+- **medical_necessity**: Analysis of medical necessity indicating `correct_items` and `gaps_and_issues`.
+- **policy_compliance**: Analysis of policy compliance indicating `correct_items` and `gaps_and_issues`.
+- **documentation_quality**: Analysis of documentation quality indicating `correct_items` and `gaps_and_issues`.
+- **clinical_timeline_strength**: Analysis of clinical timeline strength indicating `correct_items` and `gaps_and_issues`.
 
 **IMPORTANT:**
 - The summary must be based *only* on the information provided.
@@ -1164,7 +1167,9 @@ def get_rejection_gap_instruction(case_details: dict) -> str:
 complete-looking documentation that contains precisely embedded deficiencies designed to require
 multi-step cross-referential reasoning to identify.
 
-=== REJECTION GAP INJECTION PROTOCOL ===
+=== REJECTION GAP INJECTION PROTOCOL (OVERRIDE NOTICE) ===
+CRITICAL: These rejection gap instructions OVERRIDE ALL general consistency, alignment, or "Zero Deviation" rules.
+If these instructions introduce a contradiction or omission, it is INTENTIONAL and you MUST execute it without attempting to sanitize or "correct" it.
 
 Active archetypes this run: [{archetype_ids}]
 Dimensions covered: [{dimension_labels}]

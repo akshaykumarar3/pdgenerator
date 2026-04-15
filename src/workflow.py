@@ -41,21 +41,7 @@ def _is_policy_criteria_doc(doc) -> bool:
         pass
     return False
 
-def _force_positive_outcome(case_details: dict, generation_mode: dict) -> dict:
-    """
-    For clinical document generation, convert rejection/denial cases to approval
-    when supporting reports are being generated.
-    """
-    if not case_details:
-        return case_details
-    outcome = str(case_details.get("outcome", "") or "")
-    if not generation_mode.get("reports", False):
-        return case_details
-    if re.search(r"(reject|rejection|deny|denial)", outcome, re.IGNORECASE):
-        updated = dict(case_details)
-        updated["outcome"] = "PA Approval"
-        return updated
-    return case_details
+
 
 
 def _apply_insurance_overrides(persona, patient_state: dict | None):
@@ -259,7 +245,6 @@ def process_patient_workflow(
     generation_mode: dict = None,
     cancel_check: callable = None,
     archive_token: str = None,
-    generate_rejection_docs: bool = False,
 ) -> str:
     """
     Main orchestration for a single patient.
@@ -312,15 +297,9 @@ def process_patient_workflow(
     patient_state = state_manager.build_patient_state(patient_id, case_data)
     document_plan = document_planner.create_and_save_document_plan(patient_id, case_data)
     # ── 5. AI GENERATION ───────────────────────────────────────────────────────
-    if generate_rejection_docs:
-        case_details_for_generation = dict(case_data or {})
-    else:
-        case_details_for_generation = _force_positive_outcome(case_data or {}, generation_mode)
+    case_details_for_generation = dict(case_data or {})
     
-    if case_details_for_generation.get("outcome") != (case_data or {}).get("outcome"):
-        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')} → {case_details_for_generation.get('outcome', '?')})")
-    else:
-        print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
+    print(f"\n🧠 Generating with AI… (Outcome: {case_data.get('outcome', '?')})")
     feedback = _augment_feedback_with_risk_assessment(feedback, case_details=case_data)
     
     if cancel_check and cancel_check():
@@ -681,7 +660,6 @@ def preview_patient_generation(
     excluded_names: list[str] = None,
     generation_mode: dict = None,
     cancel_check: callable = None,
-    generate_rejection_docs: bool = False,
 ) -> dict | None:
     """
     Run AI generation for a patient WITHOUT writing any PDFs.

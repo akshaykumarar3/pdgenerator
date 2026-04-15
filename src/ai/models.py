@@ -369,13 +369,21 @@ class VerificationPointers(BaseModel):
     red_flags: List[str] = Field(default_factory=list, description="Red flags to watch for")
     document_references: List[Dict[str, str]] = Field(default_factory=list, description="Document references with expected content")
 
+class VerificationParameter(BaseModel):
+    """Verification parameter analysis."""
+    correct_items: List[str] = Field(..., description="List of items that are medically/clinically correct or present")
+    gaps_and_issues: List[str] = Field(..., description="List of gaps, missing criteria, or issues intentionally injected or found")
+
 class ConciseSummary(BaseModel):
     """Clinical summary for a user."""
     test_case_and_overview: str = Field(..., description="Test case description and case overview.")
     details_from_extraction: List[str] = Field(..., description="Details from extraction like CPT, ICD codes, and insurance.")
     likelihood_without_documents: str = Field(..., description="Likelihood/PA probability without considering any supporting documents.")
     likelihood_change_with_documents: List[str] = Field(..., description="Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded?")
-    overall_summary_pointers: List[str] = Field(..., description="OVERALL summary - pointers what needs to be checked to validate.")
+    medical_necessity: VerificationParameter = Field(..., description="Analysis of medical necessity including correct items and gaps/issues")
+    policy_compliance: VerificationParameter = Field(..., description="Analysis of policy compliance including correct items and gaps/issues")
+    documentation_quality: VerificationParameter = Field(..., description="Analysis of documentation quality including correct items and gaps/issues")
+    clinical_timeline_strength: VerificationParameter = Field(..., description="Analysis of clinical timeline strength including correct items and gaps/issues")
 
 class AnnotatorSummary(BaseModel):
     """Annotator verification guide - created after persona and documents are generated."""

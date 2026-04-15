@@ -405,14 +405,30 @@ def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: d
         Story.append(Paragraph("None identified.", style_normal))
     Story.append(Spacer(1, 10))
 
-    # 5. Overall summary pointers
-    Story.append(Paragraph("5. Overall Summary & Verification Pointers", style_h2))
-    if summary.overall_summary_pointers:
-        for item in summary.overall_summary_pointers:
-            Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
-    else:
-        Story.append(Paragraph("None.", style_normal))
-    Story.append(Spacer(1, 10))
+    def add_verification_section(title, param, idx):
+        Story.append(Paragraph(f"{idx}. {title}", style_h2))
+        if param:
+            Story.append(Paragraph("<b>Correct Items:</b>", style_normal))
+            if param.correct_items:
+                for item in param.correct_items:
+                    Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+            else:
+                Story.append(Paragraph("None.", style_bullet))
+            Story.append(Spacer(1, 5))
+            Story.append(Paragraph("<b><font color='red'>Gaps/Issues:</font></b>", style_normal))
+            if param.gaps_and_issues:
+                for item in param.gaps_and_issues:
+                    Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+            else:
+                Story.append(Paragraph("None.", style_bullet))
+        else:
+            Story.append(Paragraph("None.", style_normal))
+        Story.append(Spacer(1, 10))
+
+    add_verification_section("Medical Necessity", getattr(summary, "medical_necessity", None), 5)
+    add_verification_section("Policy Compliance", getattr(summary, "policy_compliance", None), 6)
+    add_verification_section("Documentation Quality", getattr(summary, "documentation_quality", None), 7)
+    add_verification_section("Clinical Timeline Strength", getattr(summary, "clinical_timeline_strength", None), 8)
 
     doc.build(Story)
     return file_path
