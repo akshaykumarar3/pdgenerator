@@ -380,6 +380,14 @@ class ConciseSummary(BaseModel):
     details_from_extraction: List[str] = Field(..., description="Details from extraction like CPT, ICD codes, and insurance.")
     likelihood_without_documents: str = Field(..., description="Likelihood/PA probability without considering any supporting documents.")
     likelihood_change_with_documents: List[str] = Field(..., description="Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded?")
+    attachments_list: List[str] = Field(
+        default_factory=list,
+        description="List of attachments (generated documents) with a 1-line why-it-matters; ex. 'MRI Knee — Confirms structural pathology and severity.'",
+    )
+    likelihood_expectations_post_attachments: Optional[VerificationParameter] = Field(
+        default=None,
+        description="Post-attachment expectations: short lists of correct responses and gaps/issues (max 4–5 each).",
+    )
     medical_necessity: VerificationParameter = Field(..., description="Analysis of medical necessity including correct items and gaps/issues")
     policy_compliance: VerificationParameter = Field(..., description="Analysis of policy compliance including correct items and gaps/issues")
     documentation_quality: VerificationParameter = Field(..., description="Analysis of documentation quality including correct items and gaps/issues")

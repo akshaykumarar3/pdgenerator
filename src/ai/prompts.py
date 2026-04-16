@@ -825,6 +825,8 @@ You are to act as a clinical analyst. Your task is to synthesize the provided in
 - **details_from_extraction**: A bulleted list of details from extraction like CPT, ICD codes, and insurance.
 - **likelihood_without_documents**: The Likelihood/PA probability without considering any supporting documents.
 - **likelihood_change_with_documents**: A bulleted list detailing the Likelihood PA score change considering each document; ex. what happens if an individual report is uploaded (if the report creates a positive impact, or if the gap is still not clear from it).
+- **attachments_list**: A bulleted list of attachments. Each item must be a single concise line formatted like: "Document Name — why it matters".
+- **likelihood_expectations_post_attachments**: After considering all attachments, provide an object with `correct_items` and `gaps_and_issues` (each list must contain max 5 short key points).
 - **medical_necessity**: Analysis of medical necessity indicating `correct_items` and `gaps_and_issues`.
 - **policy_compliance**: Analysis of policy compliance indicating `correct_items` and `gaps_and_issues`.
 - **documentation_quality**: Analysis of documentation quality indicating `correct_items` and `gaps_and_issues`.
@@ -834,6 +836,8 @@ You are to act as a clinical analyst. Your task is to synthesize the provided in
 - The summary must be based *only* on the information provided.
 - Do not invent new information.
 - The tone should be professional and clinical.
+- Keep `attachments_list` explanations to a single line each (no multi-sentence paragraphs).
+- Keep `likelihood_expectations_post_attachments.correct_items` and `.gaps_and_issues` to max 5 bullets each.
 - If authoritative payer details are provided above, DO NOT output 'not provided' for insurance.
 - If payer is known, Policy Compliance must be assessable; do not output 'cannot assess' unless payer is missing or objective evidence is missing.
 - If policy lens is provided ({lens if lens else 'unknown'}), write Policy Compliance using that payer lens.

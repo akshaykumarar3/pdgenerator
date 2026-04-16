@@ -511,8 +511,67 @@ def _contains_cannot_assess(items: list[str]) -> bool:
     )
     return any(pat.search(str(x) or "") for x in items)
 
+def _normalize_summary_item(v: Any) -> str | None:
+    s = _safe_str(v)
+    if not s:
+        return None
+    # Remove common bullet prefixes and normalize whitespace
+    s = re.sub(r"^\s*(?:[•\-\*\u2022]|\u26a0)\s+", "", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s or None
 
-def patch_concise_summary(summary_obj: Any, facts: "CanonicalFacts") -> Any:
+
+def _dedupe_keep_order(items: list[Any]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in items or []:
+        s = _normalize_summary_item(raw)
+        if not s:
+            continue
+        key = s.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(s)
+    return out
+
+
+def _why_for_attachment(title_hint: str) -> str:
+    t = (title_hint or "").casefold()
+    if any(k in t for k in ["mri", "ct", "xray", "x-ray", "ultrasound", "pet", "imaging"]):
+        return "Provides objective imaging evidence supporting indication and severity."
+    if any(k in t for k in ["lab", "cbc", "cmp", "metabolic", "a1c", "crp", "esr", "panel"]):
+        return "Provides objective lab evidence supporting severity and risk stratification."
+    if any(k in t for k in ["consult", "specialist", "cardiology", "orthopedic", "neuro", "oncology", "rheum"]):
+        return "Documents specialist assessment, indication, and clinical rationale."
+    if any(k in t for k in ["pt", "therapy", "physical", "conservative", "home exercise"]):
+        return "Documents conservative treatment course and response/failed therapy."
+    if any(k in t for k in ["note", "encounter", "progress", "visit", "h&p", "history", "exam"]):
+        return "Documents symptoms, exam findings, and clinical course over time."
+    if any(k in t for k in ["op note", "operative", "procedure", "surgery", "anesthesia"]):
+        return "Documents procedural details and peri-procedural context."
+    return "Supports medical necessity with objective clinical documentation."
+
+
+def _extract_title_hint(doc: Any) -> str | None:
+    hint = _get_attr(doc, "title_hint")
+    s = _safe_str(hint)
+    return s or None
+
+
+def _collect_verification_items(summary_obj: Any, attr: str, field: str) -> list[Any]:
+    param = getattr(summary_obj, attr, None)
+    items = getattr(param, field, None) if param else None
+    if not isinstance(items, list):
+        return []
+    return [x for x in items if x is not None]
+
+
+def patch_concise_summary(
+    summary_obj: Any,
+    facts: "CanonicalFacts",
+    documents: Optional[list[Any]] = None,
+) -> Any:
     """
     Deterministically patch ConciseSummary output for payer + assessability.
     """
@@ -566,6 +625,77 @@ def patch_concise_summary(summary_obj: Any, facts: "CanonicalFacts") -> Any:
                 if not re.search(r"(?i)\b(cannot|unable)\s+(?:to\s+)?assess\b|\binsufficient\b", str(g or ""))
             ]
             setattr(pc, "gaps_and_issues", new_gaps)
+
+    # Attachments list: if missing, derive from generated documents (title_hint + 1-line why)
+    try:
+        attachments = getattr(summary_obj, "attachments_list", None)
+        attachments_list = attachments if isinstance(attachments, list) else []
+        docs = documents or []
+        if (not attachments_list) and docs:
+            derived: list[str] = []
+            for d in docs:
+                hint = _extract_title_hint(d)
+                if not hint:
+                    continue
+                pretty = hint.replace("_", " ").strip()
+                derived.append(f"{pretty} — {_why_for_attachment(hint)}")
+            attachments_list = _dedupe_keep_order(derived)
+        else:
+            attachments_list = _dedupe_keep_order(attachments_list)
+        setattr(summary_obj, "attachments_list", attachments_list)
+    except Exception:
+        # Best-effort only; do not fail summary generation
+        pass
+
+    # Post-attachment likelihood expectations: aggregate from verification sections, cap 5 each
+    try:
+        order = [
+            "medical_necessity",
+            "policy_compliance",
+            "clinical_timeline_strength",
+            "documentation_quality",
+        ]
+
+        correct_agg: list[Any] = []
+        gaps_agg: list[Any] = []
+        for a in order:
+            correct_agg.extend(_collect_verification_items(summary_obj, a, "correct_items"))
+            gaps_agg.extend(_collect_verification_items(summary_obj, a, "gaps_and_issues"))
+
+        correct_derived = _dedupe_keep_order(correct_agg)[:5]
+        gaps_derived = _dedupe_keep_order(gaps_agg)[:5]
+
+        existing = getattr(summary_obj, "likelihood_expectations_post_attachments", None)
+        existing_correct = (
+            _dedupe_keep_order(getattr(existing, "correct_items", None) or [])
+            if existing
+            else []
+        )[:5]
+        existing_gaps = (
+            _dedupe_keep_order(getattr(existing, "gaps_and_issues", None) or [])
+            if existing
+            else []
+        )[:5]
+
+        final_correct = existing_correct or correct_derived
+        final_gaps = existing_gaps or gaps_derived
+
+        if final_correct or final_gaps:
+            from . import models as ai_models
+
+            setattr(
+                summary_obj,
+                "likelihood_expectations_post_attachments",
+                ai_models.VerificationParameter(
+                    correct_items=final_correct,
+                    gaps_and_issues=final_gaps,
+                ),
+            )
+        else:
+            setattr(summary_obj, "likelihood_expectations_post_attachments", None)
+    except Exception:
+        # Best-effort only; do not fail summary generation
+        pass
 
     return summary_obj
 

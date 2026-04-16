@@ -511,6 +511,37 @@ def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: d
         Story.append(Paragraph("None identified.", style_normal))
     Story.append(Spacer(1, 10))
 
+    # 5. List of attachments
+    Story.append(Paragraph("5. List of Attachments (What + Why)", style_h2))
+    attachments_list = getattr(summary, "attachments_list", None)
+    if attachments_list:
+        for item in attachments_list:
+            Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+    else:
+        Story.append(Paragraph("None identified.", style_normal))
+    Story.append(Spacer(1, 10))
+
+    # 6. Likelihood expectations post all attachments
+    Story.append(Paragraph("6. Likelihood Expectations (Post All Attachments)", style_h2))
+    post_param = getattr(summary, "likelihood_expectations_post_attachments", None)
+    if post_param:
+        Story.append(Paragraph("<b>Correct responses:</b>", style_normal))
+        if getattr(post_param, "correct_items", None):
+            for item in post_param.correct_items:
+                Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+        else:
+            Story.append(Paragraph("None.", style_bullet))
+        Story.append(Spacer(1, 5))
+        Story.append(Paragraph("<b><font color='red'>Gaps:</font></b>", style_normal))
+        if getattr(post_param, "gaps_and_issues", None):
+            for item in post_param.gaps_and_issues:
+                Story.append(Paragraph(f"• {format_clinical_text(item)}", style_bullet))
+        else:
+            Story.append(Paragraph("None.", style_bullet))
+    else:
+        Story.append(Paragraph("None identified.", style_normal))
+    Story.append(Spacer(1, 10))
+
     def add_verification_section(title, param, idx):
         Story.append(Paragraph(f"{idx}. {title}", style_h2))
         if param:
@@ -531,10 +562,10 @@ def create_concise_summary_pdf(patient_id: str, concise_summary, case_details: d
             Story.append(Paragraph("None.", style_normal))
         Story.append(Spacer(1, 10))
 
-    add_verification_section("Medical Necessity", getattr(summary, "medical_necessity", None), 5)
-    add_verification_section("Policy Compliance", getattr(summary, "policy_compliance", None), 6)
-    add_verification_section("Documentation Quality", getattr(summary, "documentation_quality", None), 7)
-    add_verification_section("Clinical Timeline Strength", getattr(summary, "clinical_timeline_strength", None), 8)
+    add_verification_section("Medical Necessity", getattr(summary, "medical_necessity", None), 7)
+    add_verification_section("Policy Compliance", getattr(summary, "policy_compliance", None), 8)
+    add_verification_section("Documentation Quality", getattr(summary, "documentation_quality", None), 9)
+    add_verification_section("Clinical Timeline Strength", getattr(summary, "clinical_timeline_strength", None), 10)
 
     doc.build(Story)
     return file_path

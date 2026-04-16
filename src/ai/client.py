@@ -556,7 +556,11 @@ Focus on being specific, clear, and helpful."""
             raise ValueError("AI returned no response for concise summary")
 
         # Deterministic patching for payer + assessability (procedure-agnostic)
-        summary_obj = enrichment.patch_concise_summary(summary_obj, facts)
+        summary_obj = enrichment.patch_concise_summary(
+            summary_obj,
+            facts,
+            documents=generated_documents or [],
+        )
 
         print(f"   ✅ Concise Summary Generated Successfully")
         return summary_obj
