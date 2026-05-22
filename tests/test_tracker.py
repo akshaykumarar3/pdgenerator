@@ -46,7 +46,8 @@ class TestPriorAuthTracker(unittest.TestCase):
         self.assertLessEqual(len(supporting_med), 5)
 
     def test_tracker_export_runs(self):
-        """Verify that generate_tracker_export can execute without errors and generates files."""
+        """Verify that generate_tracker_export can execute without errors and generates files with 13 columns."""
+        import csv
         # We can pass a dummy patient ID that does not exist to verify the fallback compilation logic
         pdf_path = generate_tracker_export(["99999"])
         self.assertTrue(os.path.exists(pdf_path))
@@ -54,12 +55,78 @@ class TestPriorAuthTracker(unittest.TestCase):
         tsv_path = pdf_path.replace(".pdf", ".tsv")
         self.assertTrue(os.path.exists(tsv_path))
         
+        # Verify the TSV columns match our 13-column schema exactly
+        try:
+            with open(tsv_path, "r", encoding="utf-8") as f:
+                reader = csv.reader(f, delimiter="\t")
+                rows = list(reader)
+                
+                columns = rows[0]
+                expected_columns = [
+                    "Patient ID", "Patient Name", "DOB", "Department", "CPT Code",
+                    "Procedure/Medicine Name", "Provider", "Insurance Type", "Policy Name",
+                    "extraction expectation", "likelihood expectations", "attachments",
+                    "post-attachment likelihood"
+                ]
+                
+                self.assertEqual(len(columns), 13)
+                self.assertEqual(columns, expected_columns)
+                
+                # Check data row format
+                self.assertGreater(len(rows), 1)
+                data_fields = rows[1]
+                self.assertEqual(len(data_fields), 13)
+                self.assertEqual(data_fields[0], "99999") # Patient ID
+        except Exception as e:
+            self.fail(f"TSV schema verification failed: {e}")
+        
         # Clean up generated test outputs
         try:
             os.remove(pdf_path)
             os.remove(tsv_path)
         except Exception:
             pass
+
+    def test_tracker_fallback_rich_fields(self):
+        """Verify that fallback data fields are rich and contain no raw HTML tags in the TSV."""
+        import csv
+        pdf_path = generate_tracker_export(["99999"])
+        tsv_path = pdf_path.replace(".pdf", ".tsv")
+        
+        try:
+            with open(tsv_path, "r", encoding="utf-8") as f:
+                reader = csv.reader(f, delimiter="\t")
+                rows = list(reader)
+                
+            self.assertGreater(len(rows), 1)
+            data_row = rows[1]
+            
+            # Verify columns do not contain HTML tags
+            for cell in data_row:
+                self.assertNotIn("<b>", cell)
+                self.assertNotIn("</b>", cell)
+                self.assertNotIn("<br/>", cell)
+                self.assertNotIn("<font", cell)
+                self.assertNotIn("</font>", cell)
+                
+            # Verify clinical expectations and details are richly populated
+            extraction = data_row[9]  # extraction expectation
+            likelihood = data_row[10] # likelihood expectations
+            post_likelihood = data_row[12] # post-attachment likelihood
+            
+            # Since patient 99999 is a dummy, it uses the fallback path
+            self.assertIn("Expected Service:", extraction)
+            self.assertIn("Required Criteria:", extraction)
+            self.assertIn("likelihood of approval", likelihood.lower())
+            self.assertIn("Likelihood", post_likelihood)
+            
+        finally:
+            # Clean up generated test outputs
+            try:
+                os.remove(pdf_path)
+                os.remove(tsv_path)
+            except Exception:
+                pass
 
 if __name__ == "__main__":
     unittest.main()

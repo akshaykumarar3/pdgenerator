@@ -104,9 +104,14 @@ def build_patient_state(patient_id: str, case_data: Dict[str, Any]) -> Dict[str,
     cpt_code = str(case_data.get("cpt_code", "") or "").strip()
     if not cpt_code and procedure_name:
         import re
-        m = re.search(r"(\\d{5})", str(procedure_name))
+        # Check for HCPCS code first (letter followed by 4 digits)
+        m = re.search(r"([A-Za-z]\d{4})", str(procedure_name))
         if m:
-            cpt_code = m.group(1)
+            cpt_code = m.group(1).upper()
+        else:
+            m = re.search(r"(\d{5})", str(procedure_name))
+            if m:
+                cpt_code = m.group(1)
     
     # Resolve insurance selection (patient-level override or config default)
     selection = (existing_record or {}).get("insurance_selection") or {}

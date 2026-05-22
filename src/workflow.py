@@ -45,6 +45,21 @@ def _is_policy_criteria_doc(doc) -> bool:
     return False
 
 
+def _is_core_document(doc) -> bool:
+    """
+    Identify if a document is a core document (Prior Authorization Request or Summary).
+    """
+    title = str(getattr(doc, "title_hint", "") or "").lower()
+    doc_id = str(getattr(doc, "doc_id", "") or "").lower()
+    if "prior_auth" in title or "prior authorization" in title or "pa_request" in title or "pa request" in title:
+        return True
+    if "summary" in title:
+        return True
+    if "prior_auth" in doc_id or "pa_request" in doc_id or "summary" in doc_id:
+        return True
+    return False
+
+
 
 
 def _apply_insurance_overrides(persona, patient_state: dict | None):
@@ -350,10 +365,21 @@ def process_patient_workflow(
         or "generate 10" in feedback_lower
     )
     if not bypass_cap:
-        original_count = len(filtered_documents)
-        filtered_documents = filtered_documents[:MAX_SUPPORTING_DOCUMENTS]
-        if len(filtered_documents) < original_count:
-            print(f"   ✂️  Capped supporting documents to {MAX_SUPPORTING_DOCUMENTS} (removed {original_count - len(filtered_documents)} excess).")
+        keep_docs = []
+        supporting_kept = 0
+        supporting_removed = 0
+        for doc in filtered_documents:
+            if _is_core_document(doc):
+                keep_docs.append(doc)
+            else:
+                if supporting_kept < MAX_SUPPORTING_DOCUMENTS:
+                    keep_docs.append(doc)
+                    supporting_kept += 1
+                else:
+                    supporting_removed += 1
+        filtered_documents = keep_docs
+        if supporting_removed > 0:
+            print(f"   ✂️  Capped supporting documents to {MAX_SUPPORTING_DOCUMENTS} (removed {supporting_removed} excess supporting doc(s) while preserving all core docs).")
 
     # Ensure payer fields reflect patient_state insurance config/selection
     _apply_insurance_overrides(result.patient_persona, patient_state)
@@ -763,7 +789,16 @@ def preview_patient_generation(
         or "generate 10" in feedback_lower
     )
     if not bypass_cap:
-        filtered_docs = filtered_docs[:MAX_SUPPORTING_DOCUMENTS]
+        keep_docs = []
+        supporting_kept = 0
+        for doc in filtered_docs:
+            if _is_core_document(doc):
+                keep_docs.append(doc)
+            else:
+                if supporting_kept < MAX_SUPPORTING_DOCUMENTS:
+                    keep_docs.append(doc)
+                    supporting_kept += 1
+        filtered_docs = keep_docs
 
     for doc in filtered_docs:
         docs_serialised.append({

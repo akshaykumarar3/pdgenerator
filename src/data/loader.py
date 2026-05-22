@@ -20,14 +20,19 @@ def _normalize_text(val) -> str:
 
 
 def _extract_cpt_code(*values) -> str:
-    """Try to extract a 5-digit CPT code from any provided value."""
+    """Try to extract a 5-digit CPT code or HCPCS code (e.g. J0897, Q5124) from any provided value."""
     for v in values:
         text = _normalize_text(v)
         if not text:
             continue
-        m = re.search(r"\b(\d{5})\b", text)
-        if m:
-            return m.group(1)
+        # Check for HCPCS code first (letter followed by 4 digits, like J0897 or Q5124)
+        m_hcpcs = re.search(r"\b([A-Za-z]\d{4})\b", text)
+        if m_hcpcs:
+            return m_hcpcs.group(1).upper()
+        # Fallback to standard 5-digit CPT code
+        m_cpt = re.search(r"\b(\d{5})\b", text)
+        if m_cpt:
+            return m_cpt.group(1)
     return ""
 
 

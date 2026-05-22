@@ -273,9 +273,24 @@ Use `compact_patient_data.py` to truncate long patient DB fields and trim per-pa
 ### Patient Tracker Exporter (`src/doc_generation/patient_tracker_export.py`)
 
 Handles compiling clinical Prior Authorization patient metrics for a selected subset of patients into unified reports:
-- **Landscape PDF Table**: A beautiful ReportLab-generated horizontal sheet matching a custom theme (`#1A365D` headers with alternating white and light-gray rows). Column widths and cell wrapping (using `Paragraph`) are explicitly calculated to sum to 720 points, fitting perfectly within one landscape Letter page.
-- **Companion TSV File**: A tab-separated file saving the identical data rows for easy copy-pasting or direct import into Microsoft Excel. 
-- **Offline High-Speed Pipeline**: Utilizes cached `concise_summary.json` files generated and persisted during normal document workflows, falling back gracefully to UAT configuration plans and Patient DB records.
+- **Landscape PDF Table**: A beautiful ReportLab-generated horizontal sheet matching a custom theme (`#1A365D` headers with alternating white and light-gray rows). Column widths and cell wrapping (using `Paragraph`) are explicitly calculated to sum to 720 points, fitting perfectly within one landscape Letter page. Rich text elements use custom HTML-like formatting (bold labels `<b>`, breaks `<br/>`, and red-font highlighted gaps `<font color='red'>`) to present a premium clinical justification review. To prevent XML/HTML parser crashes in ReportLab due to special symbols (such as `&` or `<20%`), a robust file-level escaping proxy `escape_for_paragraph` intercepts all PDF cell values, sanitizes special XML characters, and recovers explicitly allowed formatting tags.
+- **Companion TSV File**: A tab-separated file saving the identical data rows for easy copy-pasting or direct import into Microsoft Excel. All cells are completely sanitized of HTML elements and formatted with clean, standard multi-line values (using standard `\n` and plain text bullets `- `) to maintain high data fidelity.
+- **Offline High-Speed Pipeline**: Utilizes cached `concise_summary.json` files generated and persisted during normal document workflows, falling back gracefully to UAT configuration plans, Patient DB records, and a custom document clinical mapper (`get_attachment_explanation`).
+- **Unified 13-Column Schema**:
+  1. `Patient ID`
+  2. `Patient Name`
+  3. `DOB`
+  4. `Department` (case department)
+  5. `CPT Code` (resolved HCPCS J/Q or CPT)
+  6. `Procedure/Medicine Name`
+  7. `Provider` (requesting provider from `pa_request.requesting_provider` or PCP)
+  8. `Insurance Type` (plan type from persona `payer.plan_type`)
+  9. `Policy Name` (plan name from persona `payer.plan_name`)
+  10. `extraction expectation` (corresponds to details_from_extraction)
+  11. `likelihood expectations` (corresponds to likelihood_without_documents)
+  12. `attachments` (attached clinical documents list)
+  13. `post-attachment likelihood` (incorporates final likelihood_change_with_documents, Correct Items, and Gaps/Issues)
+- **Data Integrity and Persona PDF Exclusions**: Reads insurance details directly from the `payer` block (with fallback to `insurance`) and separates Provider and Policy Name into independent columns. Filters out all version-suffixed persona PDFs case-insensitively checking for `"persona"` in filenames.
 
 ### UI Layer (`ui/`)
 
