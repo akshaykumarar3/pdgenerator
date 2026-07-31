@@ -98,9 +98,6 @@ def refresh_cpt_code_map() -> dict:
                 if proc_key and proc_key not in mapping["by_procedure"]:
                     mapping["by_procedure"][proc_key] = cpt_code
 
-        with open(CPT_MAP_PATH, "w", encoding="utf-8") as f:
-            json.dump(mapping, f, indent=2)
-
         backend = os.getenv("PATIENT_STORAGE_BACKEND", "json").strip().lower()
         if backend == "postgres":
             try:
@@ -121,12 +118,6 @@ def get_cpt_code_map() -> dict:
     cpt_map = repo.load_cpt_code_map()
     if cpt_map and cpt_map.get("by_code"):
         return cpt_map
-    
-    # Fallback to JSON file if DB is empty and file exists
-    if os.path.exists(CPT_MAP_PATH):
-        with open(CPT_MAP_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
-            
     return {"by_code": {}, "by_procedure": {}, "updated_at": ""}
 
 
