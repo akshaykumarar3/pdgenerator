@@ -1,3 +1,4 @@
+
 """
 AI Prompts Configuration
 
@@ -9,10 +10,11 @@ Edit these prompts carefully to modify AI behavior.
 2. Keep field names consistent (e.g., PATIENT_ID, MRN, DOB)
 3. Test changes thoroughly - incorrect prompts can break document validation
 4. Add new instructions at the end of relevant sections
-5. Use f-string placeholders (e.g., {case_details['procedure']}) for dynamic values
+5. Use f-string placeholders (e.g., {case_details["procedure"]}) for dynamic values
 """
 
 import datetime
+import os
 
 # ============================================================================
 # SYSTEM PROMPT - Core AI Behavior
@@ -172,7 +174,7 @@ def _build_clinical_logic_instruction(case_details: dict) -> str:
     )
 
 def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_plan: dict, user_feedback: str = "",
-                             history_context: str = "", existing_persona: dict = None) -> str:
+                             history_context: str = "", existing_persona: dict = None, template_name: str = None) -> str:
     """
     Generates the main prompt for clinical data generation.
     
@@ -191,8 +193,25 @@ def get_clinical_data_prompt(case_details: dict, patient_state: dict, document_p
     import json
     import random
     state_str = json.dumps(patient_state, indent=2)
+    feedback_instruction, template_name = get_feedback_instruction(user_feedback)
+
+    from src.core.config import load_templates, get_template_path
+    templates = load_templates()
+    
+    template_file_name = None
+    if template_name:
+        template_file_name = templates.get(template_name)
+
+    if not template_file_name:
+        template_file_name = templates.get("default")
+
+    if template_file_name:
+        template_path = get_template_path(template_file_name)
+        if template_path and os.path.exists(template_path):
+            with open(template_path, "r") as f:
+                document_plan = json.load(f)
+    
     plan_str = json.dumps(document_plan, indent=2)
-    feedback_instruction = get_feedback_instruction(user_feedback)
     
     # 1. Handle Random Character Universe (Only for new patients)
     diversity_instruction = ""
@@ -635,15 +654,24 @@ def get_new_patient_constraint(selected_universe: str, excluded_names: list = No
 # USER FEEDBACK FORMATTING
 # ============================================================================
 
-def get_feedback_instruction(user_feedback: str) -> str:
+import re
+
+def get_feedback_instruction(user_feedback: str) -> tuple[str, str | None]:
     """
     Formats user feedback for inclusion in prompts.
     
     PURPOSE: Allows users to override AI behavior with specific instructions.
     EXAMPLE: "Use Tony Stark as the patient" or "Make the diagnosis more severe"
     """
+    template_name = None
+    if user_feedback:
+        # Simple regex to find "use <template_name> template"
+        match = re.search(r"use (\w+) template", user_feedback, re.IGNORECASE)
+        if match:
+            template_name = match.group(1)
+
     if not user_feedback:
-        return ""
+        return "", None
     
     return f"""
     **USER FEEDBACK / QA CORRECTIONS 🚨 (ABSOLUTE TOPMOST PRIORITY) 🚨:**
@@ -658,7 +686,7 @@ def get_feedback_instruction(user_feedback: str) -> str:
     - If feedback points out a **missing clinical timeline or history**, you MUST extensively populate the `encounters`, `images`, `reports`, and `procedures` lists AND `bio_narrative` to show a clear longitudinal history matching the findings.
     - If feedback points out **missing physical exam/vital signs**, you MUST populate the `vital_signs` block and add examination findings to the encounters.
     - If feedback points out **missing or empty administrative fields** (e.g. patient phone number, provider address, plan type), you MUST explicitly fill them in the persona and documents with realistic data instead of N/A or defaults.
-    """
+    """, template_name
 
 # ============================================================================
 # MEDICAL IMAGE GENERATION PROMPT
@@ -1306,3 +1334,5 @@ CHARACTER_UNIVERSES = [
     "House MD", "Scrubs", "2 Broke Girls", "The Big Bang Theory", 
     "Brooklyn 99", "Superstore"
 ]
+
+</final_file_content>

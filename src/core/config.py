@@ -133,6 +133,20 @@ __all__ = [
     "DEBUG_DIR",
     "get_patient_debug_folder",
     "MAX_SUPPORTING_DOCUMENTS",
+    "load_templates",
+    "get_template_path",
 ]
 
 MAX_SUPPORTING_DOCUMENTS = 5
+
+import json
+
+def load_templates():
+    config_path = os.path.join(_project_root, "config", "templates.json")
+    with open(config_path, "r") as f:
+        return json.load(f)
+
+def get_template_path(template_name: str) -> str | None:
+    if template_name:
+        return os.path.join(_project_root, "templates", template_name)
+    return None

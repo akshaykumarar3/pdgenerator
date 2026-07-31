@@ -286,7 +286,7 @@ The active engine is chosen via the `PATIENT_STORAGE_BACKEND` environment variab
   - **DDL Schema**: Defined in `src/core/schema.sql`. Creates the `patients` table, constraints, B-tree indexes on names and dates of birth, and a GIN index on `persona_data` (JSONB).
   - **Initialization Guard**: `_schema_initialized` flag ensures DDL runs exactly once per repository instance — not on every operation — eliminating redundant connection overhead.
   - **Schema Validation**: `DB_SCHEMA` env var is validated against `^[a-zA-Z_][a-zA-Z0-9_]*$` on instantiation to prevent malformed identifiers.
-  - **Migration Utilities**: `migrate_json_to_postgres.py` and `migrate_postgres_to_json.py` transfer data between backends and support `skip`/`update`/`fail` conflict resolution strategies.
+  - **Migration Utilities**: `migrate_data.py` is the unified bidirectional migration CLI tool (supporting `json_to_db` and `db_to_json`) for `all`, `patients`, `insurance`, and `cpt` entities. It supports `skip`/`update`/`fail` conflict resolution strategies.
 
 Module-level wrappers in `src/core/patient_db.py` act as a factory and delegate all load/save/delete/reset/compaction operations to the active repository instance. All script data operations (e.g. log compaction in `compact_patient_data.py`, selectively purging in `purge_manager.py`) utilize these abstractions rather than touching file pathways directly.
 

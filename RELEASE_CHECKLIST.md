@@ -1,4 +1,4 @@
-# Release & Deployment Checklist (v8.1)
+# Release & Deployment Checklist (v8.7)
 
 This checklist outlines the procedures for deploying the Clinical Data Generator with the new hybrid storage backend (JSON & PostgreSQL) to production.
 
@@ -52,7 +52,7 @@ To migrate all current local patient records to the PostgreSQL database, execute
 
 ```bash
 # Recommended command using virtual environment python:
-./venv/bin/python3 migrate_json_to_postgres.py --strategy update
+./venv/bin/python3 migrate_data.py --direction json_to_db --strategy update
 ```
 
 ### Conflict Resolution Strategies (`--strategy`)
@@ -68,7 +68,7 @@ In the event of a database failure or emergency rollback:
 
 1. **Extract PostgreSQL data to JSON**:
    ```bash
-   ./venv/bin/python3 migrate_postgres_to_json.py --strategy update
+   ./venv/bin/python3 migrate_data.py --direction db_to_json --strategy update
    ```
    This ensures any new patient records generated during PostgreSQL deployment are synced back into the local `src/core/patients_db.json`.
 2. **Change Backend**:
@@ -117,4 +117,4 @@ Execute the following checks immediately after deployment:
 
 * **Connection Pooling**: Implement `psycopg2.pool.SimpleConnectionPool` or integration with PgBouncer.
 * **Schema Migration Engine**: Integrate Alembic for tracking version changes in table structures.
-* **Cache Layer**: Introduce Redis or in-memory LRU cache to reduce database lookup frequencies.
+* **Cache Layer**: An in-memory name cache has been implemented (`src/core/name_cache.py`). For further performance improvements, consider a more robust solution like Redis.

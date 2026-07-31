@@ -195,12 +195,14 @@ python compact_patient_data.py --all --history-entries 3
 #### Database Migration CLI
 To transfer records between JSON and PostgreSQL storage backends:
 ```bash
-# Migrate JSON database to PostgreSQL database
-python migrate_json_to_postgres.py --strategy update
+# Migrate all entities from JSON to PostgreSQL with 'update' strategy
+python migrate_data.py --direction json_to_db --entities all --strategy update
 
-# Reverse migrate PostgreSQL database to JSON file
-python migrate_postgres_to_json.py --strategy skip
+# Migrate only patients from PostgreSQL to JSON with 'skip' strategy
+python migrate_data.py --direction db_to_json --entities patients --strategy skip
 ```
+*Directions supported: `json_to_db`, `db_to_json`.*
+*Entities supported: `all`, `patients`, `insurance`, `cpt`.*
 *Strategies supported: `update` (overwrite), `skip` (do not replace), `fail` (abort on duplicate).*
 
 ---

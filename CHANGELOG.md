@@ -6,6 +6,54 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to Semantic Versioning.
 
 ---
+## [8.7.0] - 2026-07-29
+
+### Added
+- Dashboard and 404 route handling in `api_server.py` and `ui/index.html`.
+- `pytest.ini` with `pythonpath = .` for cleaner test execution.
+
+### Changed
+- Updated `run_migration_test.py` to import `migrate` from `migrate_data`.
+- Wrapped `patient_db.load_patient` in `patient_tracker_export.py` with safe fallbacks.
+
+### Fixed
+- Corrected shebang syntax in `compact_patient_data.py`.
+- Fixed summary PDF directory mapping in `api_server.py`.
+
+---
+
+## [8.6.0] - 2026-07-23
+
+### Changed
+- Updated `src/workflow.py` and `src/utils/file_utils.py` to exclude summary documents from the scan filter.
+
+---
+
+## [8.5.0] - 2026-07-23
+
+### Added
+- Extended `PARequestDetails` and `MedicationEntry` in `src/ai/models.py` for medicine-specific PAs.
+- Added `tests/test_medicine_logic.py`.
+
+### Changed
+- Updated `templates/document_plan_rules.json` and `src/doc_generation/planner.py` to handle `medication` case types.
+- Aligned `src/ai/prompts.py` and `src/data/patient_record_writer.py` with new medicine PA logic.
+
+---
+
+## [8.3.0] - 2026-07-23
+
+### Added
+- Local name cache (`src/core/name_cache.py`) for instant patient roster loading.
+- Live cache updates in `src/workflow.py`.
+- UI loaders, skeletons, and spinners in `ui/index.html` for better user experience during data fetching.
+
+### Changed
+- `/api/patients` endpoint now uses the cache-first strategy.
+- Improved error handling and logging in the UI.
+
+---
+
 ## [8.2.1] - 2026-07-23
 
 ### Fixed
