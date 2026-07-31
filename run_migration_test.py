@@ -49,11 +49,13 @@ try:
     dest_json_repo.save_patient("999", sample_patient)
     
     print("8. Migrating JSON to Postgres...")
-    migrate(direction="json_to_db", entity="patients", strategy="update", json_path=temp_json_path)
+    migrate(direction="json_to_db", entity="all", strategy="update", json_path=temp_json_path)
     
     print("9. Verifying load from Postgres...")
     loaded_pg = postgres_repo.load_patient("999")
     print(f"Loaded from PG: {loaded_pg}")
+    cpt_map = postgres_repo.load_cpt_code_map()
+    print(f"Loaded CPT map from PG with {len(cpt_map.get('by_code', {}))} codes")
     
     print("10. Modifying in Postgres...")
     sample_patient_modified = loaded_pg.copy()
@@ -64,7 +66,7 @@ try:
     dest_json_repo.delete_patient("999")
     
     print("12. Reverse migrating Postgres to JSON...")
-    migrate(direction="db_to_json", entity="patients", strategy="update", json_path=temp_json_path)
+    migrate(direction="db_to_json", entity="all", strategy="update", json_path=temp_json_path)
     
     print("13. Verifying load from JSON...")
     loaded_json = dest_json_repo.load_patient("999")

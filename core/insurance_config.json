@@ -2,21 +2,6 @@
   "default_provider_id": "UHC",
   "providers": [
     {
-      "provider_id": "TRAD_MEDICARE",
-      "name": "Traditional Medicare (CMS)",
-      "abbreviation": "CMS",
-      "policy_url": "https://www.cms.gov/",
-      "plans": [
-        {
-          "plan_id": "TRAD_MEDICARE_NATIONAL",
-          "plan_name": "Traditional Medicare (Parts A & B)",
-          "plan_type": "Traditional Medicare",
-          "policy_url": "https://www.cms.gov/medicare/payment/",
-          "is_default": true
-        }
-      ]
-    },
-    {
       "provider_id": "AETNA",
       "name": "Aetna",
       "abbreviation": "Aetna",
@@ -34,6 +19,42 @@
           "plan_name": "Aetna Medicare Advantage",
           "plan_type": "Medicare Advantage",
           "policy_url": "https://www.aetna.com/health-care-professionals/clinical-policy-bulletins.html",
+          "is_default": false
+        }
+      ]
+    },
+    {
+      "provider_id": "BCBS_TX",
+      "name": "Blue Cross Blue Shield of Texas",
+      "abbreviation": "BCBS TX",
+      "policy_url": "https://www.bcbstx.com/provider",
+      "plans": [
+        {
+          "plan_id": "BCBS_TX_COMM_HMO",
+          "plan_name": "Texas Blue Essentials HMO (Commercial)",
+          "plan_type": "Commercial/HMO",
+          "policy_url": "https://www.bcbstx.com/provider/commercial",
+          "is_default": false
+        },
+        {
+          "plan_id": "BCBS_TX_COMM_PPO",
+          "plan_name": "Texas Blue Choice PPO (Commercial)",
+          "plan_type": "Commercial/PPO",
+          "policy_url": "https://www.bcbstx.com/provider/commercial",
+          "is_default": false
+        },
+        {
+          "plan_id": "BCBS_TX_MA",
+          "plan_name": "Texas Medicare Advantage Blue (HMO/PPO)",
+          "plan_type": "Medicare Advantage",
+          "policy_url": "https://www.bcbstx.com/provider/medicare-advantage",
+          "is_default": true
+        },
+        {
+          "plan_id": "BCBS_TX_MEDICAID",
+          "plan_name": "Texas STAR Medicaid (BCBS TX)",
+          "plan_type": "Medicaid",
+          "policy_url": "https://www.bcbstx.com/provider/medicaid",
           "is_default": false
         }
       ]
@@ -61,76 +82,62 @@
       ]
     },
     {
+      "provider_id": "TRAD_MEDICARE",
+      "name": "Traditional Medicare (CMS)",
+      "abbreviation": "CMS",
+      "policy_url": "https://www.cms.gov/",
+      "plans": [
+        {
+          "plan_id": "TRAD_MEDICARE_NATIONAL",
+          "plan_name": "Traditional Medicare (Parts A & B)",
+          "plan_type": "Traditional Medicare",
+          "policy_url": "https://www.cms.gov/medicare/payment/",
+          "is_default": true
+        }
+      ]
+    },
+    {
       "provider_id": "UHC",
-    "name": "UnitedHealthcare",
-    "abbreviation": "UHC",
-    "policy_url": "https://www.uhcprovider.com/",
-    "plans": [
-      {
-        "plan_id": "UHC_TX_MA",
-        "plan_name": "Texas AARP Medicare Advantage Plans",
-        "plan_type": "Medicare Advantage",
-        "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-aarp-medcomp-sechorizons.html",
-        "is_default": true
-      },
-      {
-        "plan_id": "UHC_TX_CCCP",
-        "plan_name": "Texas Complete Care Chronic Plan",
-        "plan_type": "Medicare Advantage",
-        "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-chronic-complete-hmo-snp.html"
-      },
-      {
-        "plan_id": "UHC_TX_COMM_PPO",
-        "plan_name": "Texas Choice Plus PPO (Commercial)",
-        "plan_type": "Commercial/PPO",
-        "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html"
-      },
-      {
-        "plan_id": "UHC_TX_COMM_HMO",
-        "plan_name": "Texas Select HMO (Commercial)",
-        "plan_type": "Commercial/HMO",
-        "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html"
-      },
-      {
-        "plan_id": "UHC_TX_MEDICAID",
-        "plan_name": "Texas STAR Medicaid (UHC Community Plan)",
-        "plan_type": "Medicaid",
-        "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicaid-plans.html"
-      }
-    ]
-  },
-  {
-    "provider_id": "BCBS_TX",
-    "name": "Blue Cross Blue Shield of Texas",
-    "abbreviation": "BCBS TX",
-    "policy_url": "https://www.bcbstx.com/provider",
-    "plans": [
-      {
-        "plan_id": "BCBS_TX_MA",
-        "plan_name": "Texas Medicare Advantage Blue (HMO/PPO)",
-        "plan_type": "Medicare Advantage",
-        "policy_url": "https://www.bcbstx.com/provider/medicare-advantage",
-        "is_default": true
-      },
-      {
-        "plan_id": "BCBS_TX_COMM_PPO",
-        "plan_name": "Texas Blue Choice PPO (Commercial)",
-        "plan_type": "Commercial/PPO",
-        "policy_url": "https://www.bcbstx.com/provider/commercial"
-      },
-      {
-        "plan_id": "BCBS_TX_COMM_HMO",
-        "plan_name": "Texas Blue Essentials HMO (Commercial)",
-        "plan_type": "Commercial/HMO",
-        "policy_url": "https://www.bcbstx.com/provider/commercial"
-      },
-      {
-        "plan_id": "BCBS_TX_MEDICAID",
-        "plan_name": "Texas STAR Medicaid (BCBS TX)",
-        "plan_type": "Medicaid",
-        "policy_url": "https://www.bcbstx.com/provider/medicaid"
-      }
-    ]
-  }
-]
+      "name": "UnitedHealthcare",
+      "abbreviation": "UHC",
+      "policy_url": "https://www.uhcprovider.com/",
+      "plans": [
+        {
+          "plan_id": "UHC_TX_CCCP",
+          "plan_name": "Texas Complete Care Chronic Plan",
+          "plan_type": "Medicare Advantage",
+          "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-chronic-complete-hmo-snp.html",
+          "is_default": false
+        },
+        {
+          "plan_id": "UHC_TX_COMM_HMO",
+          "plan_name": "Texas Select HMO (Commercial)",
+          "plan_type": "Commercial/HMO",
+          "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html",
+          "is_default": false
+        },
+        {
+          "plan_id": "UHC_TX_COMM_PPO",
+          "plan_name": "Texas Choice Plus PPO (Commercial)",
+          "plan_type": "Commercial/PPO",
+          "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-commercial-plans.html",
+          "is_default": false
+        },
+        {
+          "plan_id": "UHC_TX_MA",
+          "plan_name": "Texas AARP Medicare Advantage Plans",
+          "plan_type": "Medicare Advantage",
+          "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicare-plans/tx-aarp-medcomp-sechorizons.html",
+          "is_default": true
+        },
+        {
+          "plan_id": "UHC_TX_MEDICAID",
+          "plan_name": "Texas STAR Medicaid (UHC Community Plan)",
+          "plan_type": "Medicaid",
+          "policy_url": "https://www.uhcprovider.com/en/health-plans-by-state/texas-health-plans/tx-medicaid-plans.html",
+          "is_default": false
+        }
+      ]
+    }
+  ]
 }

@@ -11,6 +11,17 @@ CORE_FOLDER = os.path.join(PROJECT_ROOT, "core")
 INPUT_EXCEL = os.path.join(CORE_FOLDER, "UAT Plan.xlsx")
 CPT_MAP_PATH = os.path.join(CORE_FOLDER, "cpt_code_map.json")
 
+def get_repository():
+    """Get the configured patient repository (JSON or Postgres)."""
+    backend = os.getenv("PATIENT_STORAGE_BACKEND", "json").strip().lower()
+    if backend == "postgres":
+        from src.core.postgres_repository import PostgresPatientRepository
+        return PostgresPatientRepository()
+    else:
+        from src.core.json_repository import JSONPatientRepository
+        return JSONPatientRepository()
+
+
 
 def _normalize_text(val) -> str:
     try:
@@ -105,21 +116,18 @@ def refresh_cpt_code_map() -> dict:
 
 
 def get_cpt_code_map() -> dict:
-    backend = os.getenv("PATIENT_STORAGE_BACKEND", "json").strip().lower()
-    if backend == "postgres":
-        from core.postgres_repository import PostgresPatientRepository
-        db_map = PostgresPatientRepository().load_cpt_code_map()
-        if db_map and db_map.get("by_code"):
-            return db_map
-        if os.path.exists(CPT_MAP_PATH):
-            with open(CPT_MAP_PATH, "r", encoding="utf-8") as f:
-                return json.load(f)
-        return {}
-
+    """Load CPT code map from the active repository."""
+    repo = get_repository()
+    cpt_map = repo.load_cpt_code_map()
+    if cpt_map and cpt_map.get("by_code"):
+        return cpt_map
+    
+    # Fallback to JSON file if DB is empty and file exists
     if os.path.exists(CPT_MAP_PATH):
         with open(CPT_MAP_PATH, "r", encoding="utf-8") as f:
             return json.load(f)
-    return {}
+            
+    return {"by_code": {}, "by_procedure": {}, "updated_at": ""}
 
 
 def _get_patient_id_column(df: pd.DataFrame) -> str:

@@ -29,3 +29,4 @@ core/UAT Plan.xlsx
 
 # Artifacts
 artifacts/
+core/patient_name_cache.json
