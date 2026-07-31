@@ -157,8 +157,12 @@ Controlled by `LLM_PROVIDER` in `cred/.env`. Switch between providers without co
 
 | Provider | Production Model | Test Model |
 |----------|-----------------|------------|
-| `openai` | `gpt-4o` | `gpt-4o-mini` |
+| `openai` | `gpt-5.6-luna` | `gpt-5.2-nano` |
 | `vertexai` | `gemini-2.5-pro` | `gemini-2.5-flash` |
+
+### OpenAI Specifics
+
+- **Reasoning Model Compatibility**: Setting `reasoning_effort` to `"none"` is dynamically handled in [src/ai/client.py](file:///Users/akshaykumar/code/lucenz/pdgenerator/src/ai/client.py) for newer OpenAI models (e.g. `gpt-5` series) when using tool calling/Structured Outputs. This prevents API schema validation errors since function calling is not supported with active reasoning/thinking on these models.
 
 ### Vertex AI Specifics
 

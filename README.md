@@ -58,7 +58,7 @@ All documents derive from `patient_state`, a canonical patient data model loaded
 - **PDF Layout Engines**: ReportLab PDF library
 - **PDF Post-Processing**: PyMuPDF (`fitz`), Pillow, and NumPy (Visual Scan filter)
 - **Medical Code Search**: Tavily Search Engine API (retrieves CPT/ICD code descriptions)
-- **LLM Pipeline Clients**: OpenAI (`gpt-4o`, `gpt-4o-mini`) & Vertex AI (`gemini-2Pro`, `gemini-2Flash`)
+- **LLM Pipeline Clients**: OpenAI (`gpt-5.6-luna`, `gpt-5.2-nano`) & Vertex AI (`gemini-2.5-pro`, `gemini-2.5-flash`)
 
 ### Decoupled Storage Layer
 Supports two repository backends toggled via `PATIENT_STORAGE_BACKEND`:

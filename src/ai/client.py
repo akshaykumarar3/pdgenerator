@@ -33,7 +33,7 @@ ALLOWED_PROVIDERS = ["vertexai", "openai"]
 # Model Configuration (Prod vs Test)
 MODEL_MAP = {
     "vertexai": {"prod": "gemini-2.5-pro", "test": "gemini-2.5-flash"},
-    "openai":   {"prod": "gpt-5.2",         "test": "gpt-4o-mini"}
+    "openai":   {"prod": "gpt-5.6-luna", "test": "gpt-5.2-nano"}
 }
 
 # Select Model
@@ -110,6 +110,19 @@ elif PROVIDER == "vertexai":
         )
     except Exception as e:
         raise RuntimeError(f"❌ Failed to initialize Vertex AI Client: {e}")
+
+# ─── Shared Helpers ──────────────────────────────────────────────────────────────
+
+def _apply_model_specific_policies(kwargs: dict, provider: str, model_name: str):
+    """
+    Applies provider- and model-specific parameters to the request kwargs.
+    Currently handles the 'reasoning_effort' policy for OpenAI models.
+    """
+    # Policy: OpenAI models with 'gpt-5' or 'luna' in their name require `reasoning_effort="none"`
+    # when used with Instructor for structured outputs to prevent API validation errors.
+    if provider == "openai" and ("gpt-5" in model_name or "luna" in model_name):
+        kwargs["reasoning_effort"] = "none"
+
 
 # ─── Shared Vertex AI Response Parser ──────────────────────────────────────────
 
@@ -248,6 +261,7 @@ def generate_clinical_data(
                 {"role": "user", "content": prompt}
             ]
         }
+        _apply_model_specific_policies(kwargs, PROVIDER, MODEL_NAME)
 
         if PROVIDER == "vertexai":
             try:
@@ -518,6 +532,7 @@ Focus on being specific, clear, and helpful."""
                 {"role": "user", "content": prompt}
             ]
         }
+        _apply_model_specific_policies(kwargs, PROVIDER, MODEL_NAME)
         
         if PROVIDER == "vertexai":
             print(f"   [DEBUG] Calling Vertex AI for Concise Summary — Model: {MODEL_NAME}")
@@ -621,6 +636,7 @@ Focus on being specific, clear, and helpful for non-clinical annotators."""
                 {"role": "user", "content": prompt}
             ]
         }
+        _apply_model_specific_policies(kwargs, PROVIDER, MODEL_NAME)
         
         if PROVIDER == "vertexai":
             print(f"   [DEBUG] Calling Vertex AI for Annotator Summary — Model: {MODEL_NAME}")

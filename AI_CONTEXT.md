@@ -361,11 +361,11 @@ OUTPUT_DIR=<path>
 Models:
 
 Production:
-- GPT-4o (OpenAI)
+- GPT-5.6-luna (OpenAI)
 - Gemini 2.5 Pro (Vertex AI)
 
 Testing:
-- GPT-4o-mini (OpenAI)
+- GPT-5.2-nano (OpenAI)
 - Gemini 2.5 Flash (Vertex AI)
 
 ---
@@ -680,3 +680,5 @@ Applied final polish updates:
 8. Do NOT call `client.client.start_chat()` — use `generate_content()` directly
 9. All Vertex AI calls must include `max_output_tokens=65536`
 10. Call `_quantize_prompt()` before sending large prompts to Vertex AI
+11. When using OpenAI reasoning models (e.g. gpt-5.6-luna, gpt-5.2-nano) with function tools/Structured Outputs via instructor, explicitly set reasoning_effort to 'none' in completion parameters to avoid API validation errors.
+
