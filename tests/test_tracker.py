@@ -14,7 +14,31 @@ from src.core.config import MAX_SUPPORTING_DOCUMENTS
 from src.doc_generation.planner import detect_case_type, select_document_plan, RULES_PATH
 from src.doc_generation.patient_tracker_export import generate_tracker_export
 
+from src.core import patient_db
+
+import tempfile
+import shutil
+import src.core.config as config
+import src.doc_generation.patient_tracker_export as tracker_export
+
 class TestPriorAuthTracker(unittest.TestCase):
+    def setUp(self):
+        os.environ["PATIENT_STORAGE_BACKEND"] = "json"
+        patient_db._repository = None
+        self.test_dir = tempfile.mkdtemp()
+        self.orig_output_dir = config.OUTPUT_DIR
+        self.orig_patient_data_dir = config.PATIENT_DATA_DIR
+        self.orig_export_data_dir = tracker_export.PATIENT_DATA_DIR
+        config.OUTPUT_DIR = self.test_dir
+        config.PATIENT_DATA_DIR = os.path.join(self.test_dir, "patient-data")
+        tracker_export.PATIENT_DATA_DIR = config.PATIENT_DATA_DIR
+
+    def tearDown(self):
+        config.OUTPUT_DIR = self.orig_output_dir
+        config.PATIENT_DATA_DIR = self.orig_patient_data_dir
+        tracker_export.PATIENT_DATA_DIR = self.orig_export_data_dir
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
     def test_rules_path_resolution(self):
         """Verify planner correctly resolves the rules path in templates/."""
         self.assertTrue(os.path.exists(RULES_PATH), f"Rules path does not exist: {RULES_PATH}")

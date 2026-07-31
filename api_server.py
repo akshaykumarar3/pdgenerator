@@ -538,6 +538,62 @@ def _run_generation_from_content(job_id: str, patient_id: str, generation_mode: 
 
 
 
+# ─── Dashboard & Routing / 404 Handlers ─────────────────────────────────────
+
+@app.route("/")
+@app.route("/dashboard")
+def serve_dashboard():
+    """Serve the main UI application."""
+    ui_dir = os.path.join(BASE_DIR, "ui")
+    return send_from_directory(ui_dir, "index.html")
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    """Handle 404 - Page Not Found for API and HTML routes."""
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "API route not found", "status": 404}), 404
+    
+    from html import escape
+    safe_path = escape(request.path)
+    
+    html_content = f"""<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-900 text-gray-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | Clinical Data Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    body {{ font-family: 'Inter', sans-serif; }}
+  </style>
+</head>
+<body class="h-full flex items-center justify-center p-6 bg-gray-950">
+  <div class="max-w-md w-full text-center space-y-6 bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl">
+    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 text-3xl font-mono font-bold">
+      404
+    </div>
+    <div class="space-y-2">
+      <h1 class="text-2xl font-bold text-gray-100">Page Not Found</h1>
+      <p class="text-sm text-gray-400">
+        The page or route <code class="text-xs bg-gray-800 px-1.5 py-0.5 rounded text-amber-300 font-mono">{safe_path}</code> does not exist or has been moved.
+      </p>
+    </div>
+    <div class="pt-2">
+      <a href="/dashboard" class="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-lg hover:shadow-indigo-500/25 cursor-pointer">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Return to Main Dashboard
+      </a>
+    </div>
+  </div>
+</body>
+</html>"""
+    return html_content, 404
+
+
 @app.route("/api/status")
 def api_status():
     """
@@ -1130,12 +1186,11 @@ def api_get_patient_record(patient_id: str):
 @app.route("/api/download/<patient_id>/<file_type>/<filename>")
 def api_download_file(patient_id: str, file_type: str, filename: str):
     """Serve a generated PDF file."""
-    if file_type == "report":
-        directory = get_patient_report_folder(patient_id)
-    elif file_type == "persona":
-        directory = get_patient_report_folder(patient_id)
+    patient_name = patient_db.get_patient_name(patient_id)
+    if file_type in ("report", "persona"):
+        directory = get_patient_report_folder(patient_id, patient_name)
     elif file_type == "summary":
-        directory = get_patient_report_folder(patient_id)
+        directory = get_patient_summary_folder(patient_id, patient_name)
     else:
         return jsonify({"error": "Invalid file type"}), 400
     
@@ -1263,13 +1318,12 @@ def api_save_template():
     if not all([patient_id, file_type, filename]):
         return jsonify({"error": "Missing parameters"}), 400
 
+    patient_name = patient_db.get_patient_name(patient_id)
     base_dir = ""
-    if file_type == "persona":
-        base_dir = get_patient_report_folder(patient_id)
-    elif file_type == "report":
-        base_dir = get_patient_report_folder(patient_id)
+    if file_type in ("persona", "report"):
+        base_dir = get_patient_report_folder(patient_id, patient_name)
     elif file_type == "summary":
-        base_dir = get_patient_report_folder(patient_id)
+        base_dir = get_patient_summary_folder(patient_id, patient_name)
     
     source_path = os.path.join(base_dir, filename)
     if not os.path.exists(source_path):

@@ -494,6 +494,14 @@ Workflow continues gracefully.
 
 # Maintenance & Updates
 
+### v8.7 Code Audit, 404 Route Handling & Bug Fixes (2026-07-29)
+* **Dashboard & 404 Route Handling**: Added `@app.route('/')` and `@app.route('/dashboard')` to `api_server.py` to serve the web UI (`ui/index.html`). Implemented custom `@app.errorhandler(404)` returning JSON error objects for `/api/*` requests and a styled Material You dark theme HTML "Page Not Found" page with a prominent "Return to Dashboard" button for HTML page requests. Added client-side routing listener (`handleClientRouting`) in `ui/index.html` for invalid URL hash fragments.
+* **Shebang Syntax Fix**: Resolved `SyntaxError` in `compact_patient_data.py` by removing an invalid leading hyphen on line 1 (`-#!/usr/bin/env python3` -> `#!/usr/bin/env python3`).
+* **Summary PDF Directory Mapping**: Fixed directory resolution in `api_download_file` and `api_save_template` (`api_server.py`) for `file_type == "summary"` to point to `get_patient_summary_folder(patient_id)` (`generated_output/summary/`).
+* **Migration Test Script Refactoring**: Updated `run_migration_test.py` to import `migrate` from `migrate_data` (`direction="json_to_db"` and `direction="db_to_json"`), fixing test collection errors.
+* **Pytest Configuration**: Added `pytest.ini` with `pythonpath = .` to ensure automated test suites execute cleanly across developer and CI environments.
+* **Robust Unreachable DB Handling**: Wrapped `patient_db.load_patient` in `patient_tracker_export.py` with safe fallbacks and updated `test_tracker.py` / `test_migration.py` to isolate storage backends during unit testing.
+
 ### v8.6 Summary PDF Exclusion from Scan Filter (2026-07-23)
 * **Summary PDF Exclusion**: Updated workflow processing (`src/workflow.py` and `src/utils/file_utils.py`) to exclude summary documents (`Clinical_Summary_Patient_*.pdf`) from post-processing scan filter rasterization when `scan_mode` (realistic document setting) is enabled. Summary documents remain clean vector PDFs for verification while clinical reports and personas receive scan simulation.
 

@@ -79,7 +79,10 @@ def generate_tracker_export(patient_ids: List[str]) -> str:
                 print(f"⚠️ Error reading concise summary for patient {p_id}: {e}")
                 
         # Load demographics & case info for baseline/fallback
-        patient_data = patient_db.load_patient(p_id) or {}
+        try:
+            patient_data = patient_db.load_patient(p_id) or {}
+        except Exception as e:
+            patient_data = {}
         case_details = data_loader.get_case_details(p_id) or {}
         
         # 1. Patient ID

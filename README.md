@@ -1,4 +1,4 @@
-# Clinical Data Generator (v8.3)
+# Clinical Data Generator (v8.7)
 
 > **Automated Synthetic Healthcare Data Pipeline**
 > Generates high-fidelity clinical PDFs and FHIR-compliant personas for testing Prior Authorization workflows.

@@ -1,4 +1,4 @@
-# Clinical Data Generator — System Architecture (v8.3)
+# Clinical Data Generator — System Architecture (v8.7)
 
 ## 1. Overview
 
